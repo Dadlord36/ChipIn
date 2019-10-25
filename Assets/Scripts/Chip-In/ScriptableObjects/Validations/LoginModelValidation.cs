@@ -19,6 +19,7 @@ namespace ScriptableObjects.Validations
 
         private bool CheckEmailIsValid(in string email)
         {
+            return true;
             try
             {
                 var mail = new MailAddress(email);
