@@ -1,6 +1,5 @@
-﻿using System;
-using System.Net.Mail;
-using DataModels;
+﻿using DataModels;
+using EmailValidation;
 using UnityEngine;
 
 namespace ScriptableObjects.Validations
@@ -19,18 +18,15 @@ namespace ScriptableObjects.Validations
 
         private bool CheckEmailIsValid(in string email)
         {
-            return true;
-            try
+            if (EmailValidator.Validate(email))
             {
-                var mail = new MailAddress(email);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                return false;
+                Debug.Log("Email is correct");
+                return true;
             }
 
-            return true;
+            Debug.Log("Email is incorrect");
+
+            return false;
         }
     }
 }
