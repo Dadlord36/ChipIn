@@ -1,16 +1,23 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
 using DataModels;
 using JetBrains.Annotations;
 using UnityWeld.Binding;
+using ViewModels.Interfaces;
 
 namespace ViewModels
 {
     [Binding]
     public class RegistrationViewModel : BaseViewModel, IUserRegistrationModel, INotifyPropertyChanged
     {
-        private IUserRegistrationModel _registrationModel = new UserRegistrationModel();
+        public event Action<UserRegistrationModel> OnTryToRegister;
+        private IRegistrationListener _registrationListener;
+        
+        private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
+        private bool _pendingRegister;
+
         [Binding]
         public MailAddress Email
         {
@@ -21,16 +28,18 @@ namespace ViewModels
                 OnPropertyChanged(nameof(Email));
             }
         }
+
         [Binding]
         public string Password
         {
             get => _registrationModel.Password;
             set
             {
-                _registrationModel.Password = value; 
+                _registrationModel.Password = value;
                 OnPropertyChanged(nameof(Password));
             }
         }
+
         [Binding]
         public string Gender
         {
@@ -41,6 +50,7 @@ namespace ViewModels
                 OnPropertyChanged(nameof(Gender));
             }
         }
+
         [Binding]
         public string Role
         {
@@ -50,6 +60,25 @@ namespace ViewModels
                 _registrationModel.Role = value;
                 OnPropertyChanged(nameof(Role));
             }
+        }
+
+        public bool PendingRegister
+        {
+            get => _pendingRegister;
+            set
+            {
+                _pendingRegister = value;
+                OnPropertyChanged(nameof(PendingRegister));
+            }
+        }
+
+        public void TryToRegister()
+        {
+            _registrationListener.RequestStarted();
+            PendingRegister = true;
+            if (OnTryToRegister == null) return;
+            OnTryToRegister?.Invoke(_registrationModel);
+            PendingRegister = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
