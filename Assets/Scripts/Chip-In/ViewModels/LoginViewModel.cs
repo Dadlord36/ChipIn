@@ -1,58 +1,29 @@
-﻿using System;
-using DataModels;
+﻿using DataModels;
 using DefaultNamespace;
 using HttpRequests;
 using ScriptableObjects.Validations;
 using UnityEngine;
+using UnityWeld.Binding;
 
 namespace ViewModels
 {
-    [CreateAssetMenu(fileName = nameof(LoginViewModel), menuName = "ViewModels/" + nameof(LoginViewModel),
-        order = 0)]
+    [Binding]
     public class LoginViewModel : BaseViewModel, IInitialize
     {
-        public event Action<bool> OnCanLoginStateChanged;
-        private UserLoginModel UserLoginModel { get; set; }
+        private UserLoginModel _userLoginModel;
         
-        [NonSerialized] private bool _canLogin;
-        public bool CanLogin
-        {
-            get => _canLogin;
-            private set
-            {
-                _canLogin = value;
-                OnCanLoginStateChanged?.Invoke(value);
-            }
-        }
-        public bool CanReceiveInput { get;} = true;
+        [Binding] public bool CanLogin { get; private set; }
+        [Binding] public bool CanReceiveInput { get;} = true;
         
         [SerializeField] private LoginModelValidation loginModelValidation;
 
         public void Initialize()
         {
-            UserLoginModel = new UserLoginModel();
-            UserLoginModel.PropertyChanged += delegate
+            _userLoginModel = new UserLoginModel();
+            _userLoginModel.PropertyChanged += delegate
             {
-                CanLogin = loginModelValidation.CheckIsValid(UserLoginModel);
+                CanLogin = loginModelValidation.CheckIsValid(_userLoginModel);
             };
-        }
-
-        // Scriptable Objects are saving their fields values by default, so it might be needed to reset them
-        private void ResetValues()
-        {
-            _canLogin = false;
-        }
-        
-        public void SetUserEmail(string email)
-        {
-            UserLoginModel.Email = email;
-            Debug.Log($"Inputted email: {email}");
-        }
-
-        public void SetUserPassword(string password)
-        {
-            UserLoginModel.Password = password;
-            Debug.Log($"Inputted password: {password}");
         }
 
         public void LoginToAccount()
@@ -62,7 +33,7 @@ namespace ViewModels
 
         private async void ProcessLogin()
         {
-            var profileModel = await new LoginRequestProcessor().SendRequest(UserLoginModel);
+            var profileModel = await new LoginRequestProcessor().SendRequest(_userLoginModel);
 
             Debug.Log($"Is response successful? : {profileModel.success.ToString()}");
 

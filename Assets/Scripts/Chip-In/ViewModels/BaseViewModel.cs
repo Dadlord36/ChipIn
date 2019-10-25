@@ -5,7 +5,7 @@ namespace ViewModels
     /// <summary>
     /// Base view model class
     /// </summary>
-    public abstract class BaseViewModel : ScriptableObject
+    public abstract class BaseViewModel : MonoBehaviour
     {
     }
 }
