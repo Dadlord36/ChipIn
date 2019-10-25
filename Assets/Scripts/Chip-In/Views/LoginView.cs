@@ -2,12 +2,10 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
-using UnityWeld.Binding;
 
 
 namespace Views
 {
-    [Binding]
     public class LoginView : MonoBehaviour
     {
         [SerializeField] private TMP_InputField emailInputField;
@@ -22,10 +20,6 @@ namespace Views
             emailInputField.contentType = TMP_InputField.ContentType.EmailAddress;
             passwordInputField.contentType = TMP_InputField.ContentType.Password;
         }
-        [Binding]
-        public void SwitchButtonInteractivity()
-        {
-            confirmationButton.interactable = !confirmationButton.interactable;
-        }
+
     }
 }

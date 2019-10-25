@@ -13,6 +13,11 @@ namespace DataModels
         public int tokensBalance;
         public string gender;
         public Vector2 location;
-        public string avatar;
+
+        public override string ToString()
+        {
+            return
+                $"Id: {id.ToString()} Email: {email} Name: {name} Role: {role} TokenBalance: {tokensBalance.ToString()} Gender :{gender} Location: {location.ToString()}";
+        }
     }
 }

@@ -18,6 +18,7 @@ namespace ScriptableObjects.Validations
 
         private bool CheckEmailIsValid(in string email)
         {
+            if (string.IsNullOrEmpty(email)) return false;
             if (EmailValidator.Validate(email))
             {
                 Debug.Log("Email is correct");

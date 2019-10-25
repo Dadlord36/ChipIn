@@ -78,13 +78,14 @@ namespace ViewModels
 
         private async void ProcessLogin()
         {
-            var profileModel = await new LoginRequestProcessor().SendRequest(_userLoginModel);
+            var responseData = await new LoginRequestProcessor().SendRequest(_userLoginModel);
 
-            Debug.Log($"Is response successful? : {profileModel.success.ToString()}");
+            if (responseData.ResponseMessage.IsSuccessStatusCode)
+            {
+                Debug.Log($"Response is successful");
+                Debug.Log(responseData.ResponseData.user.ToString());
+            }
 
-            Debug.Log(profileModel.user.email);
-            Debug.Log(profileModel.user.name);
-            Debug.Log(profileModel.user.gender);
             IsPendingLogin = false;
         }
 
