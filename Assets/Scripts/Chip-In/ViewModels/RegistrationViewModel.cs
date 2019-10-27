@@ -2,15 +2,11 @@
 using System.ComponentModel;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
 using JetBrains.Annotations;
-using ScriptableObjects.Validations;
-using UnityEngine;
 using UnityWeld.Binding;
 using Utilities.ApiExceptions;
-using ViewModels.Interfaces;
 
 namespace ViewModels
 {
@@ -68,6 +64,7 @@ namespace ViewModels
             }
         }
 
+        [Binding]
         public bool PendingRegister
         {
             get => _pendingRegister;
@@ -78,16 +75,16 @@ namespace ViewModels
             }
         }
 
+        [Binding]
         public void TryToRegister()
         {
             RegistrationStarted?.Invoke();
-            Registrate();
+            Register();
         }
 
-        async void Registrate()
+        private async void Register()
         {
             PendingRegister = true;
-
             try
             {
                 var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
@@ -95,15 +92,19 @@ namespace ViewModels
                 {
                     RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
                 }
+
                 RegistrationSuccessfullyComplete?.Invoke(response.responseData);
+                if (response.responseMessage.IsSuccessStatusCode)
+                {
+                    PendingRegister = false;
+                }
             }
             catch (ApiException e)
             {
                 RegistrationFailed?.Invoke(e.Message);
+                PendingRegister = false;
                 throw;
             }
-            
-            PendingRegister = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

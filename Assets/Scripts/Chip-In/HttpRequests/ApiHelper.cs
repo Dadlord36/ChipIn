@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace HttpRequests
 {
-    public static class ApiHelper
+    public static class ApiHelper 
     {
         private static HttpClient _apiClient;
         private const string JsonMediaTypeHeader = "application/json";
@@ -21,6 +21,11 @@ namespace HttpRequests
 
             _apiClient.DefaultRequestHeaders.Accept.Clear();
             _apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMediaTypeHeader));
+        }
+
+        public static void Dispose()
+        {
+            _apiClient.Dispose();
         }
 
         public static async Task<HttpResponseMessage> GetAsync(string requestSuffix)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DataModels;
 using HttpRequests;
@@ -74,19 +75,31 @@ namespace ViewModels
         {
             IsPendingLogin = true;
             ProcessLogin();
+            
         }
 
         private async void ProcessLogin()
         {
-            var responseData = await new LoginRequestProcessor().SendRequest(_userLoginModel);
-
-            if (responseData.ResponseMessage.IsSuccessStatusCode)
+            try
             {
-                Debug.Log($"Response is successful");
-                Debug.Log(responseData.ResponseData.user.ToString());
+                var responseData = await new LoginRequestProcessor().SendRequest(_userLoginModel);
+                if (responseData.responseMessage.IsSuccessStatusCode)
+                {
+                    Debug.Log($"Response is successful");
+                    Debug.Log(responseData.responseData.user.ToString());
+                }
+                else
+                {
+                    Debug.Log(responseData.responseMessage.ReasonPhrase);
+                }
+                IsPendingLogin = false;
             }
-
-            IsPendingLogin = false;
+            catch (Exception e)
+            {
+                IsPendingLogin = false;
+                Debug.Log(e);
+                throw;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

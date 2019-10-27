@@ -8,4 +8,9 @@ public class GameManager : MonoBehaviour
     {
         ApiHelper.InitializeClient();
     }
+
+    private void OnDisable()
+    {
+        ApiHelper.Dispose();
+    }
 }
