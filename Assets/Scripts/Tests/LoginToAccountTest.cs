@@ -17,7 +17,8 @@ namespace Tests
         {
             ApiHelper.InitializeClient();
             var responseData = await new LoginRequestProcessor().SendRequest(_testUserLoginModel);
-            Assert.IsTrue(responseData.ResponseMessage.IsSuccessStatusCode);
+            Assert.IsTrue(responseData.responseMessage.IsSuccessStatusCode);
+            ApiHelper.Dispose();
         }
         
     }
