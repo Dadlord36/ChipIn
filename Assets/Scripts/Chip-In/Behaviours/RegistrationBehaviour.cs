@@ -1,6 +1,4 @@
-﻿using System;
-using DataModels;
-using HttpRequests;
+﻿using DataModels;
 using UnityEngine;
 using ViewModels;
 
@@ -12,16 +10,8 @@ namespace Behaviours
 
         private void Start()
         {
-            registrationViewModel.OnTryToRegister += delegate(UserRegistrationModel model)
-            {
-                TryToRegister(model);
-                
-            };
-        }
-
-        async void TryToRegister(UserRegistrationModel model)
-        {
-            var response = await new RegistrationRequestProcessor().SendRequest(model);
+            registrationViewModel.RegistrationSuccessfullyComplete += delegate(UserProfileModel model) {  };
+            registrationViewModel.RegistrationFailed+= Debug.Log;
         }
     }
 }

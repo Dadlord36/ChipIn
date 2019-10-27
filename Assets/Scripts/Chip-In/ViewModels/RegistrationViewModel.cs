@@ -2,8 +2,12 @@
 using System.ComponentModel;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using DataModels;
+using HttpRequests;
 using JetBrains.Annotations;
+using ScriptableObjects.Validations;
+using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Interfaces;
 
@@ -12,9 +16,10 @@ namespace ViewModels
     [Binding]
     public class RegistrationViewModel : BaseViewModel, IUserRegistrationModel, INotifyPropertyChanged
     {
-        public event Action<UserRegistrationModel> OnTryToRegister;
-        private IRegistrationListener _registrationListener;
-        
+        public event Action RegistrationStarted;
+        public event Action<string> RegistrationFailed;
+        public event Action<UserProfileModel> RegistrationSuccessfullyComplete;
+
         private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
         private bool _pendingRegister;
 
@@ -74,10 +79,22 @@ namespace ViewModels
 
         public void TryToRegister()
         {
-            _registrationListener.RequestStarted();
+            RegistrationStarted?.Invoke();
+            Registrate();
+        }
+
+        async void Registrate()
+        {
             PendingRegister = true;
-            if (OnTryToRegister == null) return;
-            OnTryToRegister?.Invoke(_registrationModel);
+            var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
+            if (response.responseMessage.IsSuccessStatusCode)
+            {
+                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
+            }
+            else
+            {
+                RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+            }
             PendingRegister = false;
         }
 
