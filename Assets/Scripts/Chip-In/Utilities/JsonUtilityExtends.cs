@@ -6,7 +6,7 @@ namespace Utilities
 {
     public static class JsonConverterUtility
     {
-        public static async Task<T> ContentJsonTo<T>(HttpContent content)
+        public static async Task<T> ContentAsyncJsonTo<T>(HttpContent content)
         {
             string contentAsString = await content.ReadAsStringAsync();
             return JsonUtility.FromJson<T>(contentAsString);

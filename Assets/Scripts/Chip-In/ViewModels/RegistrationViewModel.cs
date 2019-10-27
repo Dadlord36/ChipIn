@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities.ApiExceptions;
 using ViewModels.Interfaces;
 
 namespace ViewModels
@@ -86,15 +87,22 @@ namespace ViewModels
         async void Registrate()
         {
             PendingRegister = true;
-            var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
-            if (response.responseMessage.IsSuccessStatusCode)
+
+            try
             {
+                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
+                if (response.responseData == null)
+                {
+                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+                }
                 RegistrationSuccessfullyComplete?.Invoke(response.responseData);
             }
-            else
+            catch (ApiException e)
             {
-                RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+                RegistrationFailed?.Invoke(e.Message);
+                throw;
             }
+            
             PendingRegister = false;
         }
 
