@@ -10,7 +10,10 @@ namespace Behaviours
 
         private void Start()
         {
-            registrationViewModel.RegistrationSuccessfullyComplete += delegate(UserProfileModel model) {  };
+            registrationViewModel.RegistrationSuccessfullyComplete += delegate(UserProfileModel model)
+            {
+                print("Successfully register");
+            };
         }
     }
 }

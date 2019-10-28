@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 using UnityEngine;
 
 namespace DataModels
@@ -7,10 +6,10 @@ namespace DataModels
     [Serializable]
     public class UserSimpleRegistrationModel
     {
-        [SerializeField] private MailAddress email;
+        [SerializeField] private string email;
         [SerializeField] private string password;
 
-        public MailAddress Email
+        public string Email
         {
             get => email;
             set => email = value;

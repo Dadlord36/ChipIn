@@ -4,6 +4,7 @@ using System.Net.Mail;
 using System.Runtime.CompilerServices;
 using DataModels;
 using HttpRequests;
+using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
@@ -13,25 +14,28 @@ using Utilities.ApiExceptions;
 namespace ViewModels
 {
     [Binding]
-    public class RegistrationViewModel : BaseViewModel, IUserRegistrationModel, INotifyPropertyChanged
+    public class RegistrationViewModel : BaseViewModel, IUserSimpleRegistrationModel, INotifyPropertyChanged
     {
         public event Action RegistrationStarted;
         public event Action<string> RegistrationFailed;
         public event Action<UserProfileModel> RegistrationSuccessfullyComplete;
 
-        private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
-
+        private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
+
         private bool _pendingRegister;
+        private bool _canTryRegister;
+        private string _repeatedPassword;
 
         [Binding]
-        public MailAddress Email
+        public string Email
         {
             get => _registrationModel.Email;
             set
             {
                 _registrationModel.Email = value;
                 OnPropertyChanged(nameof(Email));
+                CheckIfCanRegister();
             }
         }
 
@@ -43,10 +47,11 @@ namespace ViewModels
             {
                 _registrationModel.Password = value;
                 OnPropertyChanged(nameof(Password));
+                CheckIfCanRegister();
             }
         }
 
-        [Binding]
+/*        [Binding]
         public string Gender
         {
             get => _registrationModel.Gender;
@@ -66,6 +71,18 @@ namespace ViewModels
                 _registrationModel.Role = value;
                 OnPropertyChanged(nameof(Role));
             }
+        }*/
+
+        [Binding]
+        public bool CanTryRegister
+        {
+            get => _canTryRegister;
+            private set
+            {
+                if (value == _canTryRegister) return;
+                _canTryRegister = value;
+                OnPropertyChanged(nameof(CanTryRegister));
+            }
         }
 
         [Binding]
@@ -80,10 +97,36 @@ namespace ViewModels
         }
 
         [Binding]
+        public string RepeatedPassword
+        {
+            get => _repeatedPassword;
+            set
+            {
+                if (value == _repeatedPassword) return;
+                _repeatedPassword = value;
+                OnPropertyChanged(nameof(RepeatedPassword));
+                CheckIfCanRegister();
+            }
+        }
+
+        [Binding]
         public void TryToRegister()
         {
             RegistrationStarted?.Invoke();
             Register();
+        }
+
+        private void CheckIfCanRegister()
+        {
+            if(string.IsNullOrEmpty(_repeatedPassword) ) return;
+            
+            bool CheckPasswordsAreMatch()
+            {
+                return Password == RepeatedPassword;
+            }
+
+            CanTryRegister = userSimpleRegisterModelValidator.CheckIsValid(_registrationModel) &&
+                             CheckPasswordsAreMatch();
         }
 
         private async void Register()

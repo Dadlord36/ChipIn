@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mail;
 using UnityEngine;
 
 namespace DataModels
@@ -12,7 +11,7 @@ namespace DataModels
 
     public interface IUserSimpleRegistrationModel
     {
-        MailAddress Email { get; set; }
+        string Email { get; set; }
         string Password { get; set; }
     }
 

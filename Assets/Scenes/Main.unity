@@ -196,6 +196,7 @@ GameObject:
   - component: {fileID: 123328636}
   - component: {fileID: 123328635}
   - component: {fileID: 123328634}
+  - component: {fileID: 123328637}
   m_Layer: 0
   m_Name: PasswordConfirmationInputField
   m_TagString: Untagged
@@ -355,6 +356,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123328632}
   m_CullTransparentMesh: 0
+--- !u!114 &123328637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123328632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.RegistrationViewModel.RepeatedPassword
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &164259928
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,6 +577,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3a722991604e308b33497936251045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  userSimpleRegisterModelValidator: {fileID: 11400000, guid: 9dd38b68d5fc7aa4790ad37630ff11c8,
+    type: 2}
 --- !u!1 &220688644
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1532,7 @@ GameObject:
   - component: {fileID: 1061336633}
   - component: {fileID: 1061336632}
   - component: {fileID: 1061336631}
+  - component: {fileID: 1061336634}
   m_Layer: 0
   m_Name: EmailInputField
   m_TagString: Untagged
@@ -1666,6 +1692,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1061336629}
   m_CullTransparentMesh: 0
+--- !u!114 &1061336634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061336629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.RegistrationViewModel.Email
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &1072493755
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,8 +2038,9 @@ GameObject:
   - component: {fileID: 1508126206}
   - component: {fileID: 1508126205}
   - component: {fileID: 1508126208}
+  - component: {fileID: 1508126209}
   m_Layer: 0
-  m_Name: Button
+  m_Name: ConfirmRegistrationButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2110,6 +2159,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.RegistrationViewModel.TryToRegister
   viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &1508126209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508126203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.RegistrationViewModel.CanTryRegister
+  viewPropertyName: UnityEngine.UI.Button.interactable
+--- !u!1 &1575485234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1575485236}
+  - component: {fileID: 1575485235}
+  m_Layer: 0
+  m_Name: RegistrationBehaviour
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1575485235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575485234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfefdc3aa6f3450f9e9e7f1d3cf3ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  registrationViewModel: {fileID: 186398142}
+--- !u!4 &1575485236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575485234}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 462.36575, y: 314.36777, z: -154.95761}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1771565098
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,6 +2555,7 @@ GameObject:
   - component: {fileID: 1995197461}
   - component: {fileID: 1995197460}
   - component: {fileID: 1995197459}
+  - component: {fileID: 1995197462}
   m_Layer: 0
   m_Name: PasswordInputField
   m_TagString: Untagged
@@ -2605,6 +2715,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1995197457}
   m_CullTransparentMesh: 0
+--- !u!114 &1995197462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995197457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.RegistrationViewModel.Password
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &2060265027
 GameObject:
   m_ObjectHideFlags: 0
