@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Net.Mail;
+using UnityEngine;
 
 namespace DataModels
 {
-    public interface IUserRegistrationModel
+    public interface IUserRegistrationModel : IUserSimpleRegistrationModel
     {
-        MailAddress Email { get; set; }
-        string Password { get; set; }
         string Gender { get; set; }
         string Role { get; set; }
     }
 
-    [Serializable]
-    public class UserRegistrationModel : IUserRegistrationModel
+    public interface IUserSimpleRegistrationModel
     {
-        private MailAddress email;
-        private string password;
-        private string gender;
-        private string role;
+        MailAddress Email { get; set; }
+        string Password { get; set; }
+    }
 
-        public MailAddress Email
-        {
-            get => email;
-            set => email = value;
-        }
-
-        public string Password
-        {
-            get => password;
-            set => password = value;
-        }
+    [Serializable]
+    public class UserRegistrationModel : UserSimpleRegistrationModel , IUserRegistrationModel
+    {
+       [SerializeField] private string gender;
+       [SerializeField] private string role;
 
         public string Gender
         {

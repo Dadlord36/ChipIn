@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace ScriptableObjects.Validations
 {
+    [CreateAssetMenu(fileName = nameof(LoginModelValidation),
+        menuName = "Validations/" + nameof(LoginModelValidation), order = 0)]
     public class LoginModelValidation : DataModelValidation<UserLoginModel>
     {
         public override bool CheckIsValid(UserLoginModel dataModel)
@@ -11,12 +13,12 @@ namespace ScriptableObjects.Validations
             return CheckEmailIsValid(dataModel.Email) && CheckIfPasswordIsValid(dataModel.Password);
         }
 
-        private bool CheckIfPasswordIsValid(string dataModelPassword)
+        private static bool CheckIfPasswordIsValid(string dataModelPassword)
         {
             return !string.IsNullOrEmpty(dataModelPassword);
         }
 
-        private bool CheckEmailIsValid(in string email)
+        private static bool CheckEmailIsValid(in string email)
         {
             if (string.IsNullOrEmpty(email)) return false;
             if (EmailValidator.Validate(email))

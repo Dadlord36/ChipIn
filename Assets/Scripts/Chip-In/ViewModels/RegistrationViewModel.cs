@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 using DataModels;
 using HttpRequests;
 using JetBrains.Annotations;
+using ScriptableObjects.Validations;
+using UnityEngine;
 using UnityWeld.Binding;
 using Utilities.ApiExceptions;
 
@@ -18,6 +20,8 @@ namespace ViewModels
         public event Action<UserProfileModel> RegistrationSuccessfullyComplete;
 
         private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
+
+        [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
         private bool _pendingRegister;
 
         [Binding]
