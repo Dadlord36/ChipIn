@@ -13,8 +13,8 @@ namespace UI.Effects.UIGradient
             base.OnValidate();
             if(!linearGradientParameter) return;
             
-            m_color1 = linearGradientParameter.color1;
-            m_color2 = linearGradientParameter.color2;
+            m_color1 = linearGradientParameter.Color1;
+            m_color2 = linearGradientParameter.Color2;
             m_angle = linearGradientParameter.angle;
             m_ignoreRatio = linearGradientParameter.ignoreRatio;
         }

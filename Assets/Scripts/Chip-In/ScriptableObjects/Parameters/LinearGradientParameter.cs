@@ -2,13 +2,17 @@
 
 namespace ScriptableObjects.Parameters
 {
-    [CreateAssetMenu(fileName = nameof(LinearGradientParameter),menuName = "Parameters/" + nameof(LinearGradientParameter), order = 0)]
+    [CreateAssetMenu(fileName = nameof(LinearGradientParameter),
+        menuName = "Parameters/" + nameof(LinearGradientParameter), order = 0)]
     public class LinearGradientParameter : ScriptableObject
     {
-        public Color color1 = Color.white;
-        public Color color2 = Color.white;
-        [Range(-180f, 180f)]
-        public float angle = 0f;
+        [SerializeField] private ColorParameter color1;
+        [SerializeField] public ColorParameter color2;
+
+        [Range(-180f, 180f)] public float angle = 0f;
         public bool ignoreRatio = true;
+
+        public Color Color1 => color1.value;
+        public Color Color2 => color2.value;
     }
 }
