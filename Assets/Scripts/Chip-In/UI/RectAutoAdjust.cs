@@ -15,7 +15,7 @@ namespace UI
         protected override void OnEnable()
         {
 #if !UNITY_EDITOR
-            targetResolution = new Vector2Int(Screen.width,Screen.height
+            targetResolution = new Vector2Int(Screen.width, Screen.height);
 #endif
             base.OnEnable();
             Adjust();

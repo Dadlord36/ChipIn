@@ -2177,7 +2177,7 @@ MonoBehaviour:
   m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.LoginViewModel.LoginToAccount
+  viewModelMethodName: ViewModels.LoginViewModel.SwitchToRegistrationView
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &2700503480483814264
 MonoBehaviour:
@@ -2644,6 +2644,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3842122928121362739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480264465299210867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 730a1679f8f24fd9ada4c0b1de74033e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loginModelValidation: {fileID: 11400000, guid: 88bbcc2132099f046957ef9bc5d3c8fe,
+    type: 2}
+  viewsSwitcherBinding: {fileID: 11400000, guid: bbf6c21ed128b894fabc341dc032fe1e,
+    type: 2}
 --- !u!1001 &9141795468586779629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2654,7 +2670,7 @@ PrefabInstance:
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_Name
-      value: TempLoginForm
+      value: LoginForm
       objectReference: {fileID: 0}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -2768,6 +2784,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
+--- !u!224 &3561310935658724693 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 9141795468586779629}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7305302593523994766 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
@@ -2780,9 +2802,9 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 9141795468586779629}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &3561310935658724693 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+--- !u!1 &2480264465299210867 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 9141795468586779629}
   m_PrefabAsset: {fileID: 0}

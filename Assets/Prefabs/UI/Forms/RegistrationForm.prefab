@@ -720,6 +720,20 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1826589426206516567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508284282082183541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e3a722991604e308b33497936251045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userSimpleRegisterModelValidator: {fileID: 11400000, guid: 9dd38b68d5fc7aa4790ad37630ff11c8,
+    type: 2}
 --- !u!1 &3468246265309882535
 GameObject:
   m_ObjectHideFlags: 0
@@ -3440,7 +3454,7 @@ PrefabInstance:
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_Name
-      value: TempRegistrationForm
+      value: RegistrationForm
       objectReference: {fileID: 0}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -3554,21 +3568,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
+--- !u!1 &8508284282082183541 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3073419297222510827}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3537984441578134408 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3073419297222510827}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &7283593244787979859 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3073419297222510827}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2220349672652344305 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3073419297222510827}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7283593244787979859 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3073419297222510827}
   m_PrefabAsset: {fileID: 0}

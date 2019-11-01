@@ -8,15 +8,17 @@ namespace UI.Effects.UIGradient
     {
         [SerializeField] private LinearGradientParameter linearGradientParameter;
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
-            if(!linearGradientParameter) return;
-            
+            if (!linearGradientParameter) return;
+
             m_color1 = linearGradientParameter.Color1;
             m_color2 = linearGradientParameter.Color2;
             m_angle = linearGradientParameter.angle;
             m_ignoreRatio = linearGradientParameter.ignoreRatio;
         }
+#endif
     }
 }

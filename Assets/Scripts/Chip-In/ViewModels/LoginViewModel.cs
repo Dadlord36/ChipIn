@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using DataModels;
 using HttpRequests;
 using JetBrains.Annotations;
+using ScriptableObjects;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -14,7 +15,9 @@ namespace ViewModels
     public sealed class LoginViewModel : BaseViewModel, INotifyPropertyChanged
     {
         [SerializeField] private LoginModelValidation loginModelValidation;
+        [SerializeField] private ViewsSwitcherBinding viewsSwitcherBinding;
         private readonly UserLoginModel _userLoginModel = new UserLoginModel();
+
         [Binding]
         public string UserEmail
         {
@@ -25,6 +28,7 @@ namespace ViewModels
                 ValidateLoginData();
             }
         }
+
         [Binding]
         public string UserPassword
         {
@@ -35,6 +39,7 @@ namespace ViewModels
                 ValidateLoginData();
             }
         }
+
         private bool _canLogin;
 
         [Binding]
@@ -49,6 +54,7 @@ namespace ViewModels
         }
 
         private bool _pendingLogin;
+
         [Binding]
         public bool IsPendingLogin
         {
@@ -60,7 +66,6 @@ namespace ViewModels
             }
         }
 
-
         [Binding] public bool CanReceiveInput { get; private set; } = true;
 
         private void ValidateLoginData()
@@ -71,11 +76,16 @@ namespace ViewModels
         }
 
         [Binding]
+        public void SwitchToRegistrationView()
+        {
+            viewsSwitcherBinding.SwitchView<RegistrationViewModel>(this);
+        }
+
+        [Binding]
         public void LoginToAccount()
         {
             IsPendingLogin = true;
             ProcessLogin();
-            
         }
 
         private async void ProcessLogin()
@@ -92,6 +102,7 @@ namespace ViewModels
                 {
                     Debug.Log(responseData.responseMessage.ReasonPhrase);
                 }
+
                 IsPendingLogin = false;
             }
             catch (Exception e)

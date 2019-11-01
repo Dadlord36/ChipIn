@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Utilities;
 using Utilities.ApiExceptions;
 
-namespace HttpRequests
+namespace HttpRequests.RequestsProcessors
 {
     public abstract class PostRequestProcessor<TRequestModel, TResponseModel>
         where TRequestModel : class

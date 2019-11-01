@@ -73,6 +73,33 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1455154933043593122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6384883213979668518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e758a73e17f54b8ab38ae2ac6bf6ac77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  switcherBinding: {fileID: 11400000, guid: bbf6c21ed128b894fabc341dc032fe1e, type: 2}
+--- !u!114 &1926257419235475159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3646663000385292573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.WelcomeViewModel.SwitchToLoginWindow
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &806452424682016529
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +539,7 @@ PrefabInstance:
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_Name
-      value: TempAppMainFormDesign Variant
+      value: WelcomeForm
       objectReference: {fileID: 0}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -666,15 +693,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &2274779706849952475 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 301227276372529592}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5448321436287840000 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 301227276372529592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6384883213979668518 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 301227276372529592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &2274779706849952475 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 301227276372529592}
   m_PrefabAsset: {fileID: 0}
@@ -881,6 +914,12 @@ PrefabInstance:
 --- !u!224 &87635580518003233 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 609038148188589120, guid: e2c638e63262a6c4db3bf0704e557067,
+    type: 3}
+  m_PrefabInstance: {fileID: 667910297948044897}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3646663000385292573 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4314281648008083324, guid: e2c638e63262a6c4db3bf0704e557067,
     type: 3}
   m_PrefabInstance: {fileID: 667910297948044897}
   m_PrefabAsset: {fileID: 0}
