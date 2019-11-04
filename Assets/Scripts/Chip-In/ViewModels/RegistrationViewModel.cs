@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using DataModels;
 using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
+using ScriptableObjects;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -20,6 +21,7 @@ namespace ViewModels
 
         private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
+        [SerializeField] private ViewsSwitcherBinding switcherBinding;  
 
         private bool _pendingRegister;
         private bool _canTryRegister;
@@ -112,6 +114,12 @@ namespace ViewModels
         {
             RegistrationStarted?.Invoke();
             Register();
+        }
+
+        [Binding]
+        public void SwitchToLoginView()
+        {
+            switcherBinding.SwitchView<LoginViewModel>(this);
         }
 
         private void CheckIfCanRegister()

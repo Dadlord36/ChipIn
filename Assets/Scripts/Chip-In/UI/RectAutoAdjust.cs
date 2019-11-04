@@ -9,14 +9,10 @@ namespace UI
         [SerializeField, Range(1, byte.MaxValue)]
         private byte times = 1;
 
-        [SerializeField]
-        private Vector2Int targetResolution;
+        [SerializeField] private RectTransform controlRectTransform;
 
         protected override void OnEnable()
         {
-#if !UNITY_EDITOR
-            targetResolution = new Vector2Int(Screen.width, Screen.height);
-#endif
             base.OnEnable();
             Adjust();
         }
@@ -31,10 +27,14 @@ namespace UI
 
         private void Adjust()
         {
+            controlRectTransform.gameObject.SetActive(true);
+            
+            var rectSize = controlRectTransform.rect;
+            rectSize.width *= times;
             if (!TryGetComponent(out RectTransform rectTransform)) return;
-            var sizeDelta = rectTransform.sizeDelta;
-            sizeDelta.x = targetResolution.x * times;
-            rectTransform.sizeDelta = sizeDelta;
+            rectTransform.sizeDelta =  new Vector2(rectSize.width, rectSize.height);
+            rectTransform.anchoredPosition = Vector2.zero;
+            controlRectTransform.gameObject.SetActive(false);
         }
     }
 }

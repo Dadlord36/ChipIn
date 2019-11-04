@@ -10,7 +10,7 @@ namespace Behaviours
     public class ViewsSwitcher : UIBehaviour
     {
         [SerializeField] private ViewsSwitcherBinding viewsSwitcherBinding;
-        
+
         private ScrollViewController _scrollViewController;
 
         protected override void OnEnable()
