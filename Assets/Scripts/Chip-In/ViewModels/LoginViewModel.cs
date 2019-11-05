@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
 using JetBrains.Annotations;
@@ -82,13 +83,14 @@ namespace ViewModels
         }
 
         [Binding]
-        public void LoginToAccount()
+        public async void LoginToAccount()
         {
             IsPendingLogin = true;
-            ProcessLogin();
+            await ProcessLogin();
+            IsPendingLogin = false;
         }
 
-        private async void ProcessLogin()
+        private async Task ProcessLogin()
         {
             try
             {
@@ -102,12 +104,9 @@ namespace ViewModels
                 {
                     Debug.Log(responseData.responseMessage.ReasonPhrase);
                 }
-
-                IsPendingLogin = false;
             }
             catch (Exception e)
             {
-                IsPendingLogin = false;
                 Debug.Log(e);
                 throw;
             }
