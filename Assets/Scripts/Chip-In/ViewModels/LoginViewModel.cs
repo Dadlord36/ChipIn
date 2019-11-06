@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
-using HttpRequests;
+using HumbleObjects;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
@@ -84,29 +83,8 @@ namespace ViewModels
         public async Task LoginToAccount()
         {
             IsPendingLogin = true;
-            await ProcessLogin();
+            await LoginProcessor.Login(_userLoginModel);
             IsPendingLogin = false;
-        }
-
-        private async Task ProcessLogin()
-        {
-            try
-            {
-                var responseData = await new LoginRequestProcessor().SendRequest(_userLoginModel);
-                if (responseData.responseMessage.IsSuccessStatusCode)
-                {
-                    Debug.Log($"Response is successful");
-                    Debug.Log(responseData.responseData.user.ToString());
-                }
-                else
-                {
-                    Debug.Log(responseData.responseMessage.ReasonPhrase);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

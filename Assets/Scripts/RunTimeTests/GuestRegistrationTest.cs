@@ -9,17 +9,8 @@ namespace RunTimeTests
     public class GuestRegistrationTest
     {
         [Test]
-        public async Task GuestRegistrationTestSimplePasses()
+        public void  GuestRegistrationTestSimplePasses()
         {
-            try
-            {
-               await GuestRegistration.Register();
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-                throw;
-            }
         }
 
         // A UnityTest behaves like a coroutine in PlayMode
