@@ -1,4 +1,5 @@
-﻿using ScriptableObjects;
+﻿using System;
+using HttpRequests;
 using UnityEngine;
 using UnityWeld.Binding;
 
@@ -7,18 +8,23 @@ namespace ViewModels
     [Binding]
     public class WelcomeViewModel : BaseViewModel
     {
-        [SerializeField] private ViewsSwitcherBinding switcherBinding;
-        
         [Binding]
         public void SwitchToLoginWindow()
         {
-            switcherBinding.SwitchView<LoginViewModel>(this);
+            viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
         }
-        
+
         [Binding]
-        public void LoginAsGuest()
+        public async void LoginAsGuest()
         {
-//            switcherBinding.SwitchView<>(this);
+            try
+            {
+                await GuestRegistration.Register();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace Utilities
 {
@@ -7,21 +6,24 @@ namespace Utilities
     {
         public static T FindOrAttach<T>(Transform rootTransform, in string objectName) where T : Component
         {
+            T GetOrAttachComponent(GameObject gameObject)
+            {
+                if (gameObject.TryGetComponent(out T component))
+                    return component;
+                return gameObject.gameObject.AddComponent<T>();
+            }
+
             var foundObject = rootTransform.Find(objectName);
 
             if (foundObject)
-                return GetComponent<T>(foundObject);
+            {
+                return GetOrAttachComponent(foundObject.gameObject);
+            }
 
             foundObject = new GameObject(objectName).transform;
             foundObject.SetParent(rootTransform);
-            return GetComponent<T>(foundObject);
-        }
 
-        public static T GetComponent<T>(Transform owner) where T : Component
-        {
-            Assert.IsNotNull(owner);
-            Assert.IsTrue(owner.TryGetComponent(out T rectTransform));
-            return rectTransform;
+            return foundObject.gameObject.AddComponent<T>();
         }
     }
 }

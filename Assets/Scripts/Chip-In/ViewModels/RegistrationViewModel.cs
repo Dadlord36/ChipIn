@@ -1,14 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using DataModels;
-using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
-using ScriptableObjects;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities.ApiExceptions;
 
 namespace ViewModels
 {
@@ -21,7 +19,7 @@ namespace ViewModels
 
         private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
-        [SerializeField] private ViewsSwitcherBinding switcherBinding;  
+         
 
         private bool _pendingRegister;
         private bool _canTryRegister;
@@ -119,7 +117,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToLoginView()
         {
-            switcherBinding.SwitchView<LoginViewModel>(this);
+            viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
         }
 
         private void CheckIfCanRegister()
@@ -135,29 +133,29 @@ namespace ViewModels
                              CheckPasswordsAreMatch();
         }
 
-        private async void Register()
+        private async Task Register()
         {
             PendingRegister = true;
-            try
-            {
-                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
-                if (response.responseData == null)
-                {
-                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
-                }
-
-                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
-                if (response.responseMessage.IsSuccessStatusCode)
-                {
-                    PendingRegister = false;
-                }
-            }
-            catch (ApiException e)
-            {
-                RegistrationFailed?.Invoke(e.Message);
-                PendingRegister = false;
-                throw;
-            }
+//            try
+//            {
+//                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
+//                if (response.responseData == null)
+//                {
+//                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+//                }
+//
+//                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
+//                if (response.responseMessage.IsSuccessStatusCode)
+//                {
+//                    PendingRegister = false;
+//                }
+//            }
+//            catch (ApiException e)
+//            {
+//                RegistrationFailed?.Invoke(e.Message);
+//                PendingRegister = false;
+//                throw;
+//            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

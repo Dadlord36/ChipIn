@@ -7,16 +7,11 @@ namespace Behaviours
     public class ViewsCreator : MonoBehaviour
     {
         [SerializeField] private ViewsContainer viewsContainer;
-        [SerializeField] private ViewsPlacer placer;
+        [SerializeField] private ViewsSwitchingBinding viewsSwitchingBinding;
 
         public void PlaceInPreviousContainer<T>() where T : BaseViewModel
         {
-            placer.PlaceInPreviousContainer(viewsContainer.GetViewOfType<T>().ViewRootRectTransform);
-        }
-
-        public void PlaceInNextContainer<T>() where T : BaseViewModel
-        {
-            placer.PlaceInNextContainer(viewsContainer.GetViewOfType<T>().ViewRootRectTransform);
+            viewsSwitchingBinding.SwitchView<T>(null);
         }
     }
 }

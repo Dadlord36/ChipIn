@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
 using JetBrains.Annotations;
-using ScriptableObjects;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -16,7 +15,6 @@ namespace ViewModels
     public sealed class LoginViewModel : BaseViewModel, INotifyPropertyChanged
     {
         [SerializeField] private LoginModelValidation loginModelValidation;
-        [SerializeField] private ViewsSwitcherBinding viewsSwitcherBinding;
         private readonly UserLoginModel _userLoginModel = new UserLoginModel();
 
         [Binding]
@@ -79,7 +77,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToRegistrationView()
         {
-            viewsSwitcherBinding.SwitchView<RegistrationViewModel>(this);
+            viewsSwitchingBinding.SwitchView<RegistrationViewModel>(View);
         }
 
         [Binding]
@@ -108,7 +106,6 @@ namespace ViewModels
             catch (Exception e)
             {
                 Debug.Log(e);
-                throw;
             }
         }
 

@@ -1,30 +1,27 @@
-﻿using ScriptableObjects;
-using UI;
+﻿using UI;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using Views;
 
 namespace Behaviours
 {
     [RequireComponent(typeof(ScrollViewController))]
     public class ViewsSwitcher : UIBehaviour
     {
-        [SerializeField] private ViewsSwitcherBinding viewsSwitcherBinding;
-
         private ScrollViewController _scrollViewController;
 
         protected override void OnEnable()
         {
             Assert.IsTrue(TryGetComponent(out _scrollViewController));
-            viewsSwitcherBinding.ViewSwitchingRequested += SwitchViews;
         }
 
-        protected override void OnDisable()
+        private void HideView(BaseView view)
         {
-            viewsSwitcherBinding.ViewSwitchingRequested -= SwitchViews;
+            view.Hide();
         }
 
-        private void SwitchViews(ViewsSwitcherBinding.ViewsSwitchData viewsSwitchData)
+        public void SwitchViews()
         {
             _scrollViewController.BeginScrollForward();
         }

@@ -16,11 +16,27 @@ namespace DataModels
     }
 
     [Serializable]
-    public class UserRegistrationModel : UserSimpleRegistrationModel , IUserRegistrationModel
+    public struct DeviceData
     {
-       [SerializeField] private string gender;
-       [SerializeField] private string role;
+        public DeviceData(string platform, string deviceId, string deviceToken)
+        {
+            this.platform = platform;
+            this.deviceId = deviceId;
+            this.deviceToken = deviceToken;
+        }
 
+        public string platform;
+        public string deviceId;
+        public string deviceToken;
+    }
+
+    [Serializable]
+    public class UserRegistrationModel : UserSimpleRegistrationModel, IUserRegistrationModel
+    {
+        [SerializeField] private string gender;
+        [SerializeField] private string role;
+        [SerializeField] private DeviceData device;
+        
         public string Gender
         {
             get => gender;
@@ -31,6 +47,12 @@ namespace DataModels
         {
             get => role;
             set => role = value;
+        }
+
+        public DeviceData Device
+        {
+            get => device;
+            set => device = value;
         }
     }
 }

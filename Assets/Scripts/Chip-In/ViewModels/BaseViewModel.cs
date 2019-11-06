@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
+﻿using ScriptableObjects;
+using UnityEngine;
+using Views;
 
 namespace ViewModels
 {
@@ -8,14 +9,9 @@ namespace ViewModels
     /// </summary>
     public abstract class BaseViewModel : MonoBehaviour
     {
-        private RectTransform _viewRootRectTransform;
+        [SerializeField] private BaseView view;
+        [SerializeField] protected ViewsSwitchingBinding viewsSwitchingBinding;
 
-        public RectTransform ViewRootRectTransform => _viewRootRectTransform;
-
-        private void Awake()
-        {
-            Assert.IsTrue(TryGetComponent(out _viewRootRectTransform), "There is no RectTransform on GameObject," +
-                                                                       "where ViewModel is attached");
-        }
+        public BaseView View => view;
     }
 }
