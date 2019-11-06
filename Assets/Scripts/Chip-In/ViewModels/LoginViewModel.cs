@@ -81,7 +81,7 @@ namespace ViewModels
         }
 
         [Binding]
-        public async void LoginToAccount()
+        public async Task LoginToAccount()
         {
             IsPendingLogin = true;
             await ProcessLogin();

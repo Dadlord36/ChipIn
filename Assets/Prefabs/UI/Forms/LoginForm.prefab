@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6333288100836429555}
   - component: {fileID: 1499093750099594112}
   - component: {fileID: 5692405436539229295}
+  - component: {fileID: 7176793452633174659}
   m_Layer: 0
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -171,6 +172,28 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
+--- !u!114 &7176793452633174659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450445675264746045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.LoginViewModel.UserPassword
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &1048308431092489322
 GameObject:
   m_ObjectHideFlags: 0
@@ -657,6 +680,7 @@ GameObject:
   - component: {fileID: 6692220924499904454}
   - component: {fileID: 6009563289943814297}
   - component: {fileID: 4643470327259294358}
+  - component: {fileID: 4741872119350671762}
   m_Layer: 0
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -816,6 +840,28 @@ MonoBehaviour:
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
+--- !u!114 &4741872119350671762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2576012126446374899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.LoginViewModel.UserEmail
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &3685814579968903619
 GameObject:
   m_ObjectHideFlags: 0
@@ -2453,7 +2499,7 @@ MonoBehaviour:
   m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
+  viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: ViewModels.LoginViewModel.CanLogin
   viewPropertyName: UnityEngine.UI.Button.interactable
@@ -2678,7 +2724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6703861849287714464}
-  viewsSwitchingBinding: {fileID: 11400000, guid: bbf6c21ed128b894fabc341dc032fe1e,
+  viewsSwitchingBinding: {fileID: 11400000, guid: e48f4539743d4fa42af237554afc6f51,
     type: 2}
   loginModelValidation: {fileID: 11400000, guid: 88bbcc2132099f046957ef9bc5d3c8fe,
     type: 2}

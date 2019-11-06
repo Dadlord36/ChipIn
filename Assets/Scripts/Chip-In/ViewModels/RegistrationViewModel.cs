@@ -15,13 +15,9 @@ namespace ViewModels
     [Binding]
     public class RegistrationViewModel : BaseViewModel, IUserSimpleRegistrationModel, INotifyPropertyChanged
     {
-        public event Action RegistrationStarted;
-        public event Action<string> RegistrationFailed;
-        public event Action<UserProfileModel> RegistrationSuccessfullyComplete;
-
-        private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
+        private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
-         
+
 
         private bool _pendingRegister;
         private bool _canTryRegister;
@@ -90,8 +86,9 @@ namespace ViewModels
         [Binding]
         public async void TryToRegister()
         {
-            RegistrationStarted?.Invoke();
+            PendingRegister = true;
             await Register();
+            PendingRegister = false;
         }
 
         [Binding]
@@ -102,8 +99,8 @@ namespace ViewModels
 
         private void CheckIfCanRegister()
         {
-            if(string.IsNullOrEmpty(_repeatedPassword) ) return;
-            
+            if (string.IsNullOrEmpty(_repeatedPassword)) return;
+
             bool CheckPasswordsAreMatch()
             {
                 return Password == RepeatedPassword;
@@ -115,26 +112,21 @@ namespace ViewModels
 
         private async Task Register()
         {
-            PendingRegister = true;
             try
             {
-                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
+                var response = await new SimpleRegistrationRequestProcessor().SendRequest(_registrationModel);
                 if (response.responseData == null)
                 {
-                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+                    Debug.LogError("Response data is equals null");
                 }
 
-                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
-                if (response.responseMessage.IsSuccessStatusCode)
-                {
-                    PendingRegister = false;
-                }
+                Debug.Log(response.responseMessage.IsSuccessStatusCode
+                    ? "User have been registered successfully!"
+                    : response.responseMessage.ReasonPhrase);
             }
             catch (ApiException e)
             {
-                RegistrationFailed?.Invoke(e.Message);
-                PendingRegister = false;
-                throw;
+                Debug.LogException(e);
             }
         }
 
