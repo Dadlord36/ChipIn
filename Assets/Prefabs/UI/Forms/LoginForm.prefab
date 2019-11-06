@@ -55,7 +55,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450445675264746045}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -790,14 +790,14 @@ MonoBehaviour:
   m_VerticalScrollbar: {fileID: 0}
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 6
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 7
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 7
   m_RegexValue: 
   m_GlobalPointSize: 16
   m_CharacterLimit: 0
@@ -1258,7 +1258,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -101}
-  m_SizeDelta: {x: 375, y: 153}
+  m_SizeDelta: {x: 419.5, y: 153}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &434341893737573270
 CanvasRenderer:
@@ -1980,7 +1980,6 @@ GameObject:
   - component: {fileID: 2284976444198574303}
   - component: {fileID: 2485467381795419272}
   - component: {fileID: 8779550298520732735}
-  - component: {fileID: 3213012405875753196}
   - component: {fileID: 5179489872200149863}
   - component: {fileID: 2700503480483814264}
   m_Layer: 5
@@ -2089,22 +2088,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3213012405875753196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7232864823661242310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.LoginViewModel.CanLogin
-  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!114 &5179489872200149863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2884,6 +2867,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
+--- !u!224 &5379708467914883319 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 9141795468586779629}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2480264465299210867 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
@@ -2899,12 +2888,6 @@ RectTransform:
 --- !u!224 &7305302593523994766 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 9141795468586779629}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &5379708467914883319 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 9141795468586779629}
   m_PrefabAsset: {fileID: 0}
