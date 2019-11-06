@@ -4,13 +4,12 @@ using DataModels;
 using HttpRequests;
 using HumbleObjects;
 using NUnit.Framework;
-using RunTimeTests.CommonGlobal;
+using RunTimeTests.Common;
 using UnityEngine;
 using Utilities.ApiExceptions;
 
 namespace RunTimeTests
 {
-
     public class LoginTest
     {
         [Test]

@@ -3,7 +3,7 @@ using DataModels;
 using HttpRequests;
 using HumbleObjects;
 using NUnit.Framework;
-using RunTimeTests.CommonGlobal;
+using RunTimeTests.Common;
 using UnityEngine;
 using Utilities.ApiExceptions;
 
@@ -14,7 +14,8 @@ namespace RunTimeTests
         [Test]
         public void SuccessRegisterTest()
         {
-            bool successful = Task.Run(async () => await TryToRegister(UserData.correctUserSimpleRegistrationModel))
+            bool successful = Task.Run(async () =>
+                    await AsyncRegistrationHelper.TryToRegister(UserData.correctUserSimpleRegistrationModel))
                 .GetAwaiter()
                 .GetResult();
 
@@ -27,30 +28,12 @@ namespace RunTimeTests
         [Test]
         public void WrongEmailRegisterTest()
         {
-            bool successful = Task.Run(async () => await TryToRegister(UserData.wrongEmailSimpleRegistrationModel))
+            bool successful = Task.Run(async () =>
+                    await AsyncRegistrationHelper.TryToRegister(UserData.wrongEmailSimpleRegistrationModel))
                 .GetAwaiter()
                 .GetResult();
 
             Assert.IsTrue(successful);
-        }
-
-        private async Task<bool> TryToRegister(UserSimpleRegistrationModel userRegistrationModel)
-        {
-            ApiHelper.InitializeClient();
-
-            bool successful = false;
-            try
-            {
-                successful = await RegistrationProcessor.RegisterUserSimple(userRegistrationModel);
-            }
-            catch (ApiException e)
-            {
-                Debug.Log(e);
-            }
-
-            ApiHelper.Dispose();
-
-            return successful;
         }
     }
 }
