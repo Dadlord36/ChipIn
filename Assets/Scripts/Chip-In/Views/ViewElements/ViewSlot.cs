@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using Views;
 using RectTransformUtility = Utilities.RectTransformUtility;
 
-namespace Behaviours
+namespace Views.ViewElements
 {
     [RequireComponent(typeof(RectTransform))]
     public class ViewSlot : UIBehaviour

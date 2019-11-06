@@ -1,7 +1,7 @@
 ﻿using ScriptableObjects;
 using Utilities;
 
-namespace Behaviours
+namespace Views.ViewElements
 {
     public class OneSlotViewsPlace : ViewPlacer
     {

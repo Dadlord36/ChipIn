@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
+using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities.ApiExceptions;
 
 namespace ViewModels
 {
@@ -17,7 +19,7 @@ namespace ViewModels
         public event Action<string> RegistrationFailed;
         public event Action<UserProfileModel> RegistrationSuccessfullyComplete;
 
-        private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
+        private readonly UserRegistrationModel _registrationModel = new UserRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
          
 
@@ -48,28 +50,6 @@ namespace ViewModels
                 CheckIfCanRegister();
             }
         }
-
-/*        [Binding]
-        public string Gender
-        {
-            get => _registrationModel.Gender;
-            set
-            {
-                _registrationModel.Gender = value;
-                OnPropertyChanged(nameof(Gender));
-            }
-        }
-
-        [Binding]
-        public string Role
-        {
-            get => _registrationModel.Role;
-            set
-            {
-                _registrationModel.Role = value;
-                OnPropertyChanged(nameof(Role));
-            }
-        }*/
 
         [Binding]
         public bool CanTryRegister
@@ -108,10 +88,10 @@ namespace ViewModels
         }
 
         [Binding]
-        public void TryToRegister()
+        public async void TryToRegister()
         {
             RegistrationStarted?.Invoke();
-            Register();
+            await Register();
         }
 
         [Binding]
@@ -136,26 +116,26 @@ namespace ViewModels
         private async Task Register()
         {
             PendingRegister = true;
-//            try
-//            {
-//                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
-//                if (response.responseData == null)
-//                {
-//                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
-//                }
-//
-//                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
-//                if (response.responseMessage.IsSuccessStatusCode)
-//                {
-//                    PendingRegister = false;
-//                }
-//            }
-//            catch (ApiException e)
-//            {
-//                RegistrationFailed?.Invoke(e.Message);
-//                PendingRegister = false;
-//                throw;
-//            }
+            try
+            {
+                var response = await new RegistrationRequestProcessor().SendRequest(_registrationModel);
+                if (response.responseData == null)
+                {
+                    RegistrationFailed?.Invoke(response.responseMessage.ReasonPhrase);
+                }
+
+                RegistrationSuccessfullyComplete?.Invoke(response.responseData);
+                if (response.responseMessage.IsSuccessStatusCode)
+                {
+                    PendingRegister = false;
+                }
+            }
+            catch (ApiException e)
+            {
+                RegistrationFailed?.Invoke(e.Message);
+                PendingRegister = false;
+                throw;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

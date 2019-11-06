@@ -1,17 +1,12 @@
 ﻿using ScriptableObjects;
-using UnityEngine;
 using UnityEngine.Events;
 using Utilities;
-using Views;
 
-namespace Behaviours
+namespace Views.ViewElements
 {
     public class TwoSlotsViewsPlacer : ViewPlacer
     {
         public UnityEvent ViewsBeingReplaced;
-
-        [SerializeField] private ViewsSwitchingBinding viewsSwitchingBinding;
-        [SerializeField] private ViewsRetrievingBinding viewsRetrievingBinding;
 
         private ViewSlot _previousSlot, _nextSlot;
         private const string PreviousContainerName = "PreviousViewContainer", NextContainerName = "NextViewContainer";

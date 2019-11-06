@@ -1,7 +1,7 @@
 ﻿using ScriptableObjects;
 using UnityEngine;
 
-namespace Behaviours
+namespace Views.ViewElements
 {
     public abstract class ViewPlacer : MonoBehaviour
     {
