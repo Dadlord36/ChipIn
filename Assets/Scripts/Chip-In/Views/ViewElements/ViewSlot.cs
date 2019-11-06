@@ -16,6 +16,7 @@ namespace Views.ViewElements
             var rectTransform = GetComponent<RectTransform>();
             RectTransformUtility.Stretch(rectTransform);
             RectTransformUtility.ResetSize(rectTransform);
+            RectTransformUtility.ResetScale(rectTransform);
         }
 
         public void AttachView(BaseView view)
@@ -27,7 +28,6 @@ namespace Views.ViewElements
             RectTransformUtility.ResetSize(viewRectTransform);
             RectTransformUtility.ResetScale(viewRectTransform);
         }
-
 
 
         public BaseView DetachView()
