@@ -1,6 +1,4 @@
-﻿using System;
-using HttpRequests;
-using UnityEngine;
+﻿using HumbleObjects;
 using UnityWeld.Binding;
 
 namespace ViewModels
@@ -17,14 +15,7 @@ namespace ViewModels
         [Binding]
         public async void LoginAsGuest()
         {
-            try
-            {
-                await GuestRegistration.Register();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
+            await GuestRegistrationProcessor.RegisterUserAsGuest();
         }
     }
 }
