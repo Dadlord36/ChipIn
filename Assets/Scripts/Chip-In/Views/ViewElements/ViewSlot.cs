@@ -29,7 +29,6 @@ namespace Views.ViewElements
             RectTransformUtility.ResetScale(viewRectTransform);
         }
 
-
         public BaseView DetachView()
         {
             transform.DetachChildren();

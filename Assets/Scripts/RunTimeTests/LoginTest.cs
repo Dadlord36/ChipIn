@@ -15,7 +15,7 @@ namespace RunTimeTests
         [Test]
         public void LoginSuccessfulTest()
         {
-            bool successful = Task.Run(async () => await TryToLogin(UserData.correctUserLoginDataModel)).GetAwaiter()
+            var successful = Task.Run(async () => await TryToLogin(UserData.correctUserLoginDataModel)).GetAwaiter()
                 .GetResult();
 
             Assert.IsTrue(successful);
@@ -24,13 +24,13 @@ namespace RunTimeTests
         [Test]
         public void LoginWrongEmailTest()
         {
-            bool successful = Task.Run(async () => await TryToLogin(UserData.wrongEmailUserLoginDataModel)).GetAwaiter()
+            var successful = Task.Run(async () => await TryToLogin(UserData.wrongEmailUserLoginDataModel)).GetAwaiter()
                 .GetResult();
 
             Assert.False(successful);
         }
 
-        async Task<bool> TryToLogin(UserLoginModel loginModel)
+        private static async Task<bool> TryToLogin(UserLoginModel loginModel)
         {
             ApiHelper.InitializeClient();
             

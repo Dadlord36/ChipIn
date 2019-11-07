@@ -14,7 +14,6 @@ namespace HttpRequests
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
 //        private const string ApiUri = "https://reqres.in/", ApiVersion = "";
 
-
         public static void InitializeClient()
         {
             _apiClient = new HttpClient {BaseAddress = new Uri(ApiUri + ApiVersion)};
