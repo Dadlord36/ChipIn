@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
 using HttpRequests.RequestsProcessors;
+using HumbleObjects;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
@@ -97,6 +97,11 @@ namespace ViewModels
             viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
         }
 
+        private void SwitchToCheckYourEmailView()
+        {
+            viewsSwitchingBinding.SwitchView<CheckEmailViewModel>(View);
+        }
+
         private void CheckIfCanRegister()
         {
             if (string.IsNullOrEmpty(_repeatedPassword)) return;
@@ -112,21 +117,11 @@ namespace ViewModels
 
         private async Task Register()
         {
-            try
+            // If registration was successful 
+            if (await RegistrationProcessor.RegisterUserSimple(_registrationModel))
             {
-                var response = await new SimpleRegistrationRequestProcessor().SendRequest(_registrationModel);
-                if (response.responseData == null)
-                {
-                    Debug.LogError("Response data is equals null");
-                }
-
-                Debug.Log(response.responseMessage.IsSuccessStatusCode
-                    ? "User have been registered successfully!"
-                    : response.responseMessage.ReasonPhrase);
-            }
-            catch (ApiException e)
-            {
-                Debug.LogException(e);
+                Debug.Log("User have been registered successfully!");
+                SwitchToCheckYourEmailView();
             }
         }
 
