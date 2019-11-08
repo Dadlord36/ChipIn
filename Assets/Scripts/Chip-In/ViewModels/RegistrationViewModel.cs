@@ -2,18 +2,16 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
-using HttpRequests.RequestsProcessors;
 using HumbleObjects;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities.ApiExceptions;
 
 namespace ViewModels
 {
     [Binding]
-    public class RegistrationViewModel : BaseViewModel, IUserSimpleRegistrationModel, INotifyPropertyChanged
+    public sealed class RegistrationViewModel : BaseViewModel, IUserSimpleRegistrationModel, INotifyPropertyChanged
     {
         private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
@@ -128,7 +126,7 @@ namespace ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

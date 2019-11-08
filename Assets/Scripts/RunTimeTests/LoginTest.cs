@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
 using HumbleObjects;
@@ -33,7 +32,7 @@ namespace RunTimeTests
         private static async Task<bool> TryToLogin(UserLoginModel loginModel)
         {
             ApiHelper.InitializeClient();
-            
+
             bool successful = false;
             try
             {
@@ -45,7 +44,7 @@ namespace RunTimeTests
             }
 
             ApiHelper.Dispose();
-            
+
             return successful;
         }
     }
