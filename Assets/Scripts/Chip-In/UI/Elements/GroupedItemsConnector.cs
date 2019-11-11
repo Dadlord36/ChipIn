@@ -1,4 +1,5 @@
-﻿using UnityEngine.EventSystems;
+﻿using UI.Interfaces;
+using UnityEngine.EventSystems;
 
 namespace UI.Elements
 {

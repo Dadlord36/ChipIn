@@ -7,11 +7,12 @@ using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class LoginViewModel : BaseViewModel, INotifyPropertyChanged
+    public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private LoginModelValidation loginModelValidation;
         private readonly UserLoginModel _userLoginModel = new UserLoginModel();
@@ -23,6 +24,7 @@ namespace ViewModels
             set
             {
                 _userLoginModel.Email = value;
+                OnPropertyChanged(nameof(UserEmail));
                 ValidateLoginData();
             }
         }
@@ -34,6 +36,7 @@ namespace ViewModels
             set
             {
                 _userLoginModel.Password = value;
+                OnPropertyChanged(nameof(UserPassword));
                 ValidateLoginData();
             }
         }
@@ -50,7 +53,6 @@ namespace ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanLogin)));
             }
         }
-
         private bool _pendingLogin;
 
         [Binding]
@@ -76,7 +78,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToRegistrationView()
         {
-            viewsSwitchingBinding.SwitchView<RegistrationViewModel>(View);
+            SwitchToView(nameof(RegistrationView));
         }
 
         [Binding]

@@ -1,5 +1,4 @@
-﻿using ScriptableObjects;
-using UnityEngine;
+﻿using UnityEngine;
 using Views;
 
 namespace ViewModels
@@ -10,8 +9,6 @@ namespace ViewModels
     public abstract class BaseViewModel : MonoBehaviour
     {
         [SerializeField] private BaseView view;
-        [SerializeField] protected ViewsSwitchingBinding viewsSwitchingBinding;
-
         public BaseView View => view;
     }
 }

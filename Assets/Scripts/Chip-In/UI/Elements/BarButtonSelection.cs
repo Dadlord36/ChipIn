@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects.Parameters;
+using UI.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UI.Elements
 {
-    public sealed class BarButtonSelection : UIBehaviour
+    public sealed class BarButtonSelection : UIBehaviour, IViewable
     {
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
@@ -19,7 +20,7 @@ namespace UI.Elements
 
         private void ShowUpCrossFaded()
         {
-            for (int i = 0; i < selectionViewElements.Length; i++)
+            for (var i = 0; i < selectionViewElements.Length; i++)
             {
                 CrossFadeImageColor(selectionViewElements[i], 1.0f);
             }
@@ -27,13 +28,13 @@ namespace UI.Elements
 
         private void HideCrossFaded()
         {
-            for (int i = 0; i < selectionViewElements.Length; i++)
+            for (var i = 0; i < selectionViewElements.Length; i++)
             {
                 CrossFadeImageColor(selectionViewElements[i], 0.0f);
             }
         }
 
-        private void CrossFadeImageColor(Image image, float alpha)
+        private void CrossFadeImageColor(Graphic image, float alpha)
         {
             var targetColor = image.color;
             targetColor.a = alpha;

@@ -4,12 +4,13 @@ using UnityEngine.EventSystems;
 
 namespace Views
 {
-    public class BaseView : UIBehaviour
+    [DisallowMultipleComponent]
+    public abstract class BaseView: UIBehaviour
     {
         private RectTransform _viewRootRectTransform;
-
+        public string GetViewName => GetType().Name;
         public RectTransform ViewRootRectTransform => _viewRootRectTransform;
-
+        
         protected override void Awake()
         {
             Assert.IsTrue(TryGetComponent(out _viewRootRectTransform), "There is no RectTransform on GameObject," +

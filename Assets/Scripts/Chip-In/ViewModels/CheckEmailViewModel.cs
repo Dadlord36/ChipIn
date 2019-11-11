@@ -1,14 +1,15 @@
 ﻿using UnityWeld.Binding;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public class CheckEmailViewModel : BaseViewModel
+    public class CheckEmailViewModel : ViewsSwitchingViewModel
     {
         [Binding]
         public void SwitchToLoginView()
         {
-            viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
+            SwitchToView(nameof(LoginView));
         }
     }
 }

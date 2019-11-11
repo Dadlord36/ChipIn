@@ -7,11 +7,13 @@ using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class RegistrationViewModel : BaseViewModel, IUserSimpleRegistrationModel, INotifyPropertyChanged
+    public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IUserSimpleRegistrationModel,
+        INotifyPropertyChanged
     {
         private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
@@ -92,12 +94,12 @@ namespace ViewModels
         [Binding]
         public void SwitchToLoginView()
         {
-            viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
+            SwitchToView(nameof(LoginView));
         }
 
         private void SwitchToCheckYourEmailView()
         {
-            viewsSwitchingBinding.SwitchView<CheckEmailViewModel>(View);
+            SwitchToView(nameof(CheckEmailView));
         }
 
         private void CheckIfCanRegister()

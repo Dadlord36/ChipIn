@@ -2,11 +2,10 @@
 using HttpRequests;
 using UnityEngine;
 using ViewModels;
+using Views;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private ViewsCreator viewsReplacer;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -15,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        viewsReplacer.PlaceInPreviousContainer<WelcomeViewModel>();
+        ViewsCreator.PlaceInPreviousContainer<WelcomeView>();
     }
 
     private void OnDisable()

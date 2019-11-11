@@ -1,15 +1,16 @@
 ﻿using HumbleObjects;
 using UnityWeld.Binding;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public class WelcomeViewModel : BaseViewModel
+    public class WelcomeViewModel : ViewsSwitchingViewModel
     {
         [Binding]
         public void SwitchToLoginWindow()
         {
-            viewsSwitchingBinding.SwitchView<LoginViewModel>(View);
+            SwitchToView(nameof(LoginView));
         }
 
         [Binding]

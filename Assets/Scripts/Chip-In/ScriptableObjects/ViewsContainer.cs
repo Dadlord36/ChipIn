@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-using ViewModels;
+using Views;
 using Object = UnityEngine.Object;
 
 namespace ScriptableObjects
@@ -16,23 +16,25 @@ namespace ScriptableObjects
 
             public T GetInstance => _instance == null ? _instance = Instantiate(prefab) : _instance;
         }
-        
-        [Serializable]
-        private class ViewModelContainerItem : ContainerItem<BaseViewModel>{}
-        
-        [SerializeField] private ViewModelContainerItem[] viewModels;
 
-        public T GetViewOfType<T>() where T : BaseViewModel
+        [Serializable]
+        private class ViewModelContainerItem : ContainerItem<BaseView>
         {
-            for (var i = 0; i < viewModels.Length; i++)
+        }
+
+        [SerializeField] private ViewModelContainerItem[] views;
+
+        public BaseView GetViewById(in string viewId)
+        {
+            for (var i = 0; i < views.Length; i++)
             {
-                if (viewModels[i].prefab is T)
+                var view = views[i].GetInstance;
+                if (view.GetViewName == viewId)
                 {
-                    return viewModels[i].GetInstance as T;
+                    return view;
                 }
             }
-
-            return null;
+            throw new Exception($"There is no view with given ID: {viewId} in {name} views container");
         }
     }
 }

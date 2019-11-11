@@ -947,12 +947,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3a722991604e308b33497936251045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 8758043287020011927}
-  viewsSwitchingBinding: {fileID: 11400000, guid: e48f4539743d4fa42af237554afc6f51,
-    type: 2}
+  view: {fileID: 5411512456247867563}
   userSimpleRegisterModelValidator: {fileID: 11400000, guid: 9dd38b68d5fc7aa4790ad37630ff11c8,
     type: 2}
---- !u!114 &8758043287020011927
+--- !u!114 &5411512456247867563
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -961,7 +959,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8508284282082183541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ed861a3ff1a4842b0315446d6809a62, type: 3}
+  m_Script: {fileID: 11500000, guid: 7fbacbdf5cf4481c98a1653739dd5427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3468246265309882535
@@ -1647,7 +1645,6 @@ GameObject:
   - component: {fileID: 6372921878653433008}
   - component: {fileID: 2815088168289044008}
   - component: {fileID: 8913606164555284518}
-  - component: {fileID: 4336226066747123785}
   m_Layer: 5
   m_Name: CreateButton
   m_TagString: Untagged
@@ -1701,8 +1698,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: e1109bbd4ecd1b94b89ee6d372d45baf, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 3
@@ -1784,24 +1781,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.RegistrationViewModel.TryToRegister
   viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &4336226066747123785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6225594049564620467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29d4a0e4e9a42029a6bf4d2ace8bdd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_color1: {r: 0.9843137, g: 0.5529412, b: 0.105882354, a: 1}
-  m_color2: {r: 0.68235296, g: 0.38431373, b: 0.011764706, a: 1}
-  m_angle: 0
-  m_ignoreRatio: 1
-  linearGradientParameter: {fileID: 11400000, guid: 69d8030f65947ff4890d115a12575c30,
-    type: 2}
 --- !u!1 &6373873561256111329
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,7 +2216,6 @@ GameObject:
   - component: {fileID: 1445569637020737279}
   - component: {fileID: 8620680465441694758}
   - component: {fileID: 7612329167687632678}
-  - component: {fileID: 3487863500718645089}
   - component: {fileID: 6105993146845327409}
   m_Layer: 5
   m_Name: SignInButton
@@ -2292,8 +2270,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 392cf5333fb40034b96d568c80d160c4, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 3
@@ -2345,24 +2323,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3487863500718645089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7367918894929264651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29d4a0e4e9a42029a6bf4d2ace8bdd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_color1: {r: 0.13333334, g: 0.13725491, b: 0.16862746, a: 1}
-  m_color2: {r: 0.08627451, g: 0.09019608, b: 0.12156863, a: 1}
-  m_angle: 0
-  m_ignoreRatio: 1
-  linearGradientParameter: {fileID: 11400000, guid: 414f327aad4a8854eb6864dba91502db,
-    type: 2}
 --- !u!114 &6105993146845327409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3639,27 +3599,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &2220349672652344305 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3073419297222510827}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3537984441578134408 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3073419297222510827}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &7283593244787979859 stripped
+--- !u!224 &2220349672652344305 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+  m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3073419297222510827}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8508284282082183541 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3073419297222510827}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7283593244787979859 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3073419297222510827}
   m_PrefabAsset: {fileID: 0}

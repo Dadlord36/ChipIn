@@ -1,13 +1,13 @@
 ﻿using System;
+using ScriptableObjects.Interfaces;
 using UnityEngine;
-using ViewModels;
 using Views;
 
 namespace ScriptableObjects
 {
     [CreateAssetMenu(fileName = nameof(ViewsSwitchingBinding), menuName = "Bindings/" + nameof(ViewsSwitchingBinding),
         order = 0)]
-    public class ViewsSwitchingBinding : ScriptableObject
+    public class ViewsSwitchingBinding : ScriptableObject, IViewsSwitchingBinding
     {
         public struct ViewsSwitchData
         {
@@ -19,13 +19,15 @@ namespace ScriptableObjects
 
             public readonly BaseView fromView, toView;
         }
-        
+
         public event Action<ViewsSwitchData> ViewSwitchingRequested;
         [SerializeField] private ViewsContainer viewsContainer;
 
-        public void SwitchView<T>(BaseView view) where T : BaseViewModel
+        public BaseView SwitchViews(BaseView currentView, in string viewName)
         {
-            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(view, viewsContainer.GetViewOfType<T>().View));
+            var viewToSwitchTo = viewsContainer.GetViewById(viewName);
+            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(currentView, viewToSwitchTo));
+            return viewToSwitchTo;
         }
     }
 }

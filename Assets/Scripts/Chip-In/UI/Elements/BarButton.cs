@@ -1,26 +1,20 @@
-﻿using UnityEngine;
+﻿using UI.Interfaces;
+using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Elements
 {
-    public interface IGroupableSelection
+    public class BarButton : Button, IGroupableSelection
     {
-        void OnOtherItemSelected();
-        void SelectAsOneOfGroup();
+        [SerializeField] private GameObject bottomBarCovering;
+        private IViewable _bottomBarCoveringViewable;
 
-        void SubscribeOnMainEvent(IGroupableSelection groupableSelection);
-    }
-
-    public class BarButton : Button,IGroupableSelection
-    {
-        [SerializeField] private BarButtonSelection barButtonSelection;
-
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
-            Assert.IsNotNull(barButtonSelection);
+            base.Awake();
+            Assert.IsTrue(bottomBarCovering.TryGetComponent(out _bottomBarCoveringViewable));
         }
 
         public override void OnSelect(BaseEventData eventData)
@@ -40,13 +34,13 @@ namespace UI.Elements
         void IGroupableSelection.OnOtherItemSelected()
         {
             DoStateTransition(SelectionState.Normal, false);
-            barButtonSelection.Hide();
+            _bottomBarCoveringViewable.Hide();
         }
 
         void IGroupableSelection.SelectAsOneOfGroup()
         {
             DoStateTransition(SelectionState.Selected, false);
-            barButtonSelection.Show();
+            _bottomBarCoveringViewable.Show();
         }
 
         void IGroupableSelection.SubscribeOnMainEvent(IGroupableSelection groupableSelection)

@@ -1,17 +1,13 @@
-﻿using ScriptableObjects;
-using UnityEngine;
-using ViewModels;
+﻿using Factories;
+using Views;
 
 namespace Behaviours
 {
-    public class ViewsCreator : MonoBehaviour
+    public static class ViewsCreator 
     {
-        [SerializeField] private ViewsContainer viewsContainer;
-        [SerializeField] private ViewsSwitchingBinding viewsSwitchingBinding;
-
-        public void PlaceInPreviousContainer<T>() where T : BaseViewModel
+        public static void PlaceInPreviousContainer<T>() where T : BaseView
         {
-            viewsSwitchingBinding.SwitchView<T>(null);
+            Factory.CreateViewSwitchingHelper().SwitchToView(typeof(T).Name);
         }
     }
 }
