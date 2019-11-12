@@ -11,21 +11,16 @@ namespace ViewModels.Helpers
     {
         private static IViewsSwitchingHelper _instance;
 
-        #region Events
-
-        public event Action<string> SwitchedToView;
-
-        #endregion
-
         public static IViewsSwitchingHelper Instance => _instance;
 
         [SerializeField] private Object viewsSwitchingBindingObject;
-
+        [SerializeField] private BottomBarView bottomBarView;
 
         private IViewsSwitchingBinding _viewsSwitchingBinding;
-        private IActivityConnector _bottomBarActivityConnector;
+//        private IActivityConnector _bottomBarActivityConnector;
 
         private BaseView _currentView;
+        
 
         private void Awake()
         {
@@ -39,7 +34,7 @@ namespace ViewModels.Helpers
         public void SwitchToView(in string viewName)
         {
             _viewsSwitchingBinding.SwitchViews(_currentView, viewName);
-//            SwitchedToView?.Invoke();
+            bottomBarView.ChangeViewActivityBasedOnCurrentViewName(viewName);
         }
     }
 }

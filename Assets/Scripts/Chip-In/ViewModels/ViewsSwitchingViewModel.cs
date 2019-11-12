@@ -1,5 +1,4 @@
-﻿using System;
-using Factories;
+﻿using Factories;
 using ViewModels.Helpers;
 
 namespace ViewModels
@@ -17,10 +16,5 @@ namespace ViewModels
         {
             _viewsSwitchingHelper.SwitchToView(viewName);
         }
-
-        protected void SubscribeOnViewSwitched(Action<string> action)
-        {
-            _viewsSwitchingHelper.SwitchedToView += action;
-        } 
     }
 }

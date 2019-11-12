@@ -1,15 +1,16 @@
-﻿using UI.Interfaces;
+﻿using UI.Elements;
 using UnityEngine;
 
 namespace Views
 {
     public class BottomBarView : BaseView
     {
-        [SerializeField] private IGroupableSelection marketplaceSelectionView,
+        [SerializeField] private BarButtonSelection marketplaceSelectionView,
             challengesSelectionView,
             cartSelectionView,
             communitySelectionView,
             settingsSelectionView;
+
         public void ChangeViewActivityBasedOnCurrentViewName(string currentView)
         {
             switch (currentView)

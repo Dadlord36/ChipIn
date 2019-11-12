@@ -13,6 +13,6 @@ namespace ScriptableObjects.Interfaces
         /// <param name="currentView">Current view, shown on screen</param>
         /// <param name="viewIdToSwitchTo">View to be shown on screen</param>
         /// <returns>Instance of the switched view</returns>
-        BaseView SwitchViews(BaseView currentView, in string viewIdToSwitchTo);
+        void SwitchViews(BaseView currentView, in string viewIdToSwitchTo);
     }
 }

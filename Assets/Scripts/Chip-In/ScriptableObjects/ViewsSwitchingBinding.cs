@@ -23,11 +23,9 @@ namespace ScriptableObjects
         public event Action<ViewsSwitchData> ViewSwitchingRequested;
         [SerializeField] private ViewsContainer viewsContainer;
 
-        public BaseView SwitchViews(BaseView currentView, in string viewName)
+        public void SwitchViews(BaseView currentView, in string viewName)
         {
-            var viewToSwitchTo = viewsContainer.GetViewById(viewName);
-            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(currentView, viewToSwitchTo));
-            return viewToSwitchTo;
+            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(currentView, viewsContainer.GetViewById(viewName)));
         }
     }
 }

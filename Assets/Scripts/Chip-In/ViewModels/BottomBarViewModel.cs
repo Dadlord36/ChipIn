@@ -13,15 +13,7 @@ namespace ViewModels
         {
             _bottomBarView = View as BottomBarView;
             Assert.IsNotNull(_bottomBarView);
-           
         }
-
-        protected override void Start()
-        {
-            base.Start();
-//            SubscribeOnViewSwitched(_bottomBarView.ChangeViewActivityBasedOnCurrentViewName);
-        }
-
 
         [Binding]
         public void SwitchToMarketplaceView()
