@@ -53,6 +53,7 @@ namespace ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanLogin)));
             }
         }
+
         private bool _pendingLogin;
 
         [Binding]
@@ -82,11 +83,24 @@ namespace ViewModels
         }
 
         [Binding]
-        public async Task LoginToAccount()
+        public async Task LoginButton_Click()
+        {
+            await ProcessLogin();
+        }
+
+        private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            await LoginProcessor.Login(_userLoginModel);
+            var success = await LoginProcessor.Login(_userLoginModel);
             IsPendingLogin = false;
+
+            if (success)
+                SwitchToMarketplaceView();
+        }
+        
+        private void SwitchToMarketplaceView()
+        {
+            SwitchToView(nameof(MarketplaceView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

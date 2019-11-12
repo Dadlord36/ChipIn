@@ -1,4 +1,5 @@
-﻿using Factories;
+﻿using System;
+using Factories;
 using ViewModels.Helpers;
 
 namespace ViewModels
@@ -7,7 +8,7 @@ namespace ViewModels
     {
         private IViewsSwitchingHelper _viewsSwitchingHelper;
 
-        private void Start()
+        protected virtual void Start()
         {
             _viewsSwitchingHelper = Factory.CreateViewSwitchingHelper();
         }
@@ -16,5 +17,10 @@ namespace ViewModels
         {
             _viewsSwitchingHelper.SwitchToView(viewName);
         }
+
+        protected void SubscribeOnViewSwitched(Action<string> action)
+        {
+            _viewsSwitchingHelper.SwitchedToView += action;
+        } 
     }
 }

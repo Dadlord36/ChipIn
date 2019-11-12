@@ -20,6 +20,7 @@ namespace ScriptableObjects
         [Serializable]
         private class ViewModelContainerItem : ContainerItem<BaseView>
         {
+            public string ViewName => prefab.GetViewName;
         }
 
         [SerializeField] private ViewModelContainerItem[] views;
@@ -28,10 +29,9 @@ namespace ScriptableObjects
         {
             for (var i = 0; i < views.Length; i++)
             {
-                var view = views[i].GetInstance;
-                if (view.GetViewName == viewId)
+                if (views[i].ViewName == viewId)
                 {
-                    return view;
+                    return views[i].GetInstance;
                 }
             }
             throw new Exception($"There is no view with given ID: {viewId} in {name} views container");

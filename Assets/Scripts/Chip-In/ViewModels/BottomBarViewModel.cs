@@ -1,4 +1,5 @@
-﻿using UnityWeld.Binding;
+﻿using UnityEngine.Assertions;
+using UnityWeld.Binding;
 using Views;
 
 namespace ViewModels
@@ -6,16 +7,32 @@ namespace ViewModels
     [Binding]
     public class BottomBarViewModel : ViewsSwitchingViewModel
     {
+        private BottomBarView _bottomBarView;
+
+        private void Awake()
+        {
+            _bottomBarView = View as BottomBarView;
+            Assert.IsNotNull(_bottomBarView);
+           
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+//            SubscribeOnViewSwitched(_bottomBarView.ChangeViewActivityBasedOnCurrentViewName);
+        }
+
+
         [Binding]
         public void SwitchToMarketplaceView()
         {
-            SwitchToView(nameof(LoginView));
+            SwitchToView(nameof(MarketplaceView));
         }
 
         [Binding]
-        public void SwitchToChallengeView()
+        public void SwitchToChallengesView()
         {
-            SwitchToView(nameof(ChallengeView));
+            SwitchToView(nameof(ChallengesView));
         }
 
         [Binding]
