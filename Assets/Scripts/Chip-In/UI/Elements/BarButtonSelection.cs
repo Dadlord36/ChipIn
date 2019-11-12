@@ -1,4 +1,5 @@
-﻿using ScriptableObjects.Parameters;
+﻿using System;
+using ScriptableObjects.Parameters;
 using UI.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -7,23 +8,44 @@ using UnityEngine.UI;
 
 namespace UI.Elements
 {
-    public sealed class BarButtonSelection : UIBehaviour, IViewable
+    public sealed class BarButtonSelection : UIBehaviour, IGroupableSelection
     {
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
+        [SerializeField] private StateSwitchableButton stateSwitchableButton;
+        private event Action GotSelected;
 
         protected override void Awake()
         {
             base.Awake();
             Assert.IsNotNull(selectionViewElements);
+            ResetAppearance();
+        }
+
+        private void ResetAppearance()
+        {
+            for (var i = 0; i < selectionViewElements.Length; i++)
+            {
+                var color = selectionViewElements[i].color;
+                color.a = 0.0f;
+                selectionViewElements[i].color = color;
+            }
         }
 
         private void ShowUpCrossFaded()
         {
             for (var i = 0; i < selectionViewElements.Length; i++)
             {
+                MakeImageVisible(selectionViewElements[i]);
                 CrossFadeImageColor(selectionViewElements[i], 1.0f);
             }
+        }
+
+        public void MakeImageVisible(Graphic image)
+        {
+            var color = image.color;
+            color.a = 1.0f;
+            image.color = color;
         }
 
         private void HideCrossFaded()
@@ -41,14 +63,32 @@ namespace UI.Elements
             image.CrossFadeColor(targetColor, crossFadeColorTime.value, false, true);
         }
 
-        public void Show()
+        private void Show()
         {
             ShowUpCrossFaded();
+            stateSwitchableButton.SwitchButtonState(StateSwitchableButton.ButtonSelectionSate.Selected);
         }
 
-        public void Hide()
+        private void Hide()
         {
             HideCrossFaded();
+            stateSwitchableButton.SwitchButtonState(StateSwitchableButton.ButtonSelectionSate.Normal);
+        }
+
+        public void OnOtherItemSelected()
+        {
+            Hide();
+        }
+
+        public void SelectAsOneOfGroup()
+        {
+            Show();
+            GotSelected?.Invoke();
+        }
+
+        public void SubscribeOnMainEvent(Action onOtherItemInGroupSelected)
+        {
+            GotSelected += onOtherItemInGroupSelected;
         }
     }
 }

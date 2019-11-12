@@ -22,7 +22,7 @@ namespace UI.Elements
                 for (int i = 0; i < _groupableSelections.Length; i++)
                 {
                     if (i == indexInArray) continue;
-                    _groupableSelections[indexInArray].SubscribeOnMainEvent(_groupableSelections[i]);
+                    _groupableSelections[indexInArray].SubscribeOnMainEvent(_groupableSelections[i].OnOtherItemSelected);
                 }
             }
         }

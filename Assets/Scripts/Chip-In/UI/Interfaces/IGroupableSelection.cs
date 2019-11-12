@@ -1,10 +1,12 @@
-﻿namespace UI.Interfaces
+﻿using System;
+
+namespace UI.Interfaces
 {
     public interface IGroupableSelection
     {
         void OnOtherItemSelected();
         void SelectAsOneOfGroup();
 
-        void SubscribeOnMainEvent(IGroupableSelection groupableSelection);
+        void SubscribeOnMainEvent(Action onOtherItemInGroupSelected);
     }
 }
