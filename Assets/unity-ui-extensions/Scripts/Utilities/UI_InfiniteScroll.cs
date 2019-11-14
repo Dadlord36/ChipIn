@@ -37,7 +37,7 @@ namespace UnityEngine.UI.Extensions
         private List<RectTransform> items = new List<RectTransform>();
         private Vector2 _newAnchoredPosition = Vector2.zero;
         //TO DISABLE FLICKERING OBJECT WHEN SCROLL VIEW IS IDLE IN BETWEEN OBJECTS
-        private float _treshold = 100f;
+        private float _treshold = 10f;
         private int _itemCount = 0;
         private float _recordOffsetX = 0;
         private float _recordOffsetY = 0;

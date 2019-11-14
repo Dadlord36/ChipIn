@@ -1,8 +1,6 @@
 ﻿using Behaviours;
 using HttpRequests;
-using ScriptableObjects.ActionsConnectors;
 using UnityEngine;
-using ViewModels;
 using Views;
 
 public class GameManager : MonoBehaviour

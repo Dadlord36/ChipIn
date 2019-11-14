@@ -1,0 +1,74 @@
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
+using Views.ViewElements.Interfaces;
+
+namespace Views.ViewElements
+{
+    [DisallowMultipleComponent]
+    public class ScrollItemsUpdater : UIBehaviour
+    {
+        [SerializeField] private Transform rectTransformMiddle;
+        private Transform[] _contentItems;
+        private float _endX;
+
+        private IContentItemUpdater[] _contentItemsUpdaters;
+        private IContentItemCanvasReceiver[] _contentItemsCanvasReceivers;
+
+        private Vector3 _tempItemScale;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            var objectTransform = transform;
+
+            var childCount = objectTransform.childCount;
+            _contentItems = new Transform[childCount];
+            _contentItemsUpdaters = GetComponents<IContentItemUpdater>();
+            _contentItemsCanvasReceivers = GetComponents<IContentItemCanvasReceiver>();
+
+            for (int i = 0; i < objectTransform.childCount; i++)
+            {
+                _contentItems[i] = objectTransform.GetChild(i);
+            }
+
+            var rectTransform = transform as RectTransform;
+            var rect = rectTransform.rect;
+
+            _endX = rect.width;
+        }
+
+        private void Update()
+        {
+            for (int i = 0; i < _contentItems.Length; i++)
+            {
+                SendDataToContentItemControllers(_contentItems[i],
+                    Mathf.Clamp01(GetItemPathPercentage(_contentItems[i])));
+            }
+
+            void SendDataToContentItemControllers(Transform item, float pathPercentage)
+            {
+                for (int i = 0; i < _contentItemsUpdaters.Length; i++)
+                {
+                    _contentItemsUpdaters[i].UpdateContentItem(item, pathPercentage);
+                }
+
+                for (int i = 0; i < _contentItemsCanvasReceivers.Length; i++)
+                {
+                    if (item.TryGetComponent(out Canvas canvas))
+                        _contentItemsCanvasReceivers[i].UpdateContentItemCanvas(item, canvas, pathPercentage);
+                }
+            }
+        }
+
+        private float GetItemPathPercentage(Transform item)
+        {
+            float GetControlParameter()
+            {
+                return item.position.x - rectTransformMiddle.position.x;
+            }
+
+            var point = Mathf.Abs(GetControlParameter());
+            return 1f - (point / _endX);
+        }
+    }
+}
