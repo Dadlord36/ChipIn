@@ -21,7 +21,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToPreviousView()
         {
-            
+            _viewsSwitchingHelper.SwitchToPreviousView();
         }
     }
 }

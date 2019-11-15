@@ -11,5 +11,11 @@ namespace ViewModels
         {
             SwitchToView(nameof(GamesView));
         }
+
+        [Binding]
+        public void SwitchToProductMenu()
+        {
+            SwitchToView(nameof(ProductMenuView));
+        }
     }
 }

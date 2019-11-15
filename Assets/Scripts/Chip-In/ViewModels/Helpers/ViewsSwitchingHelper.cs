@@ -1,9 +1,7 @@
-﻿using System;
-using ScriptableObjects.Interfaces;
+﻿using ScriptableObjects.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Views;
-using Object = UnityEngine.Object;
 
 namespace ViewModels.Helpers
 {
@@ -20,7 +18,8 @@ namespace ViewModels.Helpers
 //        private IActivityConnector _bottomBarActivityConnector;
 
         private BaseView _currentView;
-        
+        private string _previousViewName, _currentViewName;
+
 
         private void Awake()
         {
@@ -31,10 +30,18 @@ namespace ViewModels.Helpers
         }
 
 
-        public void SwitchToView(in string viewName)
+        public void SwitchToView(string viewName)
         {
+            _previousViewName = _currentViewName;
+            _currentViewName = viewName;
+
             _viewsSwitchingBinding.SwitchViews(_currentView, viewName);
-            bottomBarView.ChangeViewActivityBasedOnCurrentViewName(viewName);
+            bottomBarView.SwitchSelectedButton(viewName);
+        }
+
+        public void SwitchToPreviousView()
+        {
+            SwitchToView(_previousViewName);
         }
     }
 }

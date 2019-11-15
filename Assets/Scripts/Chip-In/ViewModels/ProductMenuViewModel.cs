@@ -11,7 +11,5 @@ namespace ViewModels
         {
             SwitchToView(nameof(ProductMenuView));
         }
-
-
     }
 }

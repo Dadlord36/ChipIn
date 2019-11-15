@@ -2,6 +2,7 @@
 {
     public interface IViewsSwitchingHelper
     {
-        void SwitchToView(in string typeOfView);
+        void SwitchToView(string typeOfView);
+        void SwitchToPreviousView();
     }
 }

@@ -3,7 +3,7 @@
     public class BottomBarView : BaseView
     {
 
-        public void ChangeViewActivityBasedOnCurrentViewName(string currentView)
+        public void SwitchSelectedButton(string currentView)
         {
             switch (currentView)
             {
