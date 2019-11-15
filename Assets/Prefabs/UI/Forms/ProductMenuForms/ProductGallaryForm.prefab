@@ -947,8 +947,8 @@ MonoBehaviour:
   m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelMethodName: 
-  viewEventName: 
+  viewModelMethodName: ViewModels.ProductGalleryViewModel.SwitchToPreviousView
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &3006472626321672978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,7 +1095,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 345}
+  m_SizeDelta: {x: 90, y: 690}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4891808488976296661
 CanvasRenderer:
@@ -1788,7 +1788,7 @@ GameObject:
   - component: {fileID: 3328944575783117782}
   - component: {fileID: 7514995062020518235}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

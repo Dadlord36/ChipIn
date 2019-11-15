@@ -9,8 +9,8 @@ namespace Views.ViewElements
     {
         [SerializeField] private Transform rectTransformMiddle;
         private Transform[] _contentItems;
-        private float _endX;
 
+        private RectTransform rectTransform;
         private IContentItemUpdater[] _contentItemsUpdaters;
         private IContentItemCanvasReceiver[] _contentItemsCanvasReceivers;
 
@@ -30,11 +30,7 @@ namespace Views.ViewElements
             {
                 _contentItems[i] = objectTransform.GetChild(i);
             }
-
-            var rectTransform = transform as RectTransform;
-            var rect = rectTransform.rect;
-
-            _endX = rect.width;
+            rectTransform = transform as RectTransform;
         }
 
         private void Update()
@@ -68,7 +64,7 @@ namespace Views.ViewElements
             }
 
             var point = Mathf.Abs(GetControlParameter());
-            return 1f - (point / _endX);
+            return 1f - (point / rectTransform.rect.width);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToProductGallery()
         {
-            SwitchToView(nameof(ProductMenuView));
+            SwitchToView(nameof(ProductGalleryView));
         }
     }
 }
