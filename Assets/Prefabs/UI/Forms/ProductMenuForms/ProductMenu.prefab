@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 4617122743309073568}
   - component: {fileID: 821202211936384693}
   - component: {fileID: 5329731219890819756}
+  - component: {fileID: 6112549564637245467}
   m_Layer: 5
   m_Name: GalleryButton
   m_TagString: Untagged
@@ -303,6 +304,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6112549564637245467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2907865701301641374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.ProductMenuViewModel.SwitchToProductGallery
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &3006472626321672978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,6 +1094,20 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5935840782837651228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8858336980473145823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.ProductMenuViewModel.SwitchToPreviousView
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1001 &4737509912947028686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1244,15 +1273,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f014e48fe7b754c408ad10ee0e3266e5, type: 3}
---- !u!1 &1652249271361515729 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6292359768677794335, guid: f014e48fe7b754c408ad10ee0e3266e5,
-    type: 3}
-  m_PrefabInstance: {fileID: 4737509912947028686}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5728415361813678502 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1062971839570180968, guid: f014e48fe7b754c408ad10ee0e3266e5,
+    type: 3}
+  m_PrefabInstance: {fileID: 4737509912947028686}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1652249271361515729 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6292359768677794335, guid: f014e48fe7b754c408ad10ee0e3266e5,
     type: 3}
   m_PrefabInstance: {fileID: 4737509912947028686}
   m_PrefabAsset: {fileID: 0}
@@ -1385,6 +1414,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a97b7fa45e995ca4d8f37e4bc5e26ed3, type: 3}
+--- !u!1 &8858336980473145823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2183935672045270258, guid: a97b7fa45e995ca4d8f37e4bc5e26ed3,
+    type: 3}
+  m_PrefabInstance: {fileID: 7251296094020246829}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7688300194149487256 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1014316150417903541, guid: a97b7fa45e995ca4d8f37e4bc5e26ed3,
