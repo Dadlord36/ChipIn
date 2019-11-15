@@ -6,11 +6,15 @@ namespace Common
 {
     public static class PredefinedUserData
     {
-        public static UserRegistrationModel guestDataModel = new UserRegistrationModel
+        public static readonly UserRegistrationModel GuestDataModel = new UserRegistrationModel
         {
+            Email = "",
+            Password = "",
+            Gender = "",
+            Role = "guest",
             Device = new DeviceData
             {
-                platform = Application.platform.ToString(), deviceId = DeviceUtility.GetDeviceId(),
+                platform = "android", deviceId = DeviceUtility.GetDeviceId(),
                 deviceToken = DeviceUtility.GetDeviceToken()
             }
         };
