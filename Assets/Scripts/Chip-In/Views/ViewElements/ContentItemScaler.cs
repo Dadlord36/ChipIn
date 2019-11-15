@@ -7,12 +7,16 @@ namespace Views.ViewElements
     [DisallowMultipleComponent]
     public class ContentItemScaler : UIBehaviour, IContentItemUpdater
     {
-        private Vector3 scale;
+        [SerializeField] private float minScale, maxScale;
+
+        private float clampedPercentage;
+        private Vector3 tempScale;
 
         public void UpdateContentItem(Transform contentItem, float pathPercentage)
         {
-            scale.Set(pathPercentage, pathPercentage, pathPercentage);
-            contentItem.localScale = scale;
+            clampedPercentage = Mathf.Clamp(pathPercentage, minScale, maxScale);
+            tempScale.Set(clampedPercentage, clampedPercentage, clampedPercentage);
+            contentItem.localScale = tempScale;
         }
     }
 }
