@@ -9,7 +9,7 @@
                 case nameof(MarketplaceView):
                     Show();
                     return;
-                case nameof(ChallengesView):
+                case nameof(MyChallengeView):
                     Show();
                     return;
                 case nameof(CartView):

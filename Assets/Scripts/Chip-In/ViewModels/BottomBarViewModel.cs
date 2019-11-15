@@ -24,7 +24,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToChallengesView()
         {
-            SwitchToView(nameof(ChallengesView));
+            SwitchToView(nameof(MyChallengeView));
         }
 
         [Binding]
