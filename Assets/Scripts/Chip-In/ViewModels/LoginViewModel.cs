@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Behaviours.Games;
 using DataModels;
 using HumbleObjects;
 using JetBrains.Annotations;
@@ -95,12 +96,12 @@ namespace ViewModels
             IsPendingLogin = false;
 
             if (success)
-                SwitchToMarketplaceView();
+                SwitchToMiniGame();
         }
         
-        private void SwitchToMarketplaceView()
+        private void SwitchToMiniGame()
         {
-            SwitchToView(nameof(MarketplaceView));
+            SwitchToView(nameof(CoinsGame));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

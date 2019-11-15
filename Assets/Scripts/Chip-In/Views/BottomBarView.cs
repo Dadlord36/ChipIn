@@ -2,7 +2,6 @@
 {
     public class BottomBarView : BaseView
     {
-
         public void SwitchSelectedButton(string currentView)
         {
             switch (currentView)
@@ -10,7 +9,7 @@
                 case nameof(MarketplaceView):
                     Show();
                     return;
-                case nameof(ChallengesView) :
+                case nameof(ChallengesView):
                     Show();
                     return;
                 case nameof(CartView):
@@ -23,6 +22,7 @@
                     Show();
                     return;
             }
+
             Hide();
         }
     }

@@ -13,14 +13,15 @@ namespace ViewModels
             SwitchToView(nameof(LoginView));
         }
 
+
         [Binding]
         public async void LoginAsGuest()
         {
-           bool success = await GuestRegistrationProcessor.RegisterUserAsGuest();
-           if (success)
-           {
-               SwitchToView(nameof(MarketplaceView));
-           }
+            bool success = await GuestRegistrationProcessor.RegisterUserAsGuest();
+            if (success)
+            {
+                SwitchToView(nameof(CoinsGameView));
+            }
         }
     }
 }
