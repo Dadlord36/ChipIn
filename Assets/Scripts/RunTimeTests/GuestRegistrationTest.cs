@@ -11,7 +11,7 @@ namespace RunTimeTests
         public void GuestRegistrationTestSimplePasses()
         {
             bool successful = Task.Run(async () =>
-                    await AsyncRegistrationHelper.TryToRegister(PredefinedUserData.guestDataModel))
+                    await AsyncRegistrationHelper.TryToRegister(PredefinedUserData.GuestDataModel))
                 .GetAwaiter().GetResult();
 
             Assert.IsTrue(successful);

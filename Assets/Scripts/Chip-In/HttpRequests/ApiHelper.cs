@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace HttpRequests
@@ -34,7 +35,7 @@ namespace HttpRequests
 
         public static async Task<HttpResponseMessage> PostAsync(string requestSuffix, object content)
         {
-            var json = JsonUtility.ToJson(content);
+            var json =JsonConvert.SerializeObject(content);
             return await _apiClient.PostAsync(requestSuffix, new StringContent(json, Encoding.UTF8, JsonMediaTypeHeader));
         }
         

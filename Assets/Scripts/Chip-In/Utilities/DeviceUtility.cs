@@ -6,12 +6,13 @@ namespace Utilities
     {
         public static string GetDeviceToken()
         {
-            return string.Empty;
+            return "m6aHiiHOc";
         }
 
         public static string GetDeviceId()
         {
-            return SystemInfo.deviceUniqueIdentifier;
+            return "UVr864F8zUbyYOAUd4cFOW9hpsZuGn";
+//            return SystemInfo.deviceUniqueIdentifier;
         }
     }
 }

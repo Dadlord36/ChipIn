@@ -16,7 +16,11 @@ namespace ViewModels
         [Binding]
         public async void LoginAsGuest()
         {
-            await GuestRegistrationProcessor.RegisterUserAsGuest();
+           bool success = await GuestRegistrationProcessor.RegisterUserAsGuest();
+           if (success)
+           {
+               SwitchToView(nameof(MarketplaceView));
+           }
         }
     }
 }

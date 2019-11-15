@@ -1,4 +1,6 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
 namespace DataModels
@@ -15,7 +17,7 @@ namespace DataModels
         string Password { get; set; }
     }
 
-    [Serializable]
+
     public struct DeviceData
     {
         public DeviceData(string platform, string deviceId, string deviceToken)
@@ -25,34 +27,21 @@ namespace DataModels
             this.deviceToken = deviceToken;
         }
 
-        public string platform;
-        public string deviceId;
-        public string deviceToken;
+        [JsonProperty] public string platform;
+        [JsonProperty("device_id")] public string deviceId;
+        [JsonProperty("device_token")] public string deviceToken;
     }
 
-    [Serializable]
+
     public class UserRegistrationModel : UserSimpleRegistrationModel, IUserRegistrationModel
     {
-        [SerializeField] private string gender;
-        [SerializeField] private string role;
-        [SerializeField] private DeviceData device;
-        
-        public string Gender
-        {
-            get => gender;
-            set => gender = value;
-        }
+        [JsonProperty("gender")]
+        public string Gender { get; set; }
 
-        public string Role
-        {
-            get => role;
-            set => role = value;
-        }
+        [JsonProperty("role")]
+        public string Role { get; set; }
 
-        public DeviceData Device
-        {
-            get => device;
-            set => device = value;
-        }
+        [JsonProperty("device")]
+        public DeviceData Device { get; set; }
     }
 }
