@@ -1,6 +1,7 @@
-﻿using Factories;
+﻿using System;
+using Factories;
 using UnityWeld.Binding;
-using ViewModels.Helpers;
+using ViewModels.Interfaces;
 
 namespace ViewModels
 {
@@ -15,10 +16,9 @@ namespace ViewModels
 
         protected void SwitchToView(in string viewName)
         {
-            _viewsSwitchingHelper.SwitchToView(viewName);
+            _viewsSwitchingHelper.RequestSwitchToView(viewName);
         }
-        
-        [Binding]
+
         public void SwitchToPreviousView()
         {
             _viewsSwitchingHelper.SwitchToPreviousView();

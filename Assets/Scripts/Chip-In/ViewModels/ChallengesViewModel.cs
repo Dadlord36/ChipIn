@@ -5,6 +5,5 @@ namespace ViewModels
     [Binding]
     public class ChallengesViewModel : ViewsSwitchingViewModel
     {
-        
     }
 }

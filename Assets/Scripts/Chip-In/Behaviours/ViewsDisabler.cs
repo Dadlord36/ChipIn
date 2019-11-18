@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using Views;
 

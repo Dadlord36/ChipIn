@@ -517,20 +517,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6904810008941185216}
---- !u!114 &4887685413818803589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5724872139003257817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.ChallengesViewModel.SwitchToPreviousView
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &5134966592997609439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,21 +1067,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!1 &7577433387335682968 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3863514999743777286}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5724872139003257817 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8858336980473145823, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3863514999743777286}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8804407023754933438 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3863514999743777286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7577433387335682968 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}
@@ -1345,7 +1325,7 @@ PrefabInstance:
     - target: {fileID: 7516232244691950126, guid: ff9a32205f46c9141bbe812a8148f34d,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7516232244691950126, guid: ff9a32205f46c9141bbe812a8148f34d,
         type: 3}
@@ -1550,6 +1530,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7516232244691950126, guid: ff9a32205f46c9141bbe812a8148f34d,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff9a32205f46c9141bbe812a8148f34d, type: 3}

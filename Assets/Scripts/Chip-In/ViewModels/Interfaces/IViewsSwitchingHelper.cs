@@ -1,8 +1,8 @@
-﻿namespace ViewModels.Helpers
+﻿namespace ViewModels.Interfaces
 {
     public interface IViewsSwitchingHelper
     {
-        void SwitchToView(string typeOfView);
+        void RequestSwitchToView(string typeOfView);
         void SwitchToPreviousView();
     }
 }

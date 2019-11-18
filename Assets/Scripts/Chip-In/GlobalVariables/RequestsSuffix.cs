@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace.GlobalVarialbles
+﻿namespace GlobalVariables
 {
     public class RequestsSuffixes
     {

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
+using HttpRequests.RequestsProcessors;
 using UnityEngine;
 
 namespace HumbleObjects

@@ -3,11 +3,11 @@ using ScriptableObjects.Interfaces;
 using UnityEngine;
 using Views;
 
-namespace ScriptableObjects
+namespace ScriptableObjects.SwitchBindings
 {
-    [CreateAssetMenu(fileName = nameof(ViewsSwitchingBinding), menuName = "Bindings/" + nameof(ViewsSwitchingBinding),
+    [CreateAssetMenu(fileName = nameof(MultiViewsSwitchingBinding), menuName = nameof(SwitchBindings)+"/"+ nameof(MultiViewsSwitchingBinding),
         order = 0)]
-    public class ViewsSwitchingBinding : ScriptableObject, IViewsSwitchingBinding
+    public class MultiViewsSwitchingBinding : ScriptableObject, IMultiViewsSwitchingBinding
     {
         public struct ViewsSwitchData
         {
@@ -23,9 +23,9 @@ namespace ScriptableObjects
         public event Action<ViewsSwitchData> ViewSwitchingRequested;
         [SerializeField] private ViewsContainer viewsContainer;
 
-        public void SwitchViews(BaseView currentView, in string viewName)
+        public void SwitchViews(BaseView currentView, in string viewNameToSwitchTo)
         {
-            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(currentView, viewsContainer.GetViewById(viewName)));
+            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(currentView, viewsContainer.GetViewById(viewNameToSwitchTo)));
         }
     }
 }

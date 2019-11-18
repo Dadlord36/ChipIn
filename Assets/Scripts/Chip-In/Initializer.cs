@@ -1,25 +1,22 @@
 ﻿using UnityEngine;
 
-namespace DefaultNamespace
+public class Initializer : MonoBehaviour
 {
-    public class Initializer : MonoBehaviour
-    {
-        [SerializeField] private Object[] objectsToInitialize;
+    [SerializeField] private Object[] objectsToInitialize;
 
-        private void Awake()
+    private void Awake()
+    {
+        foreach (var o in objectsToInitialize)
         {
-            foreach (var o in objectsToInitialize)
+            if (o is IInitialize initializer)
             {
-                if (o is IInitialize initializer)
-                {
-                    initializer.Initialize();
-                }
+                initializer.Initialize();
             }
         }
     }
+}
 
-    public interface IInitialize
-    {
-        void Initialize();
-    }
+public interface IInitialize
+{
+    void Initialize();
 }

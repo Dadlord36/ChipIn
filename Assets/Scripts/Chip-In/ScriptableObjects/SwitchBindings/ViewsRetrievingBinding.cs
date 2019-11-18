@@ -2,10 +2,10 @@
 using UnityEngine;
 using Views;
 
-namespace ScriptableObjects
+namespace ScriptableObjects.SwitchBindings
 {
-    [CreateAssetMenu(fileName = nameof(ViewsRetrievingBinding), menuName = "Bindings/" + nameof(ViewsRetrievingBinding),
-        order = 0)]
+    [CreateAssetMenu(fileName = nameof(ViewsRetrievingBinding),
+        menuName = nameof(SwitchBindings) + "/" + nameof(ViewsRetrievingBinding), order = 0)]
     public class ViewsRetrievingBinding : ScriptableObject
     {
         public event Action<BaseView> ViewBeingRetrieved;

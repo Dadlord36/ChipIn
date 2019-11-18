@@ -1,29 +1,22 @@
-﻿namespace Views
-{
-    public class BottomBarView : BaseView
-    {
-        public void SwitchSelectedButton(string currentView)
-        {
-            switch (currentView)
-            {
-                case nameof(MarketplaceView):
-                    Show();
-                    return;
-                case nameof(MyChallengeView):
-                    Show();
-                    return;
-                case nameof(CartView):
-                    Show();
-                    return;
-                case nameof(CommunityView):
-                    Show();
-                    return;
-                case nameof(SettingsView):
-                    Show();
-                    return;
-            }
+﻿using GlobalVariables;
+using ScriptableObjects;
+using ScriptableObjects.SwitchBindings;
 
-            Hide();
+namespace Views
+{
+    public class BottomBarView : MultiViewsSwitch
+    {
+        
+        protected override void SwitchTo(MultiViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
+        {
+            var viewName = viewsSwitchData.toView.GetViewName;
+            if (ViewsNames.IsMainView(viewName))
+            {
+                Show();
+                selectionOptionsDictionary[viewName].SelectAsOneOfGroup();
+            }
+            else
+                Hide();
         }
     }
 }

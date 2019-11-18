@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine.Events;
 using Utilities;
 
@@ -17,7 +18,7 @@ namespace Views.ViewElements
             _nextSlot = GameObjectsUtility.FindOrAttach<ViewSlot>(transform, NextContainerName);
         }
 
-        protected override void ReplaceCurrentViewsWithGiven(ViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
+        protected override void ReplaceCurrentMultiViewsWithGiven(MultiViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
         {
             ReleaseAllSlots();
 

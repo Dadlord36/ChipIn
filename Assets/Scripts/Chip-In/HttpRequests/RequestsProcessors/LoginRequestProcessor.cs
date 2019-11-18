@@ -1,7 +1,6 @@
 ﻿using DataModels;
-using HttpRequests.RequestsProcessors;
 
-namespace HttpRequests
+namespace HttpRequests.RequestsProcessors
 {
     public class LoginRequestProcessor : PostRequestProcessor<UserLoginModel,LoginResponseModel>
     {

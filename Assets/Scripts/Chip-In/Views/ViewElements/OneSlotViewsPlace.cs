@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects;
+using ScriptableObjects.SwitchBindings;
 using Utilities;
 
 namespace Views.ViewElements
@@ -13,7 +14,7 @@ namespace Views.ViewElements
             _viewSlot = GameObjectsUtility.FindOrAttach<ViewSlot>(transform, ViewSlotName);
         }
 
-        protected override void ReplaceCurrentViewsWithGiven(ViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
+        protected override void ReplaceCurrentMultiViewsWithGiven(MultiViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
         {
             ReleaseSingleSlot(_viewSlot);
             _viewSlot.AttachView(viewsSwitchData.toView);

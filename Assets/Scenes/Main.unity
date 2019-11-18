@@ -157,7 +157,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewsSwitchingBindingObject: {fileID: 11400000, guid: e48f4539743d4fa42af237554afc6f51,
     type: 2}
-  bottomBarView: {fileID: 1236468467}
 --- !u!4 &178609294
 Transform:
   m_ObjectHideFlags: 0
@@ -284,6 +283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CoinsViewElement
+      objectReference: {fileID: 0}
+    - target: {fileID: 694000514922049534, guid: f0adb508c926b204280827051a9db4c2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3989202765335166004, guid: f0adb508c926b204280827051a9db4c2,
         type: 3}
@@ -978,18 +982,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1236468467 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 613090615860159955, guid: 6569e9f23f022854e9770bd50cae515c,
-    type: 3}
-  m_PrefabInstance: {fileID: 794907391}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70489275fca64de1b9310c2c81bd22f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2060265027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,6 +1152,12 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3954393144151092441, guid: 94dcea65e8192544e8b691c453afb932,
+        type: 3}
+      propertyPath: multiViewsSwitchingBinding
+      value: 
+      objectReference: {fileID: 11400000, guid: e48f4539743d4fa42af237554afc6f51,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 3954393146191295996, guid: 94dcea65e8192544e8b691c453afb932, type: 3}
     - {fileID: 3954393146191295999, guid: 94dcea65e8192544e8b691c453afb932, type: 3}

@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.Events;
 
 namespace UI.Interfaces
 {
@@ -7,6 +8,6 @@ namespace UI.Interfaces
         void OnOtherItemSelected();
         void SelectAsOneOfGroup();
 
-        void SubscribeOnMainEvent(Action onOtherItemInGroupSelected);
+        void SubscribeOnMainEvent(UnityAction onOtherItemInGroupSelected);
     }
 }

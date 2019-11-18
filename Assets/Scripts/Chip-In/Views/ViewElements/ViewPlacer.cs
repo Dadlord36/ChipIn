@@ -1,21 +1,22 @@
 ﻿using ScriptableObjects;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 
 namespace Views.ViewElements
 {
     public abstract class ViewPlacer : MonoBehaviour
     {
-        [SerializeField] private ViewsSwitchingBinding viewsSwitchingBinding;
+        [SerializeField] private MultiViewsSwitchingBinding multiViewsSwitchingBinding;
         [SerializeField] private ViewsRetrievingBinding viewsRetrievingBinding;
 
         private void OnEnable()
         {
-            viewsSwitchingBinding.ViewSwitchingRequested += ReplaceCurrentViewsWithGiven;
+            multiViewsSwitchingBinding.ViewSwitchingRequested += ReplaceCurrentMultiViewsWithGiven;
         }
 
         private void OnDisable()
         {
-            viewsSwitchingBinding.ViewSwitchingRequested -= ReplaceCurrentViewsWithGiven;
+            multiViewsSwitchingBinding.ViewSwitchingRequested -= ReplaceCurrentMultiViewsWithGiven;
         }
 
         protected void ReleaseSingleSlot(ViewSlot slot)
@@ -26,6 +27,6 @@ namespace Views.ViewElements
             }
         }
 
-        protected abstract void ReplaceCurrentViewsWithGiven(ViewsSwitchingBinding.ViewsSwitchData viewsSwitchData);
+        protected abstract void ReplaceCurrentMultiViewsWithGiven(MultiViewsSwitchingBinding.ViewsSwitchData viewsSwitchData);
     }
 }

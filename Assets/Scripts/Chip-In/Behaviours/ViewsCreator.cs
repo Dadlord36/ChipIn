@@ -7,7 +7,7 @@ namespace Behaviours
     {
         public static void PlaceInPreviousContainer<T>() where T : BaseView
         {
-            Factory.CreateViewSwitchingHelper().SwitchToView(typeof(T).Name);
+            Factory.CreateViewSwitchingHelper().RequestSwitchToView(typeof(T).Name);
         }
     }
 }

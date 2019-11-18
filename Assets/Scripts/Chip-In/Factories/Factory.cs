@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using ViewModels.Helpers;
+using ViewModels.Interfaces;
 
 namespace Factories
 {
@@ -7,7 +8,7 @@ namespace Factories
     {
         public static IViewsSwitchingHelper CreateViewSwitchingHelper()
         {
-            return ViewsSwitchingHelper.Instance;
+            return MultiViewsSwitchingHelper.Instance;
         }
     }
 }

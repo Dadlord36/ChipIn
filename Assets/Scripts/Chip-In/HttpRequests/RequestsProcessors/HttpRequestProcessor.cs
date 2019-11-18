@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-
-namespace HttpRequests
+namespace HttpRequests.RequestsProcessors
 {
     public static class HttpRequestProcessor
     {

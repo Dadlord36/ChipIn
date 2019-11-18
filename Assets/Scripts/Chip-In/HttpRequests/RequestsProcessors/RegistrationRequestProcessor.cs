@@ -1,5 +1,5 @@
 ﻿using DataModels;
-using DefaultNamespace.GlobalVarialbles;
+using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors
 {

@@ -3,17 +3,18 @@ using ScriptableObjects.Parameters;
 using UI.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Elements
+namespace UI.Elements.Buttons
 {
     public sealed class BarButtonSelection : UIBehaviour, IGroupableSelection
     {
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
         [SerializeField] private StateSwitchableButton stateSwitchableButton;
-        private event Action GotSelected;
+        private event UnityAction GotSelected;
 
         protected override void Awake()
         {
@@ -86,7 +87,7 @@ namespace UI.Elements
             GotSelected?.Invoke();
         }
 
-        public void SubscribeOnMainEvent(Action onOtherItemInGroupSelected)
+        public void SubscribeOnMainEvent(UnityAction onOtherItemInGroupSelected)
         {
             GotSelected += onOtherItemInGroupSelected;
         }
