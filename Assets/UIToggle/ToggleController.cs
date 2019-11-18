@@ -41,8 +41,7 @@ public class ToggleController : MonoBehaviour
         onPosX = (toggleSizeX / 2) - (handleSize / 2) - handleOffset;
         offPosX = onPosX * -1;
     }
-
-
+    
     void Start()
     {
         if (isOn)

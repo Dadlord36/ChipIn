@@ -9,16 +9,14 @@ namespace ViewModels.Helpers
 {
     public class MultiViewsSwitchingHelper : MonoBehaviour, IViewsSwitchingHelper
     {
-        private static IViewsSwitchingHelper _instance;
-
-        public static IViewsSwitchingHelper Instance => _instance;
-
         [SerializeField] private Object viewsSwitchingBindingObject;
-
+        
+        private static IViewsSwitchingHelper _instance;
+        public static IViewsSwitchingHelper Instance => _instance;
         private IMultiViewsSwitchingBinding _multiViewsSwitchingBinding;
-
+        
         private BaseView _currentView;
-        private History _viewsSwitchingNamesHistory;
+        private History<string> _viewsSwitchingNamesHistory;
 
         private void Awake()
         {
@@ -32,7 +30,7 @@ namespace ViewModels.Helpers
         private void InitializeViewSwitchingHistory()
         {
             if (_viewsSwitchingNamesHistory == null)
-                _viewsSwitchingNamesHistory = new History();
+                _viewsSwitchingNamesHistory = new History<string>();
         }
 
         public void RequestSwitchToView(string viewName)

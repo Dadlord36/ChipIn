@@ -2,24 +2,31 @@
 
 namespace Common
 {
-    public class History
+    public class History<T>
     {
-        private string _currentRecord;
-        private readonly Stack<string> _historyStack;
+        private bool _isFirstRecord = true;
+        private T _currentRecord;
+        private readonly Stack<T> _historyStack;
 
         public History()
         {
-            _historyStack = new Stack<string>();
+            _historyStack = new Stack<T>();
         }
 
-        public void AddToHistory(in string record)
+        public void AddToHistory(in T record)
         {
-            if (!string.IsNullOrEmpty(_currentRecord))
-                _historyStack.Push(_currentRecord);
+            if (_isFirstRecord)
+            {
+                _isFirstRecord = false;
+                _currentRecord = record;
+                return;
+            }
+
+            _historyStack.Push(_currentRecord);
             _currentRecord = record;
         }
 
-        public string PopHistoryStack()
+        public T PopHistoryStack()
         {
             _currentRecord = _historyStack.Pop();
             return _currentRecord;

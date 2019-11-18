@@ -1,53 +1,44 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Common
 {
-    public class Timer : MonoBehaviour
+    public class Timer :  IDisposable
     {
-        public event Action OnElapsed; 
-        
-        private float _elapsedTime, _interval;
+        public event Action OnElapsed;
+        private readonly System.Timers.Timer _timer;
 
-        private bool _autoReset;
-        
-        private void Awake()
+        public bool AutoReset { get; set; }
+
+        public Timer(double interval, bool autoReset)
         {
-            enabled = false;
+            AutoReset = autoReset;
+
+            _timer = new System.Timers.Timer
+            {
+                Interval = interval, AutoReset = autoReset, Enabled = false
+            };
+            _timer.Elapsed += delegate { OnElapsed?.Invoke(); };
         }
 
         public void SetTimer(float interval, bool autoReset = false)
         {
-            _interval = interval;
-            _autoReset = autoReset;
+            _timer.Interval = interval;
+            _timer.AutoReset = autoReset;
         }
 
         public void StartTimer()
         {
-            enabled = true;
+            _timer.Start();
         }
 
         public void StopTimer()
         {
-            enabled = false;
-            _elapsedTime = 0f;
+            _timer.Stop();
         }
 
-        public void Update()
+        public void Dispose()
         {
-            _elapsedTime += Time.deltaTime;
-            if (_elapsedTime > _interval)
-            {
-                OnElapsed?.Invoke();
-                if (_autoReset)
-                {
-                    _elapsedTime = 0f;
-                }
-                else
-                {
-                    StopTimer();
-                }
-            }
+            _timer?.Dispose();
         }
     }
 }

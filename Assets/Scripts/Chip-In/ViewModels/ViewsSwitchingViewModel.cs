@@ -11,7 +11,7 @@ namespace ViewModels
 
         protected virtual void Start()
         {
-            _viewsSwitchingHelper = Factory.CreateViewSwitchingHelper();
+            _viewsSwitchingHelper = Factory.CreateMultiViewSwitchingHelper();
         }
 
         protected void SwitchToView(in string viewName)
