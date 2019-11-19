@@ -89,8 +89,7 @@ namespace UI.Elements
         {
             Condition = !Condition;
             PropagateConditionChange();
-            _timeline.StopTimer();
-            _timeline.StartTimer();
+            _timeline.RestartTimer();
         }
     }
 }

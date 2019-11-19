@@ -1,7 +1,12 @@
-﻿namespace ViewModels
+﻿using UnityWeld.Binding;
+
+namespace ViewModels
 {
-    public class SettingsViewModel : ViewsSwitchingViewModel
+   
+
+    [Binding]
+    public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        
+      
     }
 }

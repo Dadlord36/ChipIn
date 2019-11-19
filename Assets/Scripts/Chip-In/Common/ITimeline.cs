@@ -15,5 +15,6 @@ namespace Common
         void SetTimer(float interval, bool autoReset = false);
         void StartTimer();
         void StopTimer();
+        void RestartTimer();
     }
 }

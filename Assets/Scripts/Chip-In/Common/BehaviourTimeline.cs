@@ -39,6 +39,12 @@ namespace Common
             _elapsedTime = 0f;
         }
 
+        public void RestartTimer()
+        {
+            _elapsedTime = 0f;
+            enabled = true;
+        }
+
         private float _progress;
 
         public void Update()
@@ -46,17 +52,15 @@ namespace Common
             _elapsedTime += Time.deltaTime;
             _progress = Mathf.Clamp01(_elapsedTime / _interval);
             OnProgressing(_progress);
-            if (_progress >= 1.0f)
+            if (!(_progress >= 1.0f)) return;
+            OnElapsed?.Invoke();
+            if (AutoReset)
             {
-                OnElapsed?.Invoke();
-                if (AutoReset)
-                {
-                    _elapsedTime = 0f;
-                }
-                else
-                {
-                    StopTimer();
-                }
+                RestartTimer();
+            }
+            else
+            {
+                StopTimer();
             }
         }
 
