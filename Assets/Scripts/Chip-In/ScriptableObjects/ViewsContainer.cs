@@ -31,7 +31,12 @@ namespace ScriptableObjects
             }
         }
         
-        private void OnValidate()
+        private void OnEnable()
+        {
+            Initialize();
+        }
+
+        void Initialize()
         {
             if (containingViews == null)
             {
