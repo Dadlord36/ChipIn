@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityWeld.Binding;
 
 namespace UI.Elements
 {
@@ -12,21 +13,23 @@ namespace UI.Elements
         bool Condition { set; get; }
     }
 
+    [System.Serializable]
+
     public abstract class BaseUIToggle : UIBehaviour, IToggle, INotifyPropertyChanged
     {
-        [HideInInspector] public UnityEvent<bool> toggleSwitched;
+        public UnityEvent toggleSwitched;
 
         private float _basicValue;
         [SerializeField] private bool condition;
 
 
+        [Binding]
         public bool Condition
         {
             set
             {
                 condition = value;
                 _basicValue = condition ? 0 : -1.0f;
-                OnToggleSwitched(condition);
                 OnPropertyChanged(nameof(Condition));
             }
             get => condition;
@@ -67,9 +70,9 @@ namespace UI.Elements
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnToggleSwitched(bool state)
+        protected void OnToggleSwitched()
         {
-            toggleSwitched?.Invoke(state);
+            toggleSwitched?.Invoke();
         }
     }
 }

@@ -12,6 +12,11 @@ namespace ViewModels
 
         protected virtual void Start()
         {
+            InitializeViewsSwitchingHelper();
+        }
+
+        private void InitializeViewsSwitchingHelper()
+        {
             if (viewsSwitchingHelperObject == null)
                 _viewsSwitchingHelper = Factory.CreateMultiViewSwitchingHelper();
             else

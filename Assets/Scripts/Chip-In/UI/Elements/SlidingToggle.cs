@@ -79,6 +79,7 @@ namespace UI.Elements
 
         private void PropagateConditionChange()
         {
+            OnToggleSwitched();
             for (int i = 0; i < _toggles.Length; i++)
             {
                 _toggles[i].Condition = Condition;

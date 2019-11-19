@@ -25,10 +25,11 @@ namespace ViewModels
         {
         }
 
-        private void OnEnable()
+        protected override void Start()
         {
+            base.Start();
             if (!Application.isPlaying) return;
-//            ShowMyProfile();
+            ShowMyProfile();
         }
     }
 }
