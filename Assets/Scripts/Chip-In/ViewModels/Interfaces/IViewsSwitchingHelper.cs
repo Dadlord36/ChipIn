@@ -2,7 +2,7 @@
 {
     public interface IViewsSwitchingHelper
     {
-        void RequestSwitchToView(string typeOfView);
+        void RequestSwitchToView(in string typeOfView);
         void SwitchToPreviousView();
     }
 }

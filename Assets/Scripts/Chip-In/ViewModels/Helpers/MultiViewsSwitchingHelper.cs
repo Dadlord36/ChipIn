@@ -1,57 +1,24 @@
-﻿using Common;
-using ScriptableObjects.Interfaces;
-using UnityEngine;
+﻿using ScriptableObjects.Interfaces;
 using UnityEngine.Assertions;
-using ViewModels.Interfaces;
-using Views;
 
 namespace ViewModels.Helpers
 {
-    public class MultiViewsSwitchingHelper : MonoBehaviour, IViewsSwitchingHelper
+    public sealed class MultiViewsSwitchingHelper : BaseViewSwitchingHelper
     {
-        [SerializeField] private Object viewsSwitchingBindingObject;
-        
-        private static IViewsSwitchingHelper _instance;
-        public static IViewsSwitchingHelper Instance => _instance;
         private IMultiViewsSwitchingBinding _multiViewsSwitchingBinding;
-        
-        private BaseView _currentView;
-        private History<string> _viewsSwitchingNamesHistory;
+        private string _currentViewName;
 
-        private void Awake()
+        protected override void Awake()
         {
-            _instance = this;
-            Assert.IsNotNull(viewsSwitchingBindingObject);
+            base.Awake();
             _multiViewsSwitchingBinding = viewsSwitchingBindingObject as IMultiViewsSwitchingBinding;
             Assert.IsNotNull(_multiViewsSwitchingBinding);
-            InitializeViewSwitchingHistory();
         }
 
-        private void InitializeViewSwitchingHistory()
+        protected override void ProcessViewsSwitching(in string viewNameToSwitchTo)
         {
-            if (_viewsSwitchingNamesHistory == null)
-                _viewsSwitchingNamesHistory = new History<string>();
-        }
-
-        public void RequestSwitchToView(string viewName)
-        {
-            AddViewsSwitchingHistoryRecord(viewName);
-            ProcessViewsSwitching(viewName);
-        }
-
-        private void ProcessViewsSwitching(in string viewNameToSwitchTo)
-        {
-            _multiViewsSwitchingBinding.SwitchViews(_currentView, viewNameToSwitchTo);
-        }
-
-        private void AddViewsSwitchingHistoryRecord(in string viewName)
-        {
-            _viewsSwitchingNamesHistory.AddToHistory(viewName);
-        }
-
-        public void SwitchToPreviousView()
-        {
-            ProcessViewsSwitching(_viewsSwitchingNamesHistory.PopHistoryStack());
+            _multiViewsSwitchingBinding.SwitchViews(_currentViewName, viewNameToSwitchTo);
+            _currentViewName = viewNameToSwitchTo;
         }
     }
 }

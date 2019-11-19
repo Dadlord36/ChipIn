@@ -31,7 +31,7 @@ namespace ScriptableObjects
             }
         }
         
-        private void OnEnable()
+        private void OnValidate()
         {
             if (containingViews == null)
             {
@@ -48,16 +48,16 @@ namespace ScriptableObjects
         [SerializeField] private BaseView[] containingViews;
         private ViewModelContainerItem[] _viewsContainer;
 
-        public BaseView GetViewById(in string viewId)
+        public BaseView GetViewByName(in string viewName)
         {
             for (var i = 0; i < _viewsContainer.Length; i++)
             {
-                if (_viewsContainer[i].ViewName == viewId)
+                if (_viewsContainer[i].ViewName == viewName)
                 {
                     return _viewsContainer[i].GetInstance;
                 }
             }
-            throw new Exception($"There is no view with given ID: {viewId} in {name} views container");
+            throw new Exception($"There is no view with given ID: {viewName} in {name} views container");
         }
     }
 }

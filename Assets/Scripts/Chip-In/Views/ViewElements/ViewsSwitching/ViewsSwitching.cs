@@ -3,7 +3,7 @@ using Common;
 using UI.Interfaces;
 using UnityEngine.Assertions;
 
-namespace Views
+namespace Views.ViewElements.ViewsSwitching
 {
     public abstract class ViewsSwitching : BaseView
     {

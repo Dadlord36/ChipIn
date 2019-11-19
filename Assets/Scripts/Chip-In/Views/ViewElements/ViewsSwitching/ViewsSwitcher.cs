@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
-namespace Views.ViewElements
+namespace Views.ViewElements.ViewsSwitching
 {
     [RequireComponent(typeof(ScrollViewController))]
     public class ViewsSwitcher : UIBehaviour

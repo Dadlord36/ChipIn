@@ -10,7 +10,7 @@ namespace Factories
     {
         public static IViewsSwitchingHelper CreateMultiViewSwitchingHelper()
         {
-            return MultiViewsSwitchingHelper.Instance;
+            return SingleViewSwitchingHelper.Instance;
         }
 
         public static IViewsSwitchingHelper CreateSingleViewSwitchingHelper()

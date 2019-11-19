@@ -1,11 +1,10 @@
-﻿using ScriptableObjects;
-using ScriptableObjects.SwitchBindings;
+﻿using ScriptableObjects.SwitchBindings;
 using UnityEngine.Events;
 using Utilities;
 
-namespace Views.ViewElements
+namespace Views.ViewElements.ViewsPlacers
 {
-    public class TwoSlotsViewsPlacer : ViewPlacer
+    public class TwoSlotsMultiViewsesPlacer : MultiViewsPlacer
     {
         public UnityEvent ViewsBeingReplaced;
 
@@ -18,15 +17,15 @@ namespace Views.ViewElements
             _nextSlot = GameObjectsUtility.FindOrAttach<ViewSlot>(transform, NextContainerName);
         }
 
-        protected override void ReplaceCurrentMultiViewsWithGiven(MultiViewsSwitchingBinding.ViewsSwitchData viewsSwitchData)
+        protected override void ReplaceCurrentViewWithGiven(MultiViewsSwitchingBinding.DualViewsSwitchData dualViewsSwitchData)
         {
             ReleaseAllSlots();
 
-            PlaceInPreviousContainer(viewsSwitchData.fromView);
-            PlaceInNextContainer(viewsSwitchData.toView);
+            PlaceInPreviousContainer(dualViewsSwitchData.fromView);
+            PlaceInNextContainer(dualViewsSwitchData.toView);
 
-            viewsSwitchData.fromView.Show();
-            viewsSwitchData.toView.Show();
+            dualViewsSwitchData.fromView.Show();
+            dualViewsSwitchData.toView.Show();
 
             ViewsBeingReplaced?.Invoke();
         }
