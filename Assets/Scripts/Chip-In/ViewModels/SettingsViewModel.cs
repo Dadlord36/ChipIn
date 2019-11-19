@@ -24,12 +24,5 @@ namespace ViewModels
         public void ShowMyInterest()
         {
         }
-
-        protected override void Start()
-        {
-            base.Start();
-            if (!Application.isPlaying) return;
-            ShowMyProfile();
-        }
     }
 }
