@@ -1,4 +1,6 @@
-﻿namespace Utilities
+﻿using UnityEngine;
+
+namespace Utilities
 {
     public static class DeviceUtility
     {

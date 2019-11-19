@@ -1,10 +1,10 @@
 ﻿using UI.Elements.Buttons;
 using UnityEditor;
 
-namespace Inspectors.Editor
+namespace Inspectors
 {
     [CustomEditor(typeof(GroupedHighlightedButton))]
-    public class GroupedHighlightedButtonInspector : UnityEditor.Editor
+    public class GroupedHighlightedButtonInspector : Editor
     {
     }
 }
