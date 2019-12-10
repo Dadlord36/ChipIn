@@ -30,7 +30,7 @@ namespace ViewModels
             set
             {
                 _registrationModel.Email = value;
-                OnPropertyChanged(nameof(Email));
+                OnPropertyChanged();
                 CheckIfCanRegister();
             }
         }
@@ -42,7 +42,7 @@ namespace ViewModels
             set
             {
                 _registrationModel.Password = value;
-                OnPropertyChanged(nameof(Password));
+                OnPropertyChanged();
                 CheckIfCanRegister();
             }
         }
@@ -55,7 +55,7 @@ namespace ViewModels
             {
                 if (value == _canTryRegister) return;
                 _canTryRegister = value;
-                OnPropertyChanged(nameof(CanTryRegister));
+                OnPropertyChanged();
             }
         }
 
@@ -66,7 +66,7 @@ namespace ViewModels
             set
             {
                 _pendingRegister = value;
-                OnPropertyChanged(nameof(PendingRegister));
+                OnPropertyChanged();
             }
         }
 
@@ -78,7 +78,7 @@ namespace ViewModels
             {
                 if (value == _repeatedPassword) return;
                 _repeatedPassword = value;
-                OnPropertyChanged(nameof(RepeatedPassword));
+                OnPropertyChanged();
                 CheckIfCanRegister();
             }
         }

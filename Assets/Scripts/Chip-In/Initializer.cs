@@ -2,7 +2,7 @@
 
 public class Initializer : MonoBehaviour
 {
-    [SerializeField] private Object[] objectsToInitialize;
+    [SerializeField] private MonoBehaviour[] objectsToInitialize;
 
     private void Awake()
     {

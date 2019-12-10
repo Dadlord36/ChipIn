@@ -1,10 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityWeld.Binding;
 
 namespace UI.Elements
 {
@@ -13,8 +12,7 @@ namespace UI.Elements
         bool Condition { set; get; }
     }
 
-    [System.Serializable]
-
+    [Serializable]
     public abstract class BaseUIToggle : UIBehaviour, IToggle, INotifyPropertyChanged
     {
         public UnityEvent toggleSwitched;
@@ -22,15 +20,13 @@ namespace UI.Elements
         private float _basicValue;
         [SerializeField] private bool condition;
 
-
-        [Binding]
         public bool Condition
         {
             set
             {
                 condition = value;
                 _basicValue = condition ? 0 : -1.0f;
-                OnPropertyChanged(nameof(Condition));
+                OnPropertyChanged();
             }
             get => condition;
         }
@@ -64,7 +60,6 @@ namespace UI.Elements
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

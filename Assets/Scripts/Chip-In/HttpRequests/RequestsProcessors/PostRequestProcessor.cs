@@ -40,7 +40,7 @@ namespace HttpRequests.RequestsProcessors
                     {
                         errorMessageBuilder.Append(responseAsString);
                     }
-                    catch (ApiException e)
+                    catch (ApiException _)
                     {
                     }
                     errorMessageBuilder.Append("\r\n");

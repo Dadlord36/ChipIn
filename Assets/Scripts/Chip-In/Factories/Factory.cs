@@ -1,5 +1,6 @@
 ﻿using System;
 using Common;
+using Common.Timers;
 using UnityEngine;
 using ViewModels.Helpers;
 using ViewModels.Interfaces;
@@ -20,7 +21,7 @@ namespace Factories
 
         public static ITimeline AddTimer(GameObject gameObject)
         {
-            return gameObject.AddComponent<BehaviourTimeline>();
+            return gameObject.AddComponent<ParametricBehaviourTimeline>();
         }
     }
 }

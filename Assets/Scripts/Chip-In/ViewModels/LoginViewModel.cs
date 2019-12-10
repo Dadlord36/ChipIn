@@ -25,7 +25,7 @@ namespace ViewModels
             set
             {
                 _userLoginModel.Email = value;
-                OnPropertyChanged(nameof(UserEmail));
+                OnPropertyChanged();
                 ValidateLoginData();
             }
         }
@@ -37,7 +37,7 @@ namespace ViewModels
             set
             {
                 _userLoginModel.Password = value;
-                OnPropertyChanged(nameof(UserPassword));
+                OnPropertyChanged();
                 ValidateLoginData();
             }
         }
@@ -51,7 +51,7 @@ namespace ViewModels
             set
             {
                 _canLogin = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanLogin)));
+                OnPropertyChanged();
             }
         }
 
@@ -64,7 +64,7 @@ namespace ViewModels
             set
             {
                 _pendingLogin = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsPendingLogin)));
+                OnPropertyChanged();
             }
         }
 

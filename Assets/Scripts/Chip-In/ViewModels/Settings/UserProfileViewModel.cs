@@ -27,7 +27,7 @@ namespace ViewModels.Settings
             set
             {
                 _userSettings.allowIncomingAds = value;
-                OnPropertyChanged(nameof(AllowIncomingAds));
+                OnPropertyChanged();
             }
         }
 
@@ -38,7 +38,7 @@ namespace ViewModels.Settings
             set
             {
                 _userSettings.showAlerts = value;
-                OnPropertyChanged(nameof(ShowAlerts));
+                OnPropertyChanged();
             }
         }
 
@@ -49,7 +49,7 @@ namespace ViewModels.Settings
             set
             {
                 _userSettings.showNotifications = value;
-                OnPropertyChanged(nameof(ShowNotification));
+                OnPropertyChanged();
             }
         }
 
@@ -60,7 +60,7 @@ namespace ViewModels.Settings
             set
             {
                 _userSettings.userRadar = value;
-                OnPropertyChanged(nameof(UserRadar));
+                OnPropertyChanged();
             }
         }
 

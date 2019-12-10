@@ -1,16 +1,12 @@
 ﻿using System;
-using ScriptableObjects.Parameters;
 using UnityEngine;
-using UnityEngine.Assertions;
 
-namespace Common
+namespace Common.Timers
 {
-    public sealed class BehaviourTimeline : MonoBehaviour, ITimeline
+    public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline
     {
         public event Action OnElapsed;
         public event Action<float> Progressing;
-
-        [SerializeField] private FloatParameter intervalParameter;
 
         private float _elapsedTime, _interval;
         public bool AutoReset { get; set; }
@@ -18,15 +14,16 @@ namespace Common
         private void Awake()
         {
             enabled = false;
-            Assert.IsNotNull(intervalParameter, $"There is no {nameof(FloatParameter)} on: {name}");
-            SetTimer(intervalParameter.value);
+            InitializerTimer(out _interval);
+            CheckIfTimerIntervalIsValid();
         }
 
-        public void SetTimer(float interval, bool autoReset = false)
+        private void CheckIfTimerIntervalIsValid()
         {
-            _interval = interval;
-            AutoReset = autoReset;
+            if (_interval <= 0) throw new ArgumentOutOfRangeException(nameof(_interval));
         }
+
+        protected abstract void InitializerTimer(out float timerInterval);
 
         public void StartTimer()
         {

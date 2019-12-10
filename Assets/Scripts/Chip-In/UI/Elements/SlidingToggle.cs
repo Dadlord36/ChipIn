@@ -10,18 +10,17 @@ namespace UI.Elements
     {
         [SerializeField, Range(0f, 0.5f)] private double handleDockingPositionPercentage;
         [SerializeField] private RectTransform handleTransform;
-
-        private ITimeline _timeline;
+        
         private float _onPosX, _offPosX;
         private Vector3 tempHandlePosition;
-
+        private ITimeline _timeline;
         private IToggle[] _toggles;
 
         protected override void Awake()
         {
             Assert.IsNotNull(handleTransform);
             _timeline = GetComponent<ITimeline>();
-            SubscribeGraphicsFadeSwitchersToTimelineProgression();
+            SubscribeChangeableSliderPartsToTimelineProgression();
             CollectAllToggles();
             CalculateMovementBounds();
 
@@ -38,7 +37,7 @@ namespace UI.Elements
             _toggles = GetComponentsInChildren<IToggle>();
         }
 
-        private void SubscribeGraphicsFadeSwitchersToTimelineProgression()
+        private void SubscribeChangeableSliderPartsToTimelineProgression()
         {
             _timeline.Progressing += (this as IProgress<float>).Report;
             var progressReceivers = GetComponentsInChildren<IProgress<float>>();

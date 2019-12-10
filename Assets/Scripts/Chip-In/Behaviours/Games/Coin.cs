@@ -12,10 +12,14 @@ namespace Behaviours.Games
         [SerializeField] private TextMeshProUGUI valueMultiplierTextField;
         [SerializeField] private int value;
 
+#if UNITY_EDITOR
+        
         private void OnValidate()
         {
+            if (Application.isPlaying) return;
             valueMultiplierTextField.text = $"x{value.ToString()}";
         }
+#endif
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
