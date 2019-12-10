@@ -1,4 +1,5 @@
 ﻿using System;
+using Behaviours.Games.Interfaces;
 using ScriptableObjects.ActionsConnectors;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -41,17 +42,32 @@ namespace Behaviours.Games
             {
                 if (coins[i] is IInteractiveValue interactiveValue)
                 {
-                    interactiveValue.Collected += delegate(int value)
-                    {
-                        _coinsPicked++;
-                        CoinsAmount += value;
-                        FinishGameIfComplete();
-                    };
+                    SubscribeToInteractiveValue(interactiveValue);
                 }
+
+                if (coins[i] is IFinishingAction finishingAction)
+                {
+                    SubscribeOnFinishingAction(finishingAction);
+                }
+            }
+
+            void SubscribeOnFinishingAction(IFinishingAction finishingAction)
+            {
+                finishingAction.FinishingActionDone += CheckIfGameIsComplete;
+            }
+            
+            void SubscribeToInteractiveValue(IInteractiveValue interactiveValue)
+            {
+                interactiveValue.GenerateValue();
+                interactiveValue.Collected += delegate(int value)
+                {
+                    _coinsPicked++;
+                    CoinsAmount += value;
+                };
             }
         }
 
-        private void FinishGameIfComplete()
+        private void CheckIfGameIsComplete()
         {
             if (coinsToPick == _coinsPicked)
             {

@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Behaviours.Games
+namespace Behaviours.Games.Interfaces
 {
     public interface IInteractiveValue
     {
         event Action<int> Collected;
+        void GenerateValue();
     }
 }
