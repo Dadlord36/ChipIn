@@ -101,13 +101,11 @@ namespace ViewModels
         {
             IsPendingLogin = true;
             var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
-
-            authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
-            // authorisationDataRepository.Expiry = int.Parse(GetFirstValue(response.Headers, "expiry"));
             IsPendingLogin = false;
             SwitchToMiniGame();
+
+            authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             await remoteRepository.LoadDataFromServer();
-            // loginActionConnector.InvokeAction();
         }
 
         private static string GetFirstValue(HttpHeaders headers, string valueName)

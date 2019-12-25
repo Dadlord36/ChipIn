@@ -154,6 +154,7 @@ namespace Repositories
         public async Task SaveDataToServer()
         {
             await _userProfileDataSynchronization.SaveDataToServer();
+            ConfirmDataSaved();
         }
 
         private void ConfirmDataLoading()

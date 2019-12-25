@@ -187,13 +187,15 @@ namespace ViewModels.Settings
         {
             base.OnEnable();
         }
-        
+
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Debug.Log($"{propertyName} was changed");
+           //await seems to be not needed
+            repository.SaveDataToServer();
         }
     }
 }
