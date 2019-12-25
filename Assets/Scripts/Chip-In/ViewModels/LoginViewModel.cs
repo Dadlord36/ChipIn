@@ -104,12 +104,10 @@ namespace ViewModels
 
             authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             // authorisationDataRepository.Expiry = int.Parse(GetFirstValue(response.Headers, "expiry"));
-            await remoteRepository.LoadDataFromServer();
-            
             IsPendingLogin = false;
-            
-            // loginActionConnector.InvokeAction();
             SwitchToMiniGame();
+            await remoteRepository.LoadDataFromServer();
+            // loginActionConnector.InvokeAction();
         }
 
         private static string GetFirstValue(HttpHeaders headers, string valueName)

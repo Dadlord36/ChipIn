@@ -2356,6 +2356,7 @@ GameObject:
   - component: {fileID: 8200054268558793290}
   - component: {fileID: 6275386120567657077}
   - component: {fileID: 2434057728912115012}
+  - component: {fileID: 8316835604785692302}
   m_Layer: 0
   m_Name: Photo
   m_TagString: Untagged
@@ -2418,6 +2419,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8316835604785692302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5970040386370000328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: BindingAdapters.Texture2DToSprite
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.Settings.UserProfileViewModel.AvatarImage
+  viewPropertyName: UnityEngine.UI.Image.sprite
 --- !u!222 &1794117403763916750
 CanvasRenderer:
   m_ObjectHideFlags: 0
