@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityWeld.Binding;
 
 namespace UI.Elements
 {
@@ -12,7 +13,13 @@ namespace UI.Elements
         bool Condition { set; get; }
     }
 
+    public interface IViewElement
+    {
+        void RefreshVisual();
+    }
+
     [Serializable]
+    [Binding]
     public abstract class BaseUIToggle : UIBehaviour, IToggle, INotifyPropertyChanged
     {
         public UnityEvent toggleSwitched;
@@ -20,43 +27,50 @@ namespace UI.Elements
         private float _basicValue;
         [SerializeField] private bool condition;
 
+        [Binding]
         public bool Condition
         {
             set
             {
                 condition = value;
                 _basicValue = condition ? 0 : -1.0f;
+                OnConditionChanger();
                 OnPropertyChanged();
             }
             get => condition;
         }
 
-        protected override void Awake()
+        protected float GetPathPercentageFromCondition()
         {
-            base.Awake();
-            SetToggleInitState();
+            return Condition ? 1.0f : 0f;
+        } 
+
+        protected void SetToggleInitState()
+        {
+            SetHandlePositionAlongSlide(GetPathPercentageFromCondition());
         }
 
-        private void SetToggleInitState()
-        {
-            InitializeToggle(Condition ? 1.0f : 0f);
-        }
+        protected abstract void SetHandlePositionAlongSlide(float percentage);
 
-        protected abstract void InitializeToggle(float percentage);
-
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
             Condition = condition;
-            SetToggleInitState();
         }
-#endif
+#endif*/
 
         protected float InversePercentage(float percentage)
         {
             return Mathf.Abs(_basicValue + percentage);
         }
+
+
+        protected void OnToggleSwitched()
+        {
+            toggleSwitched?.Invoke();
+        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -65,9 +79,6 @@ namespace UI.Elements
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void OnToggleSwitched()
-        {
-            toggleSwitched?.Invoke();
-        }
+        protected abstract void OnConditionChanger();
     }
 }

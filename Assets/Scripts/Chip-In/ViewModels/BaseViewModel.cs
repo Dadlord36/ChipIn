@@ -16,9 +16,17 @@ namespace ViewModels
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            TryGetComponent(out view);
+            if (!Application.isPlaying)
+                TryGetComponent(out view);
             Assert.IsNotNull(view);
         }
 #endif
+        protected virtual void OnEnable()
+        {
+        }
+
+        protected virtual void OnDisable()
+        {
+        }
     }
 }

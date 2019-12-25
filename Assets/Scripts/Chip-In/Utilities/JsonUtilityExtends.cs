@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using UnityEngine;
+using Newtonsoft.Json;
 
 namespace Utilities
 {
@@ -9,7 +9,7 @@ namespace Utilities
         public static async Task<T> ContentAsyncJsonTo<T>(HttpContent content)
         {
             string contentAsString = await content.ReadAsStringAsync();
-            return JsonUtility.FromJson<T>(contentAsString);
+            return JsonConvert.DeserializeObject<T>(contentAsString);
         }
     }
 }

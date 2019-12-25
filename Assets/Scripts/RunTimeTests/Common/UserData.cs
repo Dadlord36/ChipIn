@@ -1,4 +1,5 @@
 ﻿using DataModels;
+using DataModels.RequestsModels;
 
 namespace RunTimeTests.Common
 {
@@ -7,26 +8,26 @@ namespace RunTimeTests.Common
         public const string CorrectEmail = "test@mail.com", CorrectPassword = "12345678";
         public const string WrongEmail = "testWrongMail", WrongPassword = "3216";
 
-        public static UserLoginModel correctUserLoginDataModel =
-            new UserLoginModel {Email = CorrectEmail, Password = CorrectPassword};
+        public static UserLoginRequestModel CorrectUserLoginRequestDataModel =
+            new UserLoginRequestModel {Email = CorrectEmail, Password = CorrectPassword};
 
-        public static UserLoginModel wrongPasswordUserLoginDataModel =
-            new UserLoginModel {Email = CorrectEmail, Password = WrongPassword};
+        public static UserLoginRequestModel WrongPasswordUserLoginRequestDataModel =
+            new UserLoginRequestModel {Email = CorrectEmail, Password = WrongPassword};
 
-        public static UserLoginModel wrongEmailUserLoginDataModel =
-            new UserLoginModel {Email = WrongEmail, Password = CorrectPassword};
+        public static UserLoginRequestModel WrongEmailUserLoginRequestDataModel =
+            new UserLoginRequestModel {Email = WrongEmail, Password = CorrectPassword};
 
-        public static UserSimpleRegistrationModel correctUserSimpleRegistrationModel = new UserSimpleRegistrationModel
+        public static SimpleRegistrationRequestModel CorrectSimpleRegistrationRequestModel = new SimpleRegistrationRequestModel
         {
             Email = CorrectEmail, Password = CorrectPassword
         };
         
-        public static UserSimpleRegistrationModel wrongEmailSimpleRegistrationModel = new UserSimpleRegistrationModel
+        public static SimpleRegistrationRequestModel WrongEmailSimpleRegistrationRequestModel = new SimpleRegistrationRequestModel
         {
             Email = WrongEmail, Password = CorrectPassword
         };
         
-        public static UserSimpleRegistrationModel wrongPasswordUserSimpleRegistrationModel = new UserSimpleRegistrationModel
+        public static SimpleRegistrationRequestModel WrongPasswordSimpleRegistrationRequestModel = new SimpleRegistrationRequestModel
         {
             Email = CorrectEmail, Password = WrongPassword
         };

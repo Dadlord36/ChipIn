@@ -2,8 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
-using HumbleObjects;
+using DataModels.RequestsModels;
 using JetBrains.Annotations;
+using RequestsStaticProcessors;
 using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -12,10 +13,12 @@ using Views;
 namespace ViewModels
 {
     [Binding]
-    public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IUserSimpleRegistrationModel,
+    public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IBasicLoginModel,
         INotifyPropertyChanged
     {
-        private readonly UserSimpleRegistrationModel _registrationModel = new UserSimpleRegistrationModel();
+        private readonly SimpleRegistrationRequestModel
+            _registrationRequestModel = new SimpleRegistrationRequestModel();
+
         [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
 
 
@@ -26,10 +29,10 @@ namespace ViewModels
         [Binding]
         public string Email
         {
-            get => _registrationModel.Email;
+            get => _registrationRequestModel.Email;
             set
             {
-                _registrationModel.Email = value;
+                _registrationRequestModel.Email = value;
                 OnPropertyChanged();
                 CheckIfCanRegister();
             }
@@ -38,10 +41,10 @@ namespace ViewModels
         [Binding]
         public string Password
         {
-            get => _registrationModel.Password;
+            get => _registrationRequestModel.Password;
             set
             {
-                _registrationModel.Password = value;
+                _registrationRequestModel.Password = value;
                 OnPropertyChanged();
                 CheckIfCanRegister();
             }
@@ -111,14 +114,14 @@ namespace ViewModels
                 return Password == RepeatedPassword;
             }
 
-            CanTryRegister = userSimpleRegisterModelValidator.CheckIsValid(_registrationModel) &&
+            CanTryRegister = userSimpleRegisterModelValidator.CheckIsValid(_registrationRequestModel) &&
                              CheckPasswordsAreMatch();
         }
 
         private async Task Register()
         {
             // If registration was successful 
-            if (await RegistrationProcessor.RegisterUserSimple(_registrationModel))
+            if (await RegistrationStaticProcessor.RegisterUserSimple(_registrationRequestModel))
             {
                 Debug.Log("User have been registered successfully!");
                 SwitchToCheckYourEmailView();

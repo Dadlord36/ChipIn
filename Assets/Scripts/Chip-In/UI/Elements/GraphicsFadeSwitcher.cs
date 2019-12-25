@@ -17,9 +17,14 @@ namespace UI.Elements
             base.Awake();
         }
 
-        protected override void InitializeToggle(float percentage)
+        protected override void SetHandlePositionAlongSlide(float percentage)
         {
             CrossFadeGraphics(percentage);
+        }
+
+        protected override void OnConditionChanger()
+        {
+            
         }
 
         public void Report(float value)

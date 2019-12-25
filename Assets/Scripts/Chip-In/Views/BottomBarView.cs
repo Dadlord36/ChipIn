@@ -1,6 +1,4 @@
 ﻿using GlobalVariables;
-using ScriptableObjects;
-using ScriptableObjects.SwitchBindings;
 using Views.ViewElements.ViewsSwitching;
 
 namespace Views
@@ -14,7 +12,7 @@ namespace Views
             if (ViewsNames.IsBottomBarActiveView(viewName))
             {
                 Show();
-                selectionOptionsDictionary[viewName].SelectAsOneOfGroup();
+                SelectionOptionsDictionary[viewName].SelectAsOneOfGroup();
             }
             else
                 Hide();

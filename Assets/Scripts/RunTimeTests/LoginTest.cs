@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using DataModels;
+using DataModels.RequestsModels;
 using HttpRequests;
-using HumbleObjects;
 using NUnit.Framework;
+using RequestsStaticProcessors;
 using RunTimeTests.Common;
 using UnityEngine;
 using Utilities.ApiExceptions;
@@ -14,7 +15,7 @@ namespace RunTimeTests
         [Test]
         public void LoginSuccessfulTest()
         {
-            var successful = Task.Run(async () => await TryToLogin(UserData.correctUserLoginDataModel)).GetAwaiter()
+            var successful = Task.Run(async () => await TryToLogin(UserData.CorrectUserLoginRequestDataModel)).GetAwaiter()
                 .GetResult();
 
             Assert.IsTrue(successful);
@@ -23,20 +24,21 @@ namespace RunTimeTests
         [Test]
         public void LoginWrongEmailTest()
         {
-            var successful = Task.Run(async () => await TryToLogin(UserData.wrongEmailUserLoginDataModel)).GetAwaiter()
+            var successful = Task.Run(async () => await TryToLogin(UserData.WrongEmailUserLoginRequestDataModel)).GetAwaiter()
                 .GetResult();
 
             Assert.False(successful);
         }
 
-        private static async Task<bool> TryToLogin(UserLoginModel loginModel)
+        private static async Task<bool> TryToLogin(IUserLoginRequestModel loginRequestModel)
         {
             ApiHelper.InitializeClient();
 
             bool successful = false;
             try
             {
-                successful = await LoginProcessor.Login(loginModel);
+                var result = await LoginStaticProcessor.Login(loginRequestModel);
+                successful = result.ResponseModelInterface!=null;
             }
             catch (ApiException e)
             {

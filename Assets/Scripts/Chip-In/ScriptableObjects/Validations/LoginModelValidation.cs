@@ -1,4 +1,4 @@
-﻿using DataModels;
+﻿using DataModels.RequestsModels;
 using EmailValidation;
 using UnityEngine;
 
@@ -6,11 +6,11 @@ namespace ScriptableObjects.Validations
 {
     [CreateAssetMenu(fileName = nameof(LoginModelValidation),
         menuName = "Validations/" + nameof(LoginModelValidation), order = 0)]
-    public class LoginModelValidation : DataModelValidation<UserLoginModel>
+    public class LoginModelValidation : DataModelValidation<UserLoginRequestModel>
     {
-        public override bool CheckIsValid(UserLoginModel dataModel)
+        public override bool CheckIsValid(UserLoginRequestModel dataRequestModel)
         {
-            return CheckEmailIsValid(dataModel.Email) && CheckIfPasswordIsValid(dataModel.Password);
+            return CheckEmailIsValid(dataRequestModel.Email) && CheckIfPasswordIsValid(dataRequestModel.Password);
         }
 
         private static bool CheckIfPasswordIsValid(string dataModelPassword)

@@ -1,4 +1,4 @@
-﻿using HumbleObjects;
+﻿using RequestsStaticProcessors;
 using UnityWeld.Binding;
 using Views;
 
@@ -17,7 +17,7 @@ namespace ViewModels
         [Binding]
         public async void LoginAsGuest()
         {
-            bool success = await GuestRegistrationProcessor.RegisterUserAsGuest();
+            bool success = await GuestRegistrationStaticProcessor.RegisterUserAsGuest();
             if (success)
             {
                 SwitchToView(nameof(CoinsGameView));

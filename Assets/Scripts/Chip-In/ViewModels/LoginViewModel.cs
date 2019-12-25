@@ -1,12 +1,16 @@
 ﻿using System.ComponentModel;
+using System.Linq;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Behaviours.Games;
-using DataModels;
-using HumbleObjects;
+using DataModels.RequestsModels;
 using JetBrains.Annotations;
+using Repositories;
+using RequestsStaticProcessors;
+using ScriptableObjects.ActionsConnectors;
 using ScriptableObjects.Validations;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityWeld.Binding;
 using Views;
 
@@ -15,16 +19,20 @@ namespace ViewModels
     [Binding]
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private UserProfileRemoteRepository remoteRepository;
+        
         [SerializeField] private LoginModelValidation loginModelValidation;
-        private readonly UserLoginModel _userLoginModel = new UserLoginModel();
+        [SerializeField] private ActionConnector loginActionConnector;
+        private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
         [Binding]
         public string UserEmail
         {
-            get => _userLoginModel.Email;
+            get => _userLoginRequestModel.Email;
             set
             {
-                _userLoginModel.Email = value;
+                _userLoginRequestModel.Email = value;
                 OnPropertyChanged();
                 ValidateLoginData();
             }
@@ -33,10 +41,10 @@ namespace ViewModels
         [Binding]
         public string UserPassword
         {
-            get => _userLoginModel.Password;
+            get => _userLoginRequestModel.Password;
             set
             {
-                _userLoginModel.Password = value;
+                _userLoginRequestModel.Password = value;
                 OnPropertyChanged();
                 ValidateLoginData();
             }
@@ -72,9 +80,9 @@ namespace ViewModels
 
         private void ValidateLoginData()
         {
-            CanLogin = loginModelValidation.CheckIsValid(_userLoginModel);
+            CanLogin = loginModelValidation.CheckIsValid(_userLoginRequestModel);
             if (CanLogin)
-                Debug.Log("Now can login");
+                Debug.Log("Now can login", this);
         }
 
         [Binding]
@@ -84,7 +92,7 @@ namespace ViewModels
         }
 
         [Binding]
-        public async Task LoginButton_Click()
+        public async void LoginButton_Click()
         {
             await ProcessLogin();
         }
@@ -92,16 +100,27 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            var success = await LoginProcessor.Login(_userLoginModel);
-            IsPendingLogin = false;
+            var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
 
-            if (success)
-                SwitchToMiniGame();
+            authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
+            // authorisationDataRepository.Expiry = int.Parse(GetFirstValue(response.Headers, "expiry"));
+            await remoteRepository.LoadDataFromServer();
+            
+            IsPendingLogin = false;
+            
+            // loginActionConnector.InvokeAction();
+            SwitchToMiniGame();
         }
-        
+
+        private static string GetFirstValue(HttpHeaders headers, string valueName)
+        {
+            Assert.IsTrue(headers.Contains(valueName));
+            return headers.GetValues(valueName).FirstOrDefault();
+        }
+
         private void SwitchToMiniGame()
         {
-            SwitchToView(nameof(CoinsGame));
+            SwitchToView(nameof(CoinsGameView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -111,5 +130,6 @@ namespace ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
     }
 }

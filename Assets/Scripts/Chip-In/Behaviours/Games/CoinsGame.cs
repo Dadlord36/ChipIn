@@ -55,7 +55,7 @@ namespace Behaviours.Games
             {
                 finishingAction.FinishingActionDone += CheckIfGameIsComplete;
             }
-            
+
             void SubscribeToInteractiveValue(IInteractiveValue interactiveValue)
             {
                 interactiveValue.GenerateValue();

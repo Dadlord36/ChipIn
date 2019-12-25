@@ -7,7 +7,7 @@ namespace Views.ViewElements.ViewsSwitching
 {
     public abstract class ViewsSwitching : BaseView
     {
-        protected Dictionary<string, IGroupableSelection> selectionOptionsDictionary;
+        protected Dictionary<string, IGroupableSelection> SelectionOptionsDictionary;
         protected override void Awake()
         {
             base.Awake();
@@ -17,10 +17,10 @@ namespace Views.ViewElements.ViewsSwitching
             var buttonsCount = barButtons.Length;
             Assert.IsTrue(barButtons.Length == barButtonsNames.Length);
 
-            selectionOptionsDictionary = new Dictionary<string, IGroupableSelection>(buttonsCount);
+            SelectionOptionsDictionary = new Dictionary<string, IGroupableSelection>(buttonsCount);
             for (int i = 0; i < buttonsCount; i++)
             {
-                selectionOptionsDictionary.Add(barButtonsNames[i].Name, barButtons[i]); 
+                SelectionOptionsDictionary.Add(barButtonsNames[i].Name, barButtons[i]); 
                 barButtonsNames[i].Destroy();
             }
         }

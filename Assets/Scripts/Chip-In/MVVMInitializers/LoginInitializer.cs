@@ -1,4 +1,4 @@
-﻿using DataModels;
+﻿using DataModels.RequestsModels;
 using ViewModels;
 using Views;
 
@@ -6,11 +6,11 @@ namespace MVVMInitializers
 {
     public class LoginInitializer
     {
-        private UserLoginModel _loginModel;
+        private UserLoginRequestModel _loginRequestModel;
 
         public void Initialize(LoginView loginView, LoginViewModel loginViewModel)
         {
-            _loginModel = new UserLoginModel();
+            _loginRequestModel = new UserLoginRequestModel();
             
             
             

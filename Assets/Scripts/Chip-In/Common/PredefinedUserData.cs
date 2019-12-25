@@ -1,12 +1,11 @@
-﻿using DataModels;
-using UnityEngine;
+﻿using DataModels.RequestsModels;
 using Utilities;
 
 namespace Common
 {
     public static class PredefinedUserData
     {
-        public static readonly UserRegistrationModel GuestDataModel = new UserRegistrationModel
+        public static readonly RegistrationRequestModel GuestDataRequestModel = new RegistrationRequestModel
         {
             Email = "",
             Password = "",
@@ -14,8 +13,8 @@ namespace Common
             Role = "guest",
             Device = new DeviceData
             {
-                platform = "android", deviceId = DeviceUtility.GetDeviceId(),
-                deviceToken = DeviceUtility.GetDeviceToken()
+                Platform = "android", DeviceId = DeviceUtility.GetDeviceId(),
+                DeviceToken = DeviceUtility.GetDeviceToken()
             }
         };
     }

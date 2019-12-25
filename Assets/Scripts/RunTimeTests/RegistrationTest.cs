@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
-using HumbleObjects;
 using NUnit.Framework;
 using RunTimeTests.Common;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace RunTimeTests
         public void SuccessRegisterTest()
         {
             bool successful = Task.Run(async () =>
-                    await AsyncRegistrationHelper.TryToRegister(UserData.correctUserSimpleRegistrationModel))
+                    await AsyncRegistrationHelper.TryToRegister(UserData.CorrectSimpleRegistrationRequestModel))
                 .GetAwaiter()
                 .GetResult();
 
@@ -29,7 +28,7 @@ namespace RunTimeTests
         public void WrongEmailRegisterTest()
         {
             bool successful = Task.Run(async () =>
-                    await AsyncRegistrationHelper.TryToRegister(UserData.wrongEmailSimpleRegistrationModel))
+                    await AsyncRegistrationHelper.TryToRegister(UserData.WrongEmailSimpleRegistrationRequestModel))
                 .GetAwaiter()
                 .GetResult();
 

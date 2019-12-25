@@ -1,8 +1,9 @@
 ﻿namespace GlobalVariables
 {
-    public class RequestsSuffixes
+    public static class RequestsSuffixes
     {
-        public const string SignUp = "sign_up"; 
-        public const string SignIn = "sign_in"; 
+        public const string SignUp = "sign_up";
+        public const string SignIn = "sign_in";
+        public const string Profile = "profile";
     }
 }

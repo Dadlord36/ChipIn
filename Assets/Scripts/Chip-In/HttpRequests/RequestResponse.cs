@@ -4,13 +4,13 @@ namespace HttpRequests
 {
     public struct RequestResponse<TDataModel>
     {
-        public readonly HttpResponseMessage responseMessage;
-        public readonly TDataModel responseData;
+        public readonly HttpResponseMessage ResponseMessage;
+        public readonly TDataModel ResponseData;
 
         public RequestResponse(HttpResponseMessage responseMessage, TDataModel responseData)
         {
-            this.responseMessage = responseMessage;
-            this.responseData = responseData;
+            ResponseMessage = responseMessage;
+            ResponseData = responseData;
         }
 
     }

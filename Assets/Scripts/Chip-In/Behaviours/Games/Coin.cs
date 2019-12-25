@@ -3,7 +3,6 @@ using Behaviours.Games.Interfaces;
 using Common.ValueGenerators;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
 namespace Behaviours.Games
@@ -20,6 +19,7 @@ namespace Behaviours.Games
 
         private int _coinValue;
         private static readonly int Play = Animator.StringToHash("play");
+        private bool _wasPicked;
 
         private int ValueView
         {
@@ -33,8 +33,10 @@ namespace Behaviours.Games
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
+            if (_wasPicked) return;
             OnCollected(_coinValue);
             MakeFinishingAction();
+            _wasPicked = true;
         }
 
         private void MakeFinishingAction()
