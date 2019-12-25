@@ -1,21 +1,20 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
 using DataModels;
 using DataModels.Interfaces;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
-using Repositories.Synchronizers;
-using ScriptableObjects.ActionsConnectors;
+using ScriptableObjects.DataSynchronizers;
 using UnityEngine;
-using UnityEngine.UI;
 using WebOperationUtilities;
 
 namespace Repositories
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : ScriptableObject, IUserProfileModel, IDataSynchronization
+    public sealed class UserProfileRemoteRepository : ScriptableObject, INotifyPropertyChanged, IUserProfileModel, IDataSynchronization
     {
         #region EventsDeclaration
 
@@ -24,119 +23,124 @@ namespace Repositories
 
         #endregion
 
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
+        
+        private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
+        private IDataSynchronization UserProfileDataSynchronization => userProfileDataSynchronizer;
 
-        private IUserProfileDataWebModel _userProfileDataRemote;
-        private IDataSynchronization _userProfileDataSynchronization;
-
-        private Texture2D _userAvatarImage;
+        [SerializeField] private Texture2D userAvatarImage;
 
         #region IUserProfile delegation
-
         public GeoLocation UserLocation
         {
-            get => _userProfileDataRemote.UserLocation;
-            set => _userProfileDataRemote.UserLocation = value;
+            get => UserProfileDataRemote.UserLocation;
+            set => UserProfileDataRemote.UserLocation = value;
         }
 
         public Texture2D AvatarImage
         {
-            get => _userAvatarImage;
-            set => _userAvatarImage = value;
+            get => userAvatarImage;
+            set => userAvatarImage = value;
         }
 
         public string Name
         {
-            get => _userProfileDataRemote.Name;
-            set => _userProfileDataRemote.Name = value;
+            get => UserProfileDataRemote.Name;
+            set => UserProfileDataRemote.Name = value;
         }
 
         public int Id
         {
-            get => _userProfileDataRemote.Id;
-            set => _userProfileDataRemote.Id = value;
+            get => UserProfileDataRemote.Id;
+            set => UserProfileDataRemote.Id = value;
         }
 
         public string Email
         {
-            get => _userProfileDataRemote.Email;
-            set => _userProfileDataRemote.Email = value;
+            get => UserProfileDataRemote.Email;
+            set => UserProfileDataRemote.Email = value;
         }
 
         public string Role
         {
-            get => _userProfileDataRemote.Role;
-            set => _userProfileDataRemote.Role = value;
+            get => UserProfileDataRemote.Role;
+            set => UserProfileDataRemote.Role = value;
         }
 
         public string Gender
         {
-            get => _userProfileDataRemote.Gender;
-            set => _userProfileDataRemote.Gender = value;
+            get => UserProfileDataRemote.Gender;
+            set => UserProfileDataRemote.Gender = value;
         }
 
         public string Birthday
         {
-            get => _userProfileDataRemote.Birthday;
-            set => _userProfileDataRemote.Birthday = value;
+            get => UserProfileDataRemote.Birthday;
+            set => UserProfileDataRemote.Birthday = value;
         }
 
         public string CountryCode
         {
-            get => _userProfileDataRemote.CountryCode;
-            set => _userProfileDataRemote.CountryCode = value;
+            get => UserProfileDataRemote.CountryCode;
+            set => UserProfileDataRemote.CountryCode = value;
         }
 
         public int TokensBalance
         {
-            get => _userProfileDataRemote.TokensBalance;
-            set => _userProfileDataRemote.TokensBalance = value;
+            get => UserProfileDataRemote.TokensBalance;
+            set => UserProfileDataRemote.TokensBalance = value;
         }
 
         public bool ShowAdsState
         {
-            get => _userProfileDataRemote.ShowAdsState;
-            set => _userProfileDataRemote.ShowAdsState = value;
+            get => UserProfileDataRemote.ShowAdsState;
+            set => UserProfileDataRemote.ShowAdsState = value;
         }
 
         public bool ShowAlertsState
         {
-            get => _userProfileDataRemote.ShowAlertsState;
-            set => _userProfileDataRemote.ShowAlertsState = value;
+            get => UserProfileDataRemote.ShowAlertsState;
+            set => UserProfileDataRemote.ShowAlertsState = value;
         }
 
         public bool UserRadarState
         {
-            get => _userProfileDataRemote.UserRadarState;
-            set => _userProfileDataRemote.UserRadarState = value;
+            get => UserProfileDataRemote.UserRadarState;
+            set => UserProfileDataRemote.UserRadarState = value;
         }
 
         public bool ShowNotificationsState
         {
-            get => _userProfileDataRemote.ShowNotificationsState;
-            set => _userProfileDataRemote.ShowNotificationsState = value;
+            get => UserProfileDataRemote.ShowNotificationsState;
+            set => UserProfileDataRemote.ShowNotificationsState = value;
         }
 
         #endregion
 
         private void OnEnable()
         {
-            var userProfileDataRemote = new UserProfileDataSynchronizer(authorisationDataRepository);
-
-            _userProfileDataRemote = userProfileDataRemote;
-            _userProfileDataSynchronization = userProfileDataRemote;
+            PropertyChanged += InvokeSaveDataToServer;
         }
 
+        private void OnDestroy()
+        {
+            PropertyChanged -= InvokeSaveDataToServer;
+        }
+
+        private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            SaveDataToServer();
+        }
 
         private async Task LoadAvatarImageFromServerAsync()
         {
-            if (string.IsNullOrEmpty(_userProfileDataRemote.AvatarImageUrl))
+            if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
             {
                 Debug.Log("There is not URL to load user profile avatar image from",this);
                 return;
             }
-            _userAvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(_userProfileDataRemote.AvatarImageUrl);
-            if (_userAvatarImage)
+            userAvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
+            if (userAvatarImage)
                 Debug.Log("User avatar image was loaded", this);
             else
             {
@@ -146,14 +150,14 @@ namespace Repositories
 
         public async Task LoadDataFromServer()
         {
-            await _userProfileDataSynchronization.LoadDataFromServer();
+            await UserProfileDataSynchronization.LoadDataFromServer();
             await LoadAvatarImageFromServerAsync();
             ConfirmDataLoading();
         }
 
         public async Task SaveDataToServer()
         {
-            await _userProfileDataSynchronization.SaveDataToServer();
+            await UserProfileDataSynchronization.SaveDataToServer();
             ConfirmDataSaved();
         }
 
@@ -161,7 +165,7 @@ namespace Repositories
         {
             OnDataWasLoaded();
             Debug.Log("User profile data was loaded from server", this);
-            Debug.Log(JsonConvert.SerializeObject(_userProfileDataRemote), this);
+            Debug.Log(JsonConvert.SerializeObject(UserProfileDataRemote), this);
         }
 
         private void ConfirmDataSaved()
@@ -183,5 +187,11 @@ namespace Repositories
         }
 
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => userProfileDataSynchronizer.PropertyChanged += value;
+            remove => userProfileDataSynchronizer.PropertyChanged -= value;
+        }
     }
 }

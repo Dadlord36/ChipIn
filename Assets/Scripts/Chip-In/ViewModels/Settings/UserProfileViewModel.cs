@@ -12,8 +12,6 @@ namespace ViewModels.Settings
     [Binding]
     public class UserProfileViewModel : BaseViewModel, INotifyPropertyChanged, IUserProfileModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         [SerializeField] private UserProfileRemoteRepository repository;
         private IUserProfileModel UserSettingsModel => repository;
 
@@ -21,154 +19,98 @@ namespace ViewModels.Settings
         public GeoLocation UserLocation
         {
             get => UserSettingsModel.UserLocation;
-            set
-            {
-                UserSettingsModel.UserLocation = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.UserLocation = value;
         }
 
         [Binding]
         public Texture2D AvatarImage
         {
             get => UserSettingsModel.AvatarImage;
-            set
-            {
-                UserSettingsModel.AvatarImage = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.AvatarImage = value;
         }
 
         [Binding]
         public string Name
         {
             get => UserSettingsModel.Name;
-            set
-            {
-                UserSettingsModel.Name = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Name = value;
         }
 
         [Binding]
         public int Id
         {
             get => UserSettingsModel.Id;
-            set
-            {
-                UserSettingsModel.Id = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Id = value;
         }
 
         [Binding]
         public string Email
         {
             get => UserSettingsModel.Email;
-            set
-            {
-                UserSettingsModel.Email = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Email = value;
         }
 
         [Binding]
         public string Role
         {
             get => UserSettingsModel.Role;
-            set
-            {
-                UserSettingsModel.Role = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Role = value;
         }
 
         [Binding]
         public string Gender
         {
             get => UserSettingsModel.Gender;
-            set
-            {
-                UserSettingsModel.Gender = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Gender = value;
         }
 
         [Binding]
         public string Birthday
         {
             get => UserSettingsModel.Birthday;
-            set
-            {
-                UserSettingsModel.Birthday = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.Birthday = value;
         }
 
         [Binding]
         public string CountryCode
         {
             get => UserSettingsModel.CountryCode;
-            set
-            {
-                UserSettingsModel.CountryCode = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.CountryCode = value;
         }
 
         [Binding]
         public int TokensBalance
         {
             get => UserSettingsModel.TokensBalance;
-            set
-            {
-                UserSettingsModel.TokensBalance = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.TokensBalance = value;
         }
 
         [Binding]
         public bool ShowAdsState
         {
             get => UserSettingsModel.ShowAdsState;
-            set
-            {
-                UserSettingsModel.ShowAdsState = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.ShowAdsState = value;
         }
 
         [Binding]
         public bool ShowAlertsState
         {
             get => UserSettingsModel.ShowAlertsState;
-            set
-            {
-                UserSettingsModel.ShowAlertsState = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.ShowAlertsState = value;
         }
 
         [Binding]
         public bool UserRadarState
         {
             get => UserSettingsModel.UserRadarState;
-            set
-            {
-                UserSettingsModel.UserRadarState = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.UserRadarState = value;
         }
 
         [Binding]
         public bool ShowNotificationsState
         {
             get => UserSettingsModel.ShowNotificationsState;
-            set
-            {
-                UserSettingsModel.ShowNotificationsState = value;
-                OnPropertyChanged();
-            }
+            set => UserSettingsModel.ShowNotificationsState = value;
         }
 
         [Binding]
@@ -189,13 +131,18 @@ namespace ViewModels.Settings
         }
 
 
-        [NotifyPropertyChangedInvocator]
+        /*[NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             Debug.Log($"{propertyName} was changed");
            //await seems to be not needed
             repository.SaveDataToServer();
+        }*/
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => repository.PropertyChanged += value;
+            remove => repository.PropertyChanged -= value;
         }
     }
 }

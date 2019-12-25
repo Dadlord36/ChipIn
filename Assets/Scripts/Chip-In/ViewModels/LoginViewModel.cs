@@ -100,10 +100,10 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
             IsPendingLogin = false;
             SwitchToMiniGame();
 
+            var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
             authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             await remoteRepository.LoadDataFromServer();
         }
