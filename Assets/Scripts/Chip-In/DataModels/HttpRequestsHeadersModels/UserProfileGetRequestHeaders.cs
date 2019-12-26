@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using UnityEngine.Assertions;
@@ -48,11 +49,12 @@ namespace DataModels.HttpRequestsHeadersModels
 
             for (int i = 0; i < properties.Length; i++)
             {
-                foreach (var attribute in properties[i].CustomAttributes)
+                foreach (var attribute in properties[i].GetCustomAttributes(true))
                 {
-                    Assert.IsTrue(attribute.AttributeType == typeof(JsonPropertyAttribute));
+                    var jsonPropertyAttribute = attribute as JsonPropertyAttribute;
+                    Assert.IsNotNull(jsonPropertyAttribute);
 
-                    headers.Add(new KeyValuePair<string, string>(attribute.ConstructorArguments[0].Value.ToString(),
+                    headers.Add(new KeyValuePair<string, string>(jsonPropertyAttribute.PropertyName,
                         properties[i].GetValue(this).ToString()));
                 }
             }
