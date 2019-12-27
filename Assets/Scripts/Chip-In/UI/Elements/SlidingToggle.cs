@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Common;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -12,7 +13,7 @@ namespace UI.Elements
         [SerializeField] private RectTransform handleTransform;
 
         private float _onPosX, _offPosX;
-        private Vector3 tempHandlePosition;
+        private Vector3 _tempHandlePosition;
         private ITimeline _timeline;
         private IToggle[] _toggles;
 
@@ -44,6 +45,7 @@ namespace UI.Elements
         private void CollectAllToggles()
         {
             _toggles = GetComponentsInChildren<IToggle>();
+            _toggles.ToList().Remove(this);
         }
 
         private void SubscribeChangeableSliderPartsToTimelineProgression()
@@ -91,8 +93,8 @@ namespace UI.Elements
 
         protected override void SetHandlePositionAlongSlide(float percentage)
         {
-            tempHandlePosition.x = Mathf.Lerp(_offPosX, _onPosX, percentage);
-            handleTransform.localPosition = tempHandlePosition;
+            _tempHandlePosition.x = Mathf.Lerp(_offPosX, _onPosX, percentage);
+            handleTransform.localPosition = _tempHandlePosition;
         }
 
         private void PropagateConditionChange()
@@ -106,6 +108,7 @@ namespace UI.Elements
         protected override void OnConditionChanger()
         {
             _timeline.RestartTimer();
+            
         }
 
         public void OnPointerClick(PointerEventData eventData)

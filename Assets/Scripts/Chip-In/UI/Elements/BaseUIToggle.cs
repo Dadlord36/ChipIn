@@ -13,11 +13,6 @@ namespace UI.Elements
         bool Condition { set; get; }
     }
 
-    public interface IViewElement
-    {
-        void RefreshVisual();
-    }
-
     [Serializable]
     [Binding]
     public abstract class BaseUIToggle : UIBehaviour, IToggle, INotifyPropertyChanged
@@ -64,13 +59,11 @@ namespace UI.Elements
         {
             return Mathf.Abs(_basicValue + percentage);
         }
-
-
+        
         protected void OnToggleSwitched()
         {
             toggleSwitched?.Invoke();
         }
-        
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -141,8 +141,8 @@ namespace ViewModels.Settings
         }*/
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add => repository.PropertyChanged += value;
-            remove => repository.PropertyChanged -= value;
+            add => repository.RepositoryPropertyChanged += value;
+            remove => repository.RepositoryPropertyChanged -= value;
         }
     }
 }

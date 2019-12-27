@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Structures;
 using DataModels;
@@ -14,12 +15,14 @@ namespace Repositories
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : ScriptableObject, INotifyPropertyChanged, IUserProfileModel, IDataSynchronization
+    public sealed class UserProfileRemoteRepository : ScriptableObject,  IUserProfileModel, IDataSynchronization
     {
         #region EventsDeclaration
 
         public event Action DataWasLoaded;
         public event Action DataWasSaved;
+
+        public event PropertyChangedEventHandler RepositoryPropertyChanged;
 
         #endregion
 
@@ -40,7 +43,11 @@ namespace Repositories
         public Texture2D AvatarImage
         {
             get => userAvatarImage;
-            set => userAvatarImage = value;
+            set
+            {
+                userAvatarImage = value;
+                OnRepositoryPropertyChanged();
+            }
         }
 
         public string Name
@@ -119,12 +126,14 @@ namespace Repositories
 
         private void OnEnable()
         {
-            PropertyChanged += InvokeSaveDataToServer;
+            PropertyChanged += RepositoryPropertyChanged;
+            RepositoryPropertyChanged += InvokeSaveDataToServer;
         }
 
         private void OnDestroy()
         {
-            PropertyChanged -= InvokeSaveDataToServer;
+            PropertyChanged -= RepositoryPropertyChanged;
+            RepositoryPropertyChanged -= InvokeSaveDataToServer;
         }
 
         private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -139,7 +148,7 @@ namespace Repositories
                 Debug.Log("There is not URL to load user profile avatar image from",this);
                 return;
             }
-            userAvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
+            AvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
             if (userAvatarImage)
                 Debug.Log("User avatar image was loaded", this);
             else
@@ -185,13 +194,20 @@ namespace Repositories
         {
             DataWasSaved?.Invoke();
         }
+        
+        private void OnRepositoryPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            RepositoryPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged
+        private event PropertyChangedEventHandler PropertyChanged
         {
             add => userProfileDataSynchronizer.PropertyChanged += value;
             remove => userProfileDataSynchronizer.PropertyChanged -= value;
         }
+
+
     }
 }
