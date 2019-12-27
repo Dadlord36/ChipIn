@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -120,6 +121,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &181077494 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5440012824365256484, guid: a7127e1ff2e4794448b9fd13f08a6fe2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1311471471}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bb59b59b9774d169b813f610647e0a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &359344354 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7747968243628860111, guid: a7127e1ff2e4794448b9fd13f08a6fe2,
@@ -220,6 +233,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: WinnerView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4338346481510239029, guid: a7127e1ff2e4794448b9fd13f08a6fe2,
+        type: 3}
+      propertyPath: imagesRoll
+      value: 
+      objectReference: {fileID: 181077494}
+    - target: {fileID: 5440012824365256484, guid: a7127e1ff2e4794448b9fd13f08a6fe2,
+        type: 3}
+      propertyPath: ellipsesType
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7747968243628860111, guid: a7127e1ff2e4794448b9fd13f08a6fe2,
         type: 3}
