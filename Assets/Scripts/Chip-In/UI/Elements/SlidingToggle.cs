@@ -15,24 +15,15 @@ namespace UI.Elements
         private float _onPosX, _offPosX;
         private Vector3 _tempHandlePosition;
         private ITimeline _timeline;
-        private IToggle[] _toggles;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            Assert.IsNotNull(handleTransform);
-            _timeline = GetComponent<ITimeline>();
-
-
-            CalculateMovementBounds();
-            // SetToggleInitState();
-        }
+        [SerializeField] private BaseUIToggle[] toggles;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            CollectAllToggles();
+            Assert.IsNotNull(handleTransform);
+            
+            _timeline = GetComponent<ITimeline>();
+            CalculateMovementBounds();
             SubscribeChangeableSliderPartsToTimelineProgression();
         }
 
@@ -40,12 +31,6 @@ namespace UI.Elements
         {
             base.OnDisable();
             UnsubscribeChangeableSliderPartsFromTimelineProgression();
-        }
-
-        private void CollectAllToggles()
-        {
-            _toggles = GetComponentsInChildren<IToggle>();
-            _toggles.ToList().Remove(this);
         }
 
         private void SubscribeChangeableSliderPartsToTimelineProgression()
@@ -82,7 +67,7 @@ namespace UI.Elements
             var toggleRect = GetComponent<RectTransform>();
             var toggleSizeX = toggleRect.sizeDelta.x;
 
-            _onPosX = (toggleSizeX / 2) * (float) handleDockingPositionPercentage;
+            _onPosX = toggleSizeX / 2 * (float) handleDockingPositionPercentage;
             _offPosX = _onPosX * -1;
         }
 
@@ -99,23 +84,23 @@ namespace UI.Elements
 
         private void PropagateConditionChange()
         {
-            for (int i = 0; i < _toggles.Length; i++)
+            for (int i = 0; i < toggles.Length; i++)
             {
-                _toggles[i].Condition = Condition;
+                toggles[i].Condition = Condition;
             }
         }
 
         protected override void OnConditionChanger()
         {
             _timeline.RestartTimer();
-            
+            PropagateConditionChange();
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             Condition = !Condition;
             OnToggleSwitched();
-            PropagateConditionChange();
+            
         }
     }
 }
