@@ -124,21 +124,7 @@ namespace ViewModels.Settings
         {
             Debug.Log("Editing profile");
         }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-        }
-
-
-        /*[NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            Debug.Log($"{propertyName} was changed");
-           //await seems to be not needed
-            repository.SaveDataToServer();
-        }*/
+        
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => repository.RepositoryPropertyChanged += value;

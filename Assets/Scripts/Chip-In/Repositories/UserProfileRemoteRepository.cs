@@ -128,14 +128,14 @@ namespace Repositories
 
         private void OnEnable()
         {
-            PropertyChanged += RepositoryPropertyChanged;
             RepositoryPropertyChanged += InvokeSaveDataToServer;
+            PropertyChanged += RepositoryPropertyChanged;
         }
 
         private void OnDestroy()
         {
-            PropertyChanged -= RepositoryPropertyChanged;
             RepositoryPropertyChanged -= InvokeSaveDataToServer;
+            PropertyChanged -= RepositoryPropertyChanged;
         }
 
         private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
