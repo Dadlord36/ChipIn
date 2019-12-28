@@ -11,7 +11,9 @@ namespace ViewModels
         protected override void OnEnable()
         {
             base.OnEnable();
-            ((WinnerView) View).SetMainAvatarIconSprite(GetUserAvatarSprite());
+            var winnerView =(WinnerView) View;
+            winnerView.MainAvatarIconSprite = GetUserAvatarSprite();
+            winnerView.UserNameFieldText = userProfileRemoteRepository.Name;
         }
 
         private Sprite GetUserAvatarSprite()

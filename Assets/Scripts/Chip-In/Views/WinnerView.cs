@@ -1,4 +1,5 @@
-﻿using UI;
+﻿using TMPro;
+using UI;
 using UnityEngine;
 
 namespace Views
@@ -6,10 +7,16 @@ namespace Views
     public class WinnerView : BaseView
     {
         [SerializeField] private ImagesRoll imagesRoll;
+        [SerializeField] private TMP_Text textField;
 
-        public void SetMainAvatarIconSprite(Sprite sprite)
+        public string UserNameFieldText
         {
-            imagesRoll.SetMainAvatarIconSprite(sprite);
+            set => textField.text = value;
+        }
+
+        public Sprite MainAvatarIconSprite
+        {
+            set => imagesRoll.SetMainAvatarIconSprite(value);
         }
     }
 }
