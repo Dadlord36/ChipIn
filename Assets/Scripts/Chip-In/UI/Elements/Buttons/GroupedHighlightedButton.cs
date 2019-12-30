@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace UI.Elements.Buttons
 {
-    public class GroupedHighlightedButton : Button, IGroupableSelection
+    public class GroupedHighlightedButton : Button, ISelectableObject
     {
         [SerializeField] private TMP_Text text;
         [SerializeField] private TMP_FontAsset normalFont, highlightedFont;

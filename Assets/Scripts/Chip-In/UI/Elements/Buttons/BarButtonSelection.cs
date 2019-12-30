@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace UI.Elements.Buttons
 {
-    public sealed class BarButtonSelection : UIBehaviour, IGroupableSelection
+    public sealed class BarButtonSelection : UIBehaviour, ISelectableObject
     {
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
