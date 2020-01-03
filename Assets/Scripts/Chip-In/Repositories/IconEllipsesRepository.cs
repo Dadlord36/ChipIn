@@ -1,5 +1,4 @@
 ﻿using System;
-using UI.Elements.Icons;
 using UnityEngine;
 
 namespace Repositories
@@ -11,6 +10,11 @@ namespace Repositories
         public float scale;
     }
     
+    public enum IconEllipseType
+    {
+        Golden,
+        Silver
+    }
     
     [CreateAssetMenu(fileName = nameof(IconEllipsesRepository),
         menuName = nameof(Repositories) + "/" + nameof(IconEllipsesRepository), order = 0)]

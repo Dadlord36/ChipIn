@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Repositories;
 using UI.Elements.Icons;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -62,7 +63,7 @@ namespace UI
 
         public void SetMainAvatarIconSprite(Sprite sprite)
         {
-            mainImage.SetAvatarImageSprite(sprite);
+            mainImage.AvatarSprite=sprite;
         }
 
         public void CreateImages(IconEllipseType ellipsesType)

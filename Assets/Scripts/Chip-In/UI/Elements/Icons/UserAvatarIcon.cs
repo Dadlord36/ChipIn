@@ -5,24 +5,24 @@ using UnityEngine.UI;
 
 namespace UI.Elements.Icons
 {
-    public enum IconEllipseType
-    {
-        Golden,
-        Silver
-    }
+
 
     public class UserAvatarIcon : UIBehaviour
     {
         [SerializeField] private Image background, avatar, avatarEllipse;
         [SerializeField] private IconEllipsesRepository eliEllipsesRepository;
 
-        private RectTransform _avatarRectTransform;
+        public RectTransform AvatarRectTransform { get; private set; }
 
-        public RectTransform AvatarRectTransform => _avatarRectTransform;
+        public Sprite AvatarSprite
+        {
+            get => avatar.sprite;
+            set => avatar.sprite = value;
+        }
 
         public void Initialize()
         {
-            _avatarRectTransform = GetComponent<RectTransform>();
+            AvatarRectTransform = GetComponent<RectTransform>();
         }
 
         public void SetIconEllipseSprite(IconEllipseType ellipseType)
@@ -45,12 +45,7 @@ namespace UI.Elements.Icons
 
         public void SetScale(float scale)
         {
-            _avatarRectTransform.localScale = CreateScaleVectorFromSingleValue(scale);
-        }
-
-        public void SetAvatarImageSprite(Sprite sprite)
-        {
-            avatar.sprite = sprite;
+            AvatarRectTransform.localScale = CreateScaleVectorFromSingleValue(scale);
         }
 
         private static void SetImageScale(Graphic image, float singleScale)
