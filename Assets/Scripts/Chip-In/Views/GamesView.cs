@@ -1,7 +1,6 @@
 ﻿namespace Views
 {
-    public class GamesView : BaseView
+    public class GamesView : ContainerView<SoloGameItemView>
     {
-        
     }
 }

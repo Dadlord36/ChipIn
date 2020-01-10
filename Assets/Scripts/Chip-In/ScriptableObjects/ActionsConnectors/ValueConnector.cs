@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ScriptableObjects.ActionsConnectors
 {
-    [CreateAssetMenu(fileName = nameof(ValueConnector), menuName = "ActionsConnectors/" + nameof(ValueConnector),
+    [CreateAssetMenu(fileName = nameof(ValueConnector), menuName = nameof(ActionsConnectors)+ "/" + nameof(ValueConnector),
         order = 0)]
     public sealed class ValueConnector : ScriptableObject
     {

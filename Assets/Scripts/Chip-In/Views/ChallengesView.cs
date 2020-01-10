@@ -1,6 +1,9 @@
-﻿namespace Views
+﻿using Views.ViewElements;
+
+namespace Views
 {
-    public class ChallengesView : BaseView
+    public class ChallengesView : ContainerView<ChallengeCardView>
     {
+
     }
 }
