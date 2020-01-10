@@ -1,6 +1,6 @@
-﻿using UI.Elements;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using ViewModels.UI.Elements;
 
 namespace Inspectors
 {
@@ -37,6 +37,7 @@ namespace Inspectors
             if (EditorGUI.EndChangeCheck())
             {
                 UpdateCircles();
+                EditorUtility.SetDirty(_analyticView);
             }
 
             if (GUILayout.Button("Add circle"))

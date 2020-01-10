@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI.Extensions;
 using Views;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     [RequireComponent(typeof(UICircle))]
     public class CommunitySpiritAnalyticView : BaseView

@@ -33,7 +33,6 @@ namespace Inspectors
             if (EditorGUI.EndChangeCheck())
             {
                 _avatarIcon.SetIconEllipseSprite(_ellipseType);
-                SceneView.RepaintAll();
             }
         }
     }

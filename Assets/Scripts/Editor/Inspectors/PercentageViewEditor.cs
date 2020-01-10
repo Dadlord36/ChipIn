@@ -20,7 +20,7 @@ namespace Inspectors
             _percentageView.Percentage = EditorGUILayout.Slider(_percentageView.Percentage, 0f, 1.0f);
             if (EditorGUI.EndChangeCheck())
             {
-                SceneView.lastActiveSceneView.Repaint();
+                
             }
         }
     }
