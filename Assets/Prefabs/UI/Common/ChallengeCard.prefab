@@ -75,6 +75,8 @@ GameObject:
   - component: {fileID: 6259904068210654870}
   - component: {fileID: 8567114231923506169}
   - component: {fileID: 8405580158696922578}
+  - component: {fileID: 2349179579050362447}
+  - component: {fileID: 2142488240265096806}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -181,6 +183,35 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2349179579050362447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279215446940841694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
+--- !u!114 &2142488240265096806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3279215446940841694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ChallengeCardViewModel.CloneButton_Click
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &3785765527430264378
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,6 +576,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -746,7 +778,8 @@ MonoBehaviour:
   m_text: Clone player for
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -847,8 +880,10 @@ GameObject:
   - component: {fileID: 5798734784213707156}
   - component: {fileID: 5814658147674818561}
   - component: {fileID: 285928019172192853}
+  - component: {fileID: 2833480288528878049}
+  - component: {fileID: 3466871222749390211}
   m_Layer: 5
-  m_Name: ChalengeCard
+  m_Name: ChallengeCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,6 +961,34 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &2833480288528878049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9188101403587074853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a0cec111aecd5448a016299480cc01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  challengeTypeTextField: {fileID: 3969495172458869049}
+  userCoinsView: {fileID: 5487682339001892382}
+  icon: {fileID: 3663575485560210460}
+--- !u!114 &3466871222749390211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9188101403587074853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fa031d86222faf428d1247aadf3bfd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 2833480288528878049}
 --- !u!1001 &1741188154188863848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1056,7 +1119,7 @@ PrefabInstance:
     - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
         type: 3}
@@ -1093,8 +1156,27 @@ PrefabInstance:
       propertyPath: m_fontStyle
       value: 17
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
+    m_RemovedComponents:
+    - {fileID: 134349658753396960, guid: f0adb508c926b204280827051a9db4c2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f0adb508c926b204280827051a9db4c2, type: 3}
+--- !u!114 &5487682339001892382 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6053360603180820342, guid: f0adb508c926b204280827051a9db4c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1741188154188863848}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e332dd88c3a64d4097fa3df323b05f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3419797414469789020 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3989202765335166004, guid: f0adb508c926b204280827051a9db4c2,

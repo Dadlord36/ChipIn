@@ -1,4 +1,5 @@
-﻿using Repositories;
+﻿using Repositories.Local;
+using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
@@ -6,28 +7,49 @@ using Views;
 namespace ViewModels
 {
     [Binding]
-    public class GamesViewModel : ViewsSwitchingViewModel
+    public class GamesViewModel : BaseContainerItemsViewModel
     {
+        [SerializeField] private SoloGamesRemoteRepository gamesRemoteRepository;
         [SerializeField] private SoloGameItemParametersRepository itemParametersRepository;
 
-        public struct SoloGameParameters
+        protected override void OnEnable()
         {
-            public string GameTypeName;
+            base.OnEnable();
+            SubscribeOnRepositoryItemsCollectionChangesEvent(gamesRemoteRepository);
         }
 
-        public void ProcessGameLaunch(SoloGameParameters parameters)
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            UnsubscribeOnRepositoryItemsCollectionChangesEvent(gamesRemoteRepository);
+        }
+
+        public void ProcessGameLaunch(SingleGameData parameters)
         {
         }
 
-        public void AddSoloGameItem(SoloGameParameters soloGameParameters)
+        public void AddSoloGameItem(SingleGameData itemData)
         {
             var gameView = (GamesView) View;
-            var soloGameItem = gameView.AddSoloGameItem();
+            var soloGameItem = gameView.AddItem();
 
             var gameItemVisibleParameters =
-                itemParametersRepository.GetItemVisibleParameters(soloGameParameters.GameTypeName);
+                itemParametersRepository.GetItemVisibleParameters(itemData.TypeName);
 
             soloGameItem.GameTypeIcon = gameItemVisibleParameters.gameTypeSprite;
+        }
+
+        protected override void ClearAllItems()
+        {
+            ((GamesView) View).RemoveAllItems();
+        }
+
+        protected override void FillContainerWithDataFromRepository()
+        {
+            foreach (var item in gamesRemoteRepository.Data)
+            {
+                AddSoloGameItem(item);
+            }
         }
     }
 }

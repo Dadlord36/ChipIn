@@ -3,10 +3,10 @@ using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using UnityEngine;
 
-namespace Repositories
+namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserAuthorisationDataRepository),
-        menuName = nameof(Repositories) + "/" + nameof(UserAuthorisationDataRepository), order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"+ nameof(UserAuthorisationDataRepository), order = 0)]
     public class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider
     {
         private readonly IUserProfileRequestHeadersProvider _authorisationModel =

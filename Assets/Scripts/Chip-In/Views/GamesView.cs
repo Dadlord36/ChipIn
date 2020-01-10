@@ -1,19 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
-
-namespace Views
+﻿namespace Views
 {
-    public class GamesView : BaseView
+    public class GamesView : ContainerView<SoloGameItemView>
     {
-        
-        [SerializeField] private Transform gameItemsContainer;
-        [SerializeField] private SoloGameItemView soloGameItemPrefab;
-
-        public SoloGameItemView AddSoloGameItem()
-        {
-            Assert.IsNotNull(gameItemsContainer);
-
-            return Instantiate(soloGameItemPrefab, gameItemsContainer);
-        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Repositories
+namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(SoloGameItemParametersRepository),
-        menuName = nameof(Repositories) + "/" + nameof(SoloGameItemParametersRepository), order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SoloGameItemParametersRepository), order = 0)]
     public class SoloGameItemParametersRepository : ScriptableObject
     {
         [SerializeField] private SoloGameItemVisibleParameters[] soloGameItemVisibleParameters;
@@ -18,7 +18,7 @@ namespace Repositories
 
         public SoloGameItemVisibleParameters GetItemVisibleParameters(in string gameTypeName)
         {
-            for (int i = 0; i < soloGameItemVisibleParameters.Length; i++)
+            for (var i = 0; i < soloGameItemVisibleParameters.Length; i++)
             {
                 if (string.Equals(soloGameItemVisibleParameters[i].gameTypeName, gameTypeName,
                     StringComparison.OrdinalIgnoreCase))

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Repositories
+namespace Repositories.Local
 {
     [Serializable]
     public struct IconEllipseData
@@ -17,7 +17,7 @@ namespace Repositories
     }
     
     [CreateAssetMenu(fileName = nameof(IconEllipsesRepository),
-        menuName = nameof(Repositories) + "/" + nameof(IconEllipsesRepository), order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(IconEllipsesRepository), order = 0)]
     public class IconEllipsesRepository : ScriptableObject
     {
         [SerializeField] private IconEllipseData silverEllipse, goldenEllipse;

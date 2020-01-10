@@ -1646,8 +1646,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: befd1381bce147e0bd07d129e7af370e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameItemsContainer: {fileID: 224384423529884936}
-  soloGameItemPrefab: {fileID: 861518896528506743, guid: e35a7aa6c14be7742a27a91faef5406e,
+  itemsContainer: {fileID: 224384423529884936}
+  itemPrefab: {fileID: 861518896528506743, guid: e35a7aa6c14be7742a27a91faef5406e,
     type: 3}
 --- !u!114 &4891638728113876655
 MonoBehaviour:
@@ -1663,6 +1663,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 8337443198118616639}
   viewsSwitchingHelperObject: {fileID: 0}
+  gamesRemoteRepository: {fileID: 11400000, guid: 8edbce54764d6a648bbfc7e2bdfe31e0,
+    type: 2}
   itemParametersRepository: {fileID: 11400000, guid: 2848b6df8030b444cbfe84dd582b59c2,
     type: 2}
 --- !u!1 &6806406060810968524
@@ -2527,7 +2529,7 @@ PrefabInstance:
     - target: {fileID: 3541437179667725823, guid: e35a7aa6c14be7742a27a91faef5406e,
         type: 3}
       propertyPath: m_Name
-      value: SoloGameItem (1)
+      value: SoloGameItem
       objectReference: {fileID: 0}
     - target: {fileID: 3942157896845396201, guid: e35a7aa6c14be7742a27a91faef5406e,
         type: 3}

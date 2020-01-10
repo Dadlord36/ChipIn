@@ -11,10 +11,10 @@ using ScriptableObjects.DataSynchronizers;
 using UnityEngine;
 using WebOperationUtilities;
 
-namespace Repositories
+namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
-        menuName = nameof(Repositories) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
     public sealed class UserProfileRemoteRepository : ScriptableObject, IUserProfileModel, IDataSynchronization
     {
         #region EventsDeclaration

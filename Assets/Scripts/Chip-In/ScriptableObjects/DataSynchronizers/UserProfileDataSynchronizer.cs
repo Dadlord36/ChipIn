@@ -6,6 +6,7 @@ using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using Repositories;
 using Repositories.Interfaces;
+using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
 
