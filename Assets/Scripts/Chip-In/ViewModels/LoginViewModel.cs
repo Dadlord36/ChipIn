@@ -99,20 +99,15 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            
             var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
-            repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface
-                .AuthorisationData);
-            
             IsPendingLogin = false;
-            if (response.ResponseModelInterface.RequestIsSuccessful)
-                SwitchToMiniGame();
-        }
 
-        private static string GetFirstValue(HttpHeaders headers, string valueName)
-        {
-            Assert.IsTrue(headers.Contains(valueName));
-            return headers.GetValues(valueName).FirstOrDefault();
+            if (response.ResponseModelInterface != null && response.ResponseModelInterface.RequestIsSuccessful)
+            {
+                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface
+                    .AuthorisationData);
+                SwitchToMiniGame();
+            }
         }
 
         private void SwitchToMiniGame()
