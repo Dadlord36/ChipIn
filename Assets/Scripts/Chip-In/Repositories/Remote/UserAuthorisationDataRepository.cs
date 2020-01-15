@@ -7,7 +7,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserAuthorisationDataRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"+ nameof(UserAuthorisationDataRepository), order = 0)]
-    public class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider
+    public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider
     {
         private readonly IUserProfileRequestHeadersProvider _authorisationModel =
             new UserProfileRequestHeadersProvider();

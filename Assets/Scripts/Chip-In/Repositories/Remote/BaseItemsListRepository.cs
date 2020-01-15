@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Common;
-using UnityEngine;
 
 namespace Repositories.Remote
 {
-    public class BaseItemsListRepository<TDataType> : ScriptableObject, INotifyCollectionChanged
+    public abstract class BaseItemsListRepository<TDataType> : RemoteRepositoryBase, INotifyCollectionChanged
     {
-        private readonly LiveData<TDataType> _data = new LiveData<TDataType>();
-        public IReadOnlyList<TDataType> Data => _data.GetData;
+        [NonSerialized] protected readonly LiveData<TDataType> ItemsLiveData = new LiveData<TDataType>();
+        public IReadOnlyList<TDataType> ItemsData => ItemsLiveData.GetData;
 
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged
+            public event NotifyCollectionChangedEventHandler CollectionChanged
         {
-            add => _data.CollectionChanged += value;
-            remove => _data.CollectionChanged -= value;
+            add => ItemsLiveData.CollectionChanged += value;
+            remove => ItemsLiveData.CollectionChanged -= value;
         }
     }
 }

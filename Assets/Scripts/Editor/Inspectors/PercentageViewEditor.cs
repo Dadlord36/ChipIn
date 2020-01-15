@@ -1,5 +1,5 @@
-﻿using UI.Elements;
-using UnityEditor;
+﻿using UnityEditor;
+using ViewModels.UI.Elements;
 
 namespace Inspectors
 {

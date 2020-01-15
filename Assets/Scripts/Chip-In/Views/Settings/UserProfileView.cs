@@ -1,5 +1,5 @@
-﻿using UI.Elements;
-using UnityEngine;
+﻿using UnityEngine;
+using ViewModels.UI.Elements;
 
 namespace Views.Settings
 {

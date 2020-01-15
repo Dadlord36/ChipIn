@@ -1,10 +1,9 @@
-﻿using Repositories;
-using Repositories.Local;
+﻿using Repositories.Local;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Elements.Icons
+namespace ViewModels.UI.Elements.Icons
 {
 
 

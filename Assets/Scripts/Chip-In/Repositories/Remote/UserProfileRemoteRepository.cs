@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Structures;
@@ -15,13 +14,9 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : ScriptableObject, IUserProfileModel, IDataSynchronization
+    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel
     {
         #region EventsDeclaration
-
-        public event Action DataWasLoaded;
-        public event Action DataWasSaved;
-
         public event PropertyChangedEventHandler RepositoryPropertyChanged;
 
         #endregion
@@ -138,11 +133,6 @@ namespace Repositories.Remote
             PropertyChanged -= RepositoryPropertyChanged;
         }
 
-        private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            SaveDataToServer();
-        }
-
         private async Task LoadAvatarImageFromServerAsync()
         {
             if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
@@ -160,44 +150,34 @@ namespace Repositories.Remote
             }
         }
 
-        public async Task LoadDataFromServer()
+        public override async Task LoadDataFromServer()
         {
             await UserProfileDataSynchronization.LoadDataFromServer();
             await LoadAvatarImageFromServerAsync();
             ConfirmDataLoading();
         }
 
-        public async Task SaveDataToServer()
+        public override async Task SaveDataToServer()
         {
             await UserProfileDataSynchronization.SaveDataToServer();
             ConfirmDataSaved();
         }
 
-        private void ConfirmDataLoading()
+        protected override void ConfirmDataLoading()
         {
-            OnDataWasLoaded();
+            base.ConfirmDataLoading();
             Debug.Log("User profile data was loaded from server", this);
             Debug.Log(JsonConvert.SerializeObject(UserProfileDataRemote), this);
         }
 
-        private void ConfirmDataSaved()
+        protected override void ConfirmDataSaved()
         {
-            OnDataWasSaved();
+            base.ConfirmDataSaved();
             Debug.Log("User profile data was saved to server", this);
         }
 
         #region EventsInvokation
-
-        private void OnDataWasLoaded()
-        {
-            DataWasLoaded?.Invoke();
-        }
-
-        private void OnDataWasSaved()
-        {
-            DataWasSaved?.Invoke();
-        }
-
+        
         private void OnRepositoryPropertyChanged([CallerMemberName] string propertyName = null)
         {
             RepositoryPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

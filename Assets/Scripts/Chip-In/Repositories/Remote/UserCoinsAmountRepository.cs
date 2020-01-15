@@ -8,7 +8,9 @@ namespace Repositories.Remote
 {
     public interface IUserCoinsAmount
     {
-        uint CoinsAmount { get; set; }
+        uint CoinsAmount { get; }
+        void Add(uint amount);
+        void Subtract(uint amount);
     }
 
     [CreateAssetMenu(fileName = nameof(UserCoinsAmountRepository),
@@ -17,12 +19,13 @@ namespace Repositories.Remote
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<uint> AmountChanged;
-        
+
         private uint _amount;
+
         public uint CoinsAmount
         {
             get => _amount;
-            set
+            private set
             {
                 if (value == _amount) return;
                 _amount = value;
@@ -30,6 +33,17 @@ namespace Repositories.Remote
                 OnAmountChanged();
             }
         }
+
+        public void Add(uint amount)
+        {
+            CoinsAmount += amount;
+        }
+
+        public void Subtract(uint amount)
+        {
+            CoinsAmount -= amount;
+        }
+
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

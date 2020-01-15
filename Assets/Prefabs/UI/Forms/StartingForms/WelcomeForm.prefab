@@ -107,6 +107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6559645901985984299}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
 --- !u!114 &6559645901985984299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,16 +618,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_Name
-      value: WelcomeForm
-      objectReference: {fileID: 0}
-    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -746,6 +738,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_LocalRotation.x
@@ -761,25 +763,25 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_RenderMode
-      value: 0
+      propertyPath: m_Name
+      value: WelcomeForm
       objectReference: {fileID: 0}
-    - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 5
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6842291812766953718, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
@@ -808,11 +810,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6892773658933052709}
     m_Modifications:
-    - target: {fileID: 4314281648008083324, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_Name
-      value: GuestButton
-      objectReference: {fileID: 0}
     - target: {fileID: 609038148188589120, guid: e2c638e63262a6c4db3bf0704e557067,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,10 +941,10 @@ PrefabInstance:
       propertyPath: m_UseSpriteMesh
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+    - target: {fileID: 4314281648008083324, guid: e2c638e63262a6c4db3bf0704e557067,
         type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
+      propertyPath: m_Name
+      value: GuestButton
       objectReference: {fileID: 0}
     - target: {fileID: 5079256949532123281, guid: e2c638e63262a6c4db3bf0704e557067,
         type: 3}
@@ -958,6 +955,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_padding
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 774666526403156682, guid: e2c638e63262a6c4db3bf0704e557067, type: 3}
@@ -981,11 +983,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6892773658933052709}
     m_Modifications:
-    - target: {fileID: 4314281648008083324, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_Name
-      value: LoginButton
-      objectReference: {fileID: 0}
     - target: {fileID: 609038148188589120, guid: e2c638e63262a6c4db3bf0704e557067,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1091,52 +1088,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2751762011402769045, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 46024cb883af0844cbecd4fd011f49a0,
-        type: 3}
-    - target: {fileID: 2751762011402769045, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_text
-      value: Log In
-      objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_textInfo.spaceCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5079256949532123281, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5079256949532123281, guid: e2c638e63262a6c4db3bf0704e557067,
-        type: 3}
-      propertyPath: m_padding
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 774666526403156682, guid: e2c638e63262a6c4db3bf0704e557067,
         type: 3}
       propertyPath: m_color1.r
@@ -1171,6 +1122,57 @@ PrefabInstance:
         type: 3}
       propertyPath: linearGradientParameter
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2751762011402769045, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 46024cb883af0844cbecd4fd011f49a0,
+        type: 3}
+    - target: {fileID: 2751762011402769045, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4314281648008083324, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_Name
+      value: LoginButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5079256949532123281, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5079256949532123281, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_padding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_text
+      value: Log In
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5164494640079646879, guid: e2c638e63262a6c4db3bf0704e557067,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 774666526403156682, guid: e2c638e63262a6c4db3bf0704e557067, type: 3}

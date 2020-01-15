@@ -26,6 +26,11 @@ namespace Common
             _currentRecord = record;
         }
 
+        public void ClearHistory()
+        {
+            _historyStack.Clear();
+        }
+
         public T PopHistoryStack()
         {
             _currentRecord = _historyStack.Pop();

@@ -756,34 +756,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 3339012589146514130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bb59b59b9774d169b813f610647e0a0, type: 3}
+  m_Script: {fileID: 11500000, guid: 8917f30c9f7844fd9e53fd91d1626884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  userAvatarIconPrefab: {fileID: 8796068965768017365, guid: afcf847b5531e1c4fa0eeea41e689221,
-    type: 3}
-  numberOfImages: 4
-  numberOfItemsInRow: 2
-  basicOffset: 79.75
-  minScale: 0.913
-  scaleFactor: 0.193
-  imagesRows:
-  - rowNumber: 1
-    imageComponent: {fileID: 8344875126133299825}
-    owningObject: {fileID: 843385762461676845}
-    scale: 0.71999997
-  - rowNumber: 1
-    imageComponent: {fileID: 8480334549359505611}
-    owningObject: {fileID: 7298864249415684063}
-    scale: 0.71999997
-  - rowNumber: 2
-    imageComponent: {fileID: 5081530619451630165}
-    owningObject: {fileID: 8636140982886354839}
-    scale: 0.52699995
-  - rowNumber: 2
-    imageComponent: {fileID: 1881128740759176420}
-    owningObject: {fileID: 2587571096808147522}
-    scale: 0.52699995
-  mainImage: {fileID: 8689789070565012473}
+  userAvatarIconPrefab: {fileID: 0}
+  numberOfImages: 0
+  numberOfItemsInRow: 0
+  basicOffset: 10
+  minScale: 0.8
+  scaleFactor: 0
+  imagesRows: []
+  mainImage: {fileID: 0}
 --- !u!1 &3573250786732834173
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,8 +1315,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 4338346481510239029}
-  viewsSwitchingHelperObject: {fileID: 0}
-  userProfileRemoteRepository: {fileID: 0}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
+  userProfileRemoteRepository: {fileID: 11400000, guid: 5017a1d275a879447812a7a473ef0b22,
+    type: 2}
 --- !u!1 &7298864249415684063
 GameObject:
   m_ObjectHideFlags: 0

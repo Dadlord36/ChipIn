@@ -65,21 +65,5 @@ namespace HttpRequests
             return new StringContent(JsonConvert.SerializeObject(objectToSerialize), Encoding.UTF8,
                 JsonMediaTypeHeader);
         }
-
-        [Obsolete]
-        public static async Task<HttpResponseMessage> GetAsync(string requestSuffix, object requestHeaders)
-        {
-            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, _apiClient.BaseAddress + requestSuffix))
-            {
-                requestMessage.Content = CreateStringContent(requestHeaders);
-                return await _apiClient.SendAsync(requestMessage);
-            }
-        }
-        
-        [Obsolete]
-        public static async Task<HttpResponseMessage> PostAsync(string requestSuffix, object requestModel)
-        {
-            return await _apiClient.PostAsync(requestSuffix, CreateStringContent(requestModel));
-        }
     }
 }

@@ -15,11 +15,13 @@ namespace HttpRequests.RequestsProcessors
         where TRequestBodyModelInterface : class
         where TResponseModelInterface : class
     {
+        private const string Tag = "HTTPRequests"; 
+        
         private readonly string _requestSuffix;
         private readonly HttpMethod _requestMethod;
         private readonly IRequestHeaders _requestHeaders;
         private readonly TRequestBodyModelInterface _requestBodyModel;
-
+        
         protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod,
             IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
         {
@@ -54,6 +56,8 @@ namespace HttpRequests.RequestsProcessors
 
             {
                 var responseAsString = await responseMessage.Content.ReadAsStringAsync();
+                Debug.unityLogger.Log(LogType.Log, Tag,$"Response message: {responseAsString}");
+                
                 var errorMessageBuilder = new StringBuilder();
                 try
                 {
@@ -94,13 +98,13 @@ namespace HttpRequests.RequestsProcessors
                         httpResponse.Headers = requestResponse.ResponseMessage.Headers;
                     }
 
-                    Debug.Log(requestResponse.ResponseMessage.IsSuccessStatusCode
+                    Debug.unityLogger.Log(LogType.Log, Tag,requestResponse.ResponseMessage.IsSuccessStatusCode
                         ? successfulResponseMassage
                         : requestResponse.ResponseMessage.ReasonPhrase);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e);
+                    Debug.unityLogger.LogException(e);
                 }
 
                 return httpResponse;

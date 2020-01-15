@@ -58,8 +58,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.SettingsViewModel.ShowMyWallet
-  viewEventName: UI.Elements.Buttons.GroupedHighlightedButton.onClick
---- !u!114 &3401157331936434189
+  viewEventName: ViewModels.UI.Elements.Buttons.GroupedHighlightedButton.onClick
+--- !u!114 &4303201889344921751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,11 +68,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7577433387335682968}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b46e3595d7834ab3b23b51c3a8c43938, type: 3}
+  m_Script: {fileID: 11500000, guid: 678e0955fa2542c0a69b33322ce0df50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewsSwitchingBindingObject: {fileID: 11400000, guid: aef663590fc86474f957f82ab5c48eec,
-    type: 2}
 --- !u!114 &7907283974271836111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,20 +84,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 4303201889344921751}
-  viewsSwitchingHelperObject: {fileID: 0}
-  imagesRoll: {fileID: 0}
---- !u!114 &4303201889344921751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7577433387335682968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 678e0955fa2542c0a69b33322ce0df50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  viewsSwitchingController: {fileID: 11400000, guid: 3d3d90c6cff5899438d2c36b60361266,
+    type: 2}
 --- !u!1 &4367733038743195363
 GameObject:
   m_ObjectHideFlags: 0
@@ -251,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.SettingsViewModel.ShowMyProfile
-  viewEventName: UI.Elements.Buttons.GroupedHighlightedButton.onClick
+  viewEventName: ViewModels.UI.Elements.Buttons.GroupedHighlightedButton.onClick
 --- !u!114 &2627218208148372750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,7 +251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.SettingsViewModel.ShowMyInterest
-  viewEventName: UI.Elements.Buttons.GroupedHighlightedButton.onClick
+  viewEventName: ViewModels.UI.Elements.Buttons.GroupedHighlightedButton.onClick
 --- !u!1001 &415104310089737260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -354,6 +340,12 @@ PrefabInstance:
       propertyPath: m_textInfo.spaceCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
     - target: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1972,6 +1964,12 @@ PrefabInstance:
       propertyPath: m_fontColor.b
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
     - target: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2184,6 +2182,12 @@ PrefabInstance:
       propertyPath: m_textInfo.spaceCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
     - target: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_LocalPosition.x

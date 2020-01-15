@@ -1,12 +1,12 @@
 ﻿using ScriptableObjects.Parameters;
-using UI.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using ViewModels.UI.Interfaces;
 
-namespace UI.Elements.Buttons
+namespace ViewModels.UI.Elements.Buttons
 {
     public sealed class BarButtonSelection : UIBehaviour, ISelectableObject
     {

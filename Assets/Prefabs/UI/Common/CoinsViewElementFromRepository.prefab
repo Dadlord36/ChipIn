@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1752861501181570105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5317059148607758974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.UI.Elements.UserCoinsViewModel.CoinsAmount
+  viewPropertyName: Views.ViewElements.UserCoinsView.CoinsAmount
 --- !u!114 &5773674935580754544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,22 +31,6 @@ MonoBehaviour:
   view: {fileID: 1470904326081981174}
   userCoinsAmountRepository: {fileID: 11400000, guid: bc0f72c5e218e29469cb28e466706e22,
     type: 2}
---- !u!114 &1752861501181570105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5317059148607758974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.UI.Elements.UserCoinsViewModel.Amount
-  viewPropertyName: Views.ViewElements.UserCoinsView.CoinsAmount
 --- !u!1001 &4641074682179374464
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42,11 +42,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CoinsViewElement
-      objectReference: {fileID: 0}
-    - target: {fileID: 694000514922049534, guid: f0adb508c926b204280827051a9db4c2,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3989202765335166004, guid: f0adb508c926b204280827051a9db4c2,
         type: 3}
@@ -151,26 +146,6 @@ PrefabInstance:
     - target: {fileID: 3989202765335166004, guid: f0adb508c926b204280827051a9db4c2,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8099429268422443846, guid: f0adb508c926b204280827051a9db4c2,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

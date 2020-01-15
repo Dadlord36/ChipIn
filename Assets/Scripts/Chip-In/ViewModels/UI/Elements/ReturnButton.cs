@@ -1,9 +1,8 @@
 ﻿using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using ViewModels;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public class ReturnButton : UIBehaviour
     {

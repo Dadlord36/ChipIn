@@ -1,11 +1,11 @@
-﻿using Behaviours;
-using HttpRequests;
+﻿using HttpRequests;
 using UnityEngine;
+using ViewModels.SwitchingControllers;
 using Views;
 
 public class GameManager : MonoBehaviour
 {
-    
+    [SerializeField] private BaseViewSwitchingController mainViewsSwitchingController;
     // Start is called before the first frame update
     void Awake()
     {
@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ViewsCreator.PlaceInPreviousContainer<WelcomeView>();
+        mainViewsSwitchingController.RequestSwitchToView(nameof(WelcomeView));
     }
 
     private void OnDisable()

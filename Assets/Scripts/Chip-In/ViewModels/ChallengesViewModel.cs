@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Repositories.Local;
+﻿using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -12,8 +11,6 @@ namespace ViewModels
     {
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
-        
-        private IEnumerable<ChallengeData> ItemsData => challengesRemoteRepository.Data;
 
         protected override void OnEnable()
         {
@@ -42,7 +39,7 @@ namespace ViewModels
 
         protected override void FillContainerWithDataFromRepository()
         {
-            foreach (var item in ItemsData)
+            foreach (var item in challengesRemoteRepository.ItemsData)
             {
                 AddCard(item.ChallengeTypeName, item.CoinsPrice);
             }

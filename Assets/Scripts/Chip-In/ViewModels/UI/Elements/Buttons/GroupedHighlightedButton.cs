@@ -1,12 +1,12 @@
 ﻿using ScriptableObjects.Parameters;
 using TMPro;
-using UI.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using ViewModels.UI.Interfaces;
 
-namespace UI.Elements.Buttons
+namespace ViewModels.UI.Elements.Buttons
 {
     public class GroupedHighlightedButton : Button, ISelectableObject
     {
@@ -14,6 +14,14 @@ namespace UI.Elements.Buttons
         [SerializeField] private TMP_FontAsset normalFont, highlightedFont;
         [SerializeField] private ColorParameter normalTextColor, highlightedTextColor;
 
+#if UNITY_EDITOR
+        public string TextFieldName => nameof(text);
+        public string NormalFontFieldName => nameof(normalFont);
+        public string HighlightedFontFieldName => nameof(highlightedFont);
+        public string NormalTextColorFieldName => nameof(normalTextColor);
+        public string HighlightedTextColorFieldName => nameof(highlightedTextColor);
+#endif
+        
         private void SetTextFontAsset(TMP_FontAsset newFontAsset, ColorParameter textColor)
         {
             text.font = newFontAsset;

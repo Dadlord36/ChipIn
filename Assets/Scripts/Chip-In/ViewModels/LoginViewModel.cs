@@ -20,11 +20,9 @@ namespace ViewModels
     [Binding]
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private UserProfileRemoteRepository remoteRepository;
-        
+        [SerializeField] private RemoteRepositoriesController repositoriesController;
+
         [SerializeField] private LoginModelValidation loginModelValidation;
-        [SerializeField] private ActionConnector loginActionConnector;
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
         [Binding]
@@ -101,12 +99,14 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            IsPendingLogin = false;
-            SwitchToMiniGame();
-
+            
             var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
-            authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
-            await remoteRepository.LoadDataFromServer();
+            repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface
+                .AuthorisationData);
+            
+            IsPendingLogin = false;
+            if (response.ResponseModelInterface.RequestIsSuccessful)
+                SwitchToMiniGame();
         }
 
         private static string GetFirstValue(HttpHeaders headers, string valueName)
@@ -127,6 +127,5 @@ namespace ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
     }
 }

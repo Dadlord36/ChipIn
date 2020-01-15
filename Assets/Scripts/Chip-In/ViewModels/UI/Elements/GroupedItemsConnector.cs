@@ -1,7 +1,7 @@
-﻿using UI.Interfaces;
-using UnityEngine.EventSystems;
+﻿using UnityEngine.EventSystems;
+using ViewModels.UI.Interfaces;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public class GroupedItemsConnector : UIBehaviour
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Elements.Counters
+namespace ViewModels.UI.Elements.Counters
 {
     public sealed class AdjustableInputFieldView : InputField, ISelectableObject
     {

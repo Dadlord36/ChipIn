@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Views.ViewElements
 {
-    public class ChallengeCardView : BaseView, IUserCoinsAmount
+    public class ChallengeCardView : BaseView
     {
         [SerializeField] private TMP_Text challengeTypeTextField;
         [SerializeField] private UserCoinsView userCoinsView;
@@ -27,7 +27,7 @@ namespace Views.ViewElements
         public void SetupCardViewElements(in ChallengesCardsParametersRepository.ChallengeCardParameters parameters)
         {
             challengeTypeTextField.text = parameters.challengeTypeName;
-            userCoinsView.CoinsAmount = parameters.coinsAmount;
+            CoinsAmount = parameters.coinsAmount;
             Icon = parameters.icon;
         }
     }

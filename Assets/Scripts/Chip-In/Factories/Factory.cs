@@ -2,19 +2,13 @@
 using Common;
 using Common.Timers;
 using UnityEngine;
-using ViewModels.Helpers;
 using ViewModels.Interfaces;
 
 namespace Factories
 {
     public static class Factory
     {
-        public static IViewsSwitchingHelper CreateMultiViewSwitchingHelper()
-        {
-            return BaseViewSwitchingHelper.Instance;
-        }
-
-        public static IViewsSwitchingHelper CreateSingleViewSwitchingHelper()
+        public static IViewsSwitchingController CreateSingleViewSwitchingHelper()
         {
             throw new NotImplementedException();
         }

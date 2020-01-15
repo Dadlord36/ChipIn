@@ -35,6 +35,9 @@ namespace ScriptableObjects.DataSynchronizers
             UserProfile.Set(source);
         }
 
+
+        #region IUserProfileDataWebModel implementation
+        
         public int Id
         {
             get => UserProfile.Id;
@@ -118,6 +121,8 @@ namespace ScriptableObjects.DataSynchronizers
             get => UserProfile.CountryCode;
             set => UserProfile.CountryCode = value;
         }
+        
+        #endregion
 
         public async Task LoadDataFromServer()
         {

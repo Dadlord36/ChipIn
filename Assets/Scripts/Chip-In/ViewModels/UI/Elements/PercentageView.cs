@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public class PercentageView : UIBehaviour
     {

@@ -1,39 +1,23 @@
-﻿using Factories;
-using UnityEngine;
-using UnityEngine.Assertions;
+﻿using UnityEngine;
 using ViewModels.Interfaces;
+using ViewModels.SwitchingControllers;
 
 namespace ViewModels
 {
     public abstract class ViewsSwitchingViewModel : BaseViewModel
     {
-        [SerializeField] private GameObject viewsSwitchingHelperObject;
-        private IViewsSwitchingHelper _viewsSwitchingHelper;
+        protected const string SwitchingViewTag = "ViewsSwitching";
 
-        protected virtual void Start()
-        {
-            InitializeViewsSwitchingHelper();
-        }
-
-        private void InitializeViewsSwitchingHelper()
-        {
-            if (viewsSwitchingHelperObject == null)
-                _viewsSwitchingHelper = Factory.CreateMultiViewSwitchingHelper();
-            else
-            {
-                _viewsSwitchingHelper = viewsSwitchingHelperObject.GetComponent<IViewsSwitchingHelper>();
-            }
-            Assert.IsNotNull(_viewsSwitchingHelper);
-        }
+        [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
         protected void SwitchToView(in string viewName)
         {
-            _viewsSwitchingHelper.RequestSwitchToView(viewName);
+            viewsSwitchingController.RequestSwitchToView(viewName);
         }
 
         public void SwitchToPreviousView()
         {
-            _viewsSwitchingHelper.SwitchToPreviousView();
+            viewsSwitchingController.SwitchToPreviousView();
         }
     }
 }

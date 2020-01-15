@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public interface IToggle
     {

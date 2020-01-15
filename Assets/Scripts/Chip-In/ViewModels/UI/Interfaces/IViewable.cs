@@ -1,4 +1,4 @@
-﻿namespace UI.Interfaces
+﻿namespace ViewModels.UI.Interfaces
 {
     public interface IViewable
     {

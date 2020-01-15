@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using Common;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public sealed class SlidingToggle : BaseUIToggle, IProgress<float>, IPointerClickHandler
     {

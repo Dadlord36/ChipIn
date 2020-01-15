@@ -7,9 +7,9 @@ using UnityEngine.EventSystems;
 
 namespace Behaviours.Games
 {
-    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveValue, IFinishingAction
+    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveUintValue, IFinishingAction
     {
-        public event Action<int> Collected;
+        public event Action<uint> Collected;
         public event Action FinishingActionDone;
 
 
@@ -17,11 +17,11 @@ namespace Behaviours.Games
         [SerializeField] private byte minValue;
         [SerializeField] private byte maxValue;
 
-        private int _coinValue;
+        private uint _coinValue;
         private static readonly int Play = Animator.StringToHash("play");
         private bool _wasPicked;
 
-        private int ValueView
+        private uint ValueView
         {
             set => valueMultiplierTextField.text = $"x{value.ToString()}";
         }
@@ -50,14 +50,14 @@ namespace Behaviours.Games
             animator.SetTrigger(Play);
         }
 
-        private void OnCollected(int obj)
+        private void OnCollected(uint obj)
         {
             Collected?.Invoke(obj);
         }
 
         private void GenerateCoinValue()
         {
-            _coinValue = SimpleValueGenerator.GenerateIntValueInclusive(minValue, maxValue);
+            _coinValue = (uint) SimpleValueGenerator.GenerateIntValueInclusive(minValue, maxValue);
         }
 
         public void GenerateValue()

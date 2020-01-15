@@ -8,7 +8,7 @@ namespace Utilities
     {
         public static async Task<T> ContentAsyncJsonTo<T>(HttpContent content)
         {
-            string contentAsString = await content.ReadAsStringAsync();
+            var contentAsString = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(contentAsString);
         }
     }

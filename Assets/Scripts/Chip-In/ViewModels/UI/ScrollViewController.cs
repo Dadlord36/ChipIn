@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace UI
+namespace ViewModels.UI
 {
     public class ScrollViewController : UIBehaviour
     {

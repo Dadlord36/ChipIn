@@ -1,6 +1,6 @@
 ﻿using TMPro;
-using UI;
 using UnityEngine;
+using ViewModels.UI;
 
 namespace Views
 {

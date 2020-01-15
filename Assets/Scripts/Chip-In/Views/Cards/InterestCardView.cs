@@ -1,7 +1,7 @@
 ﻿using TMPro;
-using UI.Elements;
-using UI.Elements.Icons;
 using UnityEngine;
+using ViewModels.UI.Elements;
+using ViewModels.UI.Elements.Icons;
 
 namespace Views.Cards
 {

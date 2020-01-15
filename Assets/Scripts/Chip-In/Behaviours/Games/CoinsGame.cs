@@ -1,5 +1,6 @@
 ﻿using System;
 using Behaviours.Games.Interfaces;
+using Repositories.Remote;
 using ScriptableObjects.ActionsConnectors;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -8,7 +9,7 @@ namespace Behaviours.Games
 {
     public class CoinsGame : MonoBehaviour, IGame
     {
-        [SerializeField] private ValueConnector valueConnector;
+        [SerializeField] private UserCoinsAmountRepository coinsAmountRepository;
         [SerializeField] private int coinsToPick;
 
         public event Action GameComplete;
@@ -16,22 +17,12 @@ namespace Behaviours.Games
 
         private void Awake()
         {
-            Assert.IsNotNull(valueConnector);
+            Assert.IsNotNull(coinsAmountRepository);
         }
 
-        public int CoinsAmount
+        private void AddCoinsToCoinsRepository(uint amount)
         {
-            get => _coinsAmount;
-            set
-            {
-                _coinsAmount = value;
-                SubmitValueChange();
-            }
-        }
-
-        private void SubmitValueChange()
-        {
-            valueConnector.OnValueChanged(CoinsAmount);
+            coinsAmountRepository.Add(amount);
         }
 
         private void OnEnable()
@@ -40,7 +31,7 @@ namespace Behaviours.Games
 
             for (var i = 0; i < coins.Length; i++)
             {
-                if (coins[i] is IInteractiveValue interactiveValue)
+                if (coins[i] is IInteractiveUintValue interactiveValue)
                 {
                     SubscribeToInteractiveValue(interactiveValue);
                 }
@@ -56,13 +47,13 @@ namespace Behaviours.Games
                 finishingAction.FinishingActionDone += CheckIfGameIsComplete;
             }
 
-            void SubscribeToInteractiveValue(IInteractiveValue interactiveValue)
+            void SubscribeToInteractiveValue(IInteractiveUintValue interactiveValue)
             {
                 interactiveValue.GenerateValue();
-                interactiveValue.Collected += delegate(int value)
+                interactiveValue.Collected += delegate(uint value)
                 {
                     _coinsPicked++;
-                    CoinsAmount += value;
+                    AddCoinsToCoinsRepository(value);
                 };
             }
         }

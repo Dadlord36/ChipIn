@@ -1,11 +1,9 @@
-﻿using Repositories;
-using Repositories.Remote;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Views.ViewElements
 {
-    public class UserCoinsView : BaseView, IUserCoinsAmount
+    public class UserCoinsView : BaseView
     {
         [SerializeField] private TMP_Text amountTextField;
 

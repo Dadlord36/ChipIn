@@ -5,16 +5,15 @@ namespace Common
 {
     public sealed class LiveData<T> : INotifyCollectionChanged
     {
-
         private List<T> _items;
-        
-        public LiveData (int length)
+
+        public LiveData(int length)
         {
-            _items = new List<T>(length);   
+            _items = new List<T>(length);
         }
 
         public IReadOnlyList<T> GetData => _items;
-        
+
         public LiveData()
         {
             _items = new List<T>();
@@ -24,6 +23,12 @@ namespace Common
         {
             _items.Add(item);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+        }
+
+        public void AddRange(T[] itemsArray)
+        {
+            _items.AddRange(itemsArray);
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsArray));
         }
 
         public void Remove(T item)

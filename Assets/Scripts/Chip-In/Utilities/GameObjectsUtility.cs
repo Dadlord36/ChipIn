@@ -8,9 +8,7 @@ namespace Utilities
         {
             T GetOrAttachComponent(GameObject gameObject)
             {
-                if (gameObject.TryGetComponent(out T component))
-                    return component;
-                return gameObject.gameObject.AddComponent<T>();
+                return gameObject.TryGetComponent(out T component) ? component : gameObject.gameObject.AddComponent<T>();
             }
 
             var foundObject = rootTransform.Find(objectName);
@@ -24,6 +22,14 @@ namespace Utilities
             foundObject.SetParent(rootTransform);
 
             return foundObject.gameObject.AddComponent<T>();
+        }
+
+        public static GameObject CreateAndAttachToParent(Transform parent,string objectName, Vector3 localPosition)
+        {
+            var newGameObject = new GameObject(objectName);
+            newGameObject.transform.parent = parent;
+            newGameObject.transform.localPosition = localPosition;
+            return newGameObject;
         }
     }
 }

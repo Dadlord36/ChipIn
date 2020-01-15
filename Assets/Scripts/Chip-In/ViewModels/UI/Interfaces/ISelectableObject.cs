@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Events;
 
-namespace UI.Interfaces
+namespace ViewModels.UI.Interfaces
 {
     public interface ISelectableObject
     {

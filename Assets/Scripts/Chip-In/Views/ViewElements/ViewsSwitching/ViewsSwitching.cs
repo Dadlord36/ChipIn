@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Common;
-using UI.Interfaces;
 using UnityEngine.Assertions;
+using ViewModels.UI.Interfaces;
 
 namespace Views.ViewElements.ViewsSwitching
 {

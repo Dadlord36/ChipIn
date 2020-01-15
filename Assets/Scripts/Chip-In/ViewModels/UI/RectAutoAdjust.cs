@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UI
+namespace ViewModels.UI
 {
     [AddComponentMenu("UI/Adjusting/RectAutoAdjust")]
     public class RectAutoAdjust : UIBehaviour

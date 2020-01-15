@@ -46,7 +46,7 @@ namespace ViewModels
 
         protected override void FillContainerWithDataFromRepository()
         {
-            foreach (var item in gamesRemoteRepository.Data)
+            foreach (var item in gamesRemoteRepository.ItemsData)
             {
                 AddSoloGameItem(item);
             }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
-namespace UI
+namespace ViewModels.UI
 {
     public class ConnectedTextChanger : UIBehaviour
     {

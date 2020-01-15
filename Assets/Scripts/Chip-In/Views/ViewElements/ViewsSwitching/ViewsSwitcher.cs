@@ -1,7 +1,7 @@
-﻿using UI;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using ViewModels.UI;
 
 namespace Views.ViewElements.ViewsSwitching
 {

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
-namespace UI.Elements
+namespace ViewModels.UI.Elements
 {
     public class GraphicsFadeSwitcher : BaseUIToggle, IProgress<float>
     {
