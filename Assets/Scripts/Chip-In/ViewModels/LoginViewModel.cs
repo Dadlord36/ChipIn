@@ -21,8 +21,8 @@ namespace ViewModels
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private RemoteRepositoriesController repositoriesController;
-
         [SerializeField] private LoginModelValidation loginModelValidation;
+        
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
         [Binding]
