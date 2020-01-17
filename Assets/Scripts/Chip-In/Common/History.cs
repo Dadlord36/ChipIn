@@ -6,13 +6,13 @@ namespace Common
     public class History<T>
     {
         private readonly Stack<T> _historyStack;
-        private readonly Stack<T> _dualRecords;
+        private readonly LimitedStack<T> _dualRecords;
 
         private const string Tag = "History"; 
         
         public History()
         {
-            _dualRecords = new Stack<T>(2);
+            _dualRecords = new LimitedStack<T>(2);
             _historyStack = new Stack<T>();
         }
 
