@@ -17,9 +17,10 @@ namespace Repositories.Remote
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserCoinsAmountRepository), order = 0)]
     public sealed class UserCoinsAmountRepository : ScriptableObject, INotifyPropertyChanged, IUserCoinsAmount
     {
+        [SerializeField]
+        private UserProfileRemoteRepository userProfileRemoteRepository;
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<uint> AmountChanged;
-
         private uint _amount;
 
         public uint CoinsAmount
@@ -31,7 +32,23 @@ namespace Repositories.Remote
                 _amount = value;
                 OnPropertyChanged();
                 OnAmountChanged();
+                SynchronizeDataWithServer();
             }
+        }
+
+        private void OnEnable()
+        {
+            userProfileRemoteRepository.DataWasLoaded += UpdateRepositoryData;
+        }
+
+        private void OnDisable()
+        {
+            userProfileRemoteRepository.DataWasLoaded -= UpdateRepositoryData;
+        }
+
+        private void UpdateRepositoryData()
+        {
+            CoinsAmount = (uint) userProfileRemoteRepository.TokensBalance;
         }
 
         public void Add(uint amount)
@@ -44,6 +61,10 @@ namespace Repositories.Remote
             CoinsAmount -= amount;
         }
 
+        private void SynchronizeDataWithServer()
+        {
+            userProfileRemoteRepository.TokensBalance = (int)CoinsAmount;
+        }
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

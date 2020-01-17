@@ -1,5 +1,4 @@
-﻿using ScriptableObjects;
-using ScriptableObjects.Comparators;
+﻿using ScriptableObjects.Comparators;
 using UnityEngine;
 using Views.ViewElements.ViewsSwitching;
 
