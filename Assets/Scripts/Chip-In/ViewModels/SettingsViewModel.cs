@@ -1,11 +1,16 @@
-﻿using UnityWeld.Binding;
-using Views.Settings;
+﻿using System;
+using UnityWeld.Binding;
+using Views.Cards.Settings;
 
 namespace ViewModels
 {
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
+        private void Start()
+        {
+            ShowMyProfile();
+        }
 
         [Binding]
         public void ShowMyProfile()

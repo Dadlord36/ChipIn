@@ -14,7 +14,7 @@ namespace ViewModels
             Assert.IsNotNull(miniGame);
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
             var game = miniGame as IGame;
             Assert.IsNotNull(game);

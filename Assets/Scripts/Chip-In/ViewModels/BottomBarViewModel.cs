@@ -1,18 +1,16 @@
 ﻿using UnityEngine.Assertions;
 using UnityWeld.Binding;
 using Views;
+using Views.Bars;
 
 namespace ViewModels
 {
     [Binding]
     public class BottomBarViewModel : ViewsSwitchingViewModel
     {
-        private BottomBarView _bottomBarView;
-
         private void Awake()
         {
-            _bottomBarView = View as BottomBarView;
-            Assert.IsNotNull(_bottomBarView);
+            Assert.IsNotNull(View as BottomBarView);
         }
 
         [Binding]

@@ -10,21 +10,21 @@ namespace ScriptableObjects
     {
         private class ContainerItem<T> where T : Object
         {
-            protected readonly T prefab;
+            protected readonly T Prefab;
             [NonSerialized] private T _instance;
 
-            public ContainerItem(T prefab)
+            protected ContainerItem(T prefab)
             {
-                this.prefab = prefab;
+                this.Prefab = prefab;
             }
 
-            public T GetInstance => _instance == null ? _instance = Instantiate(prefab) : _instance;
+            public T GetInstance => _instance == null ? _instance = Instantiate(Prefab) : _instance;
         }
 
         [Serializable]
         private class ViewModelContainerItem : ContainerItem<BaseView>
         {
-            public string ViewName => prefab.GetViewName;
+            public string ViewName => Prefab.GetViewName;
 
             public ViewModelContainerItem(BaseView prefab) : base(prefab)
             {

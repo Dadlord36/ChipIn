@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using ViewModels.UI.Elements;
 
-namespace Views.Settings
+namespace Views.Cards.Settings
 {
     public class UserProfileView : BaseView
     {
