@@ -1,40 +1,42 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Common
 {
     public class History<T>
     {
-        private bool _isFirstRecord = true;
-        private T _currentRecord;
         private readonly Stack<T> _historyStack;
+        private readonly Stack<T> _dualRecords;
 
+        private const string Tag = "History"; 
+        
         public History()
         {
+            _dualRecords = new Stack<T>(2);
             _historyStack = new Stack<T>();
         }
 
         public void AddToHistory(in T record)
         {
-            if (_isFirstRecord)
+            if (_dualRecords.Count > 0)
             {
-                _isFirstRecord = false;
-                _currentRecord = record;
-                return;
+                var previousRecord = _dualRecords.Pop();
+                _historyStack.Push(previousRecord);
+                Debug.unityLogger.Log(LogType.Log,Tag, $"History record: {previousRecord.ToString()}");
             }
 
-            _historyStack.Push(_currentRecord);
-            _currentRecord = record;
+            _dualRecords.Push(record);
         }
 
         public void ClearHistory()
         {
+            _dualRecords.Clear();
             _historyStack.Clear();
         }
 
         public T PopHistoryStack()
         {
-            _currentRecord = _historyStack.Pop();
-            return _currentRecord;
+            return _historyStack.Pop();
         }
     }
 }

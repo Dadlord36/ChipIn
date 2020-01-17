@@ -14,6 +14,8 @@ namespace ViewModels.SwitchingControllers
             _multiViewsSwitchingBinding = viewsSwitchingBindingObject as IMultiViewsSwitchingBinding;
             Assert.IsNotNull(_multiViewsSwitchingBinding);
         }
+        
+        
 
         protected override void ProcessViewsSwitching(in string viewNameToSwitchTo)
         {

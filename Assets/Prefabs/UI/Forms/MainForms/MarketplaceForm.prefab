@@ -199,7 +199,8 @@ MonoBehaviour:
   m_text: view game
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -354,7 +355,8 @@ MonoBehaviour:
   m_text: product menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -652,6 +654,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6854098385119022634}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
 --- !u!114 &6854098385119022634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -671,10 +675,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_Name
-      value: MarketplaceForm Variant
+      propertyPath: m_text
+      value: Marketplace
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -781,45 +800,30 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 8858336980473145823, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5318378685275122398, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_text
-      value: Marketplace
+      propertyPath: m_Name
+      value: MarketplaceForm
       objectReference: {fileID: 0}
-    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
-        type: 3}
-      propertyPath: m_textInfo.spaceCount
+      propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+    - target: {fileID: 8858336980473145823, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 1
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}

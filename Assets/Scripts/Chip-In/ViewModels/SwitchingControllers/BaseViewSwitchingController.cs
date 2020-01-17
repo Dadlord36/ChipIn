@@ -8,48 +8,28 @@ namespace ViewModels.SwitchingControllers
     public abstract class BaseViewSwitchingController : ScriptableObject, IViewsSwitchingController
     {
         [SerializeField] protected Object viewsSwitchingBindingObject;
-        [SerializeField] private bool shouldRecordHistory = true;
-        private History<string> _viewsSwitchingNamesHistory;
+        [SerializeField] private SwitchingHistoryController switchingHistoryController;
 
         protected virtual void OnEnable()
         {
             Assert.IsNotNull(viewsSwitchingBindingObject);
-            InitializeViewSwitchingHistory();
+            switchingHistoryController.InitializeViewSwitchingHistory();
+        }
+
+        private void AddToHistoryStack(string viewName)
+        {
+            switchingHistoryController.AddViewsSwitchingHistoryRecord(viewName);
         }
 
         public void SwitchToPreviousView()
         {
-            ProcessViewsSwitching(_viewsSwitchingNamesHistory.PopHistoryStack());
+            RequestSwitchToView(switchingHistoryController.PopHistoryStack());
         }
 
-        private void AddViewsSwitchingHistoryRecord(in string viewName)
+        public void RequestSwitchToView(string toViewName)
         {
-            _viewsSwitchingNamesHistory.AddToHistory(viewName);
-        }
-
-        private void InitializeViewSwitchingHistory()
-        {
-            if (!shouldRecordHistory) return;
-
-            if (_viewsSwitchingNamesHistory == null)
-                _viewsSwitchingNamesHistory = new History<string>();
-            else
-            {
-                ClearHistory();
-            }
-        }
-
-        private void ClearHistory()
-        {
-            _viewsSwitchingNamesHistory.ClearHistory();
-        }
-
-        public void RequestSwitchToView(in string viewName)
-        {
-            if (shouldRecordHistory)
-                AddViewsSwitchingHistoryRecord(viewName);
-
-            ProcessViewsSwitching(viewName);
+            AddToHistoryStack(toViewName);
+            ProcessViewsSwitching(toViewName);
         }
 
         protected abstract void ProcessViewsSwitching(in string viewNameToSwitchTo);

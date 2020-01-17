@@ -158,6 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76aa43eba6c4fa88857ddabff405f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  qrImage: {fileID: 0}
 --- !u!114 &2115293994076076736
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 605948934182436865}
-  viewsSwitchingHelperObject: {fileID: 0}
+  viewsSwitchingController: {fileID: 0}
 --- !u!1001 &8611803423181924812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -199,6 +200,12 @@ PrefabInstance:
       propertyPath: m_textInfo.wordCount
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
     - target: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_LocalPosition.x

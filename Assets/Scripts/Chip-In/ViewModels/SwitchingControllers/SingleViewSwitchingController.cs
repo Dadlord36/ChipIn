@@ -1,6 +1,5 @@
 ﻿using ScriptableObjects.Interfaces;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace ViewModels.SwitchingControllers
 {
@@ -10,7 +9,7 @@ namespace ViewModels.SwitchingControllers
     {
         protected override void ProcessViewsSwitching(in string viewNameToSwitchTo)
         {
-            (viewsSwitchingBindingObject as ISingleViewSwitchingBinding).SwitchViews(viewNameToSwitchTo);
+            ((ISingleViewSwitchingBinding) viewsSwitchingBindingObject).SwitchViews(viewNameToSwitchTo);
         }
     }
 }
