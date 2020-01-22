@@ -32,13 +32,14 @@ namespace HttpRequests
         }
 
         public static async Task<HttpResponseMessage> MakeAsyncRequest(HttpMethod methodType, string requestSuffix,
-           List<KeyValuePair<string, string>> requestHeaders, object requestBody)
+            string requestParameters, List<KeyValuePair<string, string>> requestHeaders, object requestBody)
         {
-            using (var requestMessage = new HttpRequestMessage(methodType, _apiClient.BaseAddress + requestSuffix))
+            using (var requestMessage = new HttpRequestMessage(methodType,
+                $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}"))
             {
                 Assert.IsFalse(requestHeaders == null && requestBody == null);
 
-                void AddHeaders(List<KeyValuePair<string, string>>  requestHeadersArray)
+                void AddHeaders(List<KeyValuePair<string, string>> requestHeadersArray)
                 {
                     foreach (var pair in requestHeadersArray)
                     {

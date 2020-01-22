@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace DataModels.RequestsModels
+﻿namespace DataModels.RequestsModels
 {
     public interface IUserLoginRequestModel : IBasicLoginModel
     {

@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 
 namespace Common
 {
-    public sealed class LiveData<T> : INotifyCollectionChanged
+    public class LiveData<T> :LinkedList<T>, INotifyCollectionChanged
     {
         private List<T> _items;
 
@@ -17,6 +17,11 @@ namespace Common
         public LiveData()
         {
             _items = new List<T>();
+        }
+
+        protected LiveData(IEnumerable<T> itemsList)
+        {
+            _items = new List<T>(itemsList);
         }
 
         public void Add(T item)

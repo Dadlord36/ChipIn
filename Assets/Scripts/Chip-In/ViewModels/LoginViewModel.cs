@@ -102,7 +102,7 @@ namespace ViewModels
             var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
             IsPendingLogin = false;
 
-            if (response.ResponseModelInterface != null && response.ResponseModelInterface.RequestIsSuccessful)
+            if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
             {
                 repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface
                     .AuthorisationData);

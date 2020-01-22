@@ -1,18 +1,42 @@
 ﻿using ScriptableObjects.Parameters;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityWeld.Binding;
 using ViewModels.UI.Interfaces;
 
 namespace ViewModels.UI.Elements.Buttons
 {
+    [Binding]
     public sealed class BarButtonSelection : UIBehaviour, ISelectableObject
     {
+#if UNITY_EDITOR
+        public Vector2 IconSize
+        {
+            get => stateSwitchableButton.image.rectTransform.sizeDelta;
+            set => stateSwitchableButton.image.rectTransform.sizeDelta = value;
+        }
+
+        public Sprite Icon
+        {
+            get => stateSwitchableButton.image.sprite;
+            set => stateSwitchableButton.image.sprite = value;
+        }
+
+        public bool IsIconValid => stateSwitchableButton != null;
+        public bool shouldShowReferencesFields;
+#endif
+
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
         [SerializeField] private StateSwitchableButton stateSwitchableButton;
+        [SerializeField] private Button interactiveButton;
+        
+        
+        public UnityAction onClick; 
         private event UnityAction GotSelected;
 
         protected override void Awake()
@@ -32,6 +56,28 @@ namespace ViewModels.UI.Elements.Buttons
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            SubscribeOnEvents();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            UnsubscribeOnEvent();
+        }
+
+        private void SubscribeOnEvents()
+        {
+            interactiveButton.onClick.AddListener(onClick);
+        }
+
+        private void UnsubscribeOnEvent()
+        {
+            interactiveButton.onClick.RemoveListener(onClick);
+        }
+
         private void ShowUpCrossFaded()
         {
             for (var i = 0; i < selectionViewElements.Length; i++)
@@ -41,7 +87,7 @@ namespace ViewModels.UI.Elements.Buttons
             }
         }
 
-        public void MakeImageVisible(Graphic image)
+        public static void MakeImageVisible(Graphic image)
         {
             var color = image.color;
             color.a = 1.0f;

@@ -1,30 +1,23 @@
 ﻿using System;
+using DataModels.Common;
 using DataModels.Interfaces;
 using Newtonsoft.Json;
 
 
 namespace DataModels.ResponsesModels
 {
-    
-    public sealed class
-        CommunityInterestLabelDataRequestResponse : ICommunityInterestLabelDataRequestResponse
+    public sealed class CommunityInterestLabelDataRequestResponse : ICommunityInterestLabelDataRequestResponse
     {
         [JsonObject(MemberSerialization.OptIn)]
         public struct CommunityInterestLabelData
         {
             [JsonProperty("id")] public int Id;
             [JsonProperty("name")] public string Name;
-            [JsonProperty("poster")] public string PosterUrl;
+            [JsonProperty("poster")] public string PosterUri;
 
-            public bool IsValid => !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(PosterUrl);
+            public bool IsValid => !string.IsNullOrEmpty(Name) && !string.IsNullOrEmpty(PosterUri);
         }
-        
-        public struct PaginationData
-        {
-            [JsonProperty("total")] public int Total;
-            [JsonProperty("page")] public int Page;
-            [JsonProperty("per_page")] public int PerPage;
-        }
+
 
         public bool Success { get; set; }
         public PaginationData Pagination { get; set; }

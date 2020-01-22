@@ -1,7 +1,5 @@
-﻿using Repositories;
-using Repositories.Local;
+﻿using Repositories.Local;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using ViewModels.UI.Elements.Icons;
 

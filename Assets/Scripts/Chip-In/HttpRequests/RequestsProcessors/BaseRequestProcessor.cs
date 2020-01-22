@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -15,27 +16,73 @@ namespace HttpRequests.RequestsProcessors
         where TRequestBodyModelInterface : class
         where TResponseModelInterface : class
     {
-        private const string Tag = "HTTPRequests"; 
-        
+        protected struct BaseRequestProcessorParameters
+        {
+            public readonly string RequestSuffix;
+            public readonly IReadOnlyList<string> RequestParameters;
+            public readonly HttpMethod RequestMethod;
+            public readonly IRequestHeaders RequestHeaders;
+            public readonly TRequestBodyModelInterface RequestBodyModel;
+
+            public BaseRequestProcessorParameters(string requestSuffix, IReadOnlyList<string> requestParameters,
+                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
+            {
+                RequestSuffix = requestSuffix;
+                RequestParameters = requestParameters;
+                RequestMethod = requestMethod;
+                RequestHeaders = requestHeaders;
+                RequestBodyModel = requestBodyModel;
+            }
+        }
+
+        private const string Tag = "HTTPRequests";
+
         private readonly string _requestSuffix;
+        private readonly string _requestParameters;
         private readonly HttpMethod _requestMethod;
         private readonly IRequestHeaders _requestHeaders;
         private readonly TRequestBodyModelInterface _requestBodyModel;
-        
-        protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod,
-            IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
+
+
+        protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
+            TRequestBodyModelInterface requestBodyModel)
         {
             _requestSuffix = requestSuffix;
+            _requestParameters = "";
             _requestMethod = requestMethod;
             _requestHeaders = requestHeaders;
             _requestBodyModel = requestBodyModel;
+        }
+
+        protected BaseRequestProcessor(BaseRequestProcessorParameters requestProcessorParameters)
+        {
+            _requestSuffix = requestProcessorParameters.RequestSuffix;
+            _requestParameters = requestProcessorParameters.RequestParameters == null
+                ? null
+                : FormUrlParametersString(requestProcessorParameters.RequestParameters);
+            _requestMethod = requestProcessorParameters.RequestMethod;
+            _requestHeaders = requestProcessorParameters.RequestHeaders;
+            _requestBodyModel = requestProcessorParameters.RequestBodyModel;
+        }
+
+        private static string FormUrlParametersString(IReadOnlyList<string> parameters)
+        {
+            var length = parameters.Count;
+            var stringBuilder = new StringBuilder(length);
+
+            for (int i = 0; i < length; i++)
+            {
+                stringBuilder.Append($"/{parameters[i]}");
+            }
+
+            return stringBuilder.ToString();
         }
 
         private async Task<HttpResponseMessage> SendRequestToWebServer(
             TRequestBodyModelInterface requestBodyModel = null,
             IRequestHeaders requestHeaders = null)
         {
-            return await ApiHelper.MakeAsyncRequest(_requestMethod, _requestSuffix,
+            return await ApiHelper.MakeAsyncRequest(_requestMethod, _requestSuffix, _requestParameters,
                 requestHeaders?.GetRequestHeaders(), requestBodyModel);
         }
 
@@ -56,8 +103,8 @@ namespace HttpRequests.RequestsProcessors
 
             {
                 var responseAsString = await responseMessage.Content.ReadAsStringAsync();
-                Debug.unityLogger.Log(LogType.Log, Tag,$"Response message: {responseAsString}");
-                
+                Debug.unityLogger.Log(LogType.Log, Tag, $"Response message: {responseAsString}");
+
                 var errorMessageBuilder = new StringBuilder();
                 try
                 {
@@ -90,7 +137,7 @@ namespace HttpRequests.RequestsProcessors
                     var requestResponse = await ProcessResponse(responseMessage);
                     if (requestResponse.ResponseData == null)
                     {
-                       throw new Exception ("Response data is equals null");
+                        throw new Exception("Response data is equals null");
                     }
                     else
                     {
@@ -98,7 +145,7 @@ namespace HttpRequests.RequestsProcessors
                         httpResponse.Headers = requestResponse.ResponseMessage.Headers;
                     }
 
-                    Debug.unityLogger.Log(LogType.Log, Tag,requestResponse.ResponseMessage.IsSuccessStatusCode
+                    Debug.unityLogger.Log(LogType.Log, Tag, requestResponse.ResponseMessage.IsSuccessStatusCode
                         ? successfulResponseMassage
                         : requestResponse.ResponseMessage.ReasonPhrase);
                 }

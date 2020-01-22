@@ -44,7 +44,7 @@ namespace Repositories.Remote
                     async Task<CommunityInterestGridItemView.CommunityInterestGridItemData> FromItemData(
                         CommunityInterestLabelDataRequestResponse.CommunityInterestLabelData itemData)
                     {
-                        var textureData = await DataDownloadingUtility.DownloadRawImageData(itemData.PosterUrl);
+                        var textureData = await DataDownloadingUtility.DownloadRawImageData(itemData.PosterUri);
                         return new CommunityInterestGridItemView.CommunityInterestGridItemData(itemData.Id,
                             itemData.Name, textureData);
                     }

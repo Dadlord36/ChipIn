@@ -7,12 +7,18 @@ using Repositories.Remote;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public sealed class CommunityInterestsLabelDataGetProcessor : BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse,
+    public sealed class CommunityInterestsLabelDataGetProcessor : BaseRequestProcessor<object,
+        CommunityInterestLabelDataRequestResponse,
         ICommunityInterestLabelDataRequestResponse>
     {
-        public CommunityInterestsLabelDataGetProcessor(IRequestHeaders requestHeaders) : base(
-            RequestsSuffixes.Communities, HttpMethod.Get,
-            requestHeaders, null)
+        // public CommunityInterestsLabelDataGetProcessor(IRequestHeaders requestHeaders) : base(
+        //     RequestsSuffixes.Communities, HttpMethod.Get,
+        //     requestHeaders, null)
+        // {
+        // }
+        public CommunityInterestsLabelDataGetProcessor(IRequestHeaders requestHeaders) :
+            base(new BaseRequestProcessorParameters(RequestsSuffixes.Communities, null, HttpMethod.Get, requestHeaders,
+                null))
         {
         }
     }

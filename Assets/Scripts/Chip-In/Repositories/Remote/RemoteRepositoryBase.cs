@@ -13,11 +13,6 @@ namespace Repositories.Remote
         public event Action DataWasSaved;
         #endregion
         
-        protected void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            SaveDataToServer();
-        }
-
         protected virtual void ConfirmDataLoading()
         {
             OnDataWasLoaded();

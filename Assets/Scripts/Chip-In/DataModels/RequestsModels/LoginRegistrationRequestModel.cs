@@ -21,7 +21,7 @@ namespace DataModels.RequestsModels
             DeviceToken = deviceToken;
         }
 
-        [JsonProperty] public string Platform;
+        [JsonProperty("platform")] public string Platform;
         [JsonProperty("device_id")] public string DeviceId;
         [JsonProperty("device_token")] public string DeviceToken;
     }

@@ -133,6 +133,11 @@ namespace Repositories.Remote
             PropertyChanged -= RepositoryPropertyChanged;
         }
 
+        private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            SaveDataToServer();
+        }
+
         private async Task LoadAvatarImageFromServerAsync()
         {
             if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
