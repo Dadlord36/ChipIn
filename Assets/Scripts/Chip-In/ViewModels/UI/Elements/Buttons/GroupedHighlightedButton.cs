@@ -8,8 +8,14 @@ using ViewModels.UI.Interfaces;
 
 namespace ViewModels.UI.Elements.Buttons
 {
-    public class GroupedHighlightedButton : Button, ISelectableObject
+    public class GroupedHighlightedButton : Button, IOneOfAGroup
     {
+        event UnityAction IOneOfAGroup.GroupActionPerformed
+        {
+            add => onClick.AddListener(value);
+            remove => onClick.RemoveListener(value);
+        }
+
         [SerializeField] private TMP_Text text;
         [SerializeField] private TMP_FontAsset normalFont, highlightedFont;
         [SerializeField] private ColorParameter normalTextColor, highlightedTextColor;
@@ -34,22 +40,17 @@ namespace ViewModels.UI.Elements.Buttons
             Assert.IsNotNull(text, $"There is no Text under button: {name}");
             Assert.IsNotNull(normalTextColor);
             Assert.IsNotNull(highlightedTextColor);
-            onClick.AddListener(SelectAsOneOfGroup);
+            onClick.AddListener(SwitchToHighlightedStyle);
         }
 
-        public void OnOtherItemSelected()
+        public void OnOtherOnePerformGroupAction()
         {
             SetTextFontAsset(normalFont, normalTextColor);
         }
 
-        public void SelectAsOneOfGroup()
+        private void SwitchToHighlightedStyle()
         {
             SetTextFontAsset(highlightedFont, highlightedTextColor);
-        }
-
-        public void SubscribeOnMainEvent(UnityAction onOtherItemInGroupSelected)
-        {
-            onClick.AddListener(onOtherItemInGroupSelected);
         }
     }
 }

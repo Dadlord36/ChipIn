@@ -15,7 +15,7 @@ namespace Views.Bars
             if (associativeViewsContainer.ContainsView(viewToSwitchTo))
             {
                 Show();
-                SelectionOptionsDictionary[viewToSwitchTo.GetViewName].SelectAsOneOfGroup();
+                SelectionOptionsDictionary[viewToSwitchTo.GetViewName].PerformGroupAction();
             }
             else
             {

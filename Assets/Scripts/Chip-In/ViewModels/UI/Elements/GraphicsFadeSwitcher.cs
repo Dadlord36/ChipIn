@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ViewModels.UI.Elements
 {
-    public class GraphicsFadeSwitcher : BaseUIToggle, IProgress<float>
+    public class GraphicsFadeSwitcher : BaseAnimatedToggle, IProgress<float>
     {
         [SerializeField] private Graphic mainGraphic, alternativeGraphic;
         private Color _mainColor = Color.white, _alternativeColor = Color.white;
@@ -20,11 +20,6 @@ namespace ViewModels.UI.Elements
         protected override void SetHandlePositionAlongSlide(float percentage)
         {
             CrossFadeGraphics(percentage);
-        }
-
-        protected override void OnConditionChanger()
-        {
-            
         }
 
         public void Report(float value)

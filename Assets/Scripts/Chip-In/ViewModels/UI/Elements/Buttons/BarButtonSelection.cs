@@ -11,7 +11,7 @@ using ViewModels.UI.Interfaces;
 namespace ViewModels.UI.Elements.Buttons
 {
     [Binding]
-    public sealed class BarButtonSelection : UIBehaviour, ISelectableObject
+    public sealed class BarButtonSelection : UIBehaviour, IOneOfAGroup, IGroupAction
     {
 #if UNITY_EDITOR
         public Vector2 IconSize
@@ -34,10 +34,10 @@ namespace ViewModels.UI.Elements.Buttons
         [SerializeField] private FloatParameter crossFadeColorTime;
         [SerializeField] private StateSwitchableButton stateSwitchableButton;
         [SerializeField] private Button interactiveButton;
-        
-        
-        public UnityAction onClick; 
-        private event UnityAction GotSelected;
+
+
+        public UnityAction onClick;
+        public event UnityAction GroupActionPerformed;
 
         protected override void Awake()
         {
@@ -121,20 +121,15 @@ namespace ViewModels.UI.Elements.Buttons
             stateSwitchableButton.SwitchButtonState(StateSwitchableButton.ButtonSelectionSate.Normal);
         }
 
-        public void OnOtherItemSelected()
+        public void OnOtherOnePerformGroupAction()
         {
             Hide();
         }
 
-        public void SelectAsOneOfGroup()
+        void IGroupAction.PerformGroupAction()
         {
             Show();
-            GotSelected?.Invoke();
-        }
-
-        public void SubscribeOnMainEvent(UnityAction onOtherItemInGroupSelected)
-        {
-            GotSelected += onOtherItemInGroupSelected;
+            GroupActionPerformed?.Invoke();
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Views.ViewElements
 {
-    public class SimpleToggle : Toggle
+    public class SimpleToggle : UIBehaviour, IPointerClickHandler
     {
 #if UNITY_EDITOR
         public bool UiElementsReferencesAreValid => labelTextField != null;
@@ -16,6 +16,11 @@ namespace Views.ViewElements
         {
             get => labelTextField.text;
             set => labelTextField.text = value;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log("Was CLICKED");
         }
     }
 }
