@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Controllers;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using UnityEngine;
@@ -6,10 +7,12 @@ using UnityEngine;
 namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserAuthorisationDataRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"+ nameof(UserAuthorisationDataRepository), order = 0)]
-    public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserAuthorisationDataRepository),
+        order = 0)]
+    public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider,
+        IClearable
     {
-        private readonly IUserProfileRequestHeadersProvider _authorisationModel =
+        private IUserProfileRequestHeadersProvider _authorisationModel =
             new UserProfileRequestHeadersProvider();
 
         public string AccessToken
@@ -60,6 +63,11 @@ namespace Repositories.Remote
         public string GetRequestHeadersAsString()
         {
             return _authorisationModel.GetRequestHeadersAsString();
+        }
+
+        public void Clear()
+        {
+            _authorisationModel = new UserProfileRequestHeadersProvider();
         }
     }
 }
