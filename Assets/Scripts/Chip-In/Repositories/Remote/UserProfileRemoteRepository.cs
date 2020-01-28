@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Structures;
+using Controllers;
 using DataModels;
 using DataModels.Interfaces;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel
+    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel,IClearable
     {
         #region EventsDeclaration
         public event PropertyChangedEventHandler RepositoryPropertyChanged;
@@ -181,6 +182,11 @@ namespace Repositories.Remote
             Debug.Log("User profile data was saved to server", this);
         }
 
+        void IClearable.Clear()
+        {
+            userProfileDataSynchronizer.Clear();
+        }
+
         #region EventsInvokation
         
         private void OnRepositoryPropertyChanged([CallerMemberName] string propertyName = null)
@@ -195,5 +201,7 @@ namespace Repositories.Remote
             add => userProfileDataSynchronizer.PropertyChanged += value;
             remove => userProfileDataSynchronizer.PropertyChanged -= value;
         }
+
+
     }
 }

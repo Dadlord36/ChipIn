@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
+using Controllers;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using Repositories;
@@ -15,7 +16,7 @@ namespace ScriptableObjects.DataSynchronizers
     [CreateAssetMenu(fileName = nameof(UserProfileDataSynchronizer),
         menuName = nameof(DataSynchronizers) + "/" + nameof(UserProfileDataSynchronizer), order = 0)]
     public class UserProfileDataSynchronizer : ScriptableObject, IUserProfileDataWebModel, IDataSynchronization,
-        INotifyPropertyChanged
+        INotifyPropertyChanged, IClearable
     {
         #region EventsDeclaretion
 
@@ -37,7 +38,7 @@ namespace ScriptableObjects.DataSynchronizers
 
 
         #region IUserProfileDataWebModel implementation
-        
+
         public int Id
         {
             get => UserProfile.Id;
@@ -121,7 +122,7 @@ namespace ScriptableObjects.DataSynchronizers
             get => UserProfile.CountryCode;
             set => UserProfile.CountryCode = value;
         }
-        
+
         #endregion
 
         public async Task LoadDataFromServer()
@@ -165,6 +166,11 @@ namespace ScriptableObjects.DataSynchronizers
         {
             add => userProfileData.PropertyChanged += value;
             remove => userProfileData.PropertyChanged -= value;
+        }
+
+        public void Clear()
+        {
+            userProfileData = new UserProfileDataWebModel();
         }
     }
 }
