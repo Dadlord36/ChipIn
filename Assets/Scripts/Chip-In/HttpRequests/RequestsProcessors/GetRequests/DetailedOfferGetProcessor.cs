@@ -22,8 +22,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         }
 
         public DetailedOfferGetProcessor(DetailedOfferGetProcessorParameters parameters) : base(
-            new BaseRequestProcessorParameters(RequestsSuffixes.Offers, new[] {parameters.OfferId.ToString()},
-                HttpMethod.Get, parameters.RequestHeaders, null))
+            new BaseRequestProcessorParameters(RequestsSuffixes.Offers,
+                HttpMethod.Get, parameters.RequestHeaders, null, new[] {parameters.OfferId.ToString()}))
         {
         }
     }

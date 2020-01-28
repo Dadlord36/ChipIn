@@ -7,14 +7,12 @@ using HttpRequests.RequestsProcessors.GetRequests;
 using HttpRequests.RequestsProcessors.PutRequests;
 using Newtonsoft.Json;
 using UnityEngine;
-using Utilities;
 
 namespace RequestsStaticProcessors
 {
     public static class UserProfileDataStaticRequestsProcessor
     {
-        public static async Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.
-                HttpResponse>
+        public static async Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.HttpResponse>
             GetUserProfileData(IRequestHeaders requestHeaders)
         {
             Debug.Log($"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");

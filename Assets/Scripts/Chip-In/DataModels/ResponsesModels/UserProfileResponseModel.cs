@@ -1,11 +1,12 @@
 ﻿using Common.Structures;
 using Newtonsoft.Json;
+using Repositories.Interfaces;
 
 namespace DataModels.ResponsesModels
 {
-    public sealed class UserProfileResponseModel : IUserProfileDataWebModel
+    public sealed class UserProfileResponseModel : IUserProfileDataWebModel, ISuccess
     {
-        [JsonProperty("success")] public bool Success { get; set; }
+        public bool Success { get; set; }
         [JsonProperty("user")] public UserProfileDataWebModel User { get; set; }
         [JsonProperty("auth")] public AuthorisationModel Authorisation { get; set; }
         public int Id

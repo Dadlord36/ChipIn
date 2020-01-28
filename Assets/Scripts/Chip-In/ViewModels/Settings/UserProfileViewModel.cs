@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.Structures;
+using Controllers;
 using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories;
@@ -14,6 +15,7 @@ namespace ViewModels.Settings
     public class UserProfileViewModel : BaseViewModel, INotifyPropertyChanged, IUserProfileModel
     {
         [SerializeField] private UserProfileRemoteRepository repository;
+
         private IUserProfileModel UserSettingsModel => repository;
 
         [Binding]
@@ -114,6 +116,7 @@ namespace ViewModels.Settings
             set => UserSettingsModel.ShowNotificationsState = value;
         }
 
+
         [Binding]
         public void ChangePassword_Click()
         {
@@ -125,7 +128,7 @@ namespace ViewModels.Settings
         {
             Debug.Log("Editing profile");
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => repository.RepositoryPropertyChanged += value;

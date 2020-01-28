@@ -2,6 +2,8 @@
 {
     public static class RequestsSuffixes
     {
+        public const string Games = "games";
+        public const string UserGames = "user_games";
         public const string Offers = "offers";
         public const string Communities = "communities";
         public const string SignUp = "sign_up";

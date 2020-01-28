@@ -24,8 +24,9 @@ namespace HttpRequests.RequestsProcessors
             public readonly IRequestHeaders RequestHeaders;
             public readonly TRequestBodyModelInterface RequestBodyModel;
 
-            public BaseRequestProcessorParameters(string requestSuffix, IReadOnlyList<string> requestParameters,
-                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
+            public BaseRequestProcessorParameters(string requestSuffix,
+                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel,
+                IReadOnlyList<string> requestParameters)
             {
                 RequestSuffix = requestSuffix;
                 RequestParameters = requestParameters;

@@ -17,8 +17,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         // {
         // }
         public CommunityInterestsLabelDataGetProcessor(IRequestHeaders requestHeaders) :
-            base(new BaseRequestProcessorParameters(RequestsSuffixes.Communities, null, HttpMethod.Get, requestHeaders,
-                null))
+            base(new BaseRequestProcessorParameters(RequestsSuffixes.Communities, HttpMethod.Get, requestHeaders,
+                null, null))
         {
         }
     }
