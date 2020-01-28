@@ -20,7 +20,7 @@ namespace ViewModels.UI.Elements
             return Condition ? 1.0f : 0f;
         }
 
-        protected void SetToggleInitState()
+        public void SetToggleInitState()
         {
             SetHandlePositionAlongSlide(GetPathPercentageFromCondition());
         }

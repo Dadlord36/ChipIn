@@ -29,8 +29,11 @@ namespace ViewModels.UI.Elements
 
         private void CrossFadeGraphics(float percentage)
         {
-            _mainColor.a = 1f - percentage;
+            _mainColor.a = percentage;
             _alternativeColor.a = 1f -_mainColor.a;
+            
+            // _mainColor.a = percentage;
+            // _alternativeColor.a = percentage;
 
 
             alternativeGraphic.color = _alternativeColor;

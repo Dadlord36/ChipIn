@@ -27,16 +27,15 @@ namespace ViewModels.UI.Elements.Buttons
         }
 
         public bool IsIconValid => stateSwitchableButton != null;
-        public bool shouldShowReferencesFields;
+        [HideInInspector] public bool shouldShowReferencesFields;
 #endif
 
         [SerializeField] private Image[] selectionViewElements;
         [SerializeField] private FloatParameter crossFadeColorTime;
         [SerializeField] private StateSwitchableButton stateSwitchableButton;
         [SerializeField] private Button interactiveButton;
-
-
-        public UnityAction onClick;
+        
+        [HideInInspector] public UnityEvent onClick;
         public event UnityAction GroupActionPerformed;
 
         protected override void Awake()
@@ -70,12 +69,12 @@ namespace ViewModels.UI.Elements.Buttons
 
         private void SubscribeOnEvents()
         {
-            interactiveButton.onClick.AddListener(onClick);
+            interactiveButton.onClick.AddListener(OnClick);
         }
 
         private void UnsubscribeOnEvent()
         {
-            interactiveButton.onClick.RemoveListener(onClick);
+            interactiveButton.onClick.RemoveListener(OnClick);
         }
 
         private void ShowUpCrossFaded()
@@ -126,7 +125,12 @@ namespace ViewModels.UI.Elements.Buttons
             Hide();
         }
 
-        void IGroupAction.PerformGroupAction()
+        private void OnClick()
+        {
+            onClick?.Invoke();
+        }
+
+        public void PerformGroupActionWithoutNotification()
         {
             Show();
             GroupActionPerformed?.Invoke();

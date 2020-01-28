@@ -3,14 +3,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using ViewModels.UI.Interfaces;
 
 namespace ViewModels.UI.Elements.Buttons
 {
-    public class GroupedHighlightedButton : Button, IOneOfAGroup
+    public class GroupedHighlightedButton : Button, IOneOfAGroup, IGroupAction
     {
-        event UnityAction IOneOfAGroup.GroupActionPerformed
+        public event UnityAction GroupActionPerformed
         {
             add => onClick.AddListener(value);
             remove => onClick.RemoveListener(value);
@@ -40,7 +41,12 @@ namespace ViewModels.UI.Elements.Buttons
             Assert.IsNotNull(text, $"There is no Text under button: {name}");
             Assert.IsNotNull(normalTextColor);
             Assert.IsNotNull(highlightedTextColor);
-            onClick.AddListener(SwitchToHighlightedStyle);
+        }
+
+        public override void OnPointerClick(PointerEventData eventData)
+        {
+            base.OnPointerClick(eventData);
+            SwitchToHighlightedStyle();
         }
 
         public void OnOtherOnePerformGroupAction()
@@ -51,6 +57,11 @@ namespace ViewModels.UI.Elements.Buttons
         private void SwitchToHighlightedStyle()
         {
             SetTextFontAsset(highlightedFont, highlightedTextColor);
+        }
+
+        public void PerformGroupActionWithoutNotification()
+        {
+            SwitchToHighlightedStyle();
         }
     }
 }

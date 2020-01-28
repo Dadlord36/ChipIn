@@ -2,6 +2,6 @@
 {
     public interface IGroupAction
     {
-        void PerformGroupAction();
+        void PerformGroupActionWithoutNotification();
     }
 }

@@ -20,6 +20,17 @@ namespace Inspectors
                 "Show UI elements references fields",
                 _barButtonSelection.shouldShowReferencesFields);
 
+
+            EditorGUI.BeginChangeCheck();
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("onClick"));
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                serializedObject.ApplyModifiedProperties();
+                MakeTargetDirty();
+            }
+
             if (_barButtonSelection.IsIconValid)
             {
                 EditorGUI.BeginChangeCheck();
@@ -27,15 +38,21 @@ namespace Inspectors
                     EditorGUILayout.ObjectField("Icon sprite", _barButtonSelection.Icon, typeof(Sprite), false) as
                         Sprite;
                 _barButtonSelection.IconSize = EditorGUILayout.Vector2Field("Icon size", _barButtonSelection.IconSize);
-
                 if (EditorGUI.EndChangeCheck())
                 {
-                    EditorUtility.SetDirty(_barButtonSelection);
+                    MakeTargetDirty();
                 }
             }
 
+ 
+
             if (!_barButtonSelection.shouldShowReferencesFields) return;
             base.OnInspectorGUI();
+        }
+
+        private void MakeTargetDirty()
+        {
+            EditorUtility.SetDirty(target);
         }
     }
 }

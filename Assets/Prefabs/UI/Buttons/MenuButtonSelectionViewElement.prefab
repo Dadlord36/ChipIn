@@ -265,11 +265,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4893063760452543277}
     m_Modifications:
-    - target: {fileID: 6292359768677794335, guid: f014e48fe7b754c408ad10ee0e3266e5,
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
         type: 3}
-      propertyPath: m_Name
-      value: ResizableAreaImageButton
+      propertyPath: selectionViewElements.Array.size
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+        type: 3}
+      propertyPath: selectionViewElements.Array.data[0]
+      value: 
+      objectReference: {fileID: 4893063759737405080}
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+        type: 3}
+      propertyPath: selectionViewElements.Array.data[1]
+      value: 
+      objectReference: {fileID: 6479276951600747413}
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+        type: 3}
+      propertyPath: selectionViewElements.Array.data[2]
+      value: 
+      objectReference: {fileID: 1580851529347435801}
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+        type: 3}
+      propertyPath: shouldShowReferencesFields
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+        type: 3}
+      propertyPath: interactiveButton
+      value: 
+      objectReference: {fileID: 1250590398498595192}
     - target: {fileID: 1062971839570180968, guid: f014e48fe7b754c408ad10ee0e3266e5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -375,26 +400,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+    - target: {fileID: 3342963744020950758, guid: f014e48fe7b754c408ad10ee0e3266e5,
         type: 3}
-      propertyPath: selectionViewElements.Array.size
-      value: 3
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PerformGroupAction
       objectReference: {fileID: 0}
-    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
+    - target: {fileID: 6292359768677794335, guid: f014e48fe7b754c408ad10ee0e3266e5,
         type: 3}
-      propertyPath: selectionViewElements.Array.data[0]
-      value: 
-      objectReference: {fileID: 4893063759737405080}
-    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
-        type: 3}
-      propertyPath: selectionViewElements.Array.data[1]
-      value: 
-      objectReference: {fileID: 6479276951600747413}
-    - target: {fileID: 52037899271699793, guid: f014e48fe7b754c408ad10ee0e3266e5,
-        type: 3}
-      propertyPath: selectionViewElements.Array.data[2]
-      value: 
-      objectReference: {fileID: 1580851529347435801}
+      propertyPath: m_Name
+      value: ResizableAreaImageButton
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f014e48fe7b754c408ad10ee0e3266e5, type: 3}
 --- !u!224 &3602323103171474678 stripped
@@ -403,3 +418,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4557197002431336350}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1250590398498595192 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3342963744020950758, guid: f014e48fe7b754c408ad10ee0e3266e5,
+    type: 3}
+  m_PrefabInstance: {fileID: 4557197002431336350}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -9,7 +9,7 @@ namespace DataModels.ResponsesModels
         [JsonProperty("auth")] AuthorisationModel AuthorisationData { get; set; }
     }
 
-    public abstract class LoginResponseModel : ILoginResponseModel
+    public class LoginResponseModel : ILoginResponseModel
     {
         public bool Success { get; set; }
         public UserProfileDataWebModel UserProfileData { get; set; }

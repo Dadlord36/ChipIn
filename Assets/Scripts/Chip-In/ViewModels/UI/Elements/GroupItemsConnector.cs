@@ -12,7 +12,7 @@ namespace ViewModels.UI.Elements
             Destroy(this);
         }
 
-        public static void ConnectGroupItems( IOneOfAGroup[] groupableSelections)
+        private static void ConnectGroupItems(IOneOfAGroup[] groupableSelections)
         {
             for (int i = 0; i < groupableSelections.Length; i++)
             {
@@ -29,8 +29,24 @@ namespace ViewModels.UI.Elements
                 }
             }
         }
-        
-        public static void DisconnectGroupItems( IOneOfAGroup[] groupableSelections)
+
+        public static void ConnectGroupTo(IOneOfAGroup ofAGroup, IOneOfAGroup[] group)
+        {
+            for (int i = 0; i < group.Length; i++)
+            {
+                ofAGroup.GroupActionPerformed += group[i].OnOtherOnePerformGroupAction;
+            }
+        }
+
+        public static void DisconnectGroupFrom(IOneOfAGroup ofAGroup, IOneOfAGroup[] group)
+        {
+            for (int i = 0; i < group.Length; i++)
+            {
+                ofAGroup.GroupActionPerformed -= group[i].OnOtherOnePerformGroupAction;
+            }
+        }
+
+        private static void DisconnectGroupItems(IOneOfAGroup[] groupableSelections)
         {
             for (int i = 0; i < groupableSelections.Length; i++)
             {

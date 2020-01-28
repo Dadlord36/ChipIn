@@ -241,10 +241,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55f27edea1aa48bab8b5888664c5d534, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shouldShowReferencesFields: 1
   selectionViewElements: []
   crossFadeColorTime: {fileID: 11400000, guid: 17fb81bc47f2cd841ac72ffb16a8a8b3, type: 2}
   stateSwitchableButton: {fileID: 7320125275651110507}
-  iconImage: {fileID: 8399580601258694000}
+  interactiveButton: {fileID: 3342963744020950758}
+  onClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8369912792826222415
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +331,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 52037899271699793}
-        m_MethodName: PerformGroupAction
+        m_MethodName: PerformGroupActionWithoutNotification
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

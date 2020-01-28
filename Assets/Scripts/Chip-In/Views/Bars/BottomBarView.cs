@@ -8,19 +8,22 @@ namespace Views.Bars
     {
         [SerializeField] private ViewsComparisonContainer associativeViewsContainer;
         [SerializeField] private bool shouldAutoControlVisibility = true;
+        [SerializeField] private bool highlightCorrespondingButtonOnViewSwitching = true;
+
         protected override void SwitchTo(BaseView viewToSwitchTo)
         {
-            if(!shouldAutoControlVisibility) return;
-            
-            if (associativeViewsContainer.ContainsView(viewToSwitchTo))
+            if (!associativeViewsContainer.ContainsView(viewToSwitchTo))
             {
+                if (shouldAutoControlVisibility)
+                    Hide();
+                return;
+            }
+
+            if (shouldAutoControlVisibility)
                 Show();
-                SelectionOptionsDictionary[viewToSwitchTo.GetViewName].PerformGroupAction();
-            }
-            else
-            {
-                Hide();
-            }
+
+            if (highlightCorrespondingButtonOnViewSwitching)
+                SelectionOptionsDictionary[viewToSwitchTo.GetViewName].PerformGroupActionWithoutNotification();
         }
     }
 }
