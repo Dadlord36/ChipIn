@@ -29,6 +29,18 @@ namespace ViewModels.UI.Elements
             SubscribeRelatedGraphicsSwitchers();
         }
 
+        protected override void Start()
+        {
+            base.Start();
+            SetToggleInitState();
+            for (int i = 0; i < toggles.Length; i++)
+            {
+                //Todo: figure out why should be used inverted Condition 
+                toggles[i].SetCondition(!Condition,false);
+                toggles[i].SetToggleInitState();
+            }
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -38,12 +50,12 @@ namespace ViewModels.UI.Elements
 
         private void SubscribeRelatedGraphicsSwitchers()
         {
-            GroupItemsConnector.ConnectGroupItems(toggles.Cast<IOneOfAGroup>().ToArray());
+            GroupItemsConnector.ConnectGroupTo(this,toggles.Cast<IOneOfAGroup>().ToArray());
         }
 
         private void UnsubscribeRelatedGraphicsSwitchers()
         {
-            GroupItemsConnector.DisconnectGroupItems(toggles.Cast<IOneOfAGroup>().ToArray());
+            GroupItemsConnector.DisconnectGroupFrom(this,toggles.Cast<IOneOfAGroup>().ToArray());
         }
 
         private void SubscribeChangeableSliderPartsToTimelineProgression()
@@ -112,8 +124,7 @@ namespace ViewModels.UI.Elements
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Condition = !Condition;
-            OnToggleSwitched();
+            SwitchCondition();
             _timeline.RestartTimer();
         }
     }
