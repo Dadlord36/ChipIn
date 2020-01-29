@@ -1,10 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Common.Structures;
-using Controllers;
 using DataModels.Interfaces;
-using JetBrains.Annotations;
-using Repositories;
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -17,6 +13,7 @@ namespace ViewModels.Settings
         [SerializeField] private UserProfileRemoteRepository repository;
 
         private IUserProfileModel UserSettingsModel => repository;
+        
 
         [Binding]
         public GeoLocation UserLocation

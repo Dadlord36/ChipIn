@@ -85,7 +85,7 @@ namespace DataModels
             get => email;
             set
             {
-                // if (value == email) return;
+                if (value == email) return;
                 email = value;
                 OnPropertyChanged();
             }
@@ -184,7 +184,7 @@ namespace DataModels
             get => userLocation;
             set
             {
-                if (Equals(value, userLocation)) return;
+                if (userLocation == value) return;
                 userLocation = value;
                 OnPropertyChanged();
             }

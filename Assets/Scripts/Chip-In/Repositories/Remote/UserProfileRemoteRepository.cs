@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
@@ -18,13 +19,17 @@ namespace Repositories.Remote
     public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
         INotifyPropertyChanged
     {
+        #region Events declaration
+
+        #endregion
+        
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
         [SerializeField] private LoginStateRepository loginStateRepository;
 
         private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
         private IDataSynchronization UserProfileDataSynchronization => userProfileDataSynchronizer;
         private ILoginState LoginState => loginStateRepository;
-        
+
         private bool IsAllowedToSaveToServer => !_isLoadingData && LoginState.IsLoggedIn;
 
         [SerializeField] private Texture2D defaultAvatarImage;
@@ -122,12 +127,14 @@ namespace Repositories.Remote
         private void OnEnable()
         {
             BindToSynchronizerUpdatingEvent();
+            PropertyChanged += OnProfileDataChanged;
         }
 
 
         private void OnDisable()
         {
             UnbindFromSynchronizerUpdatingEvent();
+            PropertyChanged -= OnProfileDataChanged;
         }
 
         private void BindToSynchronizerUpdatingEvent()
@@ -161,6 +168,20 @@ namespace Repositories.Remote
             {
                 Debug.Log("User avatar image is null after being loaded", this);
             }
+        }
+
+        private void OnProfileDataChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (propertyChangedEventArgs.PropertyName == nameof(UserProfileDataRemote.AvatarImageUrl))
+            {
+                RefreshUserAvatar();
+            }
+        }
+        
+        private void RefreshUserAvatar()
+        {
+            if (!string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl)) return;
+            AvatarImage = defaultAvatarImage;
         }
 
         public override async Task LoadDataFromServer()
@@ -197,6 +218,8 @@ namespace Repositories.Remote
             userProfileDataSynchronizer.Clear();
             BindToSynchronizerUpdatingEvent();
         }
+        
+        
 
         public event PropertyChangedEventHandler PropertyChanged
         {
