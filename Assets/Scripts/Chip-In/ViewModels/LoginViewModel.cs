@@ -104,8 +104,7 @@ namespace ViewModels
 
             if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
             {
-                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface
-                    .AuthorisationData);
+                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
                 SwitchToMiniGame();
             }
         }

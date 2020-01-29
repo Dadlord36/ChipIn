@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
 using DataModels;
 using DataModels.Interfaces;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
+using Repositories.Local;
 using ScriptableObjects.DataSynchronizers;
 using UnityEngine;
 using WebOperationUtilities;
@@ -20,9 +19,13 @@ namespace Repositories.Remote
         INotifyPropertyChanged
     {
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
+        [SerializeField] private LoginStateRepository loginStateRepository;
 
         private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
         private IDataSynchronization UserProfileDataSynchronization => userProfileDataSynchronizer;
+        private ILoginState LoginState => loginStateRepository;
+        
+        private bool IsAllowedToSaveToServer => !_isLoadingData && LoginState.IsLoggedIn;
 
         [SerializeField] private Texture2D defaultAvatarImage;
         private Texture2D _userAvatarImage;
@@ -39,10 +42,7 @@ namespace Repositories.Remote
         public Texture2D AvatarImage
         {
             get => _userAvatarImage ? _userAvatarImage : defaultAvatarImage;
-            set
-            {
-                _userAvatarImage = value;
-            }
+            set { _userAvatarImage = value; }
         }
 
         public string Name
@@ -121,13 +121,13 @@ namespace Repositories.Remote
 
         private void OnEnable()
         {
-            // BindToSynchronizerUpdatingEvent();
+            BindToSynchronizerUpdatingEvent();
         }
-        
+
 
         private void OnDisable()
         {
-            // UnbindFromSynchronizerUpdatingEvent();
+            UnbindFromSynchronizerUpdatingEvent();
         }
 
         private void BindToSynchronizerUpdatingEvent()
@@ -142,8 +142,8 @@ namespace Repositories.Remote
 
         private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (_isLoadingData) return;
-            SaveDataToServer();
+            if (IsAllowedToSaveToServer)
+                SaveDataToServer();
         }
 
         private async Task LoadAvatarImageFromServerAsync()
@@ -197,7 +197,7 @@ namespace Repositories.Remote
             userProfileDataSynchronizer.Clear();
             BindToSynchronizerUpdatingEvent();
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => userProfileDataSynchronizer.PropertyChanged += value;

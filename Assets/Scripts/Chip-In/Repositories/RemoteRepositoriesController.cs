@@ -1,4 +1,6 @@
 ﻿using DataModels;
+using DataModels.ResponsesModels;
+using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
 
@@ -8,15 +10,17 @@ namespace Repositories
         menuName = nameof(Repositories) + "/" + "Controllers/" + nameof(RemoteRepositoriesController), order = 0)]
     public class RemoteRepositoriesController : ScriptableObject
     {
+        [SerializeField] private LoginStateRepository loginStateRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private RemoteRepositoryBase[] remoteRepositories;
 
-        public void SetAuthorisationDataAndInvokeRepositoriesLoading(IAuthorisationModel authorisationModel)
+        public void SetAuthorisationDataAndInvokeRepositoriesLoading(ILoginResponseModel loginModel)
         {
-            authorisationDataRepository.Set(authorisationModel);
+            authorisationDataRepository.Set(loginModel.AuthorisationData);
+            loginStateRepository.SetLoginState(loginModel.UserProfileData.Role);
             InvokeRepositoriesLoading();
         }
-        
+
         private void InvokeRepositoriesLoading()
         {
             for (int i = 0; i < remoteRepositories.Length; i++)
@@ -24,5 +28,7 @@ namespace Repositories
                 remoteRepositories[i].LoadDataFromServer();
             }
         }
+
+
     }
 }

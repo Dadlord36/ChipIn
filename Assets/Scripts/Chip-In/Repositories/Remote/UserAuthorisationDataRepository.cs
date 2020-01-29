@@ -15,6 +15,19 @@ namespace Repositories.Remote
         private IUserProfileRequestHeadersProvider _authorisationModel =
             new UserProfileRequestHeadersProvider();
 
+
+        public void Set(IAuthorisationModel source)
+        {
+            _authorisationModel.Set(source);
+        }
+
+        public void Set(IUserProfileRequestHeadersProvider source)
+        {
+            _authorisationModel.Set(source);
+        }
+
+        #region IUserProfileRequestHeadersProvider implementation
+
         public string AccessToken
         {
             get => _authorisationModel.AccessToken;
@@ -39,21 +52,14 @@ namespace Repositories.Remote
             set => _authorisationModel.Uid = value;
         }
 
-        public void Set(IAuthorisationModel source)
-        {
-            _authorisationModel.Set(source);
-        }
-
         public int Expiry
         {
             get => _authorisationModel.Expiry;
             set => _authorisationModel.Expiry = value;
         }
 
-        public void Set(IUserProfileRequestHeadersProvider source)
-        {
-            _authorisationModel.Set(source);
-        }
+        #endregion
+
 
         public List<KeyValuePair<string, string>> GetRequestHeaders()
         {

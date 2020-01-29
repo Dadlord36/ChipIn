@@ -30,6 +30,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         private IUserProfileDataWebModel UserProfile => userProfileData;
         private IRequestHeaders RequestHeaders => authorisationDataRepository;
+        
 
         public void Set(IUserProfileDataWebModel source)
         {
