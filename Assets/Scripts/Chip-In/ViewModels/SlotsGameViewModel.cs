@@ -1,4 +1,5 @@
-﻿using DataModels.RequestsModels;
+﻿using System;
+using DataModels.RequestsModels;
 using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
 using Newtonsoft.Json;
@@ -82,12 +83,14 @@ namespace ViewModels
                         _offerId));
 
             gameId = offerData.Offer.GameData.Id;
+
+            Debug.Log($"Game will starts at {offerData.Offer.GameData.StartedAt}");
         }
 
         private async void GetGameData()
         {
             var matchData = await UserGamesStaticProcessor.ShowMatch(authorisationDataRepository, gameId);
-            Debug.Log(JsonConvert.SerializeObject(matchData));
+                Debug.Log(JsonConvert.SerializeObject(matchData));
         }
     }
 }
