@@ -129,10 +129,11 @@ namespace ViewModels.Settings
             Debug.Log("Editing profile");
         }
 
+
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add => repository.RepositoryPropertyChanged += value;
-            remove => repository.RepositoryPropertyChanged -= value;
+            add => repository.PropertyChanged += value;
+            remove => repository.PropertyChanged -= value;
         }
     }
 }

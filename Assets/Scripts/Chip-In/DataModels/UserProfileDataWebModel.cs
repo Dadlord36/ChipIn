@@ -45,6 +45,30 @@ namespace DataModels
         [SerializeField] private string birthday;
         [SerializeField] private string countryCode;
 
+        public UserProfileDataWebModel(int id, string email, string name, string role, int tokensBalance,
+            string gender,
+            bool showAdsState, bool showAlertsState, bool userRadarState, bool showNotificationsState,
+            GeoLocation userLocation, string avatarImageUrl, string birthday, string countryCode)
+        {
+            this.id = id;
+            this.email = email;
+            this.name = name;
+            this.role = role;
+            this.tokensBalance = tokensBalance;
+            this.gender = gender;
+            this.showAdsState = showAdsState;
+            this.showAlertsState = showAlertsState;
+            this.userRadarState = userRadarState;
+            this.showNotificationsState = showNotificationsState;
+            this.userLocation = userLocation;
+            this.avatarImageUrl = avatarImageUrl;
+            this.birthday = birthday;
+            this.countryCode = countryCode;
+        }
+
+        public static UserProfileDataWebModel Empty => new UserProfileDataWebModel(0, "", "", "", 0, "", false,
+            false, false, false, new GeoLocation(), "", "", "");
+
         public int Id
         {
             get => id;
@@ -61,7 +85,7 @@ namespace DataModels
             get => email;
             set
             {
-                if (value == email) return;
+                // if (value == email) return;
                 email = value;
                 OnPropertyChanged();
             }
@@ -198,6 +222,7 @@ namespace DataModels
                 OnPropertyChanged();
             }
         }
+
 
         public void Set(IUserProfileDataWebModel source)
         {

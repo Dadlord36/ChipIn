@@ -5,6 +5,7 @@ using Common.Structures;
 using Controllers;
 using DataModels;
 using DataModels.Interfaces;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using ScriptableObjects.DataSynchronizers;
@@ -15,13 +16,9 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel,IClearable
+    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
+        INotifyPropertyChanged
     {
-        #region EventsDeclaration
-        public event PropertyChangedEventHandler RepositoryPropertyChanged;
-
-        #endregion
-
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
 
         private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
@@ -29,6 +26,7 @@ namespace Repositories.Remote
 
         [SerializeField] private Texture2D defaultAvatarImage;
         private Texture2D _userAvatarImage;
+        private bool _isLoadingData;
 
         #region IUserProfile delegation
 
@@ -44,7 +42,6 @@ namespace Repositories.Remote
             set
             {
                 _userAvatarImage = value;
-                OnRepositoryPropertyChanged();
             }
         }
 
@@ -124,18 +121,28 @@ namespace Repositories.Remote
 
         private void OnEnable()
         {
-            RepositoryPropertyChanged += InvokeSaveDataToServer;
-            PropertyChanged += RepositoryPropertyChanged;
+            // BindToSynchronizerUpdatingEvent();
+        }
+        
+
+        private void OnDisable()
+        {
+            // UnbindFromSynchronizerUpdatingEvent();
         }
 
-        private void OnDestroy()
+        private void BindToSynchronizerUpdatingEvent()
         {
-            RepositoryPropertyChanged -= InvokeSaveDataToServer;
-            PropertyChanged -= RepositoryPropertyChanged;
+            PropertyChanged += InvokeSaveDataToServer;
+        }
+
+        private void UnbindFromSynchronizerUpdatingEvent()
+        {
+            PropertyChanged -= InvokeSaveDataToServer;
         }
 
         private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
+            if (_isLoadingData) return;
             SaveDataToServer();
         }
 
@@ -158,6 +165,7 @@ namespace Repositories.Remote
 
         public override async Task LoadDataFromServer()
         {
+            _isLoadingData = true;
             await UserProfileDataSynchronization.LoadDataFromServer();
             await LoadAvatarImageFromServerAsync();
             ConfirmDataLoading();
@@ -172,6 +180,7 @@ namespace Repositories.Remote
         protected override void ConfirmDataLoading()
         {
             base.ConfirmDataLoading();
+            _isLoadingData = false;
             Debug.Log("User profile data was loaded from server", this);
             Debug.Log(JsonConvert.SerializeObject(UserProfileDataRemote), this);
         }
@@ -184,24 +193,15 @@ namespace Repositories.Remote
 
         void IClearable.Clear()
         {
+            UnbindFromSynchronizerUpdatingEvent();
             userProfileDataSynchronizer.Clear();
+            BindToSynchronizerUpdatingEvent();
         }
-
-        #region EventsInvokation
         
-        private void OnRepositoryPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            RepositoryPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
-        private event PropertyChangedEventHandler PropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged
         {
             add => userProfileDataSynchronizer.PropertyChanged += value;
             remove => userProfileDataSynchronizer.PropertyChanged -= value;
         }
-
-
     }
 }

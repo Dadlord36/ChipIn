@@ -170,7 +170,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         public void Clear()
         {
-            userProfileData = new UserProfileDataWebModel();
+            userProfileData.Set( UserProfileDataWebModel.Empty);
         }
     }
 }
