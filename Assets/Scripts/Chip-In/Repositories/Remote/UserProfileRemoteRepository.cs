@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
@@ -19,10 +18,6 @@ namespace Repositories.Remote
     public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
         INotifyPropertyChanged
     {
-        #region Events declaration
-
-        #endregion
-        
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
         [SerializeField] private LoginStateRepository loginStateRepository;
 
@@ -33,7 +28,7 @@ namespace Repositories.Remote
         private bool IsAllowedToSaveToServer => !_isLoadingData && LoginState.IsLoggedIn;
 
         [SerializeField] private Texture2D defaultAvatarImage;
-        private Texture2D _userAvatarImage;
+
         private bool _isLoadingData;
 
         #region IUserProfile delegation
@@ -46,8 +41,8 @@ namespace Repositories.Remote
 
         public Texture2D AvatarImage
         {
-            get => _userAvatarImage ? _userAvatarImage : defaultAvatarImage;
-            set { _userAvatarImage = value; }
+            get => UserProfileDataRemote.AvatarImage ? UserProfileDataRemote.AvatarImage : defaultAvatarImage;
+            set => UserProfileDataRemote.AvatarImage = value;
         }
 
         public string Name
@@ -162,12 +157,8 @@ namespace Repositories.Remote
             }
 
             AvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
-            if (_userAvatarImage)
-                Debug.Log("User avatar image was loaded", this);
-            else
-            {
-                Debug.Log("User avatar image is null after being loaded", this);
-            }
+            Debug.Log(AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
+                this);
         }
 
         private void OnProfileDataChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -177,7 +168,7 @@ namespace Repositories.Remote
                 RefreshUserAvatar();
             }
         }
-        
+
         private void RefreshUserAvatar()
         {
             if (!string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl)) return;
@@ -218,8 +209,6 @@ namespace Repositories.Remote
             userProfileDataSynchronizer.Clear();
             BindToSynchronizerUpdatingEvent();
         }
-        
-        
 
         public event PropertyChangedEventHandler PropertyChanged
         {

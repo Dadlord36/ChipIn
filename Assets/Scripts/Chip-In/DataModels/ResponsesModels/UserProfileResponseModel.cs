@@ -1,6 +1,7 @@
 ﻿using Common.Structures;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
+using UnityEngine;
 
 namespace DataModels.ResponsesModels
 {
@@ -9,6 +10,7 @@ namespace DataModels.ResponsesModels
         public bool Success { get; set; }
         [JsonProperty("user")] public UserProfileDataWebModel User { get; set; }
         [JsonProperty("auth")] public AuthorisationModel Authorisation { get; set; }
+
         public int Id
         {
             get => User.Id;
@@ -79,6 +81,12 @@ namespace DataModels.ResponsesModels
         {
             get => User.AvatarImageUrl;
             set => User.AvatarImageUrl = value;
+        }
+
+        public Texture2D AvatarImage
+        {
+            get => User.AvatarImage;
+            set => User.AvatarImage = value;
         }
 
         public string Birthday

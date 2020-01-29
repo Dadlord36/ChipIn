@@ -22,6 +22,7 @@ namespace DataModels
         [JsonProperty("show_notifications")] bool ShowNotificationsState { get; set; }
         [JsonProperty("location")] GeoLocation UserLocation { get; set; }
         [JsonProperty("avatar")] string AvatarImageUrl { get; set; }
+        Texture2D AvatarImage { get; set; }
         [JsonProperty("birthdate")] string Birthday { get; set; }
         [JsonProperty("country")] string CountryCode { get; set; }
         void Set(IUserProfileDataWebModel source);
@@ -44,6 +45,7 @@ namespace DataModels
         [SerializeField] private string avatarImageUrl;
         [SerializeField] private string birthday;
         [SerializeField] private string countryCode;
+        [SerializeField] private Texture2D avatarImage;
 
         public UserProfileDataWebModel(int id, string email, string name, string role, int tokensBalance,
             string gender,
@@ -197,6 +199,17 @@ namespace DataModels
             {
                 if (value == avatarImageUrl) return;
                 avatarImageUrl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Texture2D AvatarImage
+        {
+            get => avatarImage;
+            set
+            {
+                if (Equals(value, avatarImage)) return;
+                avatarImage = value;
                 OnPropertyChanged();
             }
         }

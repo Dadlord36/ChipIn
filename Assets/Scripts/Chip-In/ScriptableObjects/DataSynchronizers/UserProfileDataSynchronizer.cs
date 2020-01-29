@@ -30,7 +30,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         private IUserProfileDataWebModel UserProfile => userProfileData;
         private IRequestHeaders RequestHeaders => authorisationDataRepository;
-        
+
 
         public void Set(IUserProfileDataWebModel source)
         {
@@ -112,6 +112,12 @@ namespace ScriptableObjects.DataSynchronizers
             set => UserProfile.AvatarImageUrl = value;
         }
 
+        public Texture2D AvatarImage
+        {
+            get => UserProfile.AvatarImage;
+            set => UserProfile.AvatarImage = value;
+        }
+
         public string Birthday
         {
             get => UserProfile.Birthday;
@@ -171,7 +177,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         public void Clear()
         {
-            userProfileData.Set( UserProfileDataWebModel.Empty);
+            userProfileData.Set(UserProfileDataWebModel.Empty);
         }
     }
 }
