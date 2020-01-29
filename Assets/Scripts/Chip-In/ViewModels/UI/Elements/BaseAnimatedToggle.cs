@@ -8,12 +8,14 @@ namespace ViewModels.UI.Elements
 
         public override bool Condition
         {
-            protected set
+            get => base.Condition;
+            set
             {
+                _basicValue = value ? 0 : -1.0f;
                 base.Condition = value;
-                _basicValue = Condition ? 0 : -1.0f;
             }
         }
+
 
         private float GetPathPercentageFromCondition()
         {

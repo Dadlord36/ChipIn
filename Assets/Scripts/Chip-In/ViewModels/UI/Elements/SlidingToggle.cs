@@ -4,10 +4,12 @@ using Common;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using UnityWeld.Binding;
 using ViewModels.UI.Interfaces;
 
 namespace ViewModels.UI.Elements
 {
+    [Binding]
     public sealed class SlidingToggle : BaseAnimatedToggle, IProgress<float>, IPointerClickHandler
     {
         [SerializeField, Range(0f, 0.5f)] private double handleDockingPositionPercentage;
@@ -22,12 +24,13 @@ namespace ViewModels.UI.Elements
         {
             base.OnEnable();
             Assert.IsNotNull(handleTransform);
-            
+
             _timeline = GetComponent<ITimeline>();
             CalculateMovementBounds();
             SubscribeChangeableSliderPartsToTimelineProgression();
             SubscribeRelatedGraphicsSwitchers();
         }
+
 
         protected override void Start()
         {
@@ -36,7 +39,7 @@ namespace ViewModels.UI.Elements
             for (int i = 0; i < toggles.Length; i++)
             {
                 //Todo: figure out why should be used inverted Condition 
-                toggles[i].SetCondition(!Condition,false);
+                toggles[i].Condition = !Condition;
                 toggles[i].SetToggleInitState();
             }
         }
@@ -50,12 +53,12 @@ namespace ViewModels.UI.Elements
 
         private void SubscribeRelatedGraphicsSwitchers()
         {
-            GroupItemsConnector.ConnectGroupTo(this,toggles.Cast<IOneOfAGroup>().ToArray());
+            GroupItemsConnector.ConnectGroupTo(this, toggles.Cast<IOneOfAGroup>().ToArray());
         }
 
         private void UnsubscribeRelatedGraphicsSwitchers()
         {
-            GroupItemsConnector.DisconnectGroupFrom(this,toggles.Cast<IOneOfAGroup>().ToArray());
+            GroupItemsConnector.DisconnectGroupFrom(this, toggles.Cast<IOneOfAGroup>().ToArray());
         }
 
         private void SubscribeChangeableSliderPartsToTimelineProgression()
@@ -106,26 +109,17 @@ namespace ViewModels.UI.Elements
             _tempHandlePosition.x = Mathf.Lerp(_offPosX, _onPosX, percentage);
             handleTransform.localPosition = _tempHandlePosition;
         }
-        
 
-        /*private void PropagateConditionChange()
+        protected override void OnToggleSwitched()
         {
-            for (int i = 0; i < toggles.Length; i++)
-            {
-                toggles[i].SetCondition(Condition,false);
-            }
-        }*/
-
-        /*protected override void OnConditionChanger()
-        {
-            
-            /*PropagateConditionChange();#1#
-        }*/
+            base.OnToggleSwitched();
+            if (enabled)
+                _timeline.RestartTimer();
+        }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             SwitchCondition();
-            _timeline.RestartTimer();
         }
     }
 }

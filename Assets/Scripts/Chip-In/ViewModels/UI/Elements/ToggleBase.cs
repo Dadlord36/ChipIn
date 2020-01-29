@@ -10,7 +10,6 @@ using ViewModels.UI.Interfaces;
 namespace ViewModels.UI.Elements
 {
     [Serializable]
-    [Binding]
     public abstract class ToggleBase : UIBehaviour, INotifyPropertyChanged, IToggle, IOneOfAGroup
     {
         public UnityEvent toggleSwitched;
@@ -22,38 +21,26 @@ namespace ViewModels.UI.Elements
         }
 
         [SerializeField] private bool condition;
-
-
-        [Binding]
+        
         public virtual bool Condition
         {
-            protected set
+            set
             {
                 if (condition == value) return;
                 condition = value;
+                OnGroupActionPerformed();
+                OnToggleSwitched();
                 OnPropertyChanged();
             }
             get => condition;
         }
 
-        public void SetCondition(bool newCondition, bool notifyConditionChanged = true)
+        public void SwitchCondition()
         {
-            Condition = newCondition;
-
-            if (notifyConditionChanged)
-            {
-                OnGroupActionPerformed();
-            }
+            Condition = !Condition;
         }
 
-        public void SwitchCondition(bool notifyConditionChanged = true)
-        {
-            SetCondition(!Condition, notifyConditionChanged);
-            if (notifyConditionChanged)
-                OnToggleSwitched();
-        }
-
-        protected void OnToggleSwitched()
+        protected virtual void OnToggleSwitched()
         {
             toggleSwitched?.Invoke();
         }
