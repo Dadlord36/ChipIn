@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -7,6 +9,9 @@ using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
+using WebSocket4Net;
+using WebSockets;
 
 namespace ViewModels
 {
@@ -15,7 +20,9 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private int gameId;
+
         private int _offerId;
+        private GameChannelSocket _gameChannelSocket;
 
         private void Start()
         {
@@ -26,12 +33,27 @@ namespace ViewModels
         {
             base.OnDisable();
             ApiHelper.Dispose();
+            CloseConnectionAndDisposeGameChannelSocket();
+        }
+
+        private void CloseConnectionAndDisposeGameChannelSocket()
+        {
+            if (_gameChannelSocket == null) return;
+
+            _gameChannelSocket.Close();
+            _gameChannelSocket.Dispose();
         }
 
         [Binding]
         public void Login_OnClick()
         {
             Login();
+        }
+
+        [Binding]
+        public void ConnectSocket_OnClick()
+        {
+            ConnectToSocket();
         }
 
         [Binding]
@@ -52,6 +74,16 @@ namespace ViewModels
             GetGameData();
         }
 
+        [Binding]
+        public void ConnectToTheChannel_OnClick()
+        {
+            ConnectToTheChannel();
+        }
+
+        private void ConnectToTheChannel()
+        {
+            _gameChannelSocket.SubscribeToGameChannel();
+        }
 
         private async void Login()
         {
@@ -64,12 +96,23 @@ namespace ViewModels
             }
         }
 
+        private void ConnectToSocket()
+        {
+            StartGameSocketChannel();
+        }
+
         private async void LoadOffers()
         {
             var offersData = await OffersStaticRequestProcessor.GetListOfOffers(authorisationDataRepository);
+            if (offersData == null || !offersData.Any())
+            {
+                PrintLog("There is no offers in the offers list", LogType.Error);
+                return;
+            }
+
             foreach (var offer in offersData)
             {
-                Debug.Log(JsonConvert.SerializeObject(offer));
+                PrintLog(JsonConvert.SerializeObject(offer));
             }
 
             _offerId = offersData[0].Id;
@@ -83,14 +126,59 @@ namespace ViewModels
                         _offerId));
 
             gameId = offerData.Offer.GameData.Id;
+            if (!GameIsInProgress(offerData.Offer.GameData))
+            {
+                PrintLog("Game is not in progress", LogType.Error);
+            }
 
-            Debug.Log($"Game will starts at {offerData.Offer.GameData.StartedAt}");
+            PrintLog($"Game will starts at {offerData.Offer.GameData.StartedAt}");
+        }
+
+        private static bool GameIsInProgress(IGameData gameData)
+        {
+            return gameData.Status == "in_progress";
         }
 
         private async void GetGameData()
         {
             var matchData = await UserGamesStaticProcessor.ShowMatch(authorisationDataRepository, gameId);
-                Debug.Log(JsonConvert.SerializeObject(matchData));
+            if (matchData == null) return;
+            PrintLog(JsonConvert.SerializeObject(matchData));
+        }
+
+        private void StartGameSocketChannel()
+        {
+            CloseConnectionAndDisposeGameChannelSocket();
+            EstablishSocketConnection();
+            SubscribeToGameSocketEvents();
+        }
+
+        private void SubscribeToGameSocketEvents()
+        {
+            _gameChannelSocket.MessageReceived += GameChannelSocketOnMessageReceived;
+        }
+
+        private static void GameChannelSocketOnMessageReceived(object sender,
+            MessageReceivedEventArgs messageReceivedEventArgs)
+        {
+        }
+
+        private void EstablishSocketConnection()
+        {
+            try
+            {
+                _gameChannelSocket = new GameChannelSocket(authorisationDataRepository.GetRequestHeaders());
+                _gameChannelSocket.Open();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+        }
+
+        private static void PrintLog(string message, LogType logType = LogType.Log)
+        {
+            Debug.unityLogger.Log(logType, "SlotsGame", message);
         }
     }
 }
