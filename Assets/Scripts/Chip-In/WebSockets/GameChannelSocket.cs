@@ -9,27 +9,9 @@ using SuperSocket.ClientEngine;
 using Utilities;
 using WebSocket4Net;
 
+
 namespace WebSockets
 {
-    public struct SocketChannelSubscribeCommand
-    {
-        public SocketChannelSubscribeCommand(string channelName)
-        {
-            CommandName = SocketsCommands.Subscribe;
-            Identifier = $"{{\"channel\":\"{channelName}\"}}";
-        }
-
-        [JsonProperty("command")] public string CommandName;
-        [JsonProperty("identifier")] public string Identifier;
-    }
-
-    public struct SocketMessage
-    {
-        [JsonProperty("type")] public string Type { get; set; }
-
-        [JsonProperty("message")] public int Message { get; set; }
-    }
-
     public sealed class GameChannelSocket : WebSocket
     {
         private const string Tag = nameof(GameChannelSocket);
@@ -43,8 +25,10 @@ namespace WebSockets
             $"{GameSocketsChannelsParameters.ChipInHostUrl2}/{FormAuthenticationExtraString(authenticationHeaders)}",
             sslProtocols: SslProtocols.Ssl3 | SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls)
         {
+            
             SubscribeOnSocketEvents();
         }
+        
 
         private static string FormAuthenticationExtraString(
             IEnumerable<KeyValuePair<string, string>> authenticationHeaders)

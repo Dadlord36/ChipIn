@@ -22,7 +22,7 @@ namespace ViewModels
         [SerializeField] private int gameId;
 
         private int _offerId;
-        private GameChannelSocket _gameChannelSocket;
+        private GameChannelWebSocketSharp _gameChannelSocket;
 
         private void Start()
         {
@@ -41,7 +41,7 @@ namespace ViewModels
             if (_gameChannelSocket == null) return;
 
             _gameChannelSocket.Close();
-            _gameChannelSocket.Dispose();
+            (_gameChannelSocket as IDisposable).Dispose();
         }
 
         [Binding]
@@ -155,20 +155,15 @@ namespace ViewModels
 
         private void SubscribeToGameSocketEvents()
         {
-            _gameChannelSocket.MessageReceived += GameChannelSocketOnMessageReceived;
-        }
-
-        private static void GameChannelSocketOnMessageReceived(object sender,
-            MessageReceivedEventArgs messageReceivedEventArgs)
-        {
+            
         }
 
         private void EstablishSocketConnection()
         {
             try
             {
-                _gameChannelSocket = new GameChannelSocket(authorisationDataRepository.GetRequestHeaders());
-                _gameChannelSocket.Open();
+                _gameChannelSocket = new GameChannelWebSocketSharp(authorisationDataRepository.GetRequestHeaders());
+                _gameChannelSocket.Connect();
             }
             catch (Exception e)
             {

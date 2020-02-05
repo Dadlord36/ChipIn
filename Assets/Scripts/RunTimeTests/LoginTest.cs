@@ -1,16 +1,6 @@
-﻿using System.Threading.Tasks;
-using DataModels;
-using DataModels.RequestsModels;
-using HttpRequests;
-using NUnit.Framework;
-using RequestsStaticProcessors;
-using RunTimeTests.Common;
-using UnityEngine;
-using Utilities.ApiExceptions;
-
-namespace RunTimeTests
+﻿namespace RunTimeTests
 {
-    public class LoginTest
+    /*public class LoginTest
     {
         [Test]
         public void LoginSuccessfulTest()
@@ -49,5 +39,5 @@ namespace RunTimeTests
 
             return successful;
         }
-    }
+    }*/
 }
