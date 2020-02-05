@@ -124,7 +124,7 @@ namespace WebSockets
             LogUtility.PrintLog(Tag, $"Game channel socket is closed: {e}");
         }
 
-        private void OnSocketOpened(object sender, EventArgs e)
+        private static void OnSocketOpened(object sender, EventArgs e)
         {
             LogUtility.PrintLog(Tag, $"Game channel socket is opened: {e}");
         }
