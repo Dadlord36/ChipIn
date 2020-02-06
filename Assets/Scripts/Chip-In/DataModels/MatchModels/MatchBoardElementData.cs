@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System.Threading.Tasks;
+using Newtonsoft.Json;
+using UnityEngine;
+using WebOperationUtilities;
 
 namespace DataModels.MatchModels
 {
@@ -11,12 +14,12 @@ namespace DataModels.MatchModels
         [JsonProperty("4")] public readonly MatchBoardElementData Fifth;
         [JsonProperty("5")] public readonly MatchBoardElementData Sixth;
         [JsonProperty("6")] public readonly MatchBoardElementData Seventh;
-        [JsonProperty("7")] public readonly MatchBoardElementData Eight; 
+        [JsonProperty("7")] public readonly MatchBoardElementData Eighth;
         [JsonProperty("8")] public readonly MatchBoardElementData Ninth;
 
         public SlotsBoard(MatchBoardElementData first, MatchBoardElementData second, MatchBoardElementData third,
             MatchBoardElementData fourth, MatchBoardElementData fifth, MatchBoardElementData sixth,
-            MatchBoardElementData seventh, MatchBoardElementData eight, MatchBoardElementData ninth)
+            MatchBoardElementData seventh, MatchBoardElementData eighth, MatchBoardElementData ninth)
         {
             First = first;
             Second = second;
@@ -25,8 +28,19 @@ namespace DataModels.MatchModels
             Fifth = fifth;
             Sixth = sixth;
             Seventh = seventh;
-            Eight = eight;
+            Eighth = eighth;
             Ninth = ninth;
+        }
+
+        public async Task<Texture2D[]> GetSlotsIconsTextures()
+        {
+            var iconsUrls = new[]
+            {
+                First.PosterUrl, Second.PosterUrl, Third.PosterUrl, Fourth.PosterUrl,Fifth.PosterUrl, Sixth.PosterUrl,
+                Seventh.PosterUrl, Eighth.PosterUrl, Ninth.PosterUrl
+            };
+
+            return await ImagesDownloadingUtility.LoadImagesArray(iconsUrls);
         }
     }
 

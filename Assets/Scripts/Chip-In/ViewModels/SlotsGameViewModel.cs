@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using HttpRequests;
@@ -10,7 +11,8 @@ using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using WebSocket4Net;
+using Views;
+using WebOperationUtilities;
 using WebSockets;
 
 namespace ViewModels
@@ -19,9 +21,6 @@ namespace ViewModels
     public class SlotsGameViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private int gameId;
-
-        private int _offerId;
         private GameChannelWebSocketSharp _gameChannelSocket;
 
         private void Start()
@@ -44,48 +43,29 @@ namespace ViewModels
             (_gameChannelSocket as IDisposable).Dispose();
         }
 
-        [Binding]
-        public void Login_OnClick()
-        {
-            Login();
-        }
-
-        [Binding]
-        public void ConnectSocket_OnClick()
-        {
-            ConnectToSocket();
-        }
-
-        [Binding]
-        public void LoadOffersData_OnClick()
-        {
-            LoadOffers();
-        }
-
-        [Binding]
-        public void LoadOfferDetails_OnClick()
-        {
-            LoadOfferDetails();
-        }
-
-        [Binding]
-        public void GetGameData_OnClick()
-        {
-            GetGameData();
-        }
-
-        [Binding]
-        public void ConnectToTheChannel_OnClick()
-        {
-            ConnectToTheChannel();
-        }
-
         private void ConnectToTheChannel()
         {
             _gameChannelSocket.SubscribeToGameChannel();
         }
 
-        private async void Login()
+        [Binding]
+        public void ConnectAndGetGameData_OnClick()
+        {
+            ConnectAndGetGameData();
+        }
+        
+        private async void ConnectAndGetGameData()
+        {
+           await Login();
+           var offerId = await LoadOffers();
+           var gameId = await LoadOfferDetails(offerId);
+           var matchData = await GetGameData(gameId);
+           
+           var textures = await matchData.MatchData.Board.GetSlotsIconsTextures();
+           SetSlotsIcons(textures);
+        }
+        
+        private async Task Login()
         {
             var response = await LoginStaticProcessor.Login(new UserLoginRequestModel
                 {Email = "test@mail.com", Password = "12345678"});
@@ -95,19 +75,19 @@ namespace ViewModels
                 authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             }
         }
-
+        
         private void ConnectToSocket()
         {
             StartGameSocketChannel();
         }
 
-        private async void LoadOffers()
+        private async Task<int> LoadOffers()
         {
             var offersData = await OffersStaticRequestProcessor.GetListOfOffers(authorisationDataRepository);
             if (offersData == null || !offersData.Any())
             {
                 PrintLog("There is no offers in the offers list", LogType.Error);
-                return;
+                return -1;
             }
 
             foreach (var offer in offersData)
@@ -115,23 +95,24 @@ namespace ViewModels
                 PrintLog(JsonConvert.SerializeObject(offer));
             }
 
-            _offerId = offersData[0].Id;
+            return offersData[0].Id;
         }
 
-        private async void LoadOfferDetails()
+        private async Task<int> LoadOfferDetails(int offerId)
         {
             var offerData =
                 await OffersStaticRequestProcessor.GetOfferDetails(
                     new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(authorisationDataRepository,
-                        _offerId));
+                        offerId));
 
-            gameId = offerData.Offer.GameData.Id;
+
             if (!GameIsInProgress(offerData.Offer.GameData))
             {
                 PrintLog("Game is not in progress", LogType.Error);
             }
 
             PrintLog($"Game will starts at {offerData.Offer.GameData.StartedAt}");
+            return offerData.Offer.GameData.Id;
         }
 
         private static bool GameIsInProgress(IGameData gameData)
@@ -139,11 +120,18 @@ namespace ViewModels
             return gameData.Status == "in_progress";
         }
 
-        private async void GetGameData()
+        private async Task<IShowMatchResponseModel> GetGameData(int gameId)
         {
             var matchData = await UserGamesStaticProcessor.ShowMatch(authorisationDataRepository, gameId);
-            if (matchData == null) return;
+            if (matchData == null) return null;
             PrintLog(JsonConvert.SerializeObject(matchData));
+            return matchData;
+        }
+
+        private void SetSlotsIcons(Texture2D[] textures)
+        {
+            var sprites = SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(textures);
+            ((SlotsGameView) View).SetSlotsIcons(sprites);
         }
 
         private void StartGameSocketChannel()
@@ -155,7 +143,18 @@ namespace ViewModels
 
         private void SubscribeToGameSocketEvents()
         {
-            
+            _gameChannelSocket.MatchRoundSwitched += GameChannelSocketOnMatchRoundSwitched;
+            _gameChannelSocket.RoundEnds += GameChannelSocketOnRoundEnds;
+        }
+
+        private void GameChannelSocketOnMatchRoundSwitched(MathStateData mathStateData)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GameChannelSocketOnRoundEnds(MathStateData mathStateData)
+        {
+            throw new NotImplementedException();
         }
 
         private void EstablishSocketConnection()

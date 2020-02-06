@@ -1,23 +1,20 @@
 ﻿using Repositories.Local;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ViewModels.UI.Elements.Icons
 {
-
-
-    public class UserAvatarIcon : UIBehaviour
+    public class UserAvatarIcon : BaseIconView
     {
-        [SerializeField] private Image background, avatar, avatarEllipse;
+        [SerializeField] private Image avatarEllipse;
         [SerializeField] private IconEllipsesRepository eliEllipsesRepository;
 
         public RectTransform AvatarRectTransform { get; private set; }
 
         public Sprite AvatarSprite
         {
-            get => avatar.sprite;
-            set => avatar.sprite = value;
+            get => IconSprite;
+            set => IconSprite = value;
         }
 
         public void Initialize()
@@ -29,7 +26,6 @@ namespace ViewModels.UI.Elements.Icons
         {
             var iconData = eliEllipsesRepository.GetEllipse(ellipseType);
             SetIconEllipseSprite(iconData.sprite, iconData.scale);
-            
         }
 
         public void SetIconEllipseSprite(Sprite newEllipseSprite, float scale)

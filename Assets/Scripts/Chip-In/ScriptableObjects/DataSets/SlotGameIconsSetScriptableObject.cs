@@ -4,11 +4,13 @@ using UnityEngine;
 
 namespace ScriptableObjects.DataSets
 {
-    [CreateAssetMenu(fileName = nameof(SlotGameIconsSetScriptableObject), menuName = nameof(DataSets) + "/" + nameof(SlotGameIconsSetScriptableObject),
+    [CreateAssetMenu(fileName = nameof(SlotGameIconsSetScriptableObject),
+        menuName = nameof(DataSets) + "/" + nameof(SlotGameIconsSetScriptableObject),
         order = 0)]
     public class SlotGameIconsSetScriptableObject : ScriptableObject, ISlotGameIconsSet
     {
         [SerializeField] private SlotGameIconsSet slotGameIconsSet;
+
         public Sprite First
         {
             get => slotGameIconsSet.First;

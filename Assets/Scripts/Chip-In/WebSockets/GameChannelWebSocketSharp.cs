@@ -26,6 +26,12 @@ namespace WebSockets
 
     public sealed class GameChannelWebSocketSharp : WebSocket
     {
+        #region Events Declaration
+
+        public event Action<MathStateData> MatchRoundSwitched, RoundEnds;
+
+        #endregion
+
         private const string Tag = nameof(GameChannelSocket);
         private const string CableText = "cable";
 
@@ -46,18 +52,22 @@ namespace WebSockets
         private static string FormAuthenticationExtraString(
             IEnumerable<KeyValuePair<string, string>> authenticationHeaders)
         {
+            const string accessTokenFieldName = "access-token";
+            const string uIdFieldName = "uid";
+            const string clientFieldName = "client";
+            
             var dictionary = authenticationHeaders.ToDictionary(x => x.Key, x => x.Value,
                 StringComparer.Ordinal);
 
             var stringBuilder = new StringBuilder($"{CableText}?");
 
-            stringBuilder.Append(FormElement("access-token"));
-            AddNextElement(FormElement("uid"));
-            AddNextElement(FormElement("client"));
+            stringBuilder.Append(FormElement(accessTokenFieldName));
+            AddNextElement(FormElement(uIdFieldName));
+            AddNextElement(FormElement(clientFieldName));
 
             string FormElement(string key)
             {
-                return key == "access-token" ? $"access_token={dictionary[key]}" : $"{key}={dictionary[key]}";
+                return key == accessTokenFieldName ? $"access_token={dictionary[key]}" : $"{key}={dictionary[key]}";
             }
 
             void AddNextElement(string element)
@@ -76,7 +86,7 @@ namespace WebSockets
             OnMessage += OnSocketMessageReceived;
         }
 
-        private static void OnSocketMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        private void OnSocketMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var data = messageEventArgs.Data;
             try
@@ -96,10 +106,18 @@ namespace WebSockets
             }
         }
 
-        private static void ProcessMathStateData(string data)
+        private void ProcessMathStateData(string data)
         {
             var matchStateData = JsonConvert.DeserializeObject<MathStateData>(data);
             LogUtility.PrintLog(Tag, JsonConvert.SerializeObject(matchStateData));
+
+            if (matchStateData.MatchState.Title == SlotsGameStatesNames.RoundEnd)
+            {
+                OnRoundEnds(matchStateData);
+                return;
+            }
+
+            OnMatchRoundSwitched(matchStateData);
         }
 
         private static void ProcessSocketMessage(string data)
@@ -140,5 +158,19 @@ namespace WebSockets
             LogUtility.PrintLog(Tag, $"Channel subscribe command: {commandString}");
             Send(commandString);
         }
+
+        #region Events Invokations
+
+        private void OnMatchRoundSwitched(MathStateData mathStateData)
+        {
+            MatchRoundSwitched?.Invoke(mathStateData);
+        }
+
+        private void OnRoundEnds(MathStateData mathStateData)
+        {
+            RoundEnds?.Invoke(mathStateData);
+        }
+
+        #endregion
     }
 }

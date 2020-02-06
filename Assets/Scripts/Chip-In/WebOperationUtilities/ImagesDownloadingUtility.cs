@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,6 +10,27 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
+        public static async Task<Texture2D[]> LoadImagesArray(string[] imagesUrls)
+        {
+            var length = imagesUrls.Length;
+            var tasks = new Task<Texture2D> [length];
+            var results = new Texture2D[length];
+
+            for (var i = 0; i < length; i++)
+            {
+                tasks[i] = DownloadImageAsync(imagesUrls[i]);
+            }
+
+            await Task.WhenAll(tasks);
+
+
+            for (var index = 0; index < tasks.Length; index++)
+            {
+                results[index] = tasks[index].Result;
+            }
+
+            return results;
+        }
 
         public static async Task<Texture2D> DownloadImageAsync(string url)
         {
@@ -54,6 +74,7 @@ namespace WebOperationUtilities
     public static class DataDownloadingUtility
     {
         private const string Tag = "DataDownloading";
+
         public static async Task<byte[]> DownloadRawImageData(string uri)
         {
             using (var myWebClient = new WebClient())
@@ -64,10 +85,10 @@ namespace WebOperationUtilities
                 return await myWebClient.DownloadDataTaskAsync(uri);
             }
         }
-        
+
         private static void PrintLog(string message)
         {
             Debug.unityLogger.Log(LogType.Log, Tag, message);
         }
-    } 
+    }
 }

@@ -7,4 +7,9 @@
         private const string ConstPortString = ":3334";
         public const string GameChannelName = "GameChannel";
     }
+
+    public static class SlotsGameStatesNames
+    {
+        public const string RoundEnd = "Round End";
+    }
 }
