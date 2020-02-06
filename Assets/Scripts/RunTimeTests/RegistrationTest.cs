@@ -1,14 +1,6 @@
-﻿using System.Threading.Tasks;
-using DataModels;
-using HttpRequests;
-using NUnit.Framework;
-using RunTimeTests.Common;
-using UnityEngine;
-using Utilities.ApiExceptions;
-
-namespace RunTimeTests
+﻿namespace RunTimeTests
 {
-    public class RegistrationTest
+    /*public class RegistrationTest
     {
         [Test]
         public void SuccessRegisterTest()
@@ -34,5 +26,5 @@ namespace RunTimeTests
 
             Assert.IsTrue(successful);
         }
-    }
+    }*/
 }

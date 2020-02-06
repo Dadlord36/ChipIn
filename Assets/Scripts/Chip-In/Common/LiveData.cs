@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace Common
 {
-    public class LiveData<T> :LinkedList<T>, INotifyCollectionChanged
+    public class LiveData<T> : INotifyCollectionChanged, IEnumerable<T>
     {
         private List<T> _items;
 
@@ -49,5 +50,21 @@ namespace Common
         {
             CollectionChanged?.Invoke(this, e);
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) _items).GetEnumerator();
+        }
+        
+        public T this[int index]    // Indexer declaration  
+        {  
+             get => _items[index];
+             set => _items[index] = value;
+        }  
     }
 }

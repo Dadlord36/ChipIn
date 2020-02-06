@@ -1,9 +1,6 @@
-﻿using DataModels;
-using DataModels.RequestsModels;
-
-namespace RunTimeTests.Common
+﻿namespace RunTimeTests.Common
 {
-    public static class UserData
+    /*public static class UserData
     {
         public const string CorrectEmail = "test@mail.com", CorrectPassword = "12345678";
         public const string WrongEmail = "testWrongMail", WrongPassword = "3216";
@@ -31,5 +28,5 @@ namespace RunTimeTests.Common
         {
             Email = CorrectEmail, Password = WrongPassword
         };
-    }
+    }*/
 }

@@ -23,7 +23,7 @@ namespace RequestsStaticProcessors
             return Create(response.ResponseModelInterface);
         }
 
-        public static async Task<IOfferDetailedModel> GetOfferDetails(
+        public static async Task<IOfferDetailsResponseModel> GetOfferDetails(
             DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
         {
             var response =

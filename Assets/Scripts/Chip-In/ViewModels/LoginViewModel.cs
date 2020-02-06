@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels.RequestsModels;
+using HttpRequests;
 using JetBrains.Annotations;
 using Repositories;
 using Repositories.Remote;
@@ -24,6 +26,8 @@ namespace ViewModels
         [SerializeField] private LoginModelValidation loginModelValidation;
         
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
+
+ 
 
         [Binding]
         public string UserEmail

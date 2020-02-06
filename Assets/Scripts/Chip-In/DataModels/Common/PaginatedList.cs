@@ -5,7 +5,7 @@ namespace DataModels.Common
 {
     public class PaginatedList<T> : LiveData<T>
     {
-        public  PaginationData Pagination { get;  set; }
+        public PaginationData Pagination { get; }
 
         public PaginatedList()
         {

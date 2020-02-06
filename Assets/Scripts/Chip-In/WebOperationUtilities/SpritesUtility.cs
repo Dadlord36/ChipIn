@@ -6,16 +6,30 @@ namespace WebOperationUtilities
     public static class SpritesUtility
     {
         private const string Tag = nameof(SpritesUtility);
+
         public static Sprite CreateSpriteWithDefaultParameters(Texture2D texture)
         {
             return Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)),
                 Vector2.zero);
         }
-        
+
+        public static Sprite[] CreateArrayOfSpritesWithDefaultParameters(Texture2D[] textures)
+        {
+            var length = textures.Length;
+
+            var sprites = new Sprite[length];
+            for (int i = 0; i < length; i++)
+            {
+                sprites[i] = CreateSpriteWithDefaultParameters(textures[i]);
+            }
+
+            return sprites;
+        }
+
         public static Texture2D CreateNonReadableTextureFromData(byte[] rawData)
         {
             var texture = new Texture2D(1, 1);
-            texture.LoadImage(rawData,true);
+            texture.LoadImage(rawData, true);
             return texture;
         }
 

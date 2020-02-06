@@ -95,17 +95,16 @@ namespace HttpRequests.RequestsProcessors
                 throw new Exception("Response message is null");
             }
 
+            var responseAsString = await responseMessage.Content.ReadAsStringAsync();
+            Debug.unityLogger.Log(LogType.Log, Tag, $"Response content: {responseAsString}");
+            
             if (responseMessage.IsSuccessStatusCode)
             {
-                var responseData =
-                    await JsonConverterUtility.ContentAsyncJsonTo<TResponseModel>(responseMessage.Content);
-                return new RequestResponse<TResponseModelInterface>(responseMessage, responseData);
+                return new RequestResponse<TResponseModelInterface>(responseMessage,
+                    JsonConverterUtility.ContentAsyncJsonTo<TResponseModel>(responseAsString));
             }
 
             {
-                var responseAsString = await responseMessage.Content.ReadAsStringAsync();
-                Debug.unityLogger.Log(LogType.Log, Tag, $"Response message: {responseAsString}");
-
                 var errorMessageBuilder = new StringBuilder();
                 try
                 {
