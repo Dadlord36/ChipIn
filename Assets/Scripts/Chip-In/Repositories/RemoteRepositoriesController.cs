@@ -1,5 +1,4 @@
-﻿using DataModels;
-using DataModels.ResponsesModels;
+﻿using DataModels.ResponsesModels;
 using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
@@ -28,7 +27,5 @@ namespace Repositories
                 remoteRepositories[i].LoadDataFromServer();
             }
         }
-
-
     }
 }

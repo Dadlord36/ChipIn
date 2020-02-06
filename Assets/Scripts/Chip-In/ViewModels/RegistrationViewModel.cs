@@ -5,7 +5,6 @@ using DataModels;
 using DataModels.RequestsModels;
 using JetBrains.Annotations;
 using RequestsStaticProcessors;
-using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
@@ -19,12 +18,11 @@ namespace ViewModels
         private readonly SimpleRegistrationRequestModel
             _registrationRequestModel = new SimpleRegistrationRequestModel();
 
-        [SerializeField] private UserSimpleRegisterModelValidator userSimpleRegisterModelValidator;
-
-
+        [SerializeField] private PasswordAnalyzer passwordAnalyzer;
+        [SerializeField] private ScriptableObjects.Validations.EmailValidation emailValidator;
+        
         private bool _pendingRegister;
         private bool _canTryRegister;
-        private string _repeatedPassword;
 
         [Binding]
         public string Email
@@ -45,6 +43,7 @@ namespace ViewModels
             set
             {
                 _registrationRequestModel.Password = value;
+                passwordAnalyzer.OriginalPassword = value;
                 OnPropertyChanged();
                 CheckIfCanRegister();
             }
@@ -76,11 +75,11 @@ namespace ViewModels
         [Binding]
         public string RepeatedPassword
         {
-            get => _repeatedPassword;
+            get => passwordAnalyzer.RepeatedPassword;
             set
             {
-                if (value == _repeatedPassword) return;
-                _repeatedPassword = value;
+                if (value == passwordAnalyzer.RepeatedPassword) return;
+                passwordAnalyzer.RepeatedPassword = value;
                 OnPropertyChanged();
                 CheckIfCanRegister();
             }
@@ -107,15 +106,10 @@ namespace ViewModels
 
         private void CheckIfCanRegister()
         {
-            if (string.IsNullOrEmpty(_repeatedPassword)) return;
+            if (string.IsNullOrEmpty(passwordAnalyzer.RepeatedPassword)) return;
 
-            bool CheckPasswordsAreMatch()
-            {
-                return Password == RepeatedPassword;
-            }
-
-            CanTryRegister = userSimpleRegisterModelValidator.CheckIsValid(_registrationRequestModel) &&
-                             CheckPasswordsAreMatch();
+            CanTryRegister = emailValidator.CheckIsValid(_registrationRequestModel.Email) &&
+                             passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid();
         }
 
         private async Task Register()
