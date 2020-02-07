@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
+using DataModels.MatchModels;
 using DataModels.RequestsModels;
 using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -12,7 +14,6 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views;
-using WebOperationUtilities;
 using WebSockets;
 
 namespace ViewModels
@@ -20,8 +21,54 @@ namespace ViewModels
     [Binding]
     public class SlotsGameViewModel : ViewsSwitchingViewModel
     {
+        private class BoardIconsHolder
+        {
+            private readonly List<BoardIcon> _boardIcons = new List<BoardIcon>();
+
+            public BoardIcon[] BoardIcons
+            {
+                set
+                {
+                    _boardIcons.Clear();
+                    _boardIcons.Capacity = value.Length;
+                    _boardIcons.AddRange(value);
+                }
+            }
+
+            public Sprite[] IconsSprites
+            {
+                get
+                {
+                    var sprites = new Sprite[_boardIcons.Count];
+                    for (int i = 0; i < _boardIcons.Count; i++)
+                    {
+                        sprites[i] = _boardIcons[i].IconSprite;
+                    }
+
+                    return sprites;
+                }
+            }
+
+            private Sprite GetSpriteWithId(int index)
+            {
+                return _boardIcons.Find(icon => icon.Id == index).IconSprite;
+            }
+
+            public Sprite[] GetCorrespondingIconsSprites(IReadOnlyList<int> indexes)
+            {
+                var sprites = new Sprite[_boardIcons.Count];
+                for (int i = 0; i < indexes.Count; i++)
+                {
+                    sprites[i] = GetSpriteWithId(indexes[i]);
+                }
+
+                return sprites;
+            }
+        }
+
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         private GameChannelWebSocketSharp _gameChannelSocket;
+        private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
 
         private void Start()
         {
@@ -43,28 +90,27 @@ namespace ViewModels
             (_gameChannelSocket as IDisposable).Dispose();
         }
 
-        private void ConnectToTheChannel()
-        {
-            _gameChannelSocket.SubscribeToGameChannel();
-        }
-
         [Binding]
         public void ConnectAndGetGameData_OnClick()
         {
             ConnectAndGetGameData();
         }
-        
+
         private async void ConnectAndGetGameData()
         {
-           await Login();
-           var offerId = await LoadOffers();
-           var gameId = await LoadOfferDetails(offerId);
-           var matchData = await GetGameData(gameId);
-           
-           var textures = await matchData.MatchData.Board.GetSlotsIconsTextures();
-           SetSlotsIcons(textures);
+            await Login();
+
+            var offerId = await LoadOffers();
+            var gameId = await LoadOfferDetails(offerId);
+            var matchData = await GetGameData(gameId);
+
+            _boardIconsHolder.BoardIcons = await matchData.MatchData.Board.GetBoardIcons();
+            UpdateSlotsIcons(matchData.MatchData.Board.IconsIndexes);
+
+            await StartGameSocketChannel();
         }
-        
+
+
         private async Task Login()
         {
             var response = await LoginStaticProcessor.Login(new UserLoginRequestModel
@@ -74,11 +120,6 @@ namespace ViewModels
             {
                 authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             }
-        }
-        
-        private void ConnectToSocket()
-        {
-            StartGameSocketChannel();
         }
 
         private async Task<int> LoadOffers()
@@ -128,41 +169,67 @@ namespace ViewModels
             return matchData;
         }
 
-        private void SetSlotsIcons(Texture2D[] textures)
+        private void UpdateSlotsIcons(IReadOnlyList<int> iconsIndexes)
         {
-            var sprites = SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(textures);
+            SetSlotsIcons(_boardIconsHolder.GetCorrespondingIconsSprites(iconsIndexes));
+            LogUtility.PrintLog(tag, "Slots Icons was updated");
+        }
+
+        private void SetSlotsIcons(Sprite[] sprites)
+        {
             ((SlotsGameView) View).SetSlotsIcons(sprites);
         }
 
-        private void StartGameSocketChannel()
+        private async Task StartGameSocketChannel()
         {
             CloseConnectionAndDisposeGameChannelSocket();
-            EstablishSocketConnection();
+            await EstablishSocketConnection();
             SubscribeToGameSocketEvents();
         }
 
         private void SubscribeToGameSocketEvents()
         {
-            _gameChannelSocket.MatchRoundSwitched += GameChannelSocketOnMatchRoundSwitched;
-            _gameChannelSocket.RoundEnds += GameChannelSocketOnRoundEnds;
+            _gameChannelSocket.RoundEnds += GameChannelSocketOnMatchRoundEnds;
+            _gameChannelSocket.MatchEnds += GameChannelSocketOnMatchEnds;
         }
 
-        private void GameChannelSocketOnMatchRoundSwitched(MathStateData mathStateData)
+        private MatchStateData _matchStateData;
+        private bool _shouldUpdateSlotsIcons;
+
+        private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
+        {
+            PrepareMatchStateDataForIconsUpdate(matchStateData);
+        }
+
+        private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
+        {
+            _matchStateData = matchStateData;
+            _shouldUpdateSlotsIcons = _matchStateData!=null;
+        }
+
+        private void Update()
+        {
+            UpdateSlotsIconsFromMatchStateData();
+        }
+
+        private void UpdateSlotsIconsFromMatchStateData()
+        {
+            if (!_shouldUpdateSlotsIcons) return;
+            UpdateSlotsIcons(_matchStateData.MatchState.Body.Board.IconsIndexes);
+            _shouldUpdateSlotsIcons = false;
+        }
+
+        private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
         {
             throw new NotImplementedException();
         }
 
-        private void GameChannelSocketOnRoundEnds(MathStateData mathStateData)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void EstablishSocketConnection()
+        private async Task EstablishSocketConnection()
         {
             try
             {
                 _gameChannelSocket = new GameChannelWebSocketSharp(authorisationDataRepository.GetRequestHeaders());
-                _gameChannelSocket.Connect();
+                await Task.Run(delegate { _gameChannelSocket.ConnectAsync(); });
             }
             catch (Exception e)
             {

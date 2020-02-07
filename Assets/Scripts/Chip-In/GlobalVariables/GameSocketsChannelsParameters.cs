@@ -11,5 +11,6 @@
     public static class SlotsGameStatesNames
     {
         public const string RoundEnd = "Round End";
+        public const string GameEnd = "Game End";
     }
 }

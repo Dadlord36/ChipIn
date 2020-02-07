@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Authentication;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using DataModels;
 using GlobalVariables;
 using Newtonsoft.Json;
@@ -18,7 +20,7 @@ namespace WebSockets
         [JsonProperty("title")] public string Title { get; set; }
     }
 
-    public class MathStateData
+    public class MatchStateData
     {
         [JsonProperty("identifier")] public string Identifier { get; set; }
         [JsonProperty("message")] public MatchState MatchState { get; set; }
@@ -28,7 +30,7 @@ namespace WebSockets
     {
         #region Events Declaration
 
-        public event Action<MathStateData> MatchRoundSwitched, RoundEnds;
+        public event Action<MatchStateData> RoundEnds, MatchEnds;
 
         #endregion
 
@@ -55,7 +57,7 @@ namespace WebSockets
             const string accessTokenFieldName = "access-token";
             const string uIdFieldName = "uid";
             const string clientFieldName = "client";
-            
+
             var dictionary = authenticationHeaders.ToDictionary(x => x.Key, x => x.Value,
                 StringComparer.Ordinal);
 
@@ -89,47 +91,43 @@ namespace WebSockets
         private void OnSocketMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var data = messageEventArgs.Data;
-            try
-            {
-                ProcessMathStateData(data);
-            }
-            catch
-            {
-                try
-                {
-                    ProcessSocketMessage(data);
-                }
-                catch
-                {
-                    LogUtility.PrintLog(Tag, messageEventArgs.Data);
-                }
-            }
+
+               if(TryProcessStringAsMatchStateData(data)) return;
+               if(TryProcessStringAsRegularMessage(data)) return;
+
+               LogUtility.PrintLog(Tag, $"Data was not identified: {data}");
         }
 
-        private void ProcessMathStateData(string data)
+        private bool TryProcessStringAsMatchStateData(string data)
         {
-            var matchStateData = JsonConvert.DeserializeObject<MathStateData>(data);
-            LogUtility.PrintLog(Tag, JsonConvert.SerializeObject(matchStateData));
-
+            if (!JsonConverterUtility.TryParseJson<MatchStateData>(data,out var matchStateData))
+                return false;
+                
+            LogUtility.PrintLog(Tag, $"Match data: {data}");
             if (matchStateData.MatchState.Title == SlotsGameStatesNames.RoundEnd)
             {
                 OnRoundEnds(matchStateData);
-                return;
+                return true;
             }
-
-            OnMatchRoundSwitched(matchStateData);
+            OnMatchEnds(matchStateData);
+            return true;
+            
+  
         }
 
-        private static void ProcessSocketMessage(string data)
+        private static bool TryProcessStringAsRegularMessage(string data)
         {
-            var socketMessage = JsonConvert.DeserializeObject<SocketMessage>(data);
+            if (! JsonConverterUtility.TryParseJson<SocketMessage>(data, out var socketMessage))
+                return false;
+
             if (socketMessage.Type == "ping")
             {
                 LogUtility.PrintLog(Tag, "ping");
-                return;
+                return true;
             }
 
-            LogUtility.PrintLog(Tag, data);
+            LogUtility.PrintLog(Tag, $"Message is: {data}");
+            return true;
         }
 
         private static void OnSocketError(object sender, ErrorEventArgs eventArgs)
@@ -142,13 +140,9 @@ namespace WebSockets
             LogUtility.PrintLog(Tag, $"Game channel socket is closed: {e}");
         }
 
-        private static void OnSocketOpened(object sender, EventArgs e)
+        private void OnSocketOpened(object sender, EventArgs e)
         {
             LogUtility.PrintLog(Tag, $"Game channel socket is opened: {e}");
-        }
-
-        public void SubscribeToGameChannel()
-        {
             SubscribeToGameChannelWithJson();
         }
 
@@ -161,14 +155,14 @@ namespace WebSockets
 
         #region Events Invokations
 
-        private void OnMatchRoundSwitched(MathStateData mathStateData)
+        private void OnRoundEnds(MatchStateData matchStateData)
         {
-            MatchRoundSwitched?.Invoke(mathStateData);
+            RoundEnds?.Invoke(matchStateData);
         }
 
-        private void OnRoundEnds(MathStateData mathStateData)
+        private void OnMatchEnds(MatchStateData matchStateData)
         {
-            RoundEnds?.Invoke(mathStateData);
+            MatchEnds?.Invoke(matchStateData);
         }
 
         #endregion

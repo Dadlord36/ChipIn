@@ -5,6 +5,7 @@ using WebOperationUtilities;
 
 namespace DataModels.MatchModels
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public class SlotsBoard
     {
         [JsonProperty("0")] public readonly MatchBoardElementData First;
@@ -16,6 +17,9 @@ namespace DataModels.MatchModels
         [JsonProperty("6")] public readonly MatchBoardElementData Seventh;
         [JsonProperty("7")] public readonly MatchBoardElementData Eighth;
         [JsonProperty("8")] public readonly MatchBoardElementData Ninth;
+
+        private MatchBoardElementData[] Elements =>
+            new[] {First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth};
 
         public SlotsBoard(MatchBoardElementData first, MatchBoardElementData second, MatchBoardElementData third,
             MatchBoardElementData fourth, MatchBoardElementData fifth, MatchBoardElementData sixth,
@@ -32,15 +36,47 @@ namespace DataModels.MatchModels
             Ninth = ninth;
         }
 
-        public async Task<Texture2D[]> GetSlotsIconsTextures()
+        private string[] IconsUrls => new[]
         {
-            var iconsUrls = new[]
-            {
-                First.PosterUrl, Second.PosterUrl, Third.PosterUrl, Fourth.PosterUrl,Fifth.PosterUrl, Sixth.PosterUrl,
-                Seventh.PosterUrl, Eighth.PosterUrl, Ninth.PosterUrl
-            };
+            First.PosterUrl, Second.PosterUrl, Third.PosterUrl, Fourth.PosterUrl, Fifth.PosterUrl, Sixth.PosterUrl,
+            Seventh.PosterUrl, Eighth.PosterUrl, Ninth.PosterUrl
+        };
 
-            return await ImagesDownloadingUtility.LoadImagesArray(iconsUrls);
+        private async Task<Texture2D[]> GetSlotsIconsTextures()
+        {
+            return await ImagesDownloadingUtility.LoadImagesArray(IconsUrls);
+        }
+
+        public int[] IconsIndexes
+        {
+            get
+            {
+                var elements = Elements;
+                var indexes = new int[elements.Length];
+                for (int i = 0; i < elements.Length; i++)
+                {
+                    indexes[i] = elements[i].IconId;
+                }
+
+                return indexes;
+            }
+        }
+
+        public async Task<BoardIcon[]> GetBoardIcons()
+        {
+            var textures = await GetSlotsIconsTextures();
+            var sprites = SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(textures);
+            var length = textures.Length;
+            var elements = Elements;
+
+
+            var boardIcons = new BoardIcon[length];
+            for (int i = 0; i < length; i++)
+            {
+                boardIcons[i] = new BoardIcon(sprites[i],elements[i].IconId);
+            }
+
+            return boardIcons;
         }
     }
 
@@ -49,5 +85,17 @@ namespace DataModels.MatchModels
         [JsonProperty("active")] public bool Activity;
         [JsonProperty("poster")] public string PosterUrl;
         [JsonProperty("icon_id")] public int IconId;
+    }
+
+    public struct BoardIcon
+    {
+        public readonly Sprite IconSprite;
+        public readonly int Id;
+
+        public BoardIcon(Sprite iconSprite, int id)
+        {
+            Id = id;
+            IconSprite = iconSprite;
+        }
     }
 }
