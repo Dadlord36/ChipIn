@@ -79,6 +79,12 @@ namespace ViewModels
             ApiHelper.InitializeClient();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            GetGameDataAndInitializeGame();
+        }
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -100,13 +106,9 @@ namespace ViewModels
             MakeASpin();
         }
 
-        private async void ConnectAndGetGameData()
+        private async void GetGameDataAndInitializeGame()
         {
-            await Login();
-
-            var offerId = await LoadOffers();
-            var gameId = await LoadOfferDetails(offerId);
-            var matchData = await GetGameData(gameId);
+            var matchData = await GetGameData(selectedGameRepository.GameId);
 
             _boardIconsHolder.BoardIcons = await matchData.MatchData.Board.GetBoardIcons();
             UpdateSlotsIcons(matchData.MatchData.Board.IconsIndexes);
@@ -115,7 +117,7 @@ namespace ViewModels
         }
 
 
-        private async Task Login()
+        /*private async Task Login()
         {
             var response = await LoginStaticProcessor.Login(new UserLoginRequestModel
                 {Email = "test@mail.com", Password = "12345678"});
@@ -124,9 +126,9 @@ namespace ViewModels
             {
                 authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
             }
-        }
+        }*/
 
-        private async Task<int> LoadOffers()
+        /*private async Task<int> LoadOffers()
         {
             var offersData = await OffersStaticRequestProcessor.GetListOfOffers(authorisationDataRepository);
             if (offersData == null || !offersData.Any())
@@ -141,9 +143,9 @@ namespace ViewModels
             }
 
             return offersData[0].Id;
-        }
+        }*/
 
-        private async Task<int> LoadOfferDetails(int offerId)
+        /*private async Task<int> LoadOfferDetails(int offerId)
         {
             var offerData =
                 await OffersStaticRequestProcessor.GetOfferDetails(
@@ -158,7 +160,7 @@ namespace ViewModels
 
             PrintLog($"Game will starts at {offerData.Offer.GameData.StartedAt}");
             return offerData.Offer.GameData.Id;
-        }
+        }*/
 
         private static bool GameIsInProgress(IGameData gameData)
         {
@@ -225,7 +227,8 @@ namespace ViewModels
 
         private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
         {
-            throw new NotImplementedException();
+            PrintLog("Game over");
+            SwitchToView(nameof(WinnerView));
         }
 
         private async Task EstablishSocketConnection()

@@ -7,11 +7,17 @@ using Views;
 namespace ViewModels
 {
     [Binding]
-    public class ChallengesViewModel : BaseContainerItemsViewModel
+    public class ChallengeViewModel : BaseContainerItemsViewModel
     {
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
 
+        [Binding]
+        public void Play_OnButtonClick()
+        {
+            SwitchToSlotsGameView();
+        }
+        
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -24,18 +30,25 @@ namespace ViewModels
             UnsubscribeOnRepositoryItemsCollectionChangesEvent(challengesRemoteRepository);
         }
 
+        private void SwitchToSlotsGameView()
+        {
+            SwitchToView(nameof(SlotsGameView));
+        }
+
         private void AddCard(string challengeTypeName, uint coinsAmount)
         {
             var visibleParameters = challengesCardsParametersRepository.GetItemVisibleParameters(challengeTypeName);
             visibleParameters.coinsAmount = coinsAmount;
-            var card = ((ChallengesView) View).AddItem();
+            var card = ((ChallengeView) View).AddItem();
             card.SetupCardViewElements(visibleParameters);
         }
 
         protected override void ClearAllItems()
         {
-            ((ChallengesView)View).RemoveAllItems(); 
+            ((ChallengeView)View).RemoveAllItems(); 
         }
+        
+        
 
         protected override void FillContainerWithDataFromRepository()
         {

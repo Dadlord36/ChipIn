@@ -30,6 +30,12 @@ namespace Common
             _items.Add(item);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
         }
+        
+        public void Clear()
+        {
+            _items.Clear();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
 
         public void AddRange(T[] itemsArray)
         {

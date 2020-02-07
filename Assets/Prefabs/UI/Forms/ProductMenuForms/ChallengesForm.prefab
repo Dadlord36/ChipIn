@@ -595,7 +595,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 6904810008941185216}
-  viewsSwitchingHelperObject: {fileID: 0}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
   challengesCardsParametersRepository: {fileID: 11400000, guid: 2d459134051140f4182a7cfd7d2b221f,
     type: 2}
   challengesRemoteRepository: {fileID: 11400000, guid: 0f1535152227571468d84452f20c80c2,
@@ -1535,6 +1536,7 @@ GameObject:
   - component: {fileID: 648002715838623807}
   - component: {fileID: 947931538953810321}
   - component: {fileID: 2586473203126185639}
+  - component: {fileID: 2881073548193917476}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -1641,6 +1643,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2881073548193917476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202362466183944994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.ChallengeViewModel.Play_OnButtonClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1001 &3863514999743777286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2291,6 +2307,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ChalengeCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188101403587074853, guid: ff9a32205f46c9141bbe812a8148f34d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff9a32205f46c9141bbe812a8148f34d, type: 3}

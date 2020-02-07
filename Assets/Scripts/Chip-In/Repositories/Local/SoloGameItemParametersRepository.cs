@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(SoloGameItemParametersRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SoloGameItemParametersRepository), order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SoloGameItemParametersRepository),
+        order = 0)]
     public class SoloGameItemParametersRepository : ScriptableObject
     {
         [SerializeField] private SoloGameItemVisibleParameters[] soloGameItemVisibleParameters;
@@ -26,6 +27,7 @@ namespace Repositories.Local
                     return soloGameItemVisibleParameters[i];
                 }
             }
+
             throw new Exception($"There is no Item of type {gameTypeName}");
         }
     }
