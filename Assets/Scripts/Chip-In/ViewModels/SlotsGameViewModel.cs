@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -8,6 +9,7 @@ using DataModels.RequestsModels;
 using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
 using Newtonsoft.Json;
+using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -67,6 +69,8 @@ namespace ViewModels
         }
 
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private SelectedGameRepository selectedGameRepository;
+
         private GameChannelWebSocketSharp _gameChannelSocket;
         private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
 
@@ -91,9 +95,9 @@ namespace ViewModels
         }
 
         [Binding]
-        public void ConnectAndGetGameData_OnClick()
+        public void Spin_OnClick()
         {
-            ConnectAndGetGameData();
+            MakeASpin();
         }
 
         private async void ConnectAndGetGameData()
@@ -204,7 +208,7 @@ namespace ViewModels
         private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
         {
             _matchStateData = matchStateData;
-            _shouldUpdateSlotsIcons = _matchStateData!=null;
+            _shouldUpdateSlotsIcons = _matchStateData != null;
         }
 
         private void Update()
@@ -235,6 +239,12 @@ namespace ViewModels
             {
                 LogUtility.PrintLogException(e);
             }
+        }
+
+        private async Task MakeASpin()
+        {
+            var userScore =
+                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId);
         }
 
         private static void PrintLog(string message, LogType logType = LogType.Log)

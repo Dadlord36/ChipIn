@@ -199,7 +199,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Button
+  m_Text: Spin
 --- !u!1 &2167493158708676819
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,8 +306,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: 242}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -290}
+  m_SizeDelta: {x: 123.93, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8366525554175951195
 CanvasRenderer:
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.SlotsGameViewModel.ConnectAndGetGameData_OnClick
+  viewModelMethodName: ViewModels.SlotsGameViewModel.Spin_OnClick
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &8084376917476174918
 GameObject:
@@ -565,6 +565,7 @@ MonoBehaviour:
   viewsSwitchingController: {fileID: 0}
   authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
     type: 2}
+  selectedGameRepository: {fileID: 0}
 --- !u!1001 &887091911202726602
 PrefabInstance:
   m_ObjectHideFlags: 0
