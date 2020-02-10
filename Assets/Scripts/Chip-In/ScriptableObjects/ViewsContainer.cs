@@ -15,7 +15,7 @@ namespace ScriptableObjects
 
             protected ContainerItem(T prefab)
             {
-                this.Prefab = prefab;
+                Prefab = prefab;
             }
 
             public T GetInstance => _instance == null ? _instance = Instantiate(Prefab) : _instance;

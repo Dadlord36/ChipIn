@@ -31,10 +31,11 @@ namespace RequestsStaticProcessors
             return response.ResponseModelInterface;
         }
 
-        public static async Task<IUpdateUserScoreResponseModel> MakeAMove(IRequestHeaders requestHeaders, int gameId)
+        public static async Task<IUpdateUserScoreResponseModel> MakeAMove(IRequestHeaders requestHeaders, int gameId,
+            SpinBoardParameters spinBoardParameters)
         {
             var response =
-                await new MakeAMovePostProcessor(requestHeaders, gameId).SendRequest(
+                await new MakeAMovePostProcessor(requestHeaders, gameId,spinBoardParameters).SendRequest(
                     "Player has made a move successfully");
             return response.ResponseModelInterface;
         }

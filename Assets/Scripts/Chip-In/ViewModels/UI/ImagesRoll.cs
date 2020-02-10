@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Repositories.Local;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using ViewModels.UI.Elements.Icons;
 
@@ -24,6 +25,11 @@ namespace ViewModels.UI
                 this.owningObject = owningObject;
                 scale = 0f;
             }
+
+            public void SetSprite(Sprite sprite)
+            {
+                imageComponent.AvatarSprite = sprite;
+            }
         }
 
         private enum Direction
@@ -42,8 +48,9 @@ namespace ViewModels.UI
         [SerializeField, Range(0f, 1f)] private float minScale = 0.8f;
         [SerializeField, Range(0f, 1f)] private float scaleFactor;
 
-        [SerializeField, HideInInspector] private UserAvatarInRow[] imagesRows;
-        [SerializeField, HideInInspector] private UserAvatarIcon mainImage;
+        [SerializeField] private UserAvatarInRow[] imagesRows;
+        [SerializeField] private UserAvatarIcon mainImage;
+        [SerializeField] private UserAvatarIcon[] otherIcons;
 
 #if UNITY_EDITOR
 
@@ -63,12 +70,23 @@ namespace ViewModels.UI
 
         public void SetMainAvatarIconSprite(Sprite sprite)
         {
-            mainImage.AvatarSprite=sprite;
+            mainImage.AvatarSprite = sprite;
+        }
+
+        public void SetOtherAvatarsIconSprites(IReadOnlyList<Sprite> avatarSprites)
+        {
+            Assert.IsTrue(otherIcons.Length == avatarSprites.Count);
+            for (int i = 0; i < otherIcons.Length; i++)
+            {
+                otherIcons[i].AvatarSprite = avatarSprites[i];
+            }
         }
 
         public void CreateImages(IconEllipseType ellipsesType)
         {
             imagesRows = new UserAvatarInRow[numberOfImages];
+            var otherIconsList = new List<UserAvatarIcon>(numberOfImages - 1);
+
             ushort itemsAddedToRow = 0, currentRow = 1;
             var thisTransform = transform;
 
@@ -77,12 +95,15 @@ namespace ViewModels.UI
 
             for (int i = 0; i < numberOfImages; i++)
             {
-                AddItemToRow(i, CreateImage($"Image {i.ToString()}"));
+                var userAvatarIcon = AddItemToRow(i, CreateImage($"Image {i.ToString()}"));
+                otherIconsList.Add(userAvatarIcon.imageComponent);
                 if (itemsAddedToRow == numberOfItemsInRow)
                 {
                     ConfirmRowAdding();
                 }
             }
+
+            otherIcons = otherIconsList.ToArray();
 
             UserAvatarIcon CreateImage(string objectName)
             {
@@ -94,10 +115,10 @@ namespace ViewModels.UI
                 return avatarIcon;
             }
 
-            void AddItemToRow(int arrayIndex, UserAvatarIcon imageItem)
+            UserAvatarInRow AddItemToRow(int arrayIndex, UserAvatarIcon imageItem)
             {
-                imagesRows[arrayIndex] = new UserAvatarInRow(imageItem.gameObject, imageItem, currentRow);
                 itemsAddedToRow++;
+                return imagesRows[arrayIndex] = new UserAvatarInRow(imageItem.gameObject, imageItem, currentRow);
             }
 
             void ConfirmRowAdding()

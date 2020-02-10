@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -7,11 +8,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine.Assertions;
 using Utilities;
+using WebOperationUtilities;
+
 
 namespace HttpRequests
 {
     public static class ApiHelper
     {
+        private const string Tag = nameof(ApiHelper);
+        
         private static HttpClient _apiClient;
         private const string JsonMediaTypeHeader = "application/json";
 
@@ -32,10 +37,20 @@ namespace HttpRequests
         }
 
         public static async Task<HttpResponseMessage> MakeAsyncRequest(HttpMethod methodType, string requestSuffix,
-            string requestParameters, List<KeyValuePair<string, string>> requestHeaders, object requestBody)
+            string requestParameters, NameValueCollection queryStringParams, List<KeyValuePair<string, string>>
+                requestHeaders, object requestBody)
         {
-            using (var requestMessage = new HttpRequestMessage(methodType,
-                $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}"))
+            var queryString = "";
+            if (queryStringParams != null)
+            {
+                queryString = QueryHelpers.MakeAQueryString(queryStringParams);
+            }
+
+            string requestUri = $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}{queryString}";
+            
+            LogUtility.PrintLog(Tag, requestUri);
+
+            using (var requestMessage = new HttpRequestMessage(methodType, requestUri))
             {
                 Assert.IsFalse(requestHeaders == null && requestBody == null);
 

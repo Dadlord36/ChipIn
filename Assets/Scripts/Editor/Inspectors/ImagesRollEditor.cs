@@ -21,6 +21,7 @@ namespace Inspectors
                 ((ImagesRoll) target).GenerateImages(_ellipseType);
                 serializedObject.Update();
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(target);
             }
         }
     }

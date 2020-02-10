@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using DataModels.MatchModels;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using ViewModels.UI.Elements.Icons;
 using Views.Interfaces;
@@ -20,6 +23,18 @@ namespace Views
             for (int i = 0; i < length; i++)
             {
                 slotIconViews[i].SlotIcon = sprites[i];
+            }
+        }
+
+        public void SetSlotsActivity(IReadOnlyList<IActive> iconsActivity)
+        {
+            var length = iconsActivity.Count;
+            
+            Assert.IsTrue(length == slotIconViews.Length);
+            
+            for (int i = 0; i < length; i++)
+            {
+                slotIconViews[i].ActivityState = iconsActivity[i].Active;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -19,10 +20,23 @@ namespace HttpRequests.RequestsProcessors
         protected struct BaseRequestProcessorParameters
         {
             public readonly string RequestSuffix;
-            public readonly IReadOnlyList<string> RequestParameters;
             public readonly HttpMethod RequestMethod;
+            public readonly IReadOnlyList<string> RequestParameters;
+            public readonly NameValueCollection QueryStringParameters;
             public readonly IRequestHeaders RequestHeaders;
             public readonly TRequestBodyModelInterface RequestBodyModel;
+
+            public BaseRequestProcessorParameters(string requestSuffix,
+                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel,
+                IReadOnlyList<string> requestParameters, NameValueCollection queryStringParameters)
+            {
+                RequestSuffix = requestSuffix;
+                RequestParameters = requestParameters;
+                QueryStringParameters = queryStringParameters;
+                RequestMethod = requestMethod;
+                RequestHeaders = requestHeaders;
+                RequestBodyModel = requestBodyModel;
+            }
 
             public BaseRequestProcessorParameters(string requestSuffix,
                 HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel,
@@ -30,6 +44,7 @@ namespace HttpRequests.RequestsProcessors
             {
                 RequestSuffix = requestSuffix;
                 RequestParameters = requestParameters;
+                QueryStringParameters = null;
                 RequestMethod = requestMethod;
                 RequestHeaders = requestHeaders;
                 RequestBodyModel = requestBodyModel;
@@ -38,36 +53,25 @@ namespace HttpRequests.RequestsProcessors
 
         private const string Tag = "HTTPRequests";
 
-        private readonly string _requestSuffix;
-        private readonly string _requestParameters;
-        private readonly HttpMethod _requestMethod;
-        private readonly IRequestHeaders _requestHeaders;
-        private readonly TRequestBodyModelInterface _requestBodyModel;
-
+        private BaseRequestProcessorParameters _requestProcessorParameters;
 
         protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
             TRequestBodyModelInterface requestBodyModel)
         {
-            _requestSuffix = requestSuffix;
-            _requestParameters = "";
-            _requestMethod = requestMethod;
-            _requestHeaders = requestHeaders;
-            _requestBodyModel = requestBodyModel;
+            _requestProcessorParameters = new BaseRequestProcessorParameters(requestSuffix, requestMethod,
+                requestHeaders, requestBodyModel, null, null);
         }
+
 
         protected BaseRequestProcessor(BaseRequestProcessorParameters requestProcessorParameters)
         {
-            _requestSuffix = requestProcessorParameters.RequestSuffix;
-            _requestParameters = requestProcessorParameters.RequestParameters == null
-                ? null
-                : FormUrlParametersString(requestProcessorParameters.RequestParameters);
-            _requestMethod = requestProcessorParameters.RequestMethod;
-            _requestHeaders = requestProcessorParameters.RequestHeaders;
-            _requestBodyModel = requestProcessorParameters.RequestBodyModel;
+            _requestProcessorParameters = requestProcessorParameters;
         }
 
         private static string FormUrlParametersString(IReadOnlyList<string> parameters)
         {
+            if (parameters == null) return null;
+
             var length = parameters.Count;
             var stringBuilder = new StringBuilder(length);
 
@@ -83,7 +87,10 @@ namespace HttpRequests.RequestsProcessors
             TRequestBodyModelInterface requestBodyModel = null,
             IRequestHeaders requestHeaders = null)
         {
-            return await ApiHelper.MakeAsyncRequest(_requestMethod, _requestSuffix, _requestParameters,
+            return await ApiHelper.MakeAsyncRequest(_requestProcessorParameters.RequestMethod,
+                _requestProcessorParameters.RequestSuffix,
+                FormUrlParametersString(_requestProcessorParameters.RequestParameters),
+                _requestProcessorParameters.QueryStringParameters,
                 requestHeaders?.GetRequestHeaders(), requestBodyModel);
         }
 
@@ -97,7 +104,7 @@ namespace HttpRequests.RequestsProcessors
 
             var responseAsString = await responseMessage.Content.ReadAsStringAsync();
             Debug.unityLogger.Log(LogType.Log, Tag, $"Response content: {responseAsString}");
-            
+
             if (responseMessage.IsSuccessStatusCode)
             {
                 return new RequestResponse<TResponseModelInterface>(responseMessage,
@@ -130,7 +137,8 @@ namespace HttpRequests.RequestsProcessors
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
             var httpResponse = new HttpResponse();
-            using (var responseMessage = await SendRequestToWebServer(_requestBodyModel, _requestHeaders))
+            using (var responseMessage = await SendRequestToWebServer(_requestProcessorParameters.RequestBodyModel,
+                _requestProcessorParameters.RequestHeaders))
             {
                 try
                 {
@@ -145,7 +153,7 @@ namespace HttpRequests.RequestsProcessors
                         httpResponse.Headers = requestResponse.ResponseMessage.Headers;
                     }
 
-                    Debug.unityLogger.Log(LogType.Log, Tag, requestResponse.ResponseMessage.IsSuccessStatusCode
+                    LogUtility.PrintLog(Tag, requestResponse.ResponseMessage.IsSuccessStatusCode
                         ? successfulResponseMassage
                         : requestResponse.ResponseMessage.ReasonPhrase);
                 }

@@ -25,13 +25,17 @@ namespace Inspectors
 
         public override void OnInspectorGUI()
         {
+            base.OnInspectorGUI();
+            
             EditorGUI.BeginChangeCheck();
             _ellipseType = (IconEllipseType) EditorGUILayout.EnumPopup(_ellipseType);
             AvatarImageSprite = (Sprite) EditorGUILayout.ObjectField(AvatarImageSprite, typeof(Sprite), false);
             if (EditorGUI.EndChangeCheck())
             {
                 _avatarIcon.SetIconEllipseSprite(_ellipseType);
+                EditorUtility.SetDirty(target);
             }
+            
         }
     }
 }

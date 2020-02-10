@@ -19,5 +19,10 @@ namespace ViewModels.UI.Elements.Icons
             get => background.sprite;
             set => background.sprite = value;
         }
+
+        protected void SetIconColor(Color color)
+        {
+            iconImage.color = color;
+        }
     }
 }

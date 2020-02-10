@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using ViewModels.UI;
 
@@ -17,6 +18,11 @@ namespace Views
         public Sprite MainAvatarIconSprite
         {
             set => imagesRoll.SetMainAvatarIconSprite(value);
+        }
+
+        public void SetOtherAvatarsSprites(IReadOnlyList<Sprite> avatarSprites)
+        {
+            imagesRoll.SetOtherAvatarsIconSprites(avatarSprites);
         }
     }
 }

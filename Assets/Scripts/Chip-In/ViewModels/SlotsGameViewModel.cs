@@ -56,12 +56,12 @@ namespace ViewModels
                 return _boardIcons.Find(icon => icon.Id == index).IconSprite;
             }
 
-            public Sprite[] GetCorrespondingIconsSprites(IReadOnlyList<int> indexes)
+            public Sprite[] GetCorrespondingIconsSprites(IReadOnlyList<IIconIdentifier> identifiers)
             {
                 var sprites = new Sprite[_boardIcons.Count];
-                for (int i = 0; i < indexes.Count; i++)
+                for (int i = 0; i < identifiers.Count; i++)
                 {
-                    sprites[i] = GetSpriteWithId(indexes[i]);
+                    sprites[i] = GetSpriteWithId(identifiers[i].IconId);
                 }
 
                 return sprites;
@@ -73,6 +73,28 @@ namespace ViewModels
 
         private GameChannelWebSocketSharp _gameChannelSocket;
         private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
+        private IMatchModel _matchData;
+
+        private MatchStateData _matchStateData;
+        private bool _shouldUpdateSlotsIcons;
+        private bool _gameShouldBeFinished;
+
+        private BoardIcon[] BoardIcons
+        {
+            set => _boardIconsHolder.BoardIcons = value;
+        }
+
+        private SlotsBoard Board
+        {
+            get => _matchData.Board;
+            set
+            {
+                _matchData.Board = value;
+                OnBoardDataUpdated();
+            }
+        }
+
+        private ISlotIconBaseData[] SlotIconData => _matchData.Board.IconsData;
 
         private void Start()
         {
@@ -101,66 +123,51 @@ namespace ViewModels
         }
 
         [Binding]
-        public void Spin_OnClick()
+        public void SpinFrame_OnClick()
         {
-            MakeASpin();
+            SpinFrame();
+        }
+
+        [Binding]
+        public void SpinBoard_OnClick()
+        {
+            SpinBoard();
+        }
+
+        private async Task UpdateMatchData(bool notify = true)
+        {
+            var result = await GetGameData(selectedGameRepository.GameId);
+            _matchData = result.MatchData;
+
+            if (notify)
+                OnBoardDataUpdated();
         }
 
         private async void GetGameDataAndInitializeGame()
         {
-            var matchData = await GetGameData(selectedGameRepository.GameId);
-
-            _boardIconsHolder.BoardIcons = await matchData.MatchData.Board.GetBoardIcons();
-            UpdateSlotsIcons(matchData.MatchData.Board.IconsIndexes);
-
+            await UpdateMatchData(false);
+            await UpdateGameRepositoryUsersData();
+            await LoadBoardIcons();
+            UpdateSlotsIconsPositionsAndActivity();
             await StartGameSocketChannel();
         }
 
-
-        /*private async Task Login()
+        private async Task UpdateGameRepositoryUsersData()
         {
-            var response = await LoginStaticProcessor.Login(new UserLoginRequestModel
-                {Email = "test@mail.com", Password = "12345678"});
+            await selectedGameRepository.SaveUsersData(_matchData);
+        }
 
-            if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
-            {
-                authorisationDataRepository.Set(response.ResponseModelInterface.AuthorisationData);
-            }
-        }*/
-
-        /*private async Task<int> LoadOffers()
+        private async Task LoadBoardIcons()
         {
-            var offersData = await OffersStaticRequestProcessor.GetListOfOffers(authorisationDataRepository);
-            if (offersData == null || !offersData.Any())
-            {
-                PrintLog("There is no offers in the offers list", LogType.Error);
-                return -1;
-            }
+            BoardIcons = await Board.GetBoardIcons();
+        }
 
-            foreach (var offer in offersData)
-            {
-                PrintLog(JsonConvert.SerializeObject(offer));
-            }
-
-            return offersData[0].Id;
-        }*/
-
-        /*private async Task<int> LoadOfferDetails(int offerId)
+        private void UpdateSlotsIconsPositionsAndActivity()
         {
-            var offerData =
-                await OffersStaticRequestProcessor.GetOfferDetails(
-                    new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(authorisationDataRepository,
-                        offerId));
-
-
-            if (!GameIsInProgress(offerData.Offer.GameData))
-            {
-                PrintLog("Game is not in progress", LogType.Error);
-            }
-
-            PrintLog($"Game will starts at {offerData.Offer.GameData.StartedAt}");
-            return offerData.Offer.GameData.Id;
-        }*/
+            SetSlotsIcons(_boardIconsHolder.GetCorrespondingIconsSprites(SlotIconData));
+            UpdateSlotsIconsFramesActivity(SlotIconData);
+            LogUtility.PrintLog(tag, "Slots Icons was updated");
+        }
 
         private static bool GameIsInProgress(IGameData gameData)
         {
@@ -175,10 +182,15 @@ namespace ViewModels
             return matchData;
         }
 
-        private void UpdateSlotsIcons(IReadOnlyList<int> iconsIndexes)
+        private void UpdateSlotsIconsFramesActivity(IReadOnlyList<IActive> iconsActivity)
         {
-            SetSlotsIcons(_boardIconsHolder.GetCorrespondingIconsSprites(iconsIndexes));
-            LogUtility.PrintLog(tag, "Slots Icons was updated");
+            SetSlotsActivity(iconsActivity);
+            LogUtility.PrintLog(tag, "Slots Icons Activity State was updated");
+        }
+
+        private void SetSlotsActivity(IReadOnlyList<IActive> iconsActivity)
+        {
+            ((SlotsGameView) View).SetSlotsActivity(iconsActivity);
         }
 
         private void SetSlotsIcons(Sprite[] sprites)
@@ -199,12 +211,15 @@ namespace ViewModels
             _gameChannelSocket.MatchEnds += GameChannelSocketOnMatchEnds;
         }
 
-        private MatchStateData _matchStateData;
-        private bool _shouldUpdateSlotsIcons;
-
         private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
         {
             PrepareMatchStateDataForIconsUpdate(matchStateData);
+        }
+
+        private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
+        {
+            _gameShouldBeFinished = true;
+            selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;
         }
 
         private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
@@ -213,22 +228,31 @@ namespace ViewModels
             _shouldUpdateSlotsIcons = _matchStateData != null;
         }
 
+
+        private void FinishTheGame()
+        {
+            PrintLog("Game is over");
+            SwitchToView(nameof(WinnerView));
+            _gameShouldBeFinished = false;
+        }
+
+        private void OnBoardDataUpdated()
+        {
+            UpdateSlotsIconsPositionsAndActivity();
+        }
+
         private void Update()
         {
-            UpdateSlotsIconsFromMatchStateData();
+            if (_shouldUpdateSlotsIcons)
+                UpdateSlotsIconsFromMainThread();
+            if (_gameShouldBeFinished)
+                FinishTheGame();
         }
 
-        private void UpdateSlotsIconsFromMatchStateData()
+        private void UpdateSlotsIconsFromMainThread()
         {
-            if (!_shouldUpdateSlotsIcons) return;
-            UpdateSlotsIcons(_matchStateData.MatchState.Body.Board.IconsIndexes);
+            UpdateSlotsIconsPositionsAndActivity();
             _shouldUpdateSlotsIcons = false;
-        }
-
-        private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
-        {
-            PrintLog("Game over");
-            SwitchToView(nameof(WinnerView));
         }
 
         private async Task EstablishSocketConnection()
@@ -244,10 +268,25 @@ namespace ViewModels
             }
         }
 
-        private async Task MakeASpin()
+        private void SpinFrame()
         {
-            var userScore =
-                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId);
+            MakeASpin(SpinBoardParameters.JustFrame);
+        }
+
+        private void SpinBoard()
+        {
+            MakeASpin(SpinBoardParameters.JustBoard);
+        }
+
+
+        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
+        {
+            IUpdateUserScoreResponseModel userScore =
+                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
+                    spinBoardParameters);
+            Board = userScore.Board;
+
+            PrintLog("User spin complete");
         }
 
         private static void PrintLog(string message, LogType logType = LogType.Log)

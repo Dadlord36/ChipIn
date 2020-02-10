@@ -2,7 +2,7 @@
 
 namespace DataModels.Interfaces
 {
-    public interface IUpdateUserScoreResponseModel : ISuccess, IScore
+    public interface IUpdateUserScoreResponseModel : ISuccess, IScore, ISlotsBoard
     {
     }
 }

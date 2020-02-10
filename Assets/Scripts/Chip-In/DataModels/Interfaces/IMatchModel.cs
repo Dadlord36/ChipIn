@@ -3,11 +3,23 @@ using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IBaseMatchModel
+    public interface ISlotsBoard
     {
         [JsonProperty("board")] SlotsBoard Board { get; set; }
-        [JsonProperty("users")] MatchUserData[] Users { get; set; }
+    }
+
+    public interface IGameWinnerIdentifier
+    {
         [JsonProperty("winner_id")] int? WinnerId { get; set; }
+    }
+
+    public interface IGameUsers
+    {
+        [JsonProperty("users")] MatchUserLoadedData[] Users { get; set; }
+    }
+
+    public interface IBaseMatchModel : ISlotsBoard, IGameWinnerIdentifier, IGameUsers
+    {
         [JsonProperty("round_ends_at")] float RoundsEndsAt { get; set; }
     }
 

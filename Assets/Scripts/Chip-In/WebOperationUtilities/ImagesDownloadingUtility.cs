@@ -10,7 +10,7 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
-        public static async Task<Texture2D[]> LoadImagesArray(string[] imagesUrls)
+        public static async Task<Texture2D[]> DownloadImagesArray(string[] imagesUrls)
         {
             var length = imagesUrls.Length;
             var tasks = new Task<Texture2D> [length];

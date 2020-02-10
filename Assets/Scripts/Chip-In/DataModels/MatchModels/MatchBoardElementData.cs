@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
 using WebOperationUtilities;
@@ -44,23 +45,10 @@ namespace DataModels.MatchModels
 
         private async Task<Texture2D[]> GetSlotsIconsTextures()
         {
-            return await ImagesDownloadingUtility.LoadImagesArray(IconsUrls);
+            return await ImagesDownloadingUtility.DownloadImagesArray(IconsUrls);
         }
 
-        public int[] IconsIndexes
-        {
-            get
-            {
-                var elements = Elements;
-                var indexes = new int[elements.Length];
-                for (int i = 0; i < elements.Length; i++)
-                {
-                    indexes[i] = elements[i].IconId;
-                }
-
-                return indexes;
-            }
-        }
+        public ISlotIconBaseData[] IconsData => Array.ConvertAll(Elements, item => (ISlotIconBaseData) item);
 
         public async Task<BoardIcon[]> GetBoardIcons()
         {
@@ -73,18 +61,34 @@ namespace DataModels.MatchModels
             var boardIcons = new BoardIcon[length];
             for (int i = 0; i < length; i++)
             {
-                boardIcons[i] = new BoardIcon(sprites[i],elements[i].IconId);
+                boardIcons[i] = new BoardIcon(sprites[i], elements[i].IconId);
             }
 
             return boardIcons;
         }
     }
 
-    public struct MatchBoardElementData
+
+    public interface IActive
     {
-        [JsonProperty("active")] public bool Activity;
+        [JsonProperty("active")] bool Active { get; set; }
+    }
+
+    public interface IIconIdentifier
+    {
+        [JsonProperty("icon_id")] int IconId { get; set; }
+    }
+
+    public interface ISlotIconBaseData : IActive, IIconIdentifier
+    {
+    }
+
+    public struct MatchBoardElementData : ISlotIconBaseData
+    {
         [JsonProperty("poster")] public string PosterUrl;
-        [JsonProperty("icon_id")] public int IconId;
+
+        public bool Active { get; set; }
+        public int IconId { get; set; }
     }
 
     public struct BoardIcon
