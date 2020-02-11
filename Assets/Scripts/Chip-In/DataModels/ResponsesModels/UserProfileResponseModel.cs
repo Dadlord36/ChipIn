@@ -5,7 +5,11 @@ using UnityEngine;
 
 namespace DataModels.ResponsesModels
 {
-    public sealed class UserProfileResponseModel : IUserProfileDataWebModel, ISuccess
+    public interface IUserProfileResponseModel : IUserProfileDataWebModel, ISuccess
+    {
+    }
+
+    public sealed class UserProfileResponseModel : IUserProfileResponseModel
     {
         public bool Success { get; set; }
         [JsonProperty("user")] public UserProfileDataWebModel User { get; set; }

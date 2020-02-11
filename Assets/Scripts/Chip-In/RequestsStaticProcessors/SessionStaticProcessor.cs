@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
@@ -19,8 +20,18 @@ namespace RequestsStaticProcessors
                 HttpResponse>
             Login(IUserLoginRequestModel userLoginRequestModel)
         {
-            Debug.Log($"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
-            return await new LoginRequestProcessor(userLoginRequestModel).SendRequest("User was LoggedIn");
+            try
+            {
+                Debug.Log($"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
+                return await new LoginRequestProcessor(userLoginRequestModel).SendRequest("User was LoggedIn");
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                
+            }
+
+            return default;
         }
 
         public static async Task LogOut(IRequestHeaders requestHeaders, IBaseDeviceData deviceData)

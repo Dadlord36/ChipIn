@@ -48,7 +48,7 @@ namespace HttpRequests
 
             string requestUri = $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}{queryString}";
 
-            LogUtility.PrintLog(Tag, requestUri);
+            LogUtility.PrintLog(Tag, $"Request uri: {requestUri}");
 
             using (var requestMessage = new HttpRequestMessage(methodType, requestUri))
             {
@@ -93,11 +93,14 @@ namespace HttpRequests
 
         private static StringContent CreateStringContent(object objectToSerialize)
         {
-            return CreateStringContent(JsonConvert.SerializeObject(objectToSerialize));
+            var contentAsString = JsonConvert.SerializeObject(objectToSerialize);
+
+            return CreateStringContent(contentAsString);
         }
 
         private static StringContent CreateStringContent(string content)
         {
+            LogUtility.PrintLog(Tag, $"Request message Content : {content}");
             return new StringContent(content, Encoding.UTF8, JsonMediaTypeHeader);
         }
     }

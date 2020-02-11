@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace DataModels
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public interface IUserProfileDataWebModel
     {
         [JsonProperty("id")] int Id { get; set; }
