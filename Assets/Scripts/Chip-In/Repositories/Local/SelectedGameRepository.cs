@@ -43,7 +43,8 @@ namespace Repositories.Local
 
                 for (int i = 0; i < _matchUsersData.Length; i++)
                 {
-                    sprites.Add(_matchUsersData[i].AvatarSprite);
+                    if (_matchUsersData[i].UserId != WinnerId)
+                        sprites.Add(_matchUsersData[i].AvatarSprite);
                 }
 
                 return sprites;

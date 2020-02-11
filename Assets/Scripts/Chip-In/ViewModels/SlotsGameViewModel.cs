@@ -74,8 +74,6 @@ namespace ViewModels
         private GameChannelWebSocketSharp _gameChannelSocket;
         private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
         private IMatchModel _matchData;
-
-        private MatchStateData _matchStateData;
         private bool _shouldUpdateSlotsIcons;
         private bool _gameShouldBeFinished;
 
@@ -87,19 +85,10 @@ namespace ViewModels
         private SlotsBoard Board
         {
             get => _matchData.Board;
-            set
-            {
-                _matchData.Board = value;
-                OnBoardDataUpdated();
-            }
+            set => _matchData.Board = value;
         }
 
         private ISlotIconBaseData[] SlotIconData => _matchData.Board.IconsData;
-
-        private void Start()
-        {
-            ApiHelper.InitializeClient();
-        }
 
         protected override void OnEnable()
         {
@@ -110,7 +99,6 @@ namespace ViewModels
         protected override void OnDisable()
         {
             base.OnDisable();
-            ApiHelper.Dispose();
             CloseConnectionAndDisposeGameChannelSocket();
         }
 
@@ -134,18 +122,15 @@ namespace ViewModels
             SpinBoard();
         }
 
-        private async Task UpdateMatchData(bool notify = true)
+        private async Task UpdateMatchData()
         {
             var result = await GetGameData(selectedGameRepository.GameId);
             _matchData = result.MatchData;
-
-            if (notify)
-                OnBoardDataUpdated();
         }
 
         private async void GetGameDataAndInitializeGame()
         {
-            await UpdateMatchData(false);
+            await UpdateMatchData();
             await UpdateGameRepositoryUsersData();
             await LoadBoardIcons();
             UpdateSlotsIconsPositionsAndActivity();
@@ -224,8 +209,8 @@ namespace ViewModels
 
         private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
         {
-            _matchStateData = matchStateData;
-            _shouldUpdateSlotsIcons = _matchStateData != null;
+            _shouldUpdateSlotsIcons = true;
+            Board = matchStateData.MatchState.Body.Board;
         }
 
 
@@ -236,17 +221,22 @@ namespace ViewModels
             _gameShouldBeFinished = false;
         }
 
-        private void OnBoardDataUpdated()
-        {
-            UpdateSlotsIconsPositionsAndActivity();
-        }
-
         private void Update()
         {
             if (_shouldUpdateSlotsIcons)
                 UpdateSlotsIconsFromMainThread();
             if (_gameShouldBeFinished)
                 FinishTheGame();
+        }
+
+        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
+        {
+            IUpdateUserScoreResponseModel userScore =
+                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
+                    spinBoardParameters);
+            PrintLog("User spin complete");
+            Board = userScore.Board;
+            UpdateSlotsIconsPositionsAndActivity();
         }
 
         private void UpdateSlotsIconsFromMainThread()
@@ -276,17 +266,6 @@ namespace ViewModels
         private void SpinBoard()
         {
             MakeASpin(SpinBoardParameters.JustBoard);
-        }
-
-
-        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
-        {
-            IUpdateUserScoreResponseModel userScore =
-                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
-                    spinBoardParameters);
-            Board = userScore.Board;
-
-            PrintLog("User spin complete");
         }
 
         private static void PrintLog(string message, LogType logType = LogType.Log)
