@@ -51,10 +51,13 @@ namespace HttpRequests.RequestsProcessors
             }
         }
 
+
         private const string Tag = "HTTPRequests";
-
-        private BaseRequestProcessorParameters _requestProcessorParameters;
-
+        
+        private readonly BaseRequestProcessorParameters _requestProcessorParameters;
+        protected bool SendBodyAsQueryStringFormat;
+        
+        
         protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
             TRequestBodyModelInterface requestBodyModel)
         {
@@ -87,11 +90,13 @@ namespace HttpRequests.RequestsProcessors
             TRequestBodyModelInterface requestBodyModel = null,
             IRequestHeaders requestHeaders = null)
         {
+            
+            
             return await ApiHelper.MakeAsyncRequest(_requestProcessorParameters.RequestMethod,
                 _requestProcessorParameters.RequestSuffix,
                 FormUrlParametersString(_requestProcessorParameters.RequestParameters),
                 _requestProcessorParameters.QueryStringParameters,
-                requestHeaders?.GetRequestHeaders(), requestBodyModel);
+                requestHeaders?.GetRequestHeaders(), requestBodyModel,SendBodyAsQueryStringFormat);
         }
 
         private static async Task<RequestResponse<TResponseModelInterface>> ProcessResponse(

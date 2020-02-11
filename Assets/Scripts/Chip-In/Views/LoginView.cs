@@ -8,6 +8,12 @@ namespace Views
         [SerializeField] private TMP_InputField emailField;
         [SerializeField] private TMP_InputField passwordField;
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            ClearFields();
+        }
+
         private void Update()
         {
             if (Input.GetKeyUp(KeyCode.Tab))
@@ -24,6 +30,12 @@ namespace Views
                 return;
             }
             emailField.Select();
+        }
+
+        public void ClearFields()
+        {
+            emailField.text = "";
+            passwordField.text = "";
         }
     }
 }

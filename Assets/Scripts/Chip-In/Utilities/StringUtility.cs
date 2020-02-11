@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using UnityEngine.Assertions;
 
-namespace Game.TwitchSettingsMenu.Common
+namespace Utilities
 {
     public static class StringUtility
     {

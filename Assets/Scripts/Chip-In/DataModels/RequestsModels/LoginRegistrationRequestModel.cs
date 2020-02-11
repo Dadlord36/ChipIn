@@ -9,21 +9,31 @@ namespace DataModels.RequestsModels
         [JsonProperty("device")] DeviceData Device { get; set; }
     }
 
-    // public interface ILoginRegistrationModel : {}
-
-
-    public struct DeviceData
+    public interface IBaseDeviceData
     {
-        public DeviceData(string platform, string deviceId, string deviceToken)
+        [JsonProperty("device_id")] string DeviceId { get; set; }
+        [JsonProperty("platform")] string Platform { get; set; }
+    }
+
+
+    public interface IDeviceData : IBaseDeviceData
+    {
+        [JsonProperty("device_token")] string DeviceToken { get; set; }
+    }
+
+
+    public class DeviceData : IDeviceData
+    {
+        public DeviceData(string deviceId, string platform, string deviceToken)
         {
-            Platform = platform;
             DeviceId = deviceId;
+            Platform = platform;
             DeviceToken = deviceToken;
         }
 
-        [JsonProperty("platform")] public string Platform;
-        [JsonProperty("device_id")] public string DeviceId;
-        [JsonProperty("device_token")] public string DeviceToken;
+        public string DeviceId { get; set; }
+        public string Platform { get; set; }
+        public string DeviceToken { get; set; }
     }
 
 

@@ -16,7 +16,7 @@ namespace HttpRequests
     public static class ApiHelper
     {
         private const string Tag = nameof(ApiHelper);
-        
+
         private static HttpClient _apiClient;
         private const string JsonMediaTypeHeader = "application/json";
 
@@ -38,16 +38,16 @@ namespace HttpRequests
 
         public static async Task<HttpResponseMessage> MakeAsyncRequest(HttpMethod methodType, string requestSuffix,
             string requestParameters, NameValueCollection queryStringParams, List<KeyValuePair<string, string>>
-                requestHeaders, object requestBody)
+                requestHeaders, object requestBody, bool sendBodyAsQueryStringFormat)
         {
             var queryString = "";
             if (queryStringParams != null)
             {
-                queryString = QueryHelpers.MakeAQueryString(queryStringParams);
+                queryString = QueryHelpers.MakeAUriQueryString(queryStringParams);
             }
 
             string requestUri = $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}{queryString}";
-            
+
             LogUtility.PrintLog(Tag, requestUri);
 
             using (var requestMessage = new HttpRequestMessage(methodType, requestUri))
@@ -67,10 +67,25 @@ namespace HttpRequests
                     requestMessage.Content = CreateStringContent(requestBodyObject);
                 }
 
+                void AddBodyAsQueryStringFormat(object requestBodyObject)
+                {
+                    requestMessage.Content =
+                        CreateStringContent(DataModelsUtility.ConvertToQueryStringFormat(requestBodyObject));
+                }
+
                 if (requestHeaders != null)
                     AddHeaders(requestHeaders);
                 if (requestBody != null)
-                    AddBody(requestBody);
+                {
+                    if (sendBodyAsQueryStringFormat)
+                    {
+                        AddBodyAsQueryStringFormat(requestBody);
+                    }
+                    else
+                    {
+                        AddBody(requestBody);
+                    }
+                }
 
                 return await _apiClient.SendAsync(requestMessage);
             }
@@ -78,8 +93,12 @@ namespace HttpRequests
 
         private static StringContent CreateStringContent(object objectToSerialize)
         {
-            return new StringContent(JsonConvert.SerializeObject(objectToSerialize), Encoding.UTF8,
-                JsonMediaTypeHeader);
+            return CreateStringContent(JsonConvert.SerializeObject(objectToSerialize));
+        }
+
+        private static StringContent CreateStringContent(string content)
+        {
+            return new StringContent(content, Encoding.UTF8, JsonMediaTypeHeader);
         }
     }
 }

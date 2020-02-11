@@ -1,5 +1,7 @@
 ﻿using System;
 using Controllers;
+using Repositories.Local;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views.Cards.Settings;
@@ -9,7 +11,7 @@ namespace ViewModels
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private CachingController cachingController;
+        [SerializeField] private SessionStateRepository sessionStateRepository; 
         private void Start()
         {
             ShowMyProfile();
@@ -18,7 +20,7 @@ namespace ViewModels
         [Binding]
         public void LogOut_OnClick()
         {
-            cachingController.LogOut();
+            LogOut();
         }
 
         [Binding]
@@ -36,6 +38,11 @@ namespace ViewModels
         [Binding]
         public void ShowMyInterest()
         {
+        }
+
+        private void LogOut()
+        {
+            sessionStateRepository.SignOut();
         }
     }
 }

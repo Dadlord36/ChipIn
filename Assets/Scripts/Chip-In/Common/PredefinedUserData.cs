@@ -11,11 +11,7 @@ namespace Common
             Password = "",
             Gender = "",
             Role = "guest",
-            Device = new DeviceData
-            {
-                Platform = "android", DeviceId = DeviceUtility.GetDeviceId(),
-                DeviceToken = DeviceUtility.GetDeviceToken()
-            }
+            Device = DeviceUtility.DeviceData
         };
     }
 }

@@ -2,6 +2,7 @@
 using System.Text;
 using Newtonsoft.Json;
 using UnityEngine.Assertions;
+using Utilities;
 
 namespace DataModels.HttpRequestsHeadersModels
 {
@@ -43,24 +44,9 @@ namespace DataModels.HttpRequestsHeadersModels
 
         public List<KeyValuePair<string, string>> GetRequestHeaders()
         {
-            var properties = GetType().GetProperties();
-            var headers = new List<KeyValuePair<string, string>>(properties.Length);
-
-            for (int i = 0; i < properties.Length; i++)
-            {
-                foreach (var attribute in properties[i].GetCustomAttributes(true))
-                {
-                    var jsonPropertyAttribute = attribute as JsonPropertyAttribute;
-                    Assert.IsNotNull(jsonPropertyAttribute);
-
-                    headers.Add(new KeyValuePair<string, string>(jsonPropertyAttribute.PropertyName,
-                        properties[i].GetValue(this).ToString()));
-                }
-            }
-
-            return headers;
+            return DataModelsUtility.ConvertToKeyValuePairsList(this);
         }
-
+        
         public string GetRequestHeadersAsString()
         {
             var keyValuePairs = GetRequestHeaders();

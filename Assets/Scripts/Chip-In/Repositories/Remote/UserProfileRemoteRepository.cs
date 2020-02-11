@@ -19,13 +19,13 @@ namespace Repositories.Remote
         INotifyPropertyChanged
     {
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
-        [SerializeField] private LoginStateRepository loginStateRepository;
+        [SerializeField] private SessionStateRepository sessionStateRepository;
 
         private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
         private IDataSynchronization UserProfileDataSynchronization => userProfileDataSynchronizer;
-        private ILoginState LoginState => loginStateRepository;
+        private ILoginState SessionState => sessionStateRepository;
 
-        private bool IsAllowedToSaveToServer => !_isLoadingData && LoginState.IsLoggedIn;
+        private bool IsAllowedToSaveToServer => !_isLoadingData && SessionState.IsLoggedIn;
 
         [SerializeField] private Texture2D defaultAvatarImage;
 

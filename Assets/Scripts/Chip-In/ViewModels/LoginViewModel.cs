@@ -103,7 +103,7 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            var response = await LoginStaticProcessor.Login(_userLoginRequestModel);
+            var response = await SessionStaticProcessor.Login(_userLoginRequestModel);
             IsPendingLogin = false;
 
             if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)

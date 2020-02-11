@@ -1,4 +1,6 @@
-﻿#if !UNITY_EDITOR
+﻿using DataModels.RequestsModels;
+
+#if !UNITY_EDITOR
 using UnityEngine;
 #endif
 
@@ -6,18 +8,28 @@ namespace Utilities
 {
     public static class DeviceUtility
     {
-        public static string GetDeviceToken()
+        public static IBaseDeviceData BaseDeviceData => DeviceData;
+
+        public static DeviceData DeviceData => new DeviceData(DeviceId,
+#if UNITY_EDITOR
+            "android",
+#else
+            Application.platform.ToString(),
+#endif
+            DeviceToken);
+
+        public static string DeviceToken
         {
             //ToDo: Implement correct device Token Getter
-            return "m6aHiiHOc";
+            get => "m6aHiiHOc";
         }
 
-        public static string GetDeviceId()
+        public static string DeviceId
         {
 #if UNITY_EDITOR
-            return "UVr864F8zUbyYOAUd4cFOW9hpsZuGn";
+            get => "UVr864F8zUbyYOAUd4cFOW9hpsZuGn";
 #else
-            return SystemInfo.deviceUniqueIdentifier;
+             get=> SystemInfo.deviceUniqueIdentifier;
 #endif
         }
     }

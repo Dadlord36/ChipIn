@@ -9,14 +9,14 @@ namespace Repositories
         menuName = nameof(Repositories) + "/" + "Controllers/" + nameof(RemoteRepositoriesController), order = 0)]
     public class RemoteRepositoriesController : ScriptableObject
     {
-        [SerializeField] private LoginStateRepository loginStateRepository;
+        [SerializeField] private SessionStateRepository sessionStateRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private RemoteRepositoryBase[] remoteRepositories;
 
         public void SetAuthorisationDataAndInvokeRepositoriesLoading(ILoginResponseModel loginModel)
         {
             authorisationDataRepository.Set(loginModel.AuthorisationData);
-            loginStateRepository.SetLoginState(loginModel.UserProfileData.Role);
+            sessionStateRepository.SetLoginState(loginModel.UserProfileData.Role);
             InvokeRepositoriesLoading();
         }
 
