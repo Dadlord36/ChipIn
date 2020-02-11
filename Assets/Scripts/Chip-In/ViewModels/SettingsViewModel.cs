@@ -18,7 +18,7 @@ namespace ViewModels
         [Binding]
         public void LogOut_OnClick()
         {
-            cachingController.ClearCache();
+            cachingController.LogOut();
         }
 
         [Binding]

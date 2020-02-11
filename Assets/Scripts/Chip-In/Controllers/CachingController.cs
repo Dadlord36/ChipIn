@@ -1,5 +1,7 @@
 ﻿using Repositories.Remote;
 using UnityEngine;
+using ViewModels.SwitchingControllers;
+using Views;
 
 namespace Controllers
 {
@@ -12,8 +14,10 @@ namespace Controllers
         menuName = nameof(Controllers) + "/" + nameof(CachingController), order = 0)]
     public class CachingController : ScriptableObject
     {
+        [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+
         public void ClearCache()
         {
             ClearVaultCash(userProfileRemoteRepository);
@@ -23,6 +27,12 @@ namespace Controllers
         private static void ClearVaultCash(IClearable vault)
         {
             vault.Clear();
+        }
+
+        public void LogOut()
+        {
+            ClearCache();
+            viewsSwitchingController.RequestSwitchToView(nameof(LoginView));
         }
     }
 }
