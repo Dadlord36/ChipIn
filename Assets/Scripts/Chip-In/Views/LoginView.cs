@@ -32,10 +32,16 @@ namespace Views
             emailField.Select();
         }
 
-        public void ClearFields()
+        private void ClearFields()
         {
-            emailField.text = "";
-            passwordField.text = "";
+            ClearInputField(emailField);
+            ClearInputField(passwordField);
+        }
+
+        private static void ClearInputField(TMP_InputField inputField)
+        {
+            inputField.text = "";
+            inputField.caretPosition = 0;
         }
     }
 }

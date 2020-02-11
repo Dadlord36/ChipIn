@@ -1,5 +1,6 @@
 ﻿using System;
 using Behaviours.Games.Interfaces;
+using Controllers;
 using Repositories.Remote;
 using ScriptableObjects.ActionsConnectors;
 using UnityEngine;
@@ -14,6 +15,7 @@ namespace Behaviours.Games
 
         public event Action GameComplete;
         private int _coinsAmount, _coinsPicked;
+        private bool _isInitialized;
 
         private void Awake()
         {
@@ -24,9 +26,18 @@ namespace Behaviours.Games
         {
             coinsAmountRepository.Add(amount);
         }
-
+        
         private void OnEnable()
         {
+            InitializeCoinsGame();
+            _coinsPicked = 0;
+        }
+
+        private void InitializeCoinsGame()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
+
             var coins = FindObjectsOfType<Component>();
 
             for (var i = 0; i < coins.Length; i++)
@@ -57,12 +68,14 @@ namespace Behaviours.Games
                 };
             }
         }
+        
 
         private void CheckIfGameIsComplete()
         {
             if (coinsToPick == _coinsPicked)
             {
                 GameComplete?.Invoke();
+                Destroy(gameObject);
             }
         }
     }

@@ -1,13 +1,14 @@
 ﻿using System;
 using Behaviours.Games.Interfaces;
 using Common.ValueGenerators;
+using Controllers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Behaviours.Games
 {
-    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveUintValue, IFinishingAction
+    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveUintValue, IFinishingAction, IResettable
     {
         public event Action<uint> Collected;
         public event Action FinishingActionDone;
@@ -17,14 +18,17 @@ namespace Behaviours.Games
         [SerializeField] private byte minValue;
         [SerializeField] private byte maxValue;
 
+
         private uint _coinValue;
         private static readonly int Play = Animator.StringToHash("play");
         private bool _wasPicked;
+        private static readonly int Idle = Animator.StringToHash("idle");
 
         private uint ValueView
         {
             set => valueMultiplierTextField.text = $"x{value.ToString()}";
         }
+
 
         private void RefreshValueView()
         {
@@ -48,6 +52,14 @@ namespace Behaviours.Games
         {
             var animator = GetComponent<Animator>();
             animator.SetTrigger(Play);
+            animator.ResetTrigger(Idle);
+        }
+
+        private void ResetAnimation()
+        {
+            var animator = GetComponent<Animator>();
+            animator.SetTrigger(Idle);
+            animator.ResetTrigger(Play);
         }
 
         private void OnCollected(uint obj)
@@ -70,6 +82,13 @@ namespace Behaviours.Games
         {
             SwitchPlayTrigger();
             FinishingActionDone?.Invoke();
+            
+        }
+
+        public void Reset()
+        {
+            _wasPicked = false;
+            ResetAnimation();
         }
     }
 }

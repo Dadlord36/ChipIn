@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
@@ -8,6 +10,7 @@ using DataModels.MatchModels;
 using DataModels.RequestsModels;
 using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Repositories.Local;
 using Repositories.Remote;
@@ -21,7 +24,7 @@ using WebSockets;
 namespace ViewModels
 {
     [Binding]
-    public class SlotsGameViewModel : ViewsSwitchingViewModel
+    public class SlotsGameViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         private class BoardIconsHolder
         {
@@ -76,6 +79,7 @@ namespace ViewModels
         private IMatchModel _matchData;
         private bool _shouldUpdateSlotsIcons;
         private bool _gameShouldBeFinished;
+        private int _roundNumber;
 
         private BoardIcon[] BoardIcons
         {
@@ -86,6 +90,18 @@ namespace ViewModels
         {
             get => _matchData.Board;
             set => _matchData.Board = value;
+        }
+        
+        [Binding]
+        public int RoundNumber
+        {
+            get => _roundNumber;
+            set
+            {
+                if (value == _roundNumber) return;
+                _roundNumber = value;
+                OnPropertyChanged();
+            }
         }
 
         private ISlotIconBaseData[] SlotIconData => _matchData.Board.IconsData;
@@ -199,6 +215,7 @@ namespace ViewModels
         private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
         {
             PrepareMatchStateDataForIconsUpdate(matchStateData);
+            RoundNumber = matchStateData.MatchState.Round;
         }
 
         private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
@@ -271,6 +288,14 @@ namespace ViewModels
         private static void PrintLog(string message, LogType logType = LogType.Log)
         {
             Debug.unityLogger.Log(logType, "SlotsGame", message);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
