@@ -148,6 +148,7 @@ namespace ViewModels
         {
             await UpdateMatchData();
             await UpdateGameRepositoryUsersData();
+            RoundNumber = (int) _matchData.RoundNumber;
             await LoadBoardIcons();
             UpdateSlotsIconsPositionsAndActivity();
             await StartGameSocketChannel();
@@ -215,7 +216,6 @@ namespace ViewModels
         private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
         {
             PrepareMatchStateDataForIconsUpdate(matchStateData);
-            RoundNumber = matchStateData.MatchState.Round;
         }
 
         private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
@@ -224,9 +224,11 @@ namespace ViewModels
             selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;
         }
 
+        private MatchStateData _matchStateData;
         private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
         {
             _shouldUpdateSlotsIcons = true;
+            _matchStateData = matchStateData;
             Board = matchStateData.MatchState.Body.Board;
         }
 
@@ -259,6 +261,8 @@ namespace ViewModels
         private void UpdateSlotsIconsFromMainThread()
         {
             UpdateSlotsIconsPositionsAndActivity();
+            selectedGameRepository.UpdateUsersData(_matchStateData.MatchState.Body.Users);
+            RoundNumber = _matchStateData.MatchState.Round;
             _shouldUpdateSlotsIcons = false;
         }
 

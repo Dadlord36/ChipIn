@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using GlobalVariables;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Utilities;
 
 namespace RequestsStaticProcessors
 {
@@ -25,10 +27,19 @@ namespace RequestsStaticProcessors
 
         public static async Task<IShowMatchResponseModel> ShowMatch(IRequestHeaders requestHeaders, int gameId)
         {
-            var response =
-                await new ShowMatchGetProcessor(requestHeaders, gameId).SendRequest(
-                    "Matches data was retrieved successfully");
-            return response.ResponseModelInterface;
+            try
+            {
+                var response =
+                    await new ShowMatchGetProcessor(requestHeaders, gameId).SendRequest(
+                        "Matches data was retrieved successfully");
+                return response.ResponseModelInterface;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+
+            return null;
         }
 
         public static async Task<IUpdateUserScoreResponseModel> MakeAMove(IRequestHeaders requestHeaders, int gameId,

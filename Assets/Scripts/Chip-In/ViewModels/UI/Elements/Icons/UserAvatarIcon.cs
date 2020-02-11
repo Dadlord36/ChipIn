@@ -1,4 +1,5 @@
-﻿using Repositories.Local;
+﻿using DataModels.MatchModels;
+using Repositories.Local;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,6 +33,11 @@ namespace ViewModels.UI.Elements.Icons
         {
             avatarEllipse.sprite = newEllipseSprite;
             SetImageScale(avatarEllipse, scale);
+        }
+
+        public void SetAvatarSprite(MatchUserData userData)
+        {
+            AvatarSprite = userData.AvatarSprite;
         }
 
         private static Vector3 CreateScaleVectorFromSingleValue(float singleScale)

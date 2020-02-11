@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -6,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Utilities;
 using WebOperationUtilities;
+using WebSockets;
 
 namespace Repositories.Local
 {
@@ -13,10 +15,11 @@ namespace Repositories.Local
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SelectedGameRepository), order = 0)]
     public class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
+        public event Action<IReadOnlyList<MatchUserData>> UsersDataUpdated;
+
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
         private MatchUserData[] _matchUsersData;
-
 
         public int GameId
         {
@@ -56,6 +59,7 @@ namespace Repositories.Local
             InitializeUsersData(matchData.Users);
             WinnerId = matchData.WinnerId;
             AssignAvatarsSpritesToUsersData(await LoadUsersSprites(matchData.Users));
+            OnUsersDataUpdated(_matchUsersData);
         }
 
         private void AssignAvatarsSpritesToUsersData(IReadOnlyList<Sprite> sprites)
@@ -94,6 +98,21 @@ namespace Repositories.Local
 
             return SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(
                 await ImagesDownloadingUtility.DownloadImagesArray(urlStrings));
+        }
+
+        protected virtual void OnUsersDataUpdated(MatchUserData[] data)
+        {
+            UsersDataUpdated?.Invoke(data);
+        }
+
+        public void UpdateUsersData(IReadOnlyList<MatchUserLoadedData> usersLoadedData)
+        {
+            for (int i = 0; i < usersLoadedData.Count; i++)
+            {
+                _matchUsersData[i].Score = usersLoadedData[i].Score;
+            }
+
+            OnUsersDataUpdated(_matchUsersData);
         }
     }
 }
