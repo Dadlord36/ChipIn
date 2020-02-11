@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Repositories.Local;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using ViewModels.UI.Elements.Icons;
+using Debug = System.Diagnostics.Debug;
 
 namespace ViewModels.UI
 {
@@ -81,7 +83,8 @@ namespace ViewModels.UI
                 otherIcons[i].AvatarSprite = avatarSprites[i];
             }
         }
-
+        
+#if UNITY_EDITOR
         public void CreateImages(IconEllipseType ellipsesType)
         {
             imagesRows = new UserAvatarInRow[numberOfImages];
@@ -107,7 +110,10 @@ namespace ViewModels.UI
 
             UserAvatarIcon CreateImage(string objectName)
             {
-                var prefabInstance = Instantiate(userAvatarIconPrefab, thisTransform);
+                
+                var prefabInstance = PrefabUtility.InstantiatePrefab(userAvatarIconPrefab, thisTransform) as GameObject;
+                Debug.Assert(prefabInstance != null, nameof(prefabInstance) + " != null");
+                
                 prefabInstance.name = objectName;
                 var avatarIcon = prefabInstance.GetComponent<UserAvatarIcon>();
                 avatarIcon.Initialize();
@@ -127,7 +133,7 @@ namespace ViewModels.UI
                 itemsAddedToRow = 0;
             }
         }
-
+#endif
         private void ScaleImages()
         {
             for (int i = 0; i < imagesRows.Length; i++)
