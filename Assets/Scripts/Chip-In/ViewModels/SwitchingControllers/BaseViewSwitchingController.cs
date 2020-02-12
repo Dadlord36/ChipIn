@@ -23,7 +23,7 @@ namespace ViewModels.SwitchingControllers
 
         public void SwitchToPreviousView()
         {
-            RequestSwitchToView(switchingHistoryController.PopHistoryStack());
+            ProcessViewsSwitching(switchingHistoryController.PopHistoryStack());
         }
 
         public void RequestSwitchToView(string toViewName)
