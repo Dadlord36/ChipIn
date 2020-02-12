@@ -12,9 +12,12 @@ namespace Repositories.Remote
         public event Action DataWasLoaded;
         public event Action DataWasSaved;
         #endregion
+
+        protected bool _dataWasLoaded;
         
         protected virtual void ConfirmDataLoading()
         {
+            _dataWasLoaded = true;
             OnDataWasLoaded();
         }
 

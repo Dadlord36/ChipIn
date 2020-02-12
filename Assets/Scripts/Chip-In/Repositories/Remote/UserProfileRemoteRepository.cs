@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
+using Boo.Lang;
 using Common.Structures;
 using Controllers;
 using DataModels;
@@ -33,6 +34,8 @@ namespace Repositories.Remote
 
         #region IUserProfile delegation
 
+        private int _coinsGameResult; 
+        
         public GeoLocation UserLocation
         {
             get => UserProfileDataRemote.UserLocation;
@@ -116,7 +119,7 @@ namespace Repositories.Remote
             get => UserProfileDataRemote.ShowNotificationsState;
             set => UserProfileDataRemote.ShowNotificationsState = value;
         }
-
+        
         #endregion
 
         private void OnEnable()

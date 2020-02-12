@@ -1,8 +1,5 @@
-﻿using Repositories.Local;
-using Repositories.Remote;
+﻿using Repositories.Remote;
 using UnityEngine;
-using ViewModels.SwitchingControllers;
-using Views;
 
 namespace Controllers
 {
@@ -18,11 +15,13 @@ namespace Controllers
         
         [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private UserCoinsAmountRepository coinsAmountRepository;
 
         public void ClearCache()
         {
             ClearVaultCash(userProfileRemoteRepository);
             ClearVaultCash(authorisationDataRepository);
+            ClearVaultCash(coinsAmountRepository);
         }
 
         private static void ClearVaultCash(IClearable vault)
