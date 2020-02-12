@@ -13,7 +13,7 @@ namespace ScriptableObjects.Comparators
 
         public bool ContainsView(BaseView view)
         {
-            return views.Exists(baseView => baseView.GetViewName == view.GetViewName);
+            return views.Exists(baseView => baseView.ViewName == view.ViewName);
         }
     }
 }

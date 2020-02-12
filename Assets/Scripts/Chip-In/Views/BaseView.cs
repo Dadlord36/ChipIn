@@ -8,7 +8,7 @@ namespace Views
     public abstract class BaseView: UIBehaviour
     {
         private RectTransform _viewRootRectTransform;
-        public string GetViewName => GetType().Name;
+        public string ViewName => GetType().Name;
         public RectTransform ViewRootRectTransform => _viewRootRectTransform;
         
         protected override void Awake()

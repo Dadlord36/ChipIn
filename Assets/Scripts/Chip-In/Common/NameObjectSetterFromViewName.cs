@@ -8,7 +8,7 @@ namespace Common
     {
         [SerializeField] private BaseView referencedView;
 
-        public string Name => referencedView.GetViewName;
+        public string Name => referencedView.ViewName;
 
         public void Destroy()
         {

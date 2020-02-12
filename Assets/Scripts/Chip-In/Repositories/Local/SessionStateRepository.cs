@@ -38,7 +38,7 @@ namespace Repositories.Local
         {
             await SessionStaticProcessor.LogOut(authorisationDataRepository,DeviceUtility.BaseDeviceData);
             cachingController.ClearCache();
-            viewsSwitchingController.RequestSwitchToView(nameof(LoginView));
+            viewsSwitchingController.RequestSwitchToView("",nameof(LoginView));
         }
     }
 }

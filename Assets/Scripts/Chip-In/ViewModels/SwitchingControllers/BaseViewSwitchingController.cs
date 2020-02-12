@@ -26,9 +26,10 @@ namespace ViewModels.SwitchingControllers
             ProcessViewsSwitching(switchingHistoryController.PopHistoryStack());
         }
 
-        public void RequestSwitchToView(string toViewName)
+        public void RequestSwitchToView(string fromViewName, string toViewName)
         {
-            AddToHistoryStack(toViewName);
+            if (!string.IsNullOrEmpty(fromViewName))
+                AddToHistoryStack(fromViewName);
             ProcessViewsSwitching(toViewName);
         }
 

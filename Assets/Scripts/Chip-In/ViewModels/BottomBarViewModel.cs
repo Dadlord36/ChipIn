@@ -13,34 +13,36 @@ namespace ViewModels
             Assert.IsNotNull(View as BottomBarView);
         }
 
+        private string CurrentView => ((BottomBarView) View).CurrentViewName;
+        
         [Binding]
         public void SwitchToMarketplaceView()
         {
-            SwitchToView(nameof(MarketplaceView));
+            SwitchToView(nameof(MarketplaceView),CurrentView);
         }
 
         [Binding]
         public void SwitchToChallengesView()
         {
-            SwitchToView(nameof(MyChallengeView));
+            SwitchToView(nameof(MyChallengeView),CurrentView);
         }
 
         [Binding]
         public void SwitchToCartView()
         {
-            SwitchToView(nameof(CartView));
+            SwitchToView(nameof(CartView),CurrentView);
         }
 
         [Binding]
         public void SwitchToCommunityView()
         {
-            SwitchToView(nameof(CommunityView));
+            SwitchToView(nameof(CommunityView),CurrentView);
         }
 
         [Binding]
         public void SwitchToSettingsView()
         {
-            SwitchToView(nameof(SettingsView));
+            SwitchToView(nameof(SettingsView),CurrentView);
         }
     }
 }

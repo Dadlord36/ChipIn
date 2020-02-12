@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        mainViewsSwitchingController.RequestSwitchToView(nameof(WelcomeView));
+        mainViewsSwitchingController.RequestSwitchToView(null,nameof(WelcomeView));
     }
 
     private void OnDisable()

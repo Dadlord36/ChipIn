@@ -10,6 +10,13 @@ namespace Views.Bars
         [SerializeField] private bool shouldAutoControlVisibility = true;
         [SerializeField] private bool highlightCorrespondingButtonOnViewSwitching = true;
 
+        private string _currentViewName;
+
+        public string CurrentViewName
+        {
+            get => _currentViewName;
+        }
+
         protected override void SwitchTo(BaseView viewToSwitchTo)
         {
             if (!associativeViewsContainer.ContainsView(viewToSwitchTo))
@@ -20,10 +27,13 @@ namespace Views.Bars
             }
 
             if (shouldAutoControlVisibility)
+            {
                 Show();
+                _currentViewName = viewToSwitchTo.ViewName;
+            }
 
             if (highlightCorrespondingButtonOnViewSwitching)
-                SelectionOptionsDictionary[viewToSwitchTo.GetViewName].PerformGroupActionWithoutNotification();
+                SelectionOptionsDictionary[viewToSwitchTo.ViewName].PerformGroupActionWithoutNotification();
         }
     }
 }

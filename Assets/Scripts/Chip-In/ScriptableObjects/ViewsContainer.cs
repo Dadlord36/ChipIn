@@ -24,7 +24,7 @@ namespace ScriptableObjects
         [Serializable]
         private class ViewModelContainerItem : ContainerItem<BaseView>
         {
-            public string ViewName => Prefab.GetViewName;
+            public string ViewName => Prefab.ViewName;
 
             public ViewModelContainerItem(BaseView prefab) : base(prefab)
             {

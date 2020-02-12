@@ -9,9 +9,10 @@ namespace ViewModels
 
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
-        protected void SwitchToView(string toViewName)
+        protected void SwitchToView(string toViewName, string fromView = null)
         {
-            viewsSwitchingController.RequestSwitchToView(toViewName);
+            viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(fromView) ? View.ViewName : fromView,
+                toViewName);
         }
 
         public void SwitchToPreviousView()
