@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
-using DataModels.RequestsModels;
-using HttpRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -19,6 +15,7 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views;
+using Views.ViewElements;
 using WebSockets;
 
 namespace ViewModels
@@ -73,11 +70,12 @@ namespace ViewModels
 
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
+        [SerializeField] private Timer timer;
 
         private GameChannelWebSocketSharp _gameChannelSocket;
         private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
         private IMatchModel _matchData;
-        private bool _shouldUpdateSlotsIcons;
+        private bool _roundEnds;
         private bool _gameShouldBeFinished;
         private int _roundNumber;
 
@@ -91,7 +89,7 @@ namespace ViewModels
             get => _matchData.Board;
             set => _matchData.Board = value;
         }
-        
+
         [Binding]
         public int RoundNumber
         {
@@ -138,6 +136,7 @@ namespace ViewModels
             SpinBoard();
         }
 
+
         private async Task UpdateMatchData()
         {
             var result = await GetGameData(selectedGameRepository.GameId);
@@ -147,6 +146,7 @@ namespace ViewModels
         private async void GetGameDataAndInitializeGame()
         {
             await UpdateMatchData();
+            StartTimer(_matchData.RoundEndsAt);
             await UpdateGameRepositoryUsersData();
             RoundNumber = (int) _matchData.RoundNumber;
             await LoadBoardIcons();
@@ -225,9 +225,10 @@ namespace ViewModels
         }
 
         private MatchStateData _matchStateData;
+
         private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
         {
-            _shouldUpdateSlotsIcons = true;
+            _roundEnds = true;
             _matchStateData = matchStateData;
             Board = matchStateData.MatchState.Body.Board;
         }
@@ -242,8 +243,15 @@ namespace ViewModels
 
         private void Update()
         {
-            if (_shouldUpdateSlotsIcons)
+            if (_roundEnds)
+            {
                 UpdateSlotsIconsFromMainThread();
+                UpdateRoundNumber();
+                UpdateUsersData();
+                StartTimer(_matchStateData.MatchState.Body.RoundEndsAt);
+                _roundEnds = false;
+            }
+
             if (_gameShouldBeFinished)
                 FinishTheGame();
         }
@@ -258,12 +266,25 @@ namespace ViewModels
             UpdateSlotsIconsPositionsAndActivity();
         }
 
+        private void StartTimer(float timeInterval)
+        {
+            PrintLog($"Timer interval is: {timeInterval.ToString()}");
+            timer.SetAndStartTimer(timeInterval);
+        }
+
         private void UpdateSlotsIconsFromMainThread()
         {
             UpdateSlotsIconsPositionsAndActivity();
+        }
+
+        private void UpdateUsersData()
+        {
             selectedGameRepository.UpdateUsersData(_matchStateData.MatchState.Body.Users);
+        }
+
+        private void UpdateRoundNumber()
+        {
             RoundNumber = _matchStateData.MatchState.Round;
-            _shouldUpdateSlotsIcons = false;
         }
 
         private async Task EstablishSocketConnection()

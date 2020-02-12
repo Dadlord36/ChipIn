@@ -11,6 +11,6 @@ namespace DataModels.MatchModels
         public string BackgroundUrl { get; set; }
         public int StageNumber { get; set; }
         public int? WinnerId { get; set; }
-        public float RoundsEndsAt { get; set; }
+        public float RoundEndsAt { get; set; }
     }
 }

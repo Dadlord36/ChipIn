@@ -30,6 +30,12 @@ namespace Common.Timers
             enabled = true;
         }
 
+        public void StartTimer(float interval)
+        {
+            _interval = interval;
+            RestartTimer();
+        }
+
         public void StopTimer()
         {
             enabled = false;

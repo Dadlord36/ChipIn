@@ -20,7 +20,7 @@ namespace DataModels.Interfaces
 
     public interface IBaseMatchModel : ISlotsBoard, IGameWinnerIdentifier, IGameUsers
     {
-        [JsonProperty("round_ends_at")] float RoundsEndsAt { get; set; }
+        [JsonProperty("round_ends_at")] float RoundEndsAt { get; set; }
     }
 
     public interface IMatchModel : IBaseMatchModel
