@@ -12,7 +12,7 @@ namespace Utilities
 
         public static DeviceData DeviceData => new DeviceData(DeviceId,
 #if UNITY_EDITOR
-            "Android",
+            "android",
 #else
             Application.platform.ToString().ToLower(),
 #endif
