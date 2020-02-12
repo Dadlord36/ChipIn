@@ -76,7 +76,18 @@ namespace ViewModels.Elements
         public async void Confirm_OnClick()
         {
             if (await TryChangePassword())
-                View.Hide();
+                HideView();
+        }
+
+        [Binding]
+        public void Close_OnClick()
+        {
+            HideView();
+        }
+
+        private void HideView()
+        {
+            View.Hide();
         }
 
         private async Task<bool> TryChangePassword()
@@ -99,10 +110,6 @@ namespace ViewModels.Elements
             return false;
         }
 
-        private async Task ChangeName()
-        {
-           await UserProfileDataStaticRequestsProcessor.UserNameDummy(authorisationDataRepository);
-        }
 
         private void CheckIfCanConfirmChange()
         {
