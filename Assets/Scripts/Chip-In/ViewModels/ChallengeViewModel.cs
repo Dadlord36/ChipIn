@@ -11,17 +11,26 @@ namespace ViewModels
     {
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
+        [SerializeField] private SelectedGameRepository selectedGameRepository;
+
+        private ChallengeView ChallengeView => View as ChallengeView;
 
         [Binding]
         public void Play_OnButtonClick()
         {
             SwitchToSlotsGameView();
         }
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
             SubscribeOnRepositoryItemsCollectionChangesEvent(challengesRemoteRepository);
+            SwitchPlayButtonActivity();
+        }
+
+        private void SwitchPlayButtonActivity()
+        {
+            ChallengeView.PlayButtonInteractivity = selectedGameRepository.GameWasSelected;
         }
 
         protected override void OnDisable()
@@ -45,10 +54,9 @@ namespace ViewModels
 
         protected override void ClearAllItems()
         {
-            ((ChallengeView)View).RemoveAllItems(); 
+            ((ChallengeView) View).RemoveAllItems();
         }
-        
-        
+
 
         protected override void FillContainerWithDataFromRepository()
         {

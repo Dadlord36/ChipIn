@@ -347,7 +347,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1297533080179339121}
   - component: {fileID: 822367774512910192}
-  - component: {fileID: 6815193250538492259}
   m_Layer: 5
   m_Name: NavigationButtons
   m_TagString: Untagged
@@ -402,18 +401,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6815193250538492259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7618754833361604528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac16cf220afc4323b52c13759a1f3266, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &254089081037920207
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -421,6 +408,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1297533080179339121}
     m_Modifications:
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: shouldStayHighlighted
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -779,6 +776,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CommunityForm
       objectReference: {fileID: 0}
+    - target: {fileID: 6754020932085964703, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_RootOrder
@@ -791,6 +793,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
+--- !u!224 &8804407023754933438 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3863514999743777286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7577433387335682968 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
@@ -809,12 +817,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &8804407023754933438 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3863514999743777286}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4347090574032944554
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -822,6 +824,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1297533080179339121}
     m_Modifications:
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: shouldStayHighlighted
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -1034,6 +1046,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1297533080179339121}
     m_Modifications:
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4509033620332624902, guid: 277c8944090719c4b835c5eb1aaa82ed,
+        type: 3}
+      propertyPath: shouldStayHighlighted
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8094471810802252942, guid: 277c8944090719c4b835c5eb1aaa82ed,
         type: 3}
       propertyPath: m_textInfo.characterCount

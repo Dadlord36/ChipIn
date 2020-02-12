@@ -17,18 +17,20 @@ namespace ViewModels.UI.Elements.Buttons
             remove => onClick.RemoveListener(value);
         }
 
+        [SerializeField] public bool shouldStayHighlighted;
         [SerializeField] private TMP_Text text;
         [SerializeField] private TMP_FontAsset normalFont, highlightedFont;
         [SerializeField] private ColorParameter normalTextColor, highlightedTextColor;
 
 #if UNITY_EDITOR
+        public string ShouldStayHighlightedName => nameof(shouldStayHighlighted);
         public string TextFieldName => nameof(text);
         public string NormalFontFieldName => nameof(normalFont);
         public string HighlightedFontFieldName => nameof(highlightedFont);
         public string NormalTextColorFieldName => nameof(normalTextColor);
         public string HighlightedTextColorFieldName => nameof(highlightedTextColor);
 #endif
-        
+
         private void SetTextFontAsset(TMP_FontAsset newFontAsset, ColorParameter textColor)
         {
             text.font = newFontAsset;
@@ -46,7 +48,8 @@ namespace ViewModels.UI.Elements.Buttons
         public override void OnPointerClick(PointerEventData eventData)
         {
             base.OnPointerClick(eventData);
-            SwitchToHighlightedStyle();
+            if (shouldStayHighlighted)
+                SwitchToHighlightedStyle();
         }
 
         public void OnOtherOnePerformGroupAction()

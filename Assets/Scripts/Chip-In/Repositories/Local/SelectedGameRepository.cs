@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Utilities;
 using WebOperationUtilities;
-using WebSockets;
 
 namespace Repositories.Local
 {
@@ -16,10 +15,10 @@ namespace Repositories.Local
     public class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
         public event Action<IReadOnlyList<MatchUserData>> UsersDataUpdated;
-
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
         private MatchUserData[] _matchUsersData;
+
 
         public int GameId
         {
@@ -27,6 +26,7 @@ namespace Repositories.Local
             set
             {
                 _selectedGameId = value;
+                GameWasSelected = true;
                 LogUtility.PrintLog(Tag, $"Selected game ID was changed to: {value.ToString()}");
             }
         }
@@ -53,6 +53,8 @@ namespace Repositories.Local
                 return sprites;
             }
         }
+
+        public bool GameWasSelected { get; private set; }
 
         public async Task SaveUsersData(IMatchModel matchData)
         {

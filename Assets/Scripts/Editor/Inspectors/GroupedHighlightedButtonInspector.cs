@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEditor;
 using UnityEditor.UI;
+using UnityEngine;
 using ViewModels.UI.Elements.Buttons;
 
 namespace Inspectors
@@ -9,6 +10,7 @@ namespace Inspectors
     [CustomEditor(typeof(GroupedHighlightedButton))]
     public class GroupedHighlightedButtonInspector : ButtonEditor
     {
+        private SerializedProperty _shouldStayHighlighted;
         private SerializedProperty _buttonText;
 
         private SerializedProperty _normalFont;
@@ -17,11 +19,13 @@ namespace Inspectors
         private SerializedProperty _normalTextColor;
         private SerializedProperty _highlightedTextColor;
 
+
         protected override void OnEnable()
         {
             base.OnEnable();
             var groupedHighlightedButton = (GroupedHighlightedButton) target;
 
+            _shouldStayHighlighted = serializedObject.FindProperty(groupedHighlightedButton.ShouldStayHighlightedName);
             _buttonText = serializedObject.FindProperty(groupedHighlightedButton.TextFieldName);
             _normalFont = serializedObject.FindProperty(groupedHighlightedButton.NormalFontFieldName);
             _highlightedFont = serializedObject.FindProperty(groupedHighlightedButton.HighlightedFontFieldName);
@@ -32,23 +36,29 @@ namespace Inspectors
 
         public override void OnInspectorGUI()
         {
+            serializedObject.Update();
             EditorGUI.BeginChangeCheck();
-            
+
             _buttonText.objectReferenceValue =
                 EditorGUILayout.ObjectField(_buttonText.objectReferenceValue, typeof(TMP_Text), true);
             _normalFont.objectReferenceValue =
                 EditorGUILayout.ObjectField(_normalFont.objectReferenceValue, typeof(TMP_FontAsset), true);
             _highlightedFont.objectReferenceValue = EditorGUILayout.ObjectField(_highlightedFont.objectReferenceValue,
                 typeof(TMP_FontAsset), true);
-            
-            _normalTextColor.objectReferenceValue = EditorGUILayout.ObjectField(_normalTextColor.objectReferenceValue, 
+
+            _normalTextColor.objectReferenceValue = EditorGUILayout.ObjectField(_normalTextColor.objectReferenceValue,
                 typeof(ColorParameter), false);
-            _highlightedTextColor.objectReferenceValue = EditorGUILayout.ObjectField(_highlightedTextColor.objectReferenceValue, 
+            _highlightedTextColor.objectReferenceValue = EditorGUILayout.ObjectField(
+                _highlightedTextColor.objectReferenceValue,
                 typeof(ColorParameter), false);
-            
+
+            _shouldStayHighlighted.boolValue =
+                EditorGUILayout.Toggle("Should stay highlighted", _shouldStayHighlighted.boolValue);
+
             if (EditorGUI.EndChangeCheck())
             {
-              serializedObject.Update();  
+                serializedObject.ApplyModifiedProperties();
+                EditorUtility.SetDirty(target);
             }
 
             base.OnInspectorGUI();
