@@ -7,7 +7,7 @@ namespace Common
     {
         public static readonly RegistrationRequestModel GuestDataRequestModel = new RegistrationRequestModel
         {
-            Email = "",
+            Email = null,
             Password = "",
             Gender = "",
             Role = "guest",

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using JetBrains.Annotations;
+using Newtonsoft.Json;
 
 namespace DataModels
 {
@@ -10,7 +11,7 @@ namespace DataModels
 
     public class BasicLoginModel : IBasicLoginModel
     {
-        public string Email { get; set; }
+        [CanBeNull] public string Email { get; set; }
         public string Password { get; set; }
     }
 }
