@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Controllers;
 using DataModels.RequestsModels;
 using HttpRequests;
 using JetBrains.Annotations;
@@ -23,9 +24,8 @@ namespace ViewModels
     [Binding]
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private LoginModelValidation loginModelValidation;
-
+        [SerializeField] private SessionController sessionController;
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
 
@@ -103,22 +103,8 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            try
-            {
-                var response = await SessionStaticProcessor.Login(_userLoginRequestModel);
-                IsPendingLogin = false;
-                
-                if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
-                {
-                    repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response
-                        .ResponseModelInterface);
-                    SwitchToMiniGame();
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+            await sessionController.TryToSignIn(_userLoginRequestModel);
+            IsPendingLogin = false;
         }
 
         private void SwitchToMiniGame()
