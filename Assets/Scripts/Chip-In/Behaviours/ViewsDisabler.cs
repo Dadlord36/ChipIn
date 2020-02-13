@@ -10,7 +10,12 @@ namespace Behaviours
 
         private void OnEnable()
         {
-            viewsRetrievingBinding.ViewBeingRetrieved+= DisableAndAttach;
+            viewsRetrievingBinding.ViewBeingRetrieved += DisableAndAttach;
+        }
+
+        private void OnDisable()
+        {
+            viewsRetrievingBinding.ViewBeingRetrieved -= DisableAndAttach;
         }
 
         private void DisableAndAttach(BaseView view)

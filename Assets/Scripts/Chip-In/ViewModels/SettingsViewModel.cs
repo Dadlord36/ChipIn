@@ -43,6 +43,7 @@ namespace ViewModels
         private void LogOut()
         {
             sessionStateRepository.SignOut();
+            Destroy(gameObject);
         }
     }
 }

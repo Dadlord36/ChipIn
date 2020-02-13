@@ -15,6 +15,7 @@ using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -24,10 +25,9 @@ namespace ViewModels
     {
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private LoginModelValidation loginModelValidation;
-        
+
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
- 
 
         [Binding]
         public string UserEmail
@@ -103,13 +103,21 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            var response = await SessionStaticProcessor.Login(_userLoginRequestModel);
-            IsPendingLogin = false;
-
-            if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
+            try
             {
-                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
-                SwitchToMiniGame();
+                var response = await SessionStaticProcessor.Login(_userLoginRequestModel);
+                IsPendingLogin = false;
+                
+                if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
+                {
+                    repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response
+                        .ResponseModelInterface);
+                    SwitchToMiniGame();
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
             }
         }
 
