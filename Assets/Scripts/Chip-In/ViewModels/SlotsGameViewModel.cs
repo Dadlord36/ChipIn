@@ -171,9 +171,9 @@ namespace ViewModels
             LogUtility.PrintLog(tag, "Slots Icons was updated");
         }
 
-        private static bool GameIsInProgress(IGameData gameData)
+        private static bool GameIsInProgress(IGameModel gameModel)
         {
-            return gameData.Status == "in_progress";
+            return gameModel.Status == "in_progress";
         }
 
         private async Task<IShowMatchResponseModel> GetGameData(int gameId)

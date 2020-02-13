@@ -5,6 +5,6 @@ namespace DataModels.Interfaces
 {
     public interface IOfferDetailsResponseModel : ISuccess
     {
-        [JsonProperty("offer")] OfferDetailedModel Offer { get; set; }
+        [JsonProperty("offer")] OfferWithGameModel Offer { get; set; }
     }
 }

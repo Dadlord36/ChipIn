@@ -11,7 +11,7 @@ namespace RequestsStaticProcessors
 {
     public static class UserGamesStaticProcessor
     {
-        public static async Task<GameDataModel[]> GetUserGames(IRequestHeaders requestHeaders)
+        public static async Task<GameModelModel[]> GetUserGames(IRequestHeaders requestHeaders)
         {
             var response = await new UserGamesGetProcessor(requestHeaders).SendRequest("User Games was retrieved");
             return response.ResponseModelInterface.Games;

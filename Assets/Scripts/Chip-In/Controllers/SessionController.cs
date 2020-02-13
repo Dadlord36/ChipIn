@@ -11,13 +11,14 @@ using Views;
 
 namespace Controllers
 {
-    [CreateAssetMenu(fileName = nameof(SessionController), menuName = nameof(Controllers) + "/", order = 0)]
+    [CreateAssetMenu(fileName = nameof(SessionController),
+        menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
     public class SessionController : ScriptableObject
     {
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
-        public async Task<bool> TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
+        public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
             try
             {
@@ -28,20 +29,24 @@ namespace Controllers
                 {
                     repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response
                         .ResponseModelInterface);
-                    if (response.ResponseModelInterface.UserProfileData.Role == MainNames.UserRoles.Client)
+                    var role = response.ResponseModelInterface.UserProfileData.Role;
+
+                    switch (role)
                     {
-                        SwitchToMiniGame();
+                        case MainNames.UserRoles.Client:
+                        case MainNames.UserRoles.Guest:
+                            SwitchToMiniGame();
+                            break;
+                        case MainNames.UserRoles.BusinessOwner:
+                            SwitchToBusinessMainMenu();
+                            break;
                     }
-                    
-                    return true;
                 }
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
             }
-
-            return false;
         }
 
         private void SwitchToMiniGame()
@@ -51,7 +56,7 @@ namespace Controllers
 
         private void SwitchToBusinessMainMenu()
         {
-            // SwitchToView();
+            SwitchToView(nameof(MainBusinessMenuView));
         }
 
         private void SwitchToView(string toViewName)

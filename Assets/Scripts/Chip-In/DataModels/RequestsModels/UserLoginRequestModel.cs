@@ -1,4 +1,6 @@
-﻿namespace DataModels.RequestsModels
+﻿using DataModels.Interfaces;
+
+namespace DataModels.RequestsModels
 {
     public interface IUserLoginRequestModel : IBasicLoginModel
     {

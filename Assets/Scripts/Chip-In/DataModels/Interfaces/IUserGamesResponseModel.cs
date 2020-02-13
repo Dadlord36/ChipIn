@@ -6,6 +6,6 @@ namespace DataModels.Interfaces
 {
     public interface IUserGamesResponseModel : ISuccess
     {
-        [JsonProperty("games")] GameDataModel[] Games { get; set; }
+        [JsonProperty("games")] GameModelModel[] Games { get; set; }
     }
 }

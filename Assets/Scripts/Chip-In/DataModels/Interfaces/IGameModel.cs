@@ -2,7 +2,7 @@
 
 namespace DataModels.Interfaces
 {
-    public interface IGameData : IChallengeBaseData
+    public interface IGameModel : IChallengeBaseModel
     {
         [JsonProperty("id")] int Id { get; set; }
         [JsonProperty("status")] string Status { get; set; }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Repositories.Remote
 {
-    public class OffersModelRemoteRepository : BaseItemsListRepository<OfferBasicModel>
+    public class OffersModelRemoteRepository : BaseItemsListRepository<ChallengingOfferWithIdentifierModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 

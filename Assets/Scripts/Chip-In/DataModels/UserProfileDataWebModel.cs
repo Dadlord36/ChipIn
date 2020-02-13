@@ -2,32 +2,64 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.Structures;
+using DataModels.Interfaces;
+using DataModels.RequestsModels;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
 
 namespace DataModels
 {
-    [JsonObject(MemberSerialization.OptIn)]
-    public interface IUserProfileDataWebModel
+    public interface IUserMainData
     {
-        [JsonProperty("id")] int Id { get; set; }
+        [JsonProperty("role")] string Role { get; set; }
         [JsonProperty("email")] string Email { get; set; }
         [JsonProperty("name")] string Name { get; set; }
-        [JsonProperty("role")] string Role { get; set; }
-        [JsonProperty("tokens_balance")] int TokensBalance { get; set; }
         [JsonProperty("gender")] string Gender { get; set; }
+        [JsonProperty("tokens_balance")] int TokensBalance { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public interface IUserAvatarSimpleModel
+    {
+        [JsonProperty("avatar")] string AvatarImageUrl { get; set; }
+        Texture2D AvatarImage { get; set; }
+    }
+
+    public interface IUserExtraData
+    {
+        [JsonProperty("location")] GeoLocation UserLocation { get; set; }
+
+        [JsonProperty("birthdate")] string Birthday { get; set; }
+    }
+
+    public interface IUserPreferences
+    {
         [JsonProperty("show_ads")] bool ShowAdsState { get; set; }
         [JsonProperty("show_alerts")] bool ShowAlertsState { get; set; }
         [JsonProperty("user_radar")] bool UserRadarState { get; set; }
         [JsonProperty("show_notifications")] bool ShowNotificationsState { get; set; }
-        [JsonProperty("location")] GeoLocation UserLocation { get; set; }
-        [JsonProperty("avatar")] string AvatarImageUrl { get; set; }
-        Texture2D AvatarImage { get; set; }
-        [JsonProperty("birthdate")] string Birthday { get; set; }
+    }
+
+    public interface ICountryCode
+    {
         [JsonProperty("country")] string CountryCode { get; set; }
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public interface IUserProfileDataWebModel : IIdentifier, IUserMainData, IUserAvatarSimpleModel, IUserExtraData,
+        IUserPreferences, ICountryCode
+    {
         void Set(IUserProfileDataWebModel source);
     }
+
+    public interface IDataLifeCycleModel
+    {
+        [JsonProperty("created_at")] DateTime CreatedAt { get; set; }
+
+        [JsonProperty("updated_at")] DateTime UpdatedAt { get; set; }
+    }
+
 
     [Serializable]
     public class UserProfileDataWebModel : IUserProfileDataWebModel, INotifyPropertyChanged

@@ -2,14 +2,8 @@
 
 namespace DataModels
 {
-    public interface IOfferBaseModel : IOfferBaseData, IChallengeBaseData
+    public class OfferWithGameModel : IOfferWithGameModel
     {
-    }
-
-    public sealed class OfferBasicModel : IOfferBaseModel
-    {
-        public string ChallengeType { get; set; }
-        public string StartedAt { get; set; }
         public string PosterUri { get; set; }
         public string ExpireDate { get; set; }
         public int Id { get; set; }
@@ -19,5 +13,6 @@ namespace DataModels
         public string Category { get; set; }
         public string Segment { get; set; }
         public uint Price { get; set; }
+        public GameModelModel Game { get; set; }
     }
 }

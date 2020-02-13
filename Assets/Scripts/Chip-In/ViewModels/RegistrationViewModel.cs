@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
+using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using JetBrains.Annotations;
 using RequestsStaticProcessors;

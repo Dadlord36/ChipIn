@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DataModels.Interfaces;
+using Newtonsoft.Json;
 
 namespace DataModels.RequestsModels
 {
