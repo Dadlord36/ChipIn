@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common;
+using Common.Interfaces;
 using UnityEngine.Assertions;
 using ViewModels.UI.Interfaces;
 

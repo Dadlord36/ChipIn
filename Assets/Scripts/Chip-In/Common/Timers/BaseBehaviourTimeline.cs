@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Interfaces;
 using UnityEngine;
 
 namespace Common.Timers

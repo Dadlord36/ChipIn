@@ -17,10 +17,10 @@ namespace ViewModels.UI.Elements.Buttons
             remove => onClick.RemoveListener(value);
         }
 
-        [SerializeField] public bool shouldStayHighlighted;
-        [SerializeField] private TMP_Text text;
-        [SerializeField] private TMP_FontAsset normalFont, highlightedFont;
-        [SerializeField] private ColorParameter normalTextColor, highlightedTextColor;
+        [SerializeField,HideInInspector] private bool shouldStayHighlighted;
+        [SerializeField,HideInInspector] private TMP_Text text;
+        [SerializeField,HideInInspector] private TMP_FontAsset normalFont, highlightedFont;
+        [SerializeField,HideInInspector] private ColorParameter normalTextColor, highlightedTextColor;
 
 #if UNITY_EDITOR
         public string ShouldStayHighlightedName => nameof(shouldStayHighlighted);

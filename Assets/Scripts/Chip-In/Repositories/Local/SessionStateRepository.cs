@@ -30,7 +30,7 @@ namespace Repositories.Local
 
         public void SetLoginState(in string loginAsRole)
         {
-            _isLoggedIn = loginAsRole != MainNames.Guest;
+            _isLoggedIn = loginAsRole != MainNames.UserRoles.Guest;
             _userRole = loginAsRole;
         }
 

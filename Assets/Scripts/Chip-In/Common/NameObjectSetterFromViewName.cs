@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Common.Interfaces;
+using UnityEngine;
 using Views;
 
 namespace Common
