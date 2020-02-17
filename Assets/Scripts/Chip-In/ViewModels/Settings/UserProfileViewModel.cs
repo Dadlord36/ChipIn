@@ -2,6 +2,7 @@
 using Common.Structures;
 using DataModels.Interfaces;
 using Repositories.Remote;
+using TMPro;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views.ViewElements;
@@ -16,7 +17,6 @@ namespace ViewModels.Settings
 
         private IUserProfileModel UserSettingsModel => repository;
         
-
         [Binding]
         public GeoLocation UserLocation
         {
