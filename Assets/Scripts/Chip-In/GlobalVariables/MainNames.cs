@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Eventing.Reader;
-
-namespace GlobalVariables
+﻿namespace GlobalVariables
 {
     public static class MainNames
     {
