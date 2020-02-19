@@ -86,20 +86,7 @@ namespace DataModels.MatchModels
     public struct MatchBoardElementData : ISlotIconBaseData
     {
         [JsonProperty("poster")] public string PosterUrl;
-
         public bool Active { get; set; }
         public int IconId { get; set; }
-    }
-
-    public struct BoardIcon
-    {
-        public readonly Sprite IconSprite;
-        public readonly int Id;
-
-        public BoardIcon(Sprite iconSprite, int id)
-        {
-            Id = id;
-            IconSprite = iconSprite;
-        }
     }
 }
