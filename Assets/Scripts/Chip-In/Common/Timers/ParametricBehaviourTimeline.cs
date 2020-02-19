@@ -8,7 +8,7 @@ namespace Common.Timers
     {
         [SerializeField] private FloatParameter intervalParameter;
 
-        protected override void InitializerTimer(out float timerInterval)
+        protected override void InitializeTimer(out float timerInterval)
         {
             Assert.IsNotNull(intervalParameter, $"There is no {nameof(FloatParameter)} on: {name}");
             timerInterval = intervalParameter.value;

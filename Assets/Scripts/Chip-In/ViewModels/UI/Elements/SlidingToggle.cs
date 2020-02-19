@@ -27,6 +27,8 @@ namespace ViewModels.UI.Elements
             Assert.IsNotNull(handleTransform);
 
             _timeline = GetComponent<ITimeline>();
+            _timeline.Initialize();
+            
             CalculateMovementBounds();
             SubscribeChangeableSliderPartsToTimelineProgression();
             SubscribeRelatedGraphicsSwitchers();

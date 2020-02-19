@@ -6,7 +6,7 @@ namespace Common.Timers
     {
         [SerializeField] private float initialTimerInterval;
 
-        protected override void InitializerTimer(out float timerInterval)
+        protected override void InitializeTimer(out float timerInterval)
         {
             timerInterval = initialTimerInterval;
         }

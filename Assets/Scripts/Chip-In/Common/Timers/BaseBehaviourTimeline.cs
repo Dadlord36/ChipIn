@@ -4,27 +4,28 @@ using UnityEngine;
 
 namespace Common.Timers
 {
-    public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline, IInitialize
+    public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline
     {
         public event Action OnElapsed;
         public event Action<float> Progressing;
 
         private float _elapsedTime, _interval;
         public bool AutoReset { get; set; }
+        
 
         public void Initialize()
         {
             enabled = false;
-            InitializerTimer(out _interval);
+            InitializeTimer(out _interval);
             CheckIfTimerIntervalIsValid();
-        } 
+        }
 
         private void CheckIfTimerIntervalIsValid()
         {
             if (_interval <= 0) throw new ArgumentOutOfRangeException(nameof(_interval));
         }
 
-        protected abstract void InitializerTimer(out float timerInterval);
+        protected abstract void InitializeTimer(out float timerInterval);
 
         public void StartTimer()
         {
@@ -47,7 +48,7 @@ namespace Common.Timers
         {
             _progress = _elapsedTime = 0f;
         }
-        
+
         public void RestartTimer()
         {
             ResetProgress();

@@ -7,7 +7,7 @@ namespace Common.Interfaces
         void UpdateProgress(float percentage);
     }
     
-    public interface ITimeline
+    public interface ITimeline : IInitialize
     {
         event Action OnElapsed;
         event Action<float> Progressing;
