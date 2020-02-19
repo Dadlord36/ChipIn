@@ -22,7 +22,7 @@ namespace Repositories.Remote
             try
             {
                 var result =
-                    await CommunityInterestsStaticRequestProcessor.GetCommunityInterestsLabelsData(
+                    await CommunityInterestsStaticRequestProcessor.TryGetCommunityInterestsLabelsData(
                         authorisationDataRepository);
 
                 var itemsData = result.ResponseModelInterface.Communities;

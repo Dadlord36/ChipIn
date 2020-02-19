@@ -8,7 +8,7 @@ namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(UserGamesRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) +"/"  + nameof(UserGamesRemoteRepository), order = 0)]
-    public class UserGamesRemoteRepository : BaseItemsListRepository<GameModelModel>
+    public class UserGamesRemoteRepository : BaseItemsListRepository<GameDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         public override async Task LoadDataFromServer()
@@ -17,7 +17,7 @@ namespace Repositories.Local
             ItemsLiveData.AddRange(await UserGamesStaticProcessor.GetUserGames(userAuthorisationDataRepository));
         }
         
-        public GameModelModel  this[int index] => ItemsData[index];
+        public GameDataModel  this[int index] => ItemsData[index];
 
         public override Task SaveDataToServer()
         {

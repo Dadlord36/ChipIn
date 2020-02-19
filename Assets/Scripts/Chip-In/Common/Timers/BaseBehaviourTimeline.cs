@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Common.Timers
 {
-    public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline
+    public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline, IInitialize
     {
         public event Action OnElapsed;
         public event Action<float> Progressing;
@@ -12,12 +12,12 @@ namespace Common.Timers
         private float _elapsedTime, _interval;
         public bool AutoReset { get; set; }
 
-        private void Awake()
+        public void Initialize()
         {
             enabled = false;
             InitializerTimer(out _interval);
             CheckIfTimerIntervalIsValid();
-        }
+        } 
 
         private void CheckIfTimerIntervalIsValid()
         {
@@ -40,12 +40,17 @@ namespace Common.Timers
         public void StopTimer()
         {
             enabled = false;
-            _elapsedTime = 0f;
+            ResetProgress();
         }
 
+        private void ResetProgress()
+        {
+            _progress = _elapsedTime = 0f;
+        }
+        
         public void RestartTimer()
         {
-            _elapsedTime = 0f;
+            ResetProgress();
             enabled = true;
         }
 

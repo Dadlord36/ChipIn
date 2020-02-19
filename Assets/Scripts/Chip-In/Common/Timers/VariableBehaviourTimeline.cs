@@ -10,14 +10,5 @@ namespace Common.Timers
         {
             timerInterval = initialTimerInterval;
         }
-
-        public float TimeInterval
-        {
-            get => initialTimerInterval;
-            set
-            {
-                initialTimerInterval = value;
-            }
-        }
     }
 }

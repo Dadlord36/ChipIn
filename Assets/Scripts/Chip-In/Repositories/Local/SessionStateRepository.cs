@@ -36,7 +36,7 @@ namespace Repositories.Local
 
         public async Task SignOut()
         {
-            await SessionStaticProcessor.LogOut(authorisationDataRepository,DeviceUtility.BaseDeviceData);
+            await SessionStaticProcessor.TryLogOut(authorisationDataRepository,DeviceUtility.BaseDeviceData);
             cachingController.ClearCache();
             viewsSwitchingController.RequestSwitchToView("",nameof(LoginView));
         }

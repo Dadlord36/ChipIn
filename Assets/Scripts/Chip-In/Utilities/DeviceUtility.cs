@@ -1,6 +1,6 @@
 ﻿using DataModels.RequestsModels;
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR || UNITY_STANDALONE
 using UnityEngine;
 #endif
 
@@ -11,7 +11,7 @@ namespace Utilities
         public static IBaseDeviceData BaseDeviceData => DeviceData;
 
         public static DeviceData DeviceData => new DeviceData(DeviceId,
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
             "android",
 #else
             Application.platform.ToString().ToLower(),

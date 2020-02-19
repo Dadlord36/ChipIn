@@ -141,7 +141,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         public async Task SaveDataToServer()
         {
-            await UserProfileDataStaticRequestsProcessor.UpdateUserProfileData(RequestHeaders, UserProfile);
+            await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(RequestHeaders, UserProfile);
             ConfirmDataSaving();
         }
 

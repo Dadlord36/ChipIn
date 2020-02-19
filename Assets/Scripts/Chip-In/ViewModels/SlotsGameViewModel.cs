@@ -178,7 +178,7 @@ namespace ViewModels
 
         private async Task<IShowMatchResponseModel> GetGameData(int gameId)
         {
-            var matchData = await UserGamesStaticProcessor.ShowMatch(authorisationDataRepository, gameId);
+            var matchData = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, gameId);
             if (matchData == null) return null;
             PrintLog(JsonConvert.SerializeObject(matchData));
             return matchData;
@@ -259,7 +259,7 @@ namespace ViewModels
         private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
         {
             IUpdateUserScoreResponseModel userScore =
-                await UserGamesStaticProcessor.MakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
+                await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
                     spinBoardParameters);
             PrintLog("User spin complete");
             Board = userScore.Board;

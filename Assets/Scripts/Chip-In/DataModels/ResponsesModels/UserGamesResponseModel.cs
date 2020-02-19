@@ -8,6 +8,6 @@ namespace DataModels.ResponsesModels
     {
         public bool Success { get; set; }
 
-        public GameModelModel[] Games { get; set; }
+        public GameDataModel[] Games { get; set; }
     }
 }

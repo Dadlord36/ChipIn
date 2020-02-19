@@ -20,12 +20,12 @@ namespace ViewModels
 
         private MyChallengeView ThisView => ((MyChallengeView) View);
 
-        public int SelectedElementIndexInGamesList
+        private int SelectedElementIndexInGamesList
         {
-            get => _selectedElementIndexInGamesList;
             set
             {
                 _selectedElementIndexInGamesList = value;
+                selectedGameRepository.SelectedElementIndexInGamesList = value;
                 SelectedGameIndex = userGamesRemoteRepository[_selectedElementIndexInGamesList].Id;
                 OnPropertyChanged();
             }

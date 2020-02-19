@@ -12,7 +12,7 @@ namespace Repositories.Remote
 
         public override async Task LoadDataFromServer()
         {
-            ItemsLiveData = await OffersStaticRequestProcessor.GetListOfOffers(authorisationDataRepository);
+            ItemsLiveData = await OffersStaticRequestProcessor.TryGetListOfOffers(authorisationDataRepository);
             ConfirmDataLoading();
         }
 

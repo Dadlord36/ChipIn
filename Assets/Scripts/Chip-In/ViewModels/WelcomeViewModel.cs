@@ -35,7 +35,7 @@ namespace ViewModels
         public async void LoginAsGuest()
         {
             IsPendingLogin = true;
-            bool success = await GuestRegistrationStaticProcessor.RegisterUserAsGuest();
+            bool success = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
             IsPendingLogin = false;
 
             if (success)

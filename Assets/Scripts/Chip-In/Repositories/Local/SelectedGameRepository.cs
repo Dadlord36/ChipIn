@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DataModels;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
 using UnityEngine;
@@ -12,14 +13,21 @@ namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(SelectedGameRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SelectedGameRepository), order = 0)]
-    public class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
+    public sealed class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
+        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         public event Action<IReadOnlyList<MatchUserData>> UsersDataUpdated;
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
         private MatchUserData[] _matchUsersData;
 
 
+        public GameDataModel SelectedGameData => userGamesRemoteRepository[SelectedElementIndexInGamesList];
+        public bool GameHasStarted => DateTime.UtcNow >= SelectedGameData.StartedAt;
+        public TimeSpan TimeTillGameStarts => SelectedGameData.StartedAt - DateTime.UtcNow;
+
+        public int SelectedElementIndexInGamesList { get; set; }
+        
         public int GameId
         {
             get => _selectedGameId;
@@ -102,7 +110,7 @@ namespace Repositories.Local
                 await ImagesDownloadingUtility.DownloadImagesArray(urlStrings));
         }
 
-        protected virtual void OnUsersDataUpdated(MatchUserData[] data)
+        private void OnUsersDataUpdated(MatchUserData[] data)
         {
             UsersDataUpdated?.Invoke(data);
         }

@@ -3,13 +3,13 @@ using DataModels.Interfaces;
 
 namespace DataModels
 {
-    public sealed class ChallengingOfferWithIdentifierModel : IChallengingOfferWithIdentifier
+    public sealed class ChallengingOfferWithIdentifierModel : IChallengingOfferWithIdentifier, IPosterImageUri
     {
         public string PosterUri { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
-        public string ExpireDate { get; set; }
+        public DateTime ExpireDate { get; set; }
         public string Segment { get; set; }
         public uint Quantity { get; set; }
         public uint Price { get; set; }

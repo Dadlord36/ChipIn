@@ -95,9 +95,9 @@ namespace ViewModels
         }
 
         [Binding]
-        public async void LoginButton_Click()
+        public void LoginButton_Click()
         {
-            await ProcessLogin();
+            ProcessLogin();
         }
 
         private async Task ProcessLogin()

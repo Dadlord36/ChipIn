@@ -8,12 +8,14 @@ namespace DataModels
 {
     public interface IUserAvatarModel
     {
-        UserAvatar Avatar { get; set; }
+       [JsonProperty("avatar")] Avatar UserAvatar { get; set; }
     }
 
     public interface IOfferCreatorDataModel : IIdentifier, IUserMainData, IUserExtraData, IUserPreferences,
         IDataLifeCycleModel, IUserAvatarModel
     {
+        [JsonProperty("provider")]
+        string Provider { get; set; }
     }
 
     public class OfferCreatorDataModel : IOfferCreatorDataModel
@@ -25,7 +27,7 @@ namespace DataModels
         public string Gender { get; set; }
         public int TokensBalance { get; set; }
         public GeoLocation UserLocation { get; set; }
-        public UserAvatar Avatar { get; set; }
+        public Avatar UserAvatar { get; set; }
         public string Birthday { get; set; }
         public bool ShowAdsState { get; set; }
         public bool ShowAlertsState { get; set; }
@@ -33,5 +35,6 @@ namespace DataModels
         public bool ShowNotificationsState { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string Provider { get; set; }
     }
 }

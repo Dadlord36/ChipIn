@@ -3,7 +3,7 @@ using DataModels.Interfaces;
 
 namespace DataModels
 {
-    public sealed class GameModelModel : IGameModel
+    public sealed class GameDataModel : IGameModel
     {
         public string ChallengeType { get; set; }
         public DateTime StartedAt { get; set; }

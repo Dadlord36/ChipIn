@@ -2,8 +2,8 @@
 
 namespace DataModels.Interfaces
 {
-    public interface IOfferWithGameModel : IOfferBaseModel, IIdentifier
+    public interface IOfferWithGameModel : IOfferBaseModel, IIdentifier, IPosterImageUri
     {
-        [JsonProperty("game")] GameModelModel Game { get; set; }
+        [JsonProperty("game")] GameDataModel GameData { get; set; }
     }
 }

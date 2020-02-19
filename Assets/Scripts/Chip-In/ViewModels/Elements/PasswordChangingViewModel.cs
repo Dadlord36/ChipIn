@@ -94,7 +94,7 @@ namespace ViewModels.Elements
         {
             try
             {
-                return await UserProfileDataStaticRequestsProcessor.ChangeUserProfilePassword(
+                return await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(
                     authorisationDataRepository,
                     new UserProfilePasswordChangingModel
                     {
