@@ -18,7 +18,7 @@ namespace RequestsStaticProcessors
 
         public static async Task<BaseRequestProcessor<IUserLoginRequestModel, LoginResponseModel, ILoginResponseModel>.
                 HttpResponse>
-            Login(IUserLoginRequestModel userLoginRequestModel)
+            TryLogin(IUserLoginRequestModel userLoginRequestModel)
         {
             try
             {
@@ -28,19 +28,26 @@ namespace RequestsStaticProcessors
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
-                
+                throw;
             }
-
-            return default;
         }
 
-        public static async Task LogOut(IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
+        public static async Task TryLogOut(IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
         {
-            var response = await new SignOutRequestProcessor(requestHeaders, deviceData).SendRequest("User");
-            LogUtility.PrintLog(Tag, $"SignOut success message: {response.ResponseModelInterface.Success.ToString() }");
-            if (!response.ResponseModelInterface.Success)
+            try
             {
-                LogUtility.PrintLog(Tag, $"Error message: {response.ResponseModelInterface.Errors[0]}");
+                var response = await new SignOutRequestProcessor(requestHeaders, deviceData).SendRequest("User");
+                LogUtility.PrintLog(Tag,
+                    $"SignOut success message: {response.ResponseModelInterface.Success.ToString()}");
+                if (!response.ResponseModelInterface.Success)
+                {
+                    LogUtility.PrintLog(Tag, $"Error message: {response.ResponseModelInterface.Errors[0]}");
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
     }

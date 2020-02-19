@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -51,20 +51,17 @@ namespace HttpRequests.RequestsProcessors
             }
         }
 
-
         private const string Tag = "HTTPRequests";
-        
+
         private readonly BaseRequestProcessorParameters _requestProcessorParameters;
         protected bool SendBodyAsQueryStringFormat;
-        
-        
+
         protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
             TRequestBodyModelInterface requestBodyModel)
         {
             _requestProcessorParameters = new BaseRequestProcessorParameters(requestSuffix, requestMethod,
                 requestHeaders, requestBodyModel, null, null);
         }
-
 
         protected BaseRequestProcessor(BaseRequestProcessorParameters requestProcessorParameters)
         {
@@ -90,45 +87,29 @@ namespace HttpRequests.RequestsProcessors
             TRequestBodyModelInterface requestBodyModel = null,
             IRequestHeaders requestHeaders = null)
         {
-            
-            
             return await ApiHelper.MakeAsyncRequest(_requestProcessorParameters.RequestMethod,
                 _requestProcessorParameters.RequestSuffix,
                 FormUrlParametersString(_requestProcessorParameters.RequestParameters),
                 _requestProcessorParameters.QueryStringParameters,
-                requestHeaders?.GetRequestHeaders(), requestBodyModel,SendBodyAsQueryStringFormat);
+                requestHeaders?.GetRequestHeaders(), requestBodyModel, SendBodyAsQueryStringFormat);
         }
 
-        private static async Task<RequestResponse<TResponseModelInterface>> ProcessResponse(
-            HttpResponseMessage responseMessage)
+        private static async Task<TResponseModel> ProcessResponse(HttpContent responseContent,
+            bool isSuccessStatusCode, HttpStatusCode responseMessageStatusCode)
         {
-            if (responseMessage == null)
-            {
-                throw new Exception("Response message is null");
-            }
-
-            var responseAsString = await responseMessage.Content.ReadAsStringAsync();
+            var responseAsString = await responseContent.ReadAsStringAsync();
             Debug.unityLogger.Log(LogType.Log, Tag, $"Response content: {responseAsString}");
 
-            if (responseMessage.IsSuccessStatusCode)
+            if (isSuccessStatusCode)
             {
-                return new RequestResponse<TResponseModelInterface>(responseMessage,
-                    JsonConverterUtility.ContentAsyncJsonTo<TResponseModel>(responseAsString));
+                return JsonConverterUtility.ConvertAsyncJsonTo<TResponseModel>(responseAsString);
             }
-
+            else
             {
                 var errorMessageBuilder = new StringBuilder();
-                try
-                {
-                    errorMessageBuilder.Append(responseAsString);
-                }
-                catch (ApiException _)
-                {
-                }
-
+                errorMessageBuilder.Append(responseAsString);
                 errorMessageBuilder.Append("\r\n");
-                errorMessageBuilder.Append($"Error Code: {responseMessage.StatusCode}");
-                responseMessage.Dispose();
+                errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
                 throw new ApiException(errorMessageBuilder.ToString());
             }
         }
@@ -139,32 +120,33 @@ namespace HttpRequests.RequestsProcessors
             public HttpHeaders Headers;
         }
 
+
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
             var httpResponse = new HttpResponse();
             using (var responseMessage = await SendRequestToWebServer(_requestProcessorParameters.RequestBodyModel,
                 _requestProcessorParameters.RequestHeaders))
             {
-                try
+                if (responseMessage == null)
                 {
-                    var requestResponse = await ProcessResponse(responseMessage);
-                    if (requestResponse.ResponseData == null)
-                    {
-                        throw new Exception("Response data is equals null");
-                    }
-                    else
-                    {
-                        httpResponse.ResponseModelInterface = requestResponse.ResponseData;
-                        httpResponse.Headers = requestResponse.ResponseMessage.Headers;
-                    }
-
-                    LogUtility.PrintLog(Tag, requestResponse.ResponseMessage.IsSuccessStatusCode
-                        ? successfulResponseMassage
-                        : requestResponse.ResponseMessage.ReasonPhrase);
+                    throw new ApiException("Response message is null");
                 }
-                catch (Exception e)
+
+                var requestResponse =
+                    await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode,
+                        responseMessage.StatusCode);
+
+                httpResponse.ResponseModelInterface = requestResponse;
+                httpResponse.Headers = responseMessage.Headers;
+
+                if (responseMessage.IsSuccessStatusCode)
                 {
-                    Debug.unityLogger.LogException(e);
+                    LogUtility.PrintLog(Tag, successfulResponseMassage);
+                }
+                else
+                {
+                    LogUtility.PrintLogError(Tag, responseMessage.ReasonPhrase);
+                    LogUtility.PrintLogError(Tag, responseMessage.Content.ToString());
                 }
 
                 return httpResponse;

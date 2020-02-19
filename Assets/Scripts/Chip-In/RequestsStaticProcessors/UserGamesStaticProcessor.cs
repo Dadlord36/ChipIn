@@ -11,21 +11,38 @@ namespace RequestsStaticProcessors
 {
     public static class UserGamesStaticProcessor
     {
-        public static async Task<GameModelModel[]> GetUserGames(IRequestHeaders requestHeaders)
+        public static async Task<GameDataModel[]> GetUserGames(IRequestHeaders requestHeaders)
         {
-            var response = await new UserGamesGetProcessor(requestHeaders).SendRequest("User Games was retrieved");
-            return response.ResponseModelInterface.Games;
+            try
+            {
+                var response = await new UserGamesGetProcessor(requestHeaders).SendRequest("User Games was retrieved");
+                return response.ResponseModelInterface.Games;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        public static async Task<bool> JoinAGame(IRequestHeaders requestHeaders, int gameId)
+        public static async Task<bool> TryJoinAGame(IRequestHeaders requestHeaders, int gameId)
         {
-            var response =
-                await new JoinGamePostProcessor(requestHeaders, new[] {gameId.ToString(), GameRequestParameters.Join})
-                    .SendRequest("User has successfully joined the game");
-            return response.ResponseModelInterface.Success;
+            try
+            {
+                var response =
+                    await new JoinGamePostProcessor(requestHeaders,
+                            new[] {gameId.ToString(), GameRequestParameters.Join})
+                        .SendRequest("User has successfully joined the game");
+                return response.ResponseModelInterface.Success;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        public static async Task<IShowMatchResponseModel> ShowMatch(IRequestHeaders requestHeaders, int gameId)
+        public static async Task<IShowMatchResponseModel> TryShowMatch(IRequestHeaders requestHeaders, int gameId)
         {
             try
             {
@@ -37,18 +54,25 @@ namespace RequestsStaticProcessors
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
+                throw;
             }
-
-            return null;
         }
 
-        public static async Task<IUpdateUserScoreResponseModel> MakeAMove(IRequestHeaders requestHeaders, int gameId,
+        public static async Task<IUpdateUserScoreResponseModel> TryMakeAMove(IRequestHeaders requestHeaders, int gameId,
             SpinBoardParameters spinBoardParameters)
         {
-            var response =
-                await new MakeAMovePostProcessor(requestHeaders, gameId,spinBoardParameters).SendRequest(
-                    "Player has made a move successfully");
-            return response.ResponseModelInterface;
+            try
+            {
+                var response =
+                    await new MakeAMovePostProcessor(requestHeaders, gameId, spinBoardParameters).SendRequest(
+                        "Player has made a move successfully");
+                return response.ResponseModelInterface;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

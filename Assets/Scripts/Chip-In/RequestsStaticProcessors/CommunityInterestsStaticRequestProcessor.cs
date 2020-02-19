@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Utilities;
 
 namespace RequestsStaticProcessors
 {
@@ -11,11 +13,19 @@ namespace RequestsStaticProcessors
     {
         public static async
             Task<BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse,
-                ICommunityInterestLabelDataRequestResponse>.HttpResponse> GetCommunityInterestsLabelsData(
+                ICommunityInterestLabelDataRequestResponse>.HttpResponse> TryGetCommunityInterestsLabelsData(
                 IRequestHeaders requestHeaders)
         {
-            return await new CommunityInterestsLabelDataGetProcessor(requestHeaders).SendRequest(
-                "CommunityInterestsLabelData was retrieved successfully");
+            try
+            {
+                return await new CommunityInterestsLabelDataGetProcessor(requestHeaders).SendRequest(
+                    "CommunityInterestsLabelData was retrieved successfully");
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

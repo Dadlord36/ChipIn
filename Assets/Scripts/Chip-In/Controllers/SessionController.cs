@@ -6,6 +6,7 @@ using Repositories;
 using RequestsStaticProcessors;
 using UnityEngine;
 using Utilities;
+using ViewModels;
 using ViewModels.SwitchingControllers;
 using Views;
 
@@ -15,6 +16,8 @@ namespace Controllers
         menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
     public class SessionController : ScriptableObject
     {
+        private const string Tag = nameof(SessionController);
+        
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
@@ -22,7 +25,7 @@ namespace Controllers
         {
             try
             {
-                var response = await SessionStaticProcessor.Login(userLoginRequestModel);
+                var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
 
 
                 if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
@@ -43,9 +46,9 @@ namespace Controllers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                LogUtility.PrintLogException(e);
+                LogUtility.PrintLog(nameof(LoginViewModel), "Was not able to sign in");
             }
         }
 
