@@ -1,4 +1,7 @@
-﻿using UnityEngine.Assertions;
+﻿using ScriptableObjects.Comparators;
+using ScriptableObjects.SwitchBindings;
+using UnityEngine;
+using UnityEngine.Assertions;
 using UnityWeld.Binding;
 using Views;
 using Views.Bars;
@@ -8,41 +11,55 @@ namespace ViewModels
     [Binding]
     public class BottomBarViewModel : ViewsSwitchingViewModel
     {
+        [SerializeField] private ViewsComparisonContainer associativeViewsContainer;
+
         private void Awake()
         {
             Assert.IsNotNull(View as BottomBarView);
         }
 
         private string CurrentView => ((BottomBarView) View).CurrentViewName;
-        
+
         [Binding]
         public void SwitchToMarketplaceView()
         {
-            SwitchToView(nameof(MarketplaceView),CurrentView);
+            SwitchToViewAndChooseAppearingSide(nameof(MarketplaceView));
         }
 
         [Binding]
         public void SwitchToChallengesView()
         {
-            SwitchToView(nameof(MyChallengeView),CurrentView);
+            SwitchToViewAndChooseAppearingSide(nameof(MyChallengeView));
         }
 
         [Binding]
         public void SwitchToCartView()
         {
-            SwitchToView(nameof(CartView),CurrentView);
+            SwitchToViewAndChooseAppearingSide(nameof(CartView));
         }
 
         [Binding]
         public void SwitchToCommunityView()
         {
-            SwitchToView(nameof(CommunityView),CurrentView);
+            SwitchToViewAndChooseAppearingSide(nameof(CommunityView));
         }
 
         [Binding]
         public void SwitchToSettingsView()
         {
-            SwitchToView(nameof(SettingsView),CurrentView);
+            SwitchToViewAndChooseAppearingSide(nameof(SettingsView));
+        }
+
+
+        private void SwitchToViewAndChooseAppearingSide(string viewToSwitchToName)
+        {
+            var relativePositionInArray =
+                associativeViewsContainer.GetRelativePositionInContainer(CurrentView, viewToSwitchToName);
+
+            SwitchToView(viewToSwitchToName, CurrentView,
+                relativePositionInArray == ViewsComparisonContainer.RelativePositionInArray.Before
+                    ? ViewsSwitchData.AppearingSide.FromLeft
+                    : ViewsSwitchData.AppearingSide.FromRight);
         }
     }
 }

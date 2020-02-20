@@ -1,25 +1,21 @@
 ﻿using ScriptableObjects.Comparators;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using Views.ViewElements.ViewsSwitching;
 
 namespace Views.Bars
 {
-    public class BottomBarView : SingleViewSwitching
+    public class BottomBarView : MultiViewsSwitch
     {
         [SerializeField] private ViewsComparisonContainer associativeViewsContainer;
         [SerializeField] private bool shouldAutoControlVisibility = true;
         [SerializeField] private bool highlightCorrespondingButtonOnViewSwitching = true;
 
-        private string _currentViewName;
+        public string CurrentViewName { get; private set; }
 
-        public string CurrentViewName
+        protected override void SwitchTo(ViewsSwitchData viewsSwitchData)
         {
-            get => _currentViewName;
-        }
-
-        protected override void SwitchTo(BaseView viewToSwitchTo)
-        {
-            if (!associativeViewsContainer.ContainsView(viewToSwitchTo))
+            if (!associativeViewsContainer.ContainsView(viewsSwitchData.ViewToSwitchTo))
             {
                 if (shouldAutoControlVisibility)
                     Hide();
@@ -29,11 +25,12 @@ namespace Views.Bars
             if (shouldAutoControlVisibility)
             {
                 Show();
-                _currentViewName = viewToSwitchTo.ViewName;
+                CurrentViewName = viewsSwitchData.ViewToSwitchTo.ViewName;
             }
 
             if (highlightCorrespondingButtonOnViewSwitching)
-                SelectionOptionsDictionary[viewToSwitchTo.ViewName].PerformGroupActionWithoutNotification();
+                SelectionOptionsDictionary[viewsSwitchData.ViewToSwitchTo.ViewName]
+                    .PerformGroupActionWithoutNotification();
         }
     }
 }

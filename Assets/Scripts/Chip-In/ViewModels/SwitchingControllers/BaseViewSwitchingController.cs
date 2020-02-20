@@ -1,4 +1,5 @@
 ﻿using Common;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Assertions;
 using ViewModels.Interfaces;
@@ -7,8 +8,11 @@ namespace ViewModels.SwitchingControllers
 {
     public abstract class BaseViewSwitchingController : ScriptableObject, IViewsSwitchingController
     {
-        [SerializeField] protected Object viewsSwitchingBindingObject;
+        [SerializeField] protected ViewsSwitchingBinding viewsSwitchingBindingObject;
         [SerializeField] private SwitchingHistoryController switchingHistoryController;
+
+        [SerializeField]
+        private ViewsSwitchData.AppearingSide defaultReturningViewAppearingSide = ViewsSwitchData.AppearingSide.FromLeft;
 
         protected virtual void OnEnable()
         {
@@ -23,16 +27,18 @@ namespace ViewModels.SwitchingControllers
 
         public void SwitchToPreviousView()
         {
-            ProcessViewsSwitching(switchingHistoryController.PopHistoryStack());
+            ProcessViewsSwitching(switchingHistoryController.PopHistoryStack(), defaultReturningViewAppearingSide);
         }
 
-        public void RequestSwitchToView(string fromViewName, string toViewName)
+        public void RequestSwitchToView(string fromViewName, string toViewName,
+            ViewsSwitchData.AppearingSide viewAppearingSide= ViewsSwitchData.AppearingSide.FromRight)
         {
             if (!string.IsNullOrEmpty(fromViewName))
                 AddToHistoryStack(fromViewName);
-            ProcessViewsSwitching(toViewName);
+            ProcessViewsSwitching(toViewName,viewAppearingSide);
         }
 
-        protected abstract void ProcessViewsSwitching(in string viewNameToSwitchTo);
+        protected abstract void ProcessViewsSwitching(in string viewNameToSwitchTo,
+            ViewsSwitchData.AppearingSide viewAppearingSide);
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ScriptableObjects.SwitchBindings;
+using UnityEngine;
 using ViewModels.SwitchingControllers;
 
 namespace ViewModels
@@ -9,10 +10,11 @@ namespace ViewModels
 
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
-        protected void SwitchToView(string toViewName, string fromView = null)
+        protected void SwitchToView(string toViewName, string fromView = null,
+            ViewsSwitchData.AppearingSide viewAppearingSide = ViewsSwitchData.AppearingSide.FromRight)
         {
             viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(fromView) ? View.ViewName : fromView,
-                toViewName);
+                toViewName, viewAppearingSide);
         }
 
         public void SwitchToPreviousView()
