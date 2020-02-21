@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using Utilities;
 using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Views.ViewElements
 {
     [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(Canvas))]
     public class ViewSlot : UIBehaviour
     {
         public bool Occupied => _view != null;
@@ -13,8 +15,33 @@ namespace Views.ViewElements
         protected override void Awake()
         {
             base.Awake();
-            var rectTransform = GetComponent<RectTransform>();
-            RectTransformUtility.Stretch(rectTransform);
+            ResetTransform(((RectTransform) transform));
+        }
+
+        public Vector2 ViewSlotSize
+        {
+            get => ((RectTransform) transform).sizeDelta;
+            set => ((RectTransform) transform).sizeDelta = value;
+        }
+
+        public void Stretch()
+        {
+            RectTransformUtility.Stretch(transform as RectTransform);
+        }
+        
+        public int CanvasSortingOrder
+        {
+            set
+            {
+                var canvas =  GetComponent<Canvas>();
+                canvas.overrideSorting = true;
+                canvas.sortingOrder = value;
+            }
+            get => GetComponent<Canvas>().sortingOrder;
+        }
+
+        private static void ResetTransform(RectTransform rectTransform)
+        {
             RectTransformUtility.ResetSize(rectTransform);
             RectTransformUtility.ResetScale(rectTransform);
         }
@@ -24,9 +51,9 @@ namespace Views.ViewElements
             _view = view;
             var viewRectTransform = _view.ViewRootRectTransform;
             viewRectTransform.SetParent(transform);
+            ResetTransform(viewRectTransform);
             RectTransformUtility.Stretch(viewRectTransform);
-            RectTransformUtility.ResetSize(viewRectTransform);
-            RectTransformUtility.ResetScale(viewRectTransform);
+            _view.Show();
         }
 
         public BaseView DetachView()

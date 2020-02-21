@@ -33,7 +33,7 @@ namespace ViewModels
         {
             PosterFilePath = new FilePath(
                 @"C:\Users\Dadlo\Documents\UnityProjects\chip-in\Assets\UIDesign\MyChallenges\Nike.png"),
-            
+
             Offer = new UserCreatedOffer
             {
                 Category = MainNames.OfferCategories.BulkOffer, Description = "Something",
@@ -42,7 +42,6 @@ namespace ViewModels
                 ExpireDate = DateTime.Today,
                 StartedAt = InMinute
             }
-            
         };
 
         [Binding]
@@ -53,7 +52,6 @@ namespace ViewModels
 
         private async void CreateOffer()
         {
-            
             try
             {
                 await OffersStaticRequestProcessor.TryCreateAnOffer(userAuthorisationDataRepository, Offer);

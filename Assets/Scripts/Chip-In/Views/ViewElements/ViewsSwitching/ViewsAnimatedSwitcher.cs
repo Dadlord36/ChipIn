@@ -6,7 +6,7 @@ using ViewModels.UI;
 namespace Views.ViewElements.ViewsSwitching
 {
     [RequireComponent(typeof(ScrollViewController))]
-    public class ViewsSwitcher : UIBehaviour
+    public class ViewsAnimatedSwitcher : UIBehaviour
     {
         private ScrollViewController _scrollViewController;
 
@@ -22,7 +22,7 @@ namespace Views.ViewElements.ViewsSwitching
 
         public void SwitchViews()
         {
-            _scrollViewController.BeginScrollForward();
+            // _scrollViewController.BeginScrollForward();
         }
     }
 }

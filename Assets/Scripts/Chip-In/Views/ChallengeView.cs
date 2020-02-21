@@ -4,5 +4,6 @@ namespace Views
 {
     public class ChallengeView : ContainerView<ChallengeCardView>
     {
+        
     }
 }

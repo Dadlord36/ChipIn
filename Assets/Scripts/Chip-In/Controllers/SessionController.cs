@@ -17,7 +17,7 @@ namespace Controllers
     public class SessionController : ScriptableObject
     {
         private const string Tag = nameof(SessionController);
-        
+
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
