@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
 using JetBrains.Annotations;
@@ -15,7 +16,7 @@ using Views.ViewElements;
 
 namespace ViewModels
 {
-    public interface ISlotsGame
+    public interface ISlotsGame : IInitialize
     {
         event Action SpinFrameRequested;
         event Action SpinBoardRequested;
@@ -23,10 +24,11 @@ namespace ViewModels
         Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls);
         void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData);
         void AllowInteractivity();
-        void OnGameFinished();
+        void OnMatchEnds();
         int RoundNumber { get; set; }
     }
 
+    [Binding]
     public sealed partial class SlotsGameViewModel : ViewsSwitchingViewModel, ISlotsGame,
         INotifyPropertyChanged
     {
@@ -124,6 +126,11 @@ namespace ViewModels
 
         #endregion
 
+        public void Initialize()
+        {
+            timer.Initialize();
+        }
+        
         private void OnInteraction()
         {
             CanInteract = false;
@@ -159,7 +166,7 @@ namespace ViewModels
             CanInteract = true;
         }
 
-        public void OnGameFinished()
+        public void OnMatchEnds()
         {
             SwitchToView(nameof(WinnerView));
         }
@@ -195,5 +202,7 @@ namespace ViewModels
         }
 
         #endregion
+
+
     }
 }

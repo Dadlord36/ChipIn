@@ -752,6 +752,8 @@ GameObject:
   - component: {fileID: 6042164947223543842}
   - component: {fileID: 4877789429160709909}
   - component: {fileID: 7329305760486257349}
+  - component: {fileID: 5655793873161845224}
+  - component: {fileID: 3220858039047229329}
   m_Layer: 5
   m_Name: SpinBoardButton
   m_TagString: Untagged
@@ -858,6 +860,36 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5655793873161845224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5123574599950277732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.SlotsGameViewModel.SpinFrame_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &3220858039047229329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5123574599950277732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.SlotsGameViewModel.CanInteract
+  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!1 &5614850267814812214
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,6 +1058,8 @@ GameObject:
   - component: {fileID: 4111170146155370841}
   - component: {fileID: 7342464905138567776}
   - component: {fileID: 661853983658324508}
+  - component: {fileID: 3495146055270701561}
+  - component: {fileID: 1895264903841721102}
   m_Layer: 5
   m_Name: Spin Frame Button
   m_TagString: Untagged
@@ -1132,6 +1166,36 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3495146055270701561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7340079794618302974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.SlotsGameViewModel.SpinFrame_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &1895264903841721102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7340079794618302974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.SlotsGameViewModel.CanInteract
+  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!1 &8084376917476174918
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,6 +1422,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsView: {fileID: 6955368166714725621}
+--- !u!114 &4006410264456157810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006950464281921824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc761162dc84bcdac9912540edc97f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
+    type: 2}
+  gameInterfaceViewModel: {fileID: 5912055524418342526}
 --- !u!114 &5912055524418342526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1379,23 +1460,6 @@ MonoBehaviour:
     type: 2}
   timer: {fileID: 4509455233110584626}
   rowsColumns: {x: 5, y: 5}
---- !u!114 &4006410264456157810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006950464281921824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebc761162dc84bcdac9912540edc97f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
-    type: 2}
-  selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
-    type: 2}
-  gameInterfaceViewModel: {fileID: 5912055524418342526}
 --- !u!1001 &887091911202726602
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1515,12 +1579,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f, type: 3}
---- !u!224 &2685941044549996711 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
-    type: 3}
-  m_PrefabInstance: {fileID: 887091911202726602}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5036335797503181321 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -3914967428288831293, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
@@ -1533,6 +1591,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f5b79753644c83b3760dfd14bc3928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2685941044549996711 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
+    type: 3}
+  m_PrefabInstance: {fileID: 887091911202726602}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &925223281613433189
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1652,6 +1716,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f, type: 3}
+--- !u!224 &2728893227987524360 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
+    type: 3}
+  m_PrefabInstance: {fileID: 925223281613433189}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5006930151509051814 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -3914967428288831293, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
@@ -1664,12 +1734,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f5b79753644c83b3760dfd14bc3928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &2728893227987524360 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
-    type: 3}
-  m_PrefabInstance: {fileID: 925223281613433189}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1629287607135579360
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2358,12 +2422,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f, type: 3}
---- !u!224 &4024903062932354771 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
-    type: 3}
-  m_PrefabInstance: {fileID: 2221013764514366654}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6303242453579162749 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -3914967428288831293, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
@@ -2376,6 +2434,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f5b79753644c83b3760dfd14bc3928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &4024903062932354771 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2221013764514366654}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3149597286153511813
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3347,12 +3411,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f, type: 3}
---- !u!224 &5866525555315630605 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
-    type: 3}
-  m_PrefabInstance: {fileID: 8675025434418729056}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3587359504001364131 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -3914967428288831293, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
@@ -3365,6 +3423,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56f5b79753644c83b3760dfd14bc3928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &5866525555315630605 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2957163197105648237, guid: 25fbdb81d8c00174a8a1e12fb1c0c11f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8675025434418729056}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8962406573578754950
 PrefabInstance:
   m_ObjectHideFlags: 0
