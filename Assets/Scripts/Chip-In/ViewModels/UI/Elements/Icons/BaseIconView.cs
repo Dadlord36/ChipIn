@@ -11,7 +11,11 @@ namespace ViewModels.UI.Elements.Icons
         protected Sprite IconSprite
         {
             get => iconImage.sprite;
-            set => iconImage.sprite = value;
+            set
+            {
+                if(!value) return;
+                iconImage.sprite = value;
+            }
         }
 
         protected Sprite Background

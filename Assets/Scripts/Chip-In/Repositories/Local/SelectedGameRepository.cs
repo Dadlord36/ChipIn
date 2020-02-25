@@ -28,7 +28,7 @@ namespace Repositories.Local
         public TimeSpan TimeTillGameStarts => SelectedGameData.StartedAt - DateTime.UtcNow;
 
         public int SelectedElementIndexInGamesList { get; set; }
-        
+
         public int GameId
         {
             get => _selectedGameId;
@@ -100,15 +100,40 @@ namespace Repositories.Local
 
             _matchUsersData = new MatchUserData[length];
 
-            string[] urlStrings = new string[length];
+            var urlStrings = new List<string>(length);
+            var emptyIndexes = new bool [length];
+
             for (int i = 0; i < length; i++)
             {
-                urlStrings[i] = usersLoadedData[i].AvatarUrl;
                 _matchUsersData[i] = new MatchUserData(usersLoadedData[i]);
+
+                if (string.IsNullOrEmpty(usersLoadedData[i].AvatarUrl))
+                {
+                    emptyIndexes[i] = true;
+                    continue;
+                }
+
+                urlStrings.Add(usersLoadedData[i].AvatarUrl);
             }
 
-            return SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(
-                await ImagesDownloadingUtility.TryDownloadImagesArray(urlStrings));
+            var sprites = SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(await ImagesDownloadingUtility.TryDownloadImagesArray(urlStrings.ToArray()));
+
+            var spritesToReturn = new Sprite[length];
+            int spriteIndex = 0;
+            for (int i = 0; i < spritesToReturn.Length; i++)
+            {
+                if (emptyIndexes[i])
+                {
+                    spritesToReturn[i] = null;
+                }
+                else
+                {
+                    spritesToReturn[i] = sprites[spriteIndex];
+                    spriteIndex++;
+                }
+            }
+
+            return spritesToReturn;
         }
 
         private void OnUsersDataUpdated(MatchUserData[] data)
