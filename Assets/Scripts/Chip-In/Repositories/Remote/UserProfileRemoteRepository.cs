@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
@@ -9,6 +10,7 @@ using Repositories.Interfaces;
 using Repositories.Local;
 using ScriptableObjects.DataSynchronizers;
 using UnityEngine;
+using Utilities;
 using WebOperationUtilities;
 
 namespace Repositories.Remote
@@ -33,8 +35,8 @@ namespace Repositories.Remote
 
         #region IUserProfile delegation
 
-        private int _coinsGameResult; 
-        
+        private int _coinsGameResult;
+
         public GeoLocation UserLocation
         {
             get => UserProfileDataRemote.UserLocation;
@@ -118,7 +120,7 @@ namespace Repositories.Remote
             get => UserProfileDataRemote.ShowNotificationsState;
             set => UserProfileDataRemote.ShowNotificationsState = value;
         }
-        
+
         #endregion
 
         private void OnEnable()
@@ -158,9 +160,17 @@ namespace Repositories.Remote
                 return;
             }
 
-            AvatarImage = await ImagesDownloadingUtility.DownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
-            Debug.Log(AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
-                this);
+            try
+            {
+                AvatarImage =
+                    await ImagesDownloadingUtility.TryDownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
+                Debug.Log(AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
+                    this);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
         }
 
         private void OnProfileDataChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Behaviours.Games;
 using DataModels;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -64,11 +65,11 @@ namespace Repositories.Local
 
         public bool GameWasSelected { get; private set; }
 
-        public async Task SaveUsersData(IMatchModel matchData)
+        public async Task SaveGameSateData(SlotsGameBehaviour.SlotGameRoundData roundData)
         {
-            InitializeUsersData(matchData.Users);
-            WinnerId = matchData.WinnerId;
-            AssignAvatarsSpritesToUsersData(await LoadUsersSprites(matchData.Users));
+            InitializeUsersData(roundData.UsersData);
+            WinnerId = roundData.WinnerId;
+            AssignAvatarsSpritesToUsersData(await LoadUsersSprites(roundData.UsersData));
             OnUsersDataUpdated(_matchUsersData);
         }
 
@@ -80,7 +81,7 @@ namespace Repositories.Local
             }
         }
 
-        private void InitializeUsersData(IReadOnlyList<MatchUserLoadedData> usersLoadedData)
+        private void InitializeUsersData(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
         {
             var length = usersLoadedData.Count;
             _matchUsersData = new MatchUserData[length];
@@ -91,7 +92,7 @@ namespace Repositories.Local
             }
         }
 
-        private async Task<Sprite[]> LoadUsersSprites(IReadOnlyList<MatchUserLoadedData> usersLoadedData)
+        private async Task<Sprite[]> LoadUsersSprites(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
         {
             var length = usersLoadedData.Count;
             Assert.IsNotNull(usersLoadedData);
@@ -107,7 +108,7 @@ namespace Repositories.Local
             }
 
             return SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(
-                await ImagesDownloadingUtility.DownloadImagesArray(urlStrings));
+                await ImagesDownloadingUtility.TryDownloadImagesArray(urlStrings));
         }
 
         private void OnUsersDataUpdated(MatchUserData[] data)
@@ -115,7 +116,7 @@ namespace Repositories.Local
             UsersDataUpdated?.Invoke(data);
         }
 
-        public void UpdateUsersData(IReadOnlyList<MatchUserLoadedData> usersLoadedData)
+        public void UpdateUsersData(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
         {
             for (int i = 0; i < usersLoadedData.Count; i++)
             {

@@ -5,8 +5,8 @@ namespace DataModels
 {
     public struct BaseMatchModel : IBaseMatchModel
     {
-        public SlotsBoard Board { get; set; }
-        public MatchUserLoadedData[] Users { get; set; }
+        public SlotsBoardData BoardData { get; set; }
+        public MatchUserDownloadingData[] Users { get; set; }
         public int? WinnerId { get; set; }
         public float RoundEndsAt { get; set; }
     }

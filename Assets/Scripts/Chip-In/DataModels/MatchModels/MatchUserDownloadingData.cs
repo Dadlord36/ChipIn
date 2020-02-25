@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DataModels.MatchModels
 {
-    public struct MatchUserLoadedData
+    public struct MatchUserDownloadingData
     {
         [JsonProperty("avatar")] public string AvatarUrl;
         [JsonProperty("score")] public uint Score;
@@ -16,11 +16,11 @@ namespace DataModels.MatchModels
         public uint Score;
         public int UserId;
 
-        public MatchUserData(in MatchUserLoadedData loadedData)
+        public MatchUserData(in MatchUserDownloadingData downloadingData)
         {
             AvatarSprite = null;
-            Score = loadedData.Score;
-            UserId = loadedData.UserId;
+            Score = downloadingData.Score;
+            UserId = downloadingData.UserId;
         }
     }
 }

@@ -43,8 +43,11 @@ namespace Views.ViewElements.ViewsPlacers
 
             if (stretchSlotsToScreenSize)
             {
-                _previousSlot.ViewSlotSize = ScreenUtility.GetScreenSize();
-                _nextSlot.ViewSlotSize = ScreenUtility.GetScreenSize();
+                _previousSlot.ResetTransform();
+                _nextSlot.ResetTransform();
+                
+                _previousSlot.Stretch();
+                _nextSlot.Stretch();
             }
 
             if (overrideSortingOrderInSlots)

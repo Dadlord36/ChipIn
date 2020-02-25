@@ -5,90 +5,69 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
-using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 using Repositories.Local;
 using Repositories.Remote;
-using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities;
 using Views;
 using Views.ViewElements;
-using WebSockets;
 
 namespace ViewModels
 {
-    [Binding]
-    public class SlotsGameViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    public interface ISlotsGame
     {
-        private class BoardIconsHolder
-        {
-            private readonly List<BoardIcon> _boardIcons = new List<BoardIcon>();
+        event Action SpinFrameRequested;
+        event Action SpinBoardRequested;
+        void StartTimer(float timeInterval);
+        Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls);
+        void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData);
+        void AllowInteractivity();
+        void OnGameFinished();
+        int RoundNumber { get; set; }
+    }
 
-            public BoardIcon[] BoardIcons
-            {
-                set
-                {
-                    _boardIcons.Clear();
-                    _boardIcons.Capacity = value.Length;
-                    _boardIcons.AddRange(value);
-                }
-            }
+    public sealed partial class SlotsGameViewModel : ViewsSwitchingViewModel, ISlotsGame,
+        INotifyPropertyChanged
+    {
+        #region Events
 
-            public Sprite[] IconsSprites
-            {
-                get
-                {
-                    var sprites = new Sprite[_boardIcons.Count];
-                    for (int i = 0; i < _boardIcons.Count; i++)
-                    {
-                        sprites[i] = _boardIcons[i].IconSprite;
-                    }
+        public event Action SpinFrameRequested;
+        public event Action SpinBoardRequested;
 
-                    return sprites;
-                }
-            }
+        #endregion
 
-            private Sprite GetSpriteWithId(int index)
-            {
-                return _boardIcons.Find(icon => icon.Id == index).IconSprite;
-            }
-
-            public Sprite[] GetCorrespondingIconsSprites(IReadOnlyList<IIconIdentifier> identifiers)
-            {
-                var sprites = new Sprite[_boardIcons.Count];
-                for (int i = 0; i < identifiers.Count; i++)
-                {
-                    sprites[i] = GetSpriteWithId(identifiers[i].IconId);
-                }
-
-                return sprites;
-            }
-        }
+        #region Serialized Privat Fields
 
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private Timer timer;
 
-        private GameChannelWebSocketSharp _gameChannelSocket;
-        private readonly BoardIconsHolder _boardIconsHolder = new BoardIconsHolder();
-        private IMatchModel _matchData;
-        private bool _roundEnds;
-        private bool _gameShouldBeFinished;
+        /// <summary>
+        /// Number of rows and columns on witch all spites-sheets will be slit, forming arrays of Sprites 
+        /// </summary>
+        [SerializeField, Tooltip("X - rows, Y - columns")]
+        private Vector2Int rowsColumns = new Vector2Int(5, 5);
+
+        #endregion
+
+        #region Private Properties
+
+        private SlotsGameView GameView => (SlotsGameView) View;
+
+        #endregion
+
+
+        #region Private Fields
+
+        private readonly BoardIconsSetHolder _boardIconsHolder;
         private int _roundNumber;
+        private bool _canInteract;
 
-        private BoardIcon[] BoardIcons
-        {
-            set => _boardIconsHolder.BoardIcons = value;
-        }
+        #endregion
 
-        private SlotsBoard Board
-        {
-            get => _matchData.Board;
-            set => _matchData.Board = value;
-        }
+
+        #region Properties Bindings
 
         [Binding]
         public int RoundNumber
@@ -102,225 +81,119 @@ namespace ViewModels
             }
         }
 
-        private ISlotIconBaseData[] SlotIconData => _matchData.Board.IconsData;
-
-        protected override void OnEnable()
+        [Binding]
+        public bool CanInteract
         {
-            base.OnEnable();
-            GetGameDataAndInitializeGame();
+            get => _canInteract;
+            set
+            {
+                if (value == _canInteract) return;
+                _canInteract = value;
+                OnPropertyChanged();
+            }
         }
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            CloseConnectionAndDisposeGameChannelSocket();
-        }
+        #endregion
 
-        private void CloseConnectionAndDisposeGameChannelSocket()
-        {
-            if (_gameChannelSocket == null) return;
 
-            _gameChannelSocket.Close();
-            (_gameChannelSocket as IDisposable).Dispose();
-        }
+        #region Buttons Bindings
 
         [Binding]
         public void SpinFrame_OnClick()
         {
-            SpinFrame();
+            OnSpinFrameRequested();
+            OnInteraction();
         }
 
         [Binding]
         public void SpinBoard_OnClick()
         {
-            SpinBoard();
+            OnSpinBoardRequested();
+            OnInteraction();
         }
 
+        #endregion
 
-        private async Task UpdateMatchData()
+
+        #region Constructor
+
+        public SlotsGameViewModel()
         {
-            var result = await GetGameData(selectedGameRepository.GameId);
-            _matchData = result.MatchData;
+            _boardIconsHolder = new BoardIconsSetHolder(rowsColumns.x, rowsColumns.y);
         }
 
-        private async void GetGameDataAndInitializeGame()
-        {
-            await UpdateMatchData();
-            StartTimer(_matchData.RoundEndsAt);
-            await UpdateGameRepositoryUsersData();
-            RoundNumber = (int) _matchData.RoundNumber;
-            await LoadBoardIcons();
-            UpdateSlotsIconsPositionsAndActivity();
-            await StartGameSocketChannel();
-        }
+        #endregion
 
-        private async Task UpdateGameRepositoryUsersData()
+        private void OnInteraction()
         {
-            await selectedGameRepository.SaveUsersData(_matchData);
-        }
-
-        private async Task LoadBoardIcons()
-        {
-            BoardIcons = await Board.GetBoardIcons();
-        }
-
-        private void UpdateSlotsIconsPositionsAndActivity()
-        {
-            SetSlotsIcons(_boardIconsHolder.GetCorrespondingIconsSprites(SlotIconData));
-            UpdateSlotsIconsFramesActivity(SlotIconData);
-            LogUtility.PrintLog(tag, "Slots Icons was updated");
-        }
-
-        private static bool GameIsInProgress(IGameModel gameModel)
-        {
-            return gameModel.Status == "in_progress";
-        }
-
-        private async Task<IShowMatchResponseModel> GetGameData(int gameId)
-        {
-            var matchData = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, gameId);
-            if (matchData == null) return null;
-            PrintLog(JsonConvert.SerializeObject(matchData));
-            return matchData;
+            CanInteract = false;
         }
 
         private void UpdateSlotsIconsFramesActivity(IReadOnlyList<IActive> iconsActivity)
         {
-            SetSlotsActivity(iconsActivity);
-            LogUtility.PrintLog(tag, "Slots Icons Activity State was updated");
+            GameView.SetSlotsActivity(iconsActivity);
+            PrintLog("Slots Icons Activity State was updated");
         }
 
-        private void SetSlotsActivity(IReadOnlyList<IActive> iconsActivity)
-        {
-            ((SlotsGameView) View).SetSlotsActivity(iconsActivity);
-        }
-
-        private void SetSlotsIcons(Sprite[] sprites)
-        {
-            ((SlotsGameView) View).SetSlotsIcons(sprites);
-        }
-
-        private async Task StartGameSocketChannel()
-        {
-            CloseConnectionAndDisposeGameChannelSocket();
-            await EstablishSocketConnection();
-            SubscribeToGameSocketEvents();
-        }
-
-        private void SubscribeToGameSocketEvents()
-        {
-            _gameChannelSocket.RoundEnds += GameChannelSocketOnMatchRoundEnds;
-            _gameChannelSocket.MatchEnds += GameChannelSocketOnMatchEnds;
-        }
-
-        private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
-        {
-            PrepareMatchStateDataForIconsUpdate(matchStateData);
-        }
-
-        private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
-        {
-            _gameShouldBeFinished = true;
-            selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;
-        }
-
-        private MatchStateData _matchStateData;
-
-        private void PrepareMatchStateDataForIconsUpdate(MatchStateData matchStateData)
-        {
-            _roundEnds = true;
-            _matchStateData = matchStateData;
-            Board = matchStateData.MatchState.Body.Board;
-        }
-
-
-        private void FinishTheGame()
-        {
-            PrintLog("Game is over");
-            SwitchToView(nameof(WinnerView));
-            _gameShouldBeFinished = false;
-        }
-
-        private void Update()
-        {
-            if (_roundEnds)
-            {
-                UpdateSlotsIconsFromMainThread();
-                UpdateRoundNumber();
-                UpdateUsersData();
-                StartTimer(_matchStateData.MatchState.Body.RoundEndsAt);
-                _roundEnds = false;
-            }
-
-            if (_gameShouldBeFinished)
-                FinishTheGame();
-        }
-
-        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
-        {
-            IUpdateUserScoreResponseModel userScore =
-                await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository, selectedGameRepository.GameId,
-                    spinBoardParameters);
-            PrintLog("User spin complete");
-            Board = userScore.Board;
-            UpdateSlotsIconsPositionsAndActivity();
-        }
-
-        private void StartTimer(float timeInterval)
+        public void StartTimer(float timeInterval)
         {
             PrintLog($"Timer interval is: {timeInterval.ToString()}");
             timer.SetAndStartTimer(timeInterval);
         }
 
-        private void UpdateSlotsIconsFromMainThread()
+        public async Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls)
         {
-            UpdateSlotsIconsPositionsAndActivity();
+            await _boardIconsHolder.Refill(indexedUrls);
         }
 
-        private void UpdateUsersData()
+        public void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData)
         {
-            selectedGameRepository.UpdateUsersData(_matchStateData.MatchState.Body.Users);
+            var boardIcons = _boardIconsHolder.GetBoardIconsDataWithIDs(slotsIconsData);
+            UpdateSlotsIconsFramesActivity(slotsIconsData);
+            GameView.SetSlotsIcons(boardIcons);
+            GameView.StartSlotsAnimation();
         }
 
-        private void UpdateRoundNumber()
+        public void AllowInteractivity()
         {
-            RoundNumber = _matchStateData.MatchState.Round;
+            CanInteract = true;
         }
 
-        private async Task EstablishSocketConnection()
+        public void OnGameFinished()
         {
-            try
-            {
-                _gameChannelSocket = new GameChannelWebSocketSharp(authorisationDataRepository.GetRequestHeaders());
-                await Task.Run(delegate { _gameChannelSocket.ConnectAsync(); });
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+            SwitchToView(nameof(WinnerView));
         }
 
-        private void SpinFrame()
+        private void PrintLog(string message, LogType logType = LogType.Log)
         {
-            MakeASpin(SpinBoardParameters.JustFrame);
+            Debug.unityLogger.Log(logType, nameof(SlotsGameViewModel), message, gameObject);
         }
 
-        private void SpinBoard()
-        {
-            MakeASpin(SpinBoardParameters.JustBoard);
-        }
 
-        private static void PrintLog(string message, LogType logType = LogType.Log)
-        {
-            Debug.unityLogger.Log(logType, "SlotsGame", message);
-        }
+        #region INotifyPropertyChanged Implementation
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
+
+        #region Events Invokators
+
+        private void OnSpinFrameRequested()
+        {
+            SpinFrameRequested?.Invoke();
+        }
+
+        private void OnSpinBoardRequested()
+        {
+            SpinBoardRequested?.Invoke();
+        }
+
+        #endregion
     }
 }

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using DataModels.Interfaces;
 using UnityEngine;
 using UnityEngine.Networking;
+using Utilities;
 
 namespace WebOperationUtilities
 {
@@ -10,32 +13,35 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
-        public static async Task<Texture2D[]> DownloadImagesArray(string[] imagesUrls)
-        {
-            var length = imagesUrls.Length;
-            var tasks = new Task<Texture2D> [length];
-            var results = new Texture2D[length];
-
-            for (var i = 0; i < length; i++)
-            {
-                tasks[i] = DownloadImageAsync(imagesUrls[i]);
-            }
-
-            await Task.WhenAll(tasks);
-
-
-            for (var index = 0; index < tasks.Length; index++)
-            {
-                results[index] = tasks[index].Result;
-            }
-
-            return results;
-        }
-
-        public static async Task<Texture2D> DownloadImageAsync(string url)
+        public static async Task<Texture2D[]> TryDownloadImagesArray(string[] imagesUrls)
         {
             try
             {
+                var length = imagesUrls.Length;
+                var tasks = new Task<Texture2D> [length];
+                for (var i = 0; i < length; i++)
+                {
+                    tasks[i] = TryDownloadImageAsync(imagesUrls[i]);
+                }
+
+                return await Task.WhenAll(tasks);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        public static async Task<Texture2D> TryDownloadImageAsync(string url)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(url))
+                {
+                    throw new Exception("Given url is null or empty");
+                }
+
                 using (var client = UnityWebRequestTexture.GetTexture(url))
                 {
                     PrintLog("Image Loading started");

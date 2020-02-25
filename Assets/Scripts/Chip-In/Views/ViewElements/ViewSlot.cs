@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using Utilities;
 using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Views.ViewElements
@@ -12,12 +11,6 @@ namespace Views.ViewElements
         public bool Occupied => _view != null;
         private BaseView _view;
 
-        protected override void Awake()
-        {
-            base.Awake();
-            ResetTransform(((RectTransform) transform));
-        }
-
         public Vector2 ViewSlotSize
         {
             get => ((RectTransform) transform).sizeDelta;
@@ -28,16 +21,21 @@ namespace Views.ViewElements
         {
             RectTransformUtility.Stretch(transform as RectTransform);
         }
-        
+
         public int CanvasSortingOrder
         {
             set
             {
-                var canvas =  GetComponent<Canvas>();
+                var canvas = GetComponent<Canvas>();
                 canvas.overrideSorting = true;
                 canvas.sortingOrder = value;
             }
             get => GetComponent<Canvas>().sortingOrder;
+        }
+
+        public void ResetTransform()
+        {
+            ResetTransform(transform as RectTransform);
         }
 
         private static void ResetTransform(RectTransform rectTransform)

@@ -6,6 +6,6 @@ namespace DataModels.Interfaces
 {
     public interface IShowMatchResponseModel : ISuccess
     {
-        [JsonProperty("match")] MatchModel MatchData { get; set; }
+        [JsonProperty("match")] MatchDataModel MatchData { get; set; }
     }
 }

@@ -7,6 +7,6 @@ namespace DataModels.ResponsesModels
     {
         public bool Success { get; set; }
         public uint Score { get; set; }
-        public SlotsBoard Board { get; set; }
+        public SlotsBoardData BoardData { get; set; }
     }
 }

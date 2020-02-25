@@ -3,7 +3,7 @@ using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using Utilities;
 
 namespace ViewModels.UI
 {
@@ -16,6 +16,7 @@ namespace ViewModels.UI
         [SerializeField] private float minScrollSpeed;
         [SerializeField] private float maxScrollSpeed;
         [SerializeField, Space(10)] private RectTransform crateTransform;
+        [SerializeField, Space(10)] private RectTransform rightDestinationPointTransform;
 
 
         private float _movementDistance;
@@ -60,11 +61,13 @@ namespace ViewModels.UI
         private void SetMovementDistanceAndDestinations()
         {
             _centerDestinationPoint = GetComponent<RectTransform>().anchoredPosition;
-            _movementDistance = Screen.width;
+            
+             _movementDistance = ((RectTransform) transform).rect.width;
              _leftDestinationPoint = _rightDestinationPoint = _centerDestinationPoint;
             _leftDestinationPoint.x -= _movementDistance;
             _rightDestinationPoint.x += _movementDistance;
         }
+
 
         private Vector2 CratePosition
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DataModels.Interfaces;
 using Newtonsoft.Json;
 using UnityEngine;
 using WebOperationUtilities;
@@ -7,7 +8,7 @@ using WebOperationUtilities;
 namespace DataModels.MatchModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class SlotsBoard
+    public class SlotsBoardData
     {
         [JsonProperty("0")] public readonly MatchBoardElementData First;
         [JsonProperty("1")] public readonly MatchBoardElementData Second;
@@ -19,10 +20,10 @@ namespace DataModels.MatchModels
         [JsonProperty("7")] public readonly MatchBoardElementData Eighth;
         [JsonProperty("8")] public readonly MatchBoardElementData Ninth;
 
-        private MatchBoardElementData[] Elements =>
+        public MatchBoardElementData[] Elements =>
             new[] {First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth};
 
-        public SlotsBoard(MatchBoardElementData first, MatchBoardElementData second, MatchBoardElementData third,
+        public SlotsBoardData(MatchBoardElementData first, MatchBoardElementData second, MatchBoardElementData third,
             MatchBoardElementData fourth, MatchBoardElementData fifth, MatchBoardElementData sixth,
             MatchBoardElementData seventh, MatchBoardElementData eighth, MatchBoardElementData ninth)
         {
@@ -36,39 +37,13 @@ namespace DataModels.MatchModels
             Eighth = eighth;
             Ninth = ninth;
         }
-
-        private string[] IconsUrls => new[]
+        
+        public ISlotIconBaseData[] GetIconsData()
         {
-            First.PosterUrl, Second.PosterUrl, Third.PosterUrl, Fourth.PosterUrl, Fifth.PosterUrl, Sixth.PosterUrl,
-            Seventh.PosterUrl, Eighth.PosterUrl, Ninth.PosterUrl
-        };
-
-        private async Task<Texture2D[]> GetSlotsIconsTextures()
-        {
-            return await ImagesDownloadingUtility.DownloadImagesArray(IconsUrls);
-        }
-
-        public ISlotIconBaseData[] IconsData => Array.ConvertAll(Elements, item => (ISlotIconBaseData) item);
-
-        public async Task<BoardIcon[]> GetBoardIcons()
-        {
-            var textures = await GetSlotsIconsTextures();
-            var sprites = SpritesUtility.CreateArrayOfSpritesWithDefaultParameters(textures);
-            var length = textures.Length;
-            var elements = Elements;
-
-
-            var boardIcons = new BoardIcon[length];
-            for (int i = 0; i < length; i++)
-            {
-                boardIcons[i] = new BoardIcon(sprites[i], elements[i].IconId);
-            }
-
-            return boardIcons;
+            return Array.ConvertAll(Elements, item => (ISlotIconBaseData) item);
         }
     }
-
-
+    
     public interface IActive
     {
         [JsonProperty("active")] bool Active { get; set; }
@@ -85,7 +60,6 @@ namespace DataModels.MatchModels
 
     public struct MatchBoardElementData : ISlotIconBaseData
     {
-        [JsonProperty("poster")] public string PosterUrl;
         public bool Active { get; set; }
         public int IconId { get; set; }
     }

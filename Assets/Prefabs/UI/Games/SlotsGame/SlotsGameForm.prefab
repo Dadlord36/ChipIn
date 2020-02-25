@@ -1193,6 +1193,7 @@ MonoBehaviour:
   - {fileID: 8238520795846930476}
   - {fileID: 2502862120454932796}
   - {fileID: 3587359504001364131}
+  slotsSpritesAnimationSwitchingInterval: 0.1
 --- !u!1 &8314217182712741684
 GameObject:
   m_ObjectHideFlags: 0
@@ -1357,7 +1358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotsView: {fileID: 6955368166714725621}
---- !u!114 &2858401184153479222
+--- !u!114 &5912055524418342526
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1366,7 +1367,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3006950464281921824}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41afac8e18f4458092439d5e9d915c57, type: 3}
+  m_Script: {fileID: 11500000, guid: 525d53a072254ca8bdb87898404f17d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 2715353407537926393}
@@ -1377,6 +1378,24 @@ MonoBehaviour:
   selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
     type: 2}
   timer: {fileID: 4509455233110584626}
+  rowsColumns: {x: 5, y: 5}
+--- !u!114 &4006410264456157810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006950464281921824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc761162dc84bcdac9912540edc97f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
+    type: 2}
+  gameInterfaceViewModel: {fileID: 5912055524418342526}
 --- !u!1001 &887091911202726602
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3173,6 +3192,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5151060643453142171, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}

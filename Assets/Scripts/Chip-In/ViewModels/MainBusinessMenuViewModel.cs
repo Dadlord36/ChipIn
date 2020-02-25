@@ -25,7 +25,9 @@ namespace ViewModels
             get
             {
                 var now = DateTime.UtcNow;
-                return now.AddMinutes(3);
+                now = now.AddMinutes(1);
+                now = now.AddSeconds(10);
+                return now;
             }
         }
 
