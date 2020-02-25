@@ -14,7 +14,7 @@ namespace WebSockets
     public struct MatchState
     {
         [JsonProperty("body")] public BaseMatchModel Body { get; set; }
-        [JsonProperty("round")] public int Round { get; set; }
+        [JsonProperty("round")] public uint Round { get; set; }
         [JsonProperty("title")] public string Title { get; set; }
     }
 
@@ -90,32 +90,31 @@ namespace WebSockets
         {
             var data = messageEventArgs.Data;
 
-               if(TryProcessStringAsMatchStateData(data)) return;
-               if(TryProcessStringAsRegularMessage(data)) return;
+            if(TryProcessStringAsMatchStateData(data)) return;
+            if(TryProcessStringAsRegularMessage(data)) return;
 
-               LogUtility.PrintLog(Tag, $"Data was not identified: {data}");
+            LogUtility.PrintLog(Tag, $"Data was not identified: {data}");
         }
 
         private bool TryProcessStringAsMatchStateData(string data)
         {
-            if (!JsonConverterUtility.TryParseJson<MatchStateData>(data,out var matchStateData))
+            if (!JsonConverterUtility.TryParseJson<MatchStateData>(data, out var matchStateData))
                 return false;
-                
+
             LogUtility.PrintLog(Tag, $"Match data: {data}");
             if (matchStateData.MatchState.Title == SlotsGameStatesNames.RoundEnd)
             {
                 OnRoundEnds(matchStateData);
                 return true;
             }
+
             OnMatchEnds(matchStateData);
             return true;
-            
-  
         }
 
         private static bool TryProcessStringAsRegularMessage(string data)
         {
-            if (! JsonConverterUtility.TryParseJson<SocketMessage>(data, out var socketMessage))
+            if (!JsonConverterUtility.TryParseJson<SocketMessage>(data, out var socketMessage))
                 return false;
 
             if (socketMessage.Type == "ping")
