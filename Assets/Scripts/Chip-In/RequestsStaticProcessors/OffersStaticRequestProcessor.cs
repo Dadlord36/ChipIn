@@ -96,8 +96,9 @@ namespace RequestsStaticProcessors
                 }
                 else
                 {
+                    var asString = await response.Content.ReadAsStringAsync();
                     LogUtility.PrintLog(nameof(OffersStaticRequestProcessor),
-                        $"Response body: {response.Content.ToString()}");
+                        $"Response body: {asString}");
                     throw new Exception("Offer was not created");
                 }
             }
