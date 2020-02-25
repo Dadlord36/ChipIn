@@ -19,19 +19,20 @@ namespace ViewModels
     public class MainBusinessMenuViewModel : BaseViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
+        [SerializeField] private int startingAfterMinutes = 1;
 
-        private static DateTime InMinute
+        private DateTime InMinute
         {
             get
             {
                 var now = DateTime.UtcNow;
-                now = now.AddMinutes(1);
-                now = now.AddSeconds(10);
+                now = now.AddMinutes(startingAfterMinutes);
+                now = now.AddSeconds(1);
                 return now;
             }
         }
 
-        private static readonly OfferCreationRequestModel Offer = new OfferCreationRequestModel
+        private  OfferCreationRequestModel Offer => new OfferCreationRequestModel
         {
             PosterFilePath = new FilePath(
                 @"C:\Users\Dadlo\Documents\UnityProjects\chip-in\Assets\UIDesign\MyChallenges\Nike.png"),
