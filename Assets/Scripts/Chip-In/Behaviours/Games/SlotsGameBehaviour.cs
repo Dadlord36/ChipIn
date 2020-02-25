@@ -19,11 +19,11 @@ namespace Behaviours.Games
 
         public struct SlotGameRoundData
         {
-            public int RoundNumber;
-            public int RoundEndsInSeconds;
-            public int? WinnerId;
+            public int Number { get; private set; }
+            public float RoundEndsInSeconds { get; private set; }
+            public int? WinnerId { get; private set; }
+            
             private SlotsBoardData _slotsBoardData;
-
             public ISlotIconBaseData[] SlotsIconsData => _slotsBoardData.GetIconsData();
             public MatchUserDownloadingData[] UsersData { get; private set; }
 
@@ -34,16 +34,21 @@ namespace Behaviours.Games
 
             public void Update(MatchStateData matchStateData)
             {
-                _slotsBoardData = matchStateData.MatchState.Body.BoardData;
-                UsersData = matchStateData.MatchState.Body.Users;
-                WinnerId = matchStateData.MatchState.Body.WinnerId;
+                Update(matchStateData.MatchState.Body, matchStateData.MatchState.Round);
             }
 
-            public void Update(IBaseMatchModel matchDataModel)
+            public void Update(IMatchModel matchModel)
+            {
+                Update(matchModel, matchModel.RoundNumber);
+            }
+
+            private void Update(IBaseMatchModel matchDataModel, uint roundNumber)
             {
                 _slotsBoardData = matchDataModel.BoardData;
                 UsersData = matchDataModel.Users;
                 WinnerId = matchDataModel.WinnerId;
+                RoundEndsInSeconds = matchDataModel.RoundEndsAt;
+                Number = (int) roundNumber;
             }
         }
 
@@ -98,6 +103,7 @@ namespace Behaviours.Games
 
         private async void GetGameDataAndInitializeGame()
         {
+            GameInterface.Initialize();
             await InitializeMatch();
             await UpdateGameRepositoryUsersData();
             await StartGameSocketChannel();
@@ -123,7 +129,7 @@ namespace Behaviours.Games
 
         private void StartNewRound()
         {
-            RoundNumber = _roundData.RoundNumber;
+            RoundNumber = _roundData.Number;
             UpdateSlotsIconsPositionsAndActivity();
             GameInterface.StartTimer(_roundData.RoundEndsInSeconds);
             GameInterface.AllowInteractivity();
@@ -133,7 +139,8 @@ namespace Behaviours.Games
         {
             _gameShouldBeFinished = false;
             PrintLog("Game is over");
-            GameInterface.OnGameFinished();
+            CloseConnectionAndDisposeGameChannelSocket();
+            GameInterface.OnMatchEnds();
         }
 
         private void Update()
@@ -203,8 +210,8 @@ namespace Behaviours.Games
 
         private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
         {
-            _gameShouldBeFinished = true;
             selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;
+            _gameShouldBeFinished = true;
         }
 
         private void UdataRoundData(MatchStateData matchStateData)

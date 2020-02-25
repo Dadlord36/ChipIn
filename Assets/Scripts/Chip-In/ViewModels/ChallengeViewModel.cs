@@ -115,7 +115,7 @@ namespace ViewModels
 
         private void AllowToPlayOnTimer()
         {
-            StartTimerCountdown(Mathf.Abs((float) selectedGameRepository.TimeTillGameStarts.TotalSeconds));
+            StartTimerCountdown(Mathf.Abs((float) selectedGameRepository.TimeTillGameStarts.TotalSeconds)+1f);
         }
 
         private void StartTimerCountdown(float intervalInSeconds)
