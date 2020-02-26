@@ -20,7 +20,7 @@ namespace Repositories
             InvokeRepositoriesLoading();
         }
 
-        private void InvokeRepositoriesLoading()
+        public void InvokeRepositoriesLoading()
         {
             for (int i = 0; i < remoteRepositories.Length; i++)
             {

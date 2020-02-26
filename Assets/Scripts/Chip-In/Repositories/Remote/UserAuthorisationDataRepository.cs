@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Controllers;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
+using Encryption;
 using UnityEngine;
+using Utilities;
 
 namespace Repositories.Remote
 {
@@ -15,6 +19,10 @@ namespace Repositories.Remote
         private IUserProfileRequestHeadersProvider _authorisationModel =
             new UserProfileRequestHeadersProvider();
 
+        private const string EncryptionKey = "crowdcrowdcrowdcrowdcrowdcrowdSD";
+        private const string SaveFileName = "Player.dat";
+
+        private static string FileName => Path.Combine(Application.persistentDataPath, SaveFileName);
 
         public void Set(IAuthorisationModel source)
         {
@@ -74,6 +82,53 @@ namespace Repositories.Remote
         public void Clear()
         {
             _authorisationModel = new UserProfileRequestHeadersProvider();
+            ClearSavedData();
+        }
+
+        public void TrySaveDataLocally()
+        {
+            try
+            {
+                var authenticationDataAsString = JsonConverterUtility.ConvertModelToJson(_authorisationModel);
+                var encryptedStringAsBytes = RijndaelEncryptor.Encrypt(authenticationDataAsString, EncryptionKey);
+                
+                ClearSavedData();
+                File.WriteAllBytes(FileName, encryptedStringAsBytes);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+        }
+
+
+        public void TryLoadLocalData()
+        {
+            try
+            {
+                var authenticationDatAsBytes = File.ReadAllBytes(FileName);
+                var decryptedStringAsString = RijndaelEncryptor.Decrypt(authenticationDatAsBytes, EncryptionKey);
+
+                _authorisationModel = JsonConverterUtility.ConvertJsonString<UserProfileRequestHeadersProvider>(decryptedStringAsString);
+                LogUtility.PrintLog(nameof(UserAuthorisationDataRepository), "Authentication data was loaded");
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+        }
+
+        private void ClearSavedData()
+        {
+            if (File.Exists(FileName))
+            {
+                File.Delete(FileName);
+            }
+        }
+
+        public bool CheckIfUserWasLoggedInPreviously()
+        {
+            return File.Exists(FileName);
         }
     }
 }
