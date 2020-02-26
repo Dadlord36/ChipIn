@@ -18,11 +18,7 @@ namespace Utilities
 #endif
             DeviceToken);
 
-        public static string DeviceToken
-        {
-            //ToDo: Implement correct device Token Getter
-            get => "m6aHiiHOc";
-        }
+        public static string DeviceToken { get; set; } = "m6aHiiHOc";
 
         public static string DeviceId
         {
