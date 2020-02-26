@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DataModels;
 using DataModels.RequestsModels;
 using HttpRequests.RequestsProcessors.PostRequests;
 using Utilities;
@@ -8,15 +9,14 @@ namespace RequestsStaticProcessors
 {
     public static class RegistrationStaticProcessor
     {
-        public static async Task<bool> TryRegisterUserFull(
+        public static async Task<IRegistrationResponseDataModel> TryRegisterUserFull(
             RegistrationRequestModel registrationRequestModel)
         {
             try
             {
-                var response =
-                    await new SimpleRegistrationRequestProcessor(registrationRequestModel).SendRequest(
+                var response = await new RegistrationRequestProcessor(registrationRequestModel).SendRequest(
                         "User have been registered successfully!");
-                return response.ResponseModelInterface != null;
+                return response.ResponseModelInterface;
             }
             catch (Exception e)
             {
@@ -29,9 +29,7 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                var response =
-                    await new SimpleRegistrationRequestProcessor(registrationRequestModel).SendRequest(
-                        "User have been registered successfully!");
+                var response = await new SimpleRegistrationRequestProcessor(registrationRequestModel).SendRequest("User have been registered successfully!");
                 return response.ResponseModelInterface != null;
             }
             catch (Exception e)

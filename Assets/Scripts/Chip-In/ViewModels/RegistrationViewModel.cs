@@ -127,8 +127,10 @@ namespace ViewModels
 
         private async Task Register()
         {
+            var result = await RegistrationStaticProcessor.TryRegisterUserFull(_registrationRequestModel);
+
             // If registration was successful 
-            if (await RegistrationStaticProcessor.TryRegisterUserFull(_registrationRequestModel))
+            if (result.Success)
             {
                 Debug.Log("User have been registered successfully!");
                 SwitchToCheckYourEmailView();
