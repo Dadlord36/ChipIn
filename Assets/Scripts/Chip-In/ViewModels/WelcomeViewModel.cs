@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Controllers;
 using JetBrains.Annotations;
 using RequestsStaticProcessors;
+using UnityEngine;
 using UnityWeld.Binding;
 using Views;
 
@@ -10,6 +12,8 @@ namespace ViewModels
     [Binding]
     public sealed class WelcomeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
+        [SerializeField] private SessionController sessionController;
+        
         private bool _isPendingLogin;
 
         [Binding]
@@ -35,7 +39,9 @@ namespace ViewModels
         public async void LoginAsGuest()
         {
             IsPendingLogin = true;
-            bool success = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+            
+            bool success = await sessionController.TryRegisterAndLoginAsGuest();
+                
             IsPendingLogin = false;
 
             if (success)

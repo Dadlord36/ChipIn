@@ -35,10 +35,8 @@ namespace Controllers
                 {
                     repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response
                         .ResponseModelInterface);
-                    
-                    //Save authentication data, so that it will be used on next app launch and user won't have to sign in again
-                    authorisationDataRepository.TrySaveDataLocally();
-                    
+
+                    SaveUserAuthentication();
 
                     var role = response.ResponseModelInterface.UserProfileData.Role;
                     switch (role)
@@ -51,13 +49,18 @@ namespace Controllers
                             SwitchToBusinessMainMenu();
                             break;
                     }
-
                 }
             }
             catch (Exception)
             {
                 LogUtility.PrintLog(nameof(LoginViewModel), "Was not able to sign in");
             }
+        }
+
+        private void SaveUserAuthentication()
+        {
+            //Save authentication data, so that it will be used on next app launch and user won't have to sign in again
+            authorisationDataRepository.TrySaveDataLocally();
         }
 
         public void ProcessAppLaunching()
@@ -93,6 +96,14 @@ namespace Controllers
         private void SwitchToView(string toViewName)
         {
             viewsSwitchingController.RequestSwitchToView(null, toViewName);
+        }
+
+        public async Task<bool> TryRegisterAndLoginAsGuest()
+        {
+            var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
+            SaveUserAuthentication();
+            return true;
         }
     }
 }

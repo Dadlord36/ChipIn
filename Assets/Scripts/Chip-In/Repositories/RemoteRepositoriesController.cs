@@ -1,4 +1,6 @@
-﻿using DataModels.ResponsesModels;
+﻿using DataModels;
+using DataModels.ResponsesModels;
+using GlobalVariables;
 using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
@@ -17,6 +19,13 @@ namespace Repositories
         {
             authorisationDataRepository.Set(loginModel.AuthorisationData);
             sessionStateRepository.SetLoginState(loginModel.UserProfileData.Role);
+            InvokeRepositoriesLoading();
+        }
+
+        public void SetGuestAuthorisationDataAndInvokeRepositoriesLoading(IAuthorisationModel authorisationModel)
+        {
+            authorisationDataRepository.Set(authorisationModel);
+            sessionStateRepository.SetLoginState(MainNames.UserRoles.Guest);
             InvokeRepositoriesLoading();
         }
 
