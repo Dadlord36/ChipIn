@@ -102,7 +102,7 @@ namespace HttpRequests.RequestsProcessors
 
             if (isSuccessStatusCode)
             {
-                return JsonConverterUtility.ConvertAsyncJsonTo<TResponseModel>(responseAsString);
+                return JsonConverterUtility.ConvertJsonString<TResponseModel>(responseAsString);
             }
             else
             {

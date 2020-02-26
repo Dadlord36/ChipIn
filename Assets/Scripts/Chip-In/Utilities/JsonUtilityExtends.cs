@@ -6,13 +6,13 @@ namespace Utilities
 {
     public static class JsonConverterUtility
     {
-        public static async Task<T> ConvertAsyncJsonTo<T>(HttpContent content)
+        public static async Task<T> ConvertHttpContentAsync<T>(HttpContent content)
         {
             var contentAsString = await content.ReadAsStringAsync();
-            return ConvertAsyncJsonTo<T>(contentAsString);
+            return ConvertJsonString<T>(contentAsString);
         }
 
-        public static T ConvertAsyncJsonTo<T>(string contentAsString)
+        public static T ConvertJsonString<T>(string contentAsString)
         {
             return JsonConvert.DeserializeObject<T>(contentAsString);
         }

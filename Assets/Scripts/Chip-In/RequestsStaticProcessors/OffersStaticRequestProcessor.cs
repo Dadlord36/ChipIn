@@ -91,7 +91,7 @@ namespace RequestsStaticProcessors
                     LogUtility.PrintLog(nameof(OffersStaticRequestProcessor), responseAsString);
 
 
-                    return JsonConverterUtility.ConvertAsyncJsonTo<ChallengingOfferWithIdentifierModel>(
+                    return JsonConverterUtility.ConvertJsonString<ChallengingOfferWithIdentifierModel>(
                         responseAsString);
                 }
                 else
