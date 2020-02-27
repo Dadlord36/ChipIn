@@ -31,6 +31,8 @@ namespace HttpRequests
 
         public static void InitializeClient()
         {
+            if (_apiClient != null) return;
+
             _apiClient = new HttpClient {BaseAddress = new Uri(ApiUri + ApiVersion)};
             _apiClient.DefaultRequestHeaders.Accept.Clear();
         }

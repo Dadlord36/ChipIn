@@ -16,10 +16,5 @@ namespace ViewModels
             viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(fromView) ? View.ViewName : fromView,
                 toViewName, viewAppearingSide);
         }
-
-        public void SwitchToPreviousView()
-        {
-            viewsSwitchingController.SwitchToPreviousView();
-        }
     }
 }
