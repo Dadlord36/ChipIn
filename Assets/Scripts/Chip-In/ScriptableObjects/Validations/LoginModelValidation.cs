@@ -1,6 +1,7 @@
 ﻿using DataModels.RequestsModels;
 using EmailValidation;
 using UnityEngine;
+using Utilities;
 
 namespace ScriptableObjects.Validations
 {
@@ -8,6 +9,7 @@ namespace ScriptableObjects.Validations
         menuName = "Validations/" + nameof(LoginModelValidation), order = 0)]
     public class LoginModelValidation : DataModelValidation<UserLoginRequestModel>
     {
+        private const string Tag = nameof(LoginModelValidation);
         public override bool CheckIsValid(UserLoginRequestModel dataRequestModel)
         {
             return CheckEmailIsValid(dataRequestModel.Email) && CheckIfPasswordIsValid(dataRequestModel.Password);
@@ -23,11 +25,11 @@ namespace ScriptableObjects.Validations
             if (string.IsNullOrEmpty(email)) return false;
             if (EmailValidator.Validate(email))
             {
-                Debug.Log("Email is correct");
+                LogUtility.PrintLog(Tag,"Email is correct");
                 return true;
             }
 
-            Debug.Log("Email is incorrect");
+            LogUtility.PrintLog(Tag,"Email is incorrect");
 
             return false;
         }

@@ -1,20 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
 using DataModels.RequestsModels;
-using HttpRequests;
 using JetBrains.Annotations;
-using Repositories;
-using Repositories.Remote;
-using RequestsStaticProcessors;
-using ScriptableObjects.ActionsConnectors;
 using ScriptableObjects.Validations;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityWeld.Binding;
 using Utilities;
 using Views;
@@ -24,6 +15,8 @@ namespace ViewModels
     [Binding]
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
+        private const string Tag = nameof(LoginViewModel);
+        
         [SerializeField] private LoginModelValidation loginModelValidation;
         [SerializeField] private SessionController sessionController;
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
@@ -85,7 +78,7 @@ namespace ViewModels
         {
             CanLogin = loginModelValidation.CheckIsValid(_userLoginRequestModel);
             if (CanLogin)
-                Debug.Log("Now can login", this);
+                LogUtility.PrintLog(Tag,"Now can login", this);
         }
 
         [Binding]

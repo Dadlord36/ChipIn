@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -16,6 +17,8 @@ namespace ViewModels
     public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IBasicLoginModel,
         INotifyPropertyChanged
     {
+        private const string Tag = nameof(RegistrationViewModel);
+        
         private readonly RegistrationRequestModel
             _registrationRequestModel = new RegistrationRequestModel();
 
@@ -132,7 +135,7 @@ namespace ViewModels
             // If registration was successful 
             if (result.Success)
             {
-                Debug.Log("User have been registered successfully!");
+                LogUtility.PrintLog(Tag,"User have been registered successfully!");
                 SwitchToCheckYourEmailView();
             }
         }

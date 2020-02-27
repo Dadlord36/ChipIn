@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Utilities;
 
 namespace Common
 {
@@ -27,7 +28,7 @@ namespace Common
             _dualRecords.Push(record);*/
             
             _historyStack.Push(record);
-            Debug.unityLogger.Log(LogType.Log,Tag, $"History record: {record.ToString()}");
+            LogUtility.PrintLog(Tag, $"History record: {record.ToString()}");
         }
 
         public void ClearHistory()

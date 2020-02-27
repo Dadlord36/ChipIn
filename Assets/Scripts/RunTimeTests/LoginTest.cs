@@ -32,7 +32,7 @@
             }
             catch (ApiException e)
             {
-                Debug.Log(e);
+                LogUtility.PrintLog(Tag,e);
             }
 
             ApiHelper.Dispose();

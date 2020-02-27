@@ -5,6 +5,7 @@ using Repositories.Remote;
 using TMPro;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views.ViewElements;
 
 namespace ViewModels.Settings
@@ -12,6 +13,8 @@ namespace ViewModels.Settings
     [Binding]
     public class UserProfileViewModel : BaseViewModel, INotifyPropertyChanged, IUserProfileModel
     {
+        private const string Tag = nameof(UserProfileViewModel);
+        
         [SerializeField] private UserProfileRemoteRepository repository;
         [SerializeField] private SimpleView passwordChangingView;
 
@@ -120,13 +123,13 @@ namespace ViewModels.Settings
         public void ChangePassword_Click()
         {
             ShowPasswordSwitchingView();
-            Debug.Log("Changing password");
+            LogUtility.PrintLog(Tag,"Changing password");
         }
 
         [Binding]
         public void EditProfile_Click()
         {
-            Debug.Log("Editing profile");
+            LogUtility.PrintLog(Tag,"Editing profile");
         }
 
         private void ShowPasswordSwitchingView()

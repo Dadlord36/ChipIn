@@ -22,7 +22,7 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                Debug.Log($"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
+                LogUtility.PrintLog(Tag,$"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
                 return await new LoginRequestProcessor(userLoginRequestModel).SendRequest("User was LoggedIn");
             }
             catch (Exception e)

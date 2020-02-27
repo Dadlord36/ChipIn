@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Utilities;
 
 namespace Views.ViewElements
 {
@@ -20,7 +21,7 @@ namespace Views.ViewElements
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("Was CLICKED");
+            LogUtility.PrintLog(nameof(SimpleToggle),"Was CLICKED");
         }
     }
 }

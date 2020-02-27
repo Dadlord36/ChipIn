@@ -98,7 +98,7 @@ namespace HttpRequests.RequestsProcessors
             bool isSuccessStatusCode, HttpStatusCode responseMessageStatusCode)
         {
             var responseAsString = await responseContent.ReadAsStringAsync();
-            Debug.unityLogger.Log(LogType.Log, Tag, $"Response content: {responseAsString}");
+            LogUtility.PrintLog(Tag, $"Response content: {responseAsString}");
 
             if (isSuccessStatusCode)
             {

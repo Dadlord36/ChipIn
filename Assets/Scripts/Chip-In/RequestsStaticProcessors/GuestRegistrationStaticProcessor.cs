@@ -10,14 +10,15 @@ namespace RequestsStaticProcessors
 {
     public static class GuestRegistrationStaticProcessor
     {
+        private const string Tag = nameof(GuestRegistrationStaticProcessor);
         public static async Task<IAuthorisationModel> TryRegisterUserAsGuest()
         {
             try
             {
-                Debug.Log($"Registration Request Model Data: {JsonConvert.SerializeObject(PredefinedUserData.GuestDataRequestModel)}");
-                Debug.Log("Trying to login as guest");
+                LogUtility.PrintLog(Tag,$"Registration Request Model Data: {JsonConvert.SerializeObject(PredefinedUserData.GuestDataRequestModel)}");
+                LogUtility.PrintLog(Tag,"Trying to login as guest");
                 var registrationResponse = await RegistrationStaticProcessor.TryRegisterUserFull(PredefinedUserData.GuestDataRequestModel);
-                Debug.Log(registrationResponse.Success ? "User was register as Guest" : "Failed to register user as Guest");
+                LogUtility.PrintLog(Tag,registrationResponse.Success ? "User was register as Guest" : "Failed to register user as Guest");
                 return registrationResponse.AuthorisationData;
             }
             catch (Exception e)

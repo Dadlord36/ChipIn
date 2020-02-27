@@ -20,6 +20,8 @@ namespace Repositories.Remote
     public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
         INotifyPropertyChanged
     {
+        private const string Tag = nameof(UserProfileRemoteRepository);
+        
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
         [SerializeField] private SessionStateRepository sessionStateRepository;
 
@@ -156,7 +158,7 @@ namespace Repositories.Remote
         {
             if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
             {
-                Debug.Log("There is not URL to load user profile avatar image from", this);
+                LogUtility.PrintLog(Tag,"There is not URL to load user profile avatar image from", this);
                 return;
             }
 
@@ -164,8 +166,7 @@ namespace Repositories.Remote
             {
                 AvatarImage =
                     await ImagesDownloadingUtility.TryDownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
-                Debug.Log(AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
-                    this);
+                LogUtility.PrintLog(Tag,AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded", this);
             }
             catch (Exception e)
             {
@@ -205,14 +206,14 @@ namespace Repositories.Remote
         {
             base.ConfirmDataLoading();
             _isLoadingData = false;
-            Debug.Log("User profile data was loaded from server", this);
-            Debug.Log(JsonConvert.SerializeObject(UserProfileDataRemote), this);
+            LogUtility.PrintLog(Tag,"User profile data was loaded from server", this);
+            LogUtility.PrintLog(Tag,JsonConvert.SerializeObject(UserProfileDataRemote), this);
         }
 
         protected override void ConfirmDataSaved()
         {
             base.ConfirmDataSaved();
-            Debug.Log("User profile data was saved to server", this);
+            LogUtility.PrintLog(Tag,"User profile data was saved to server", this);
         }
 
         void IClearable.Clear()

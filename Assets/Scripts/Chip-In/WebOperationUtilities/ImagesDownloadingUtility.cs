@@ -61,19 +61,19 @@ namespace WebOperationUtilities
             }
             catch (Exception e)
             {
-                Debug.unityLogger.LogException(e);
+                PrintException(e);
                 throw;
             }
         }
 
         private static void PrintLog(string message)
         {
-            Debug.unityLogger.Log(LogType.Log, Tag, message);
+            LogUtility.PrintLog(Tag, message);
         }
 
         private static void PrintException(Exception exception)
         {
-            Debug.unityLogger.LogException(exception);
+            LogUtility.PrintLogException(exception);
         }
     }
 
@@ -94,7 +94,7 @@ namespace WebOperationUtilities
 
         private static void PrintLog(string message)
         {
-            Debug.unityLogger.Log(LogType.Log, Tag, message);
+            LogUtility.PrintLog(Tag, message);
         }
     }
 }

@@ -17,18 +17,16 @@ namespace RequestsStaticProcessors
 {
     public static class OffersStaticRequestProcessor
     {
-        public static async Task<PaginatedList<ChallengingOfferWithIdentifierModel>> TryGetListOfOffers(
-            IRequestHeaders requestHeaders)
+        private const string Tag = nameof(OffersStaticRequestProcessor);
+        public static async Task<PaginatedList<ChallengingOfferWithIdentifierModel>> TryGetListOfOffers(IRequestHeaders requestHeaders)
         {
             try
             {
-                var response =
-                    await new OffersGetProcessor(requestHeaders).SendRequest("Offers was retrieved successfully");
+                var response = await new OffersGetProcessor(requestHeaders).SendRequest("Offers was retrieved successfully");
 
                 PaginatedList<ChallengingOfferWithIdentifierModel> Create(IOffersResponseModel offersResponseModel)
                 {
-                    return new PaginatedList<ChallengingOfferWithIdentifierModel>(offersResponseModel.Pagination,
-                        offersResponseModel.Offers);
+                    return new PaginatedList<ChallengingOfferWithIdentifierModel>(offersResponseModel.Pagination, offersResponseModel.Offers);
                 }
 
                 return Create(response.ResponseModelInterface);
@@ -40,14 +38,11 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<IOfferDetailsResponseModel> TryGetOfferDetails(
-            DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
+        public static async Task<IOfferDetailsResponseModel> TryGetOfferDetails(DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
         {
             try
             {
-                var response =
-                    await new DetailedOfferGetProcessor(parameters).SendRequest(
-                        "Offer details was retrieved successfully");
+                var response = await new DetailedOfferGetProcessor(parameters).SendRequest("Offer details was retrieved successfully");
                 return response.ResponseModelInterface;
             }
             catch (Exception e)
@@ -57,16 +52,14 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(
-            IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
+        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, 
+            IOfferCreationRequestModel requestModel)
         {
             var filePath = requestModel.PosterFilePath.Path;
             var imageAsBytesArray = File.ReadAllBytes(filePath);
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
-
-
-            var form = new MultipartFormDataContent
-                {{new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName(filePath)}};
+            
+            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName(filePath)}};
 
             foreach (var element in elements)
             {
@@ -75,30 +68,25 @@ namespace RequestsStaticProcessors
 
 
             var formAsString = await form.ReadAsStringAsync();
-            LogUtility.PrintLog(nameof(OffersStaticRequestProcessor), formAsString);
+            LogUtility.PrintLog(Tag, formAsString);
 
 
-            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post,
-                RequestsSuffixes.Offers, form, requestHeaders.GetRequestHeaders()))
+            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, RequestsSuffixes.Offers, form, requestHeaders.GetRequestHeaders()))
             {
-                LogUtility.PrintLog(nameof(OffersStaticRequestProcessor),
-                    $"Response phrase: {response.ReasonPhrase}");
-                LogUtility.PrintLog(nameof(OffersStaticRequestProcessor),
-                    $"Response request message: {response.RequestMessage}");
+                LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
+                LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseAsString = await response.Content.ReadAsStringAsync();
-                    LogUtility.PrintLog(nameof(OffersStaticRequestProcessor), responseAsString);
+                    LogUtility.PrintLog(Tag, responseAsString);
 
 
-                    return JsonConverterUtility.ConvertJsonString<ChallengingOfferWithIdentifierModel>(
-                        responseAsString);
+                    return JsonConverterUtility.ConvertJsonString<ChallengingOfferWithIdentifierModel>(responseAsString);
                 }
                 else
                 {
                     var asString = await response.Content.ReadAsStringAsync();
-                    LogUtility.PrintLog(nameof(OffersStaticRequestProcessor),
-                        $"Response body: {asString}");
+                    LogUtility.PrintLog(Tag, $"Response body: {asString}");
                     throw new Exception("Offer was not created");
                 }
             }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DataModels.ResponsesModels;
 using RequestsStaticProcessors;
 using UnityEngine;
+using Utilities;
 using Views;
 using WebOperationUtilities;
 
@@ -64,14 +65,14 @@ namespace Repositories.Remote
 
             catch (Exception e)
             {
-                Debug.unityLogger.LogException(e);
+                LogUtility.PrintLogException(e);
             }
         }
 
         protected override void ConfirmDataLoading()
         {
             base.ConfirmDataLoading();
-            Debug.unityLogger.Log(LogType.Log, "Repositories", "Community repository data was loaded from server");
+            LogUtility.PrintLog( "Repositories", "Community repository data was loaded from server");
         }
 
         public override Task SaveDataToServer()

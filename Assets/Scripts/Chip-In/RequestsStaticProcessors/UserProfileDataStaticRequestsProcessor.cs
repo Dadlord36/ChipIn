@@ -14,15 +14,15 @@ namespace RequestsStaticProcessors
 {
     public static class UserProfileDataStaticRequestsProcessor
     {
-        public static async Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.
-                HttpResponse>
+        private const string Tag = nameof(UserProfileDataStaticRequestsProcessor);
+        
+        public static async Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.HttpResponse>
             GetUserProfileData(IRequestHeaders requestHeaders)
         {
             try
             {
-                Debug.Log($"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");
-                return await new UserProfileDataGetProcessor(requestHeaders).SendRequest(
-                    "User profile data was retrieved");
+                LogUtility.PrintLog(Tag,$"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");
+                return await new UserProfileDataGetProcessor(requestHeaders).SendRequest("User profile data was retrieved");
             }
             catch (Exception e)
             {
@@ -36,12 +36,11 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                Debug.Log($"RequestHeaders: {requestHeaders.GetRequestHeadersAsString()}");
-                Debug.Log($"RequestBody: {JsonConvert.SerializeObject(requestBodyProvider)}");
-                var response = await new UserProfileDataPutProcessor(requestHeaders, requestBodyProvider).SendRequest(
-                    "User profile data was updated");
+                LogUtility.PrintLog(Tag,$"RequestHeaders: {requestHeaders.GetRequestHeadersAsString()}");
+                LogUtility.PrintLog(Tag,$"RequestBody: {JsonConvert.SerializeObject(requestBodyProvider)}");
+                var response = await new UserProfileDataPutProcessor(requestHeaders, requestBodyProvider).SendRequest("User profile data was updated");
 
-                Debug.Log($"Response User Model: {JsonConvert.SerializeObject(response.ResponseModelInterface)}");
+                LogUtility.PrintLog(Tag,$"Response User Model: {JsonConvert.SerializeObject(response.ResponseModelInterface)}");
             }
             catch (Exception e)
             {
@@ -50,14 +49,11 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<bool> TryChangeUserProfilePassword(IRequestHeaders requestHeaders,
-            IUserProfilePasswordChangeModel requestBodyModel)
+        public static async Task<bool> TryChangeUserProfilePassword(IRequestHeaders requestHeaders, IUserProfilePasswordChangeModel requestBodyModel)
         {
             try
             {
-                var response =
-                    await new UserProfilePasswordChangePutProcessor(requestHeaders, requestBodyModel).SendRequest(
-                        "User password was changed successfully");
+                var response = await new UserProfilePasswordChangePutProcessor(requestHeaders, requestBodyModel).SendRequest("User password was changed successfully");
                 return response.ResponseModelInterface.Success;
             }
             catch (Exception e)
