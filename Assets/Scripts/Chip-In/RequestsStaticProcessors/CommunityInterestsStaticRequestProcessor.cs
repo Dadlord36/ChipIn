@@ -12,14 +12,12 @@ namespace RequestsStaticProcessors
     public static class CommunityInterestsStaticRequestProcessor
     {
         public static async
-            Task<BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse,
-                ICommunityInterestLabelDataRequestResponse>.HttpResponse> TryGetCommunityInterestsLabelsData(
-                IRequestHeaders requestHeaders)
+            Task<BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse, ICommunityInterestLabelDataRequestResponse>.HttpResponse> 
+            TryGetCommunityInterestsLabelsData(IRequestHeaders requestHeaders)
         {
             try
             {
-                return await new CommunityInterestsLabelDataGetProcessor(requestHeaders).SendRequest(
-                    "CommunityInterestsLabelData was retrieved successfully");
+                return await new CommunityInterestsLabelDataGetProcessor(requestHeaders).SendRequest("CommunityInterestsLabelData was retrieved successfully");
             }
             catch (Exception e)
             {
