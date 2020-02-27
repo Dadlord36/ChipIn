@@ -11,6 +11,8 @@ namespace Views.ViewElements
         public bool Occupied => _view != null;
         private BaseView _view;
 
+        public BaseView ViewInSlot => _view;
+
         public Vector2 ViewSlotSize
         {
             get => ((RectTransform) transform).sizeDelta;
@@ -47,11 +49,16 @@ namespace Views.ViewElements
         public void AttachView(BaseView view)
         {
             _view = view;
+            FormatView();
+            _view.Show();
+        }
+
+        private void FormatView()
+        {
             var viewRectTransform = _view.ViewRootRectTransform;
             viewRectTransform.SetParent(transform);
             ResetTransform(viewRectTransform);
             RectTransformUtility.Stretch(viewRectTransform);
-            _view.Show();
         }
 
         public BaseView DetachView()

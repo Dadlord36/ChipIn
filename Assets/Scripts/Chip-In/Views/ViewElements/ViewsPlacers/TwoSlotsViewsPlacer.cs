@@ -45,7 +45,7 @@ namespace Views.ViewElements.ViewsPlacers
             {
                 _previousSlot.ResetTransform();
                 _nextSlot.ResetTransform();
-                
+
                 _previousSlot.Stretch();
                 _nextSlot.Stretch();
             }
@@ -70,10 +70,17 @@ namespace Views.ViewElements.ViewsPlacers
                 if (_previousSlot.Occupied)
                     ReleaseSingleSlot(_previousSlot);
 
-                _previousSlot.AttachView(_nextSlot.DetachView());
+                MoveViewFromNextToPreviousSlot();
             }
 
             _nextSlot.AttachView(view);
+            view.ConfirmBeingSwitchedTo();
+        }
+
+        private void MoveViewFromNextToPreviousSlot()
+        {
+            _nextSlot.ViewInSlot.ConfirmedBeingSwitchedFrom();
+            _previousSlot.AttachView(_nextSlot.DetachView());
         }
 
 

@@ -23,9 +23,38 @@ namespace ViewModels
 #endif
         protected virtual void OnEnable()
         {
+            SubscribeOnViewEvents();
         }
 
         protected virtual void OnDisable()
+        {
+            UnsubscribeFromViewEvents();
+        }
+
+        private void SubscribeOnViewEvents()
+        {
+            view.BeingSwitchedTo += OnBecomingActiveView;
+            view.BeingSwitchedSwitchedFrom += OnBecomingInactiveView;
+        }
+
+        private void UnsubscribeFromViewEvents()
+        {
+            view.BeingSwitchedTo -= OnBecomingActiveView;
+            view.BeingSwitchedSwitchedFrom -= OnBecomingInactiveView;
+        }
+
+
+        /// <summary>
+        /// Fires up when view becoming the one, that user is currently interacts with
+        /// </summary>
+        protected virtual void OnBecomingActiveView()
+        {
+        }
+
+        /// <summary>
+        /// Fires up when view becoming inactive, so that user can't interact with it anymore
+        /// </summary>
+        protected virtual void OnBecomingInactiveView()
         {
         }
     }
