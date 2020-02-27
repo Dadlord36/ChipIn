@@ -1,19 +1,20 @@
-﻿using Controllers;
+﻿using ActionsTranslators;
+using Controllers;
 using HttpRequests;
-using Repositories.Remote;
 using UnityEngine;
-using ViewModels.SwitchingControllers;
-using Views;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private SessionController sessionController;
+    [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
 
+    private IUpdatable _updatable;
 
     // Start is called before the first frame update
 
     private void Start()
     {
+        _updatable = inputActionsTranslator;
         ApiHelper.InitializeClient();
         sessionController.ProcessAppLaunching();
     }
@@ -21,5 +22,10 @@ public class GameManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         ApiHelper.Dispose();
+    }
+
+    private void Update()
+    {
+        _updatable.Update();
     }
 }

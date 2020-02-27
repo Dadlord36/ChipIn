@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using ActionsTranslators;
 using Controllers;
 using DataModels.RequestsModels;
 using JetBrains.Annotations;
@@ -20,8 +21,36 @@ namespace ViewModels
 
         [SerializeField] private LoginModelValidation loginModelValidation;
         [SerializeField] private SessionController sessionController;
+        [SerializeField] private MainInputActionsTranslator mainInputActionsTranslator;
+
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
 
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            SubscribeToMainInputEventsTranslation();
+        }
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            UnsubscribeFromMainInputEventsTranslation();
+        }
+
+        private void UnsubscribeFromMainInputEventsTranslation()
+        {
+            mainInputActionsTranslator.EscapeButtonPressed -= OnEscapeButtonPressed;
+        }
+        
+        private void SubscribeToMainInputEventsTranslation()
+        {
+            mainInputActionsTranslator.EscapeButtonPressed += OnEscapeButtonPressed;
+        }
+
+        private void OnEscapeButtonPressed()
+        {
+            SwitchToView(nameof(WelcomeView));
+        }
 
         [Binding]
         public string UserEmail
@@ -79,7 +108,7 @@ namespace ViewModels
         {
             CanLogin = loginModelValidation.CheckIsValid(_userLoginRequestModel);
             if (CanLogin)
-                LogUtility.PrintLog(Tag,"Now can login", this);
+                LogUtility.PrintLog(Tag, "Now can login", this);
         }
 
         [Binding]
@@ -105,13 +134,8 @@ namespace ViewModels
             {
                 LogUtility.PrintLogException(e);
             }
-            
-            IsPendingLogin = false;
-        }
 
-        private void SwitchToMiniGame()
-        {
-            SwitchToView(nameof(CoinsGameView));
+            IsPendingLogin = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
