@@ -5,6 +5,7 @@ using GlobalVariables;
 using Repositories;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Utilities;
 using ViewModels;
@@ -22,38 +23,41 @@ namespace Controllers
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private CachingController cachingController;
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
-            try
+            var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
+
+            if (response.ResponseModelInterface == null)
             {
-                var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
+                LogUtility.PrintLog(Tag, "SignIn response model is null");
+                alertCardController.ShowAlertWithText(response.Error);
+                return;
+            }
 
+            if (response.ResponseModelInterface.Success)
+            {
+                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
 
-                if (response.ResponseModelInterface != null && response.ResponseModelInterface.Success)
+                SaveUserAuthentication();
+
+                var role = response.ResponseModelInterface.UserProfileData.Role;
+                switch (role)
                 {
-                    repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response
-                        .ResponseModelInterface);
-
-                    SaveUserAuthentication();
-
-                    var role = response.ResponseModelInterface.UserProfileData.Role;
-                    switch (role)
-                    {
-                        case MainNames.UserRoles.Client:
-                        case MainNames.UserRoles.Guest:
-                            SwitchToMiniGame();
-                            break;
-                        case MainNames.UserRoles.BusinessOwner:
-                            SwitchToBusinessMainMenu();
-                            break;
-                    }
+                    case MainNames.UserRoles.Client:
+                    case MainNames.UserRoles.Guest:
+                        SwitchToMiniGame();
+                        break;
+                    case MainNames.UserRoles.BusinessOwner:
+                        SwitchToBusinessMainMenu();
+                        break;
                 }
             }
-            catch (Exception)
+            else
             {
-                LogUtility.PrintLog(nameof(LoginViewModel), "Was not able to sign in");
+                alertCardController.ShowAlertWithText(response.Error);
             }
         }
 
@@ -101,6 +105,7 @@ namespace Controllers
         public async Task<bool> TryRegisterAndLoginAsGuest()
         {
             var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+
             repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
             SaveUserAuthentication();
             return true;

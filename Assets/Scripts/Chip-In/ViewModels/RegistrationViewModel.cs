@@ -6,6 +6,7 @@ using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using JetBrains.Annotations;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -24,6 +25,7 @@ namespace ViewModels
 
         [SerializeField] private PasswordAnalyzer passwordAnalyzer;
         [SerializeField] private ScriptableObjects.Validations.EmailValidation emailValidator;
+        [SerializeField] private AlertCardController alertCardController;
 
         private bool _pendingRegister;
         private bool _canTryRegister;
@@ -131,12 +133,15 @@ namespace ViewModels
         private async Task Register()
         {
             var result = await RegistrationStaticProcessor.TryRegisterUserFull(_registrationRequestModel);
-            if (result == null) return;
             // If registration was successful 
             if (result.Success)
             {
                 LogUtility.PrintLog(Tag, "User have been registered successfully!");
                 SwitchToCheckYourEmailView();
+            }
+            else
+            {
+                alertCardController.ShowAlertWithText(result.Error);
             }
         }
 

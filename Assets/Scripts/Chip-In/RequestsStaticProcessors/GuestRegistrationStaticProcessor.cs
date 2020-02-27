@@ -19,7 +19,7 @@ namespace RequestsStaticProcessors
                 LogUtility.PrintLog(Tag,"Trying to login as guest");
                 var registrationResponse = await RegistrationStaticProcessor.TryRegisterUserFull(PredefinedUserData.GuestDataRequestModel);
                 LogUtility.PrintLog(Tag,registrationResponse.Success ? "User was register as Guest" : "Failed to register user as Guest");
-                return registrationResponse.AuthorisationData;
+                return registrationResponse.ResponseModelInterface.AuthorisationData;
             }
             catch (Exception e)
             {

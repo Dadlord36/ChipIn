@@ -6,9 +6,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using DataModels.HttpRequestsHeadersModels;
-using UnityEngine;
+using Newtonsoft.Json;
+using Repositories.Interfaces;
 using Utilities;
-using Utilities.ApiExceptions;
 
 namespace HttpRequests.RequestsProcessors
 {
@@ -110,37 +110,39 @@ namespace HttpRequests.RequestsProcessors
                 errorMessageBuilder.Append(responseAsString);
                 errorMessageBuilder.Append("\r\n");
                 errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
-                // throw new ApiException(errorMessageBuilder.ToString());
-                LogUtility.PrintLogError(Tag,errorMessageBuilder.ToString());
+                LogUtility.PrintLog(Tag, errorMessageBuilder.ToString());
             }
+
             return default;
         }
 
-        public struct HttpResponse
+        public struct HttpResponse : ISuccess
         {
             public TResponseModelInterface ResponseModelInterface;
             public HttpHeaders Headers;
+            public string ResponsePhrase;
+            public string Error;
+            public bool Success { get; set; }
         }
 
 
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
-            var httpResponse = new HttpResponse();
             using (var responseMessage = await SendRequestToWebServer(_requestProcessorParameters.RequestBodyModel,
                 _requestProcessorParameters.RequestHeaders))
             {
                 if (responseMessage == null)
                 {
-                    LogUtility.PrintLogError(Tag,"Response message is null");
-                    return httpResponse;
+                    LogUtility.PrintLogError(Tag, "Response message is null");
+                    return default;
                 }
 
-                var requestResponse =
-                    await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode,
-                        responseMessage.StatusCode);
-
-                httpResponse.ResponseModelInterface = requestResponse;
-                httpResponse.Headers = responseMessage.Headers;
+                var requestResponse = await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode);
+                var httpResponse = new HttpResponse
+                {
+                    ResponseModelInterface = requestResponse, Headers = responseMessage.Headers, ResponsePhrase = responseMessage.ReasonPhrase,
+                    Success = responseMessage.IsSuccessStatusCode
+                };
 
                 if (responseMessage.IsSuccessStatusCode)
                 {
@@ -149,12 +151,117 @@ namespace HttpRequests.RequestsProcessors
                 else
                 {
                     var contentAsString = await responseMessage.Content.ReadAsStringAsync();
-                    LogUtility.PrintLogError(Tag,$"ResponsePhrase: {responseMessage.ReasonPhrase}" );
-                    LogUtility.PrintLogError(Tag,$"Content string: {contentAsString}");
+                    httpResponse.Error = CollectErrors(contentAsString);
+
+                    LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}");
+                    LogUtility.PrintLog(Tag, $"Content string: {contentAsString}");
                 }
 
                 return httpResponse;
             }
+        }
+
+        private struct ApiSimpleErrors
+        {
+            [JsonProperty("errors")] public string[] ErrorsArray;
+        }
+
+        private struct ApiStructuredErrors
+        {
+            public struct ErrorModel
+            {
+                [JsonProperty("key")] public string Key;
+                [JsonProperty("messages")] public string Message;
+            }
+
+            [JsonProperty("errors")] public ErrorModel[] ErrorData;
+        }
+
+        private struct ApiDeepStructuredErrors
+        {
+            public struct DeepStructuredError
+            {
+                [JsonProperty("key")] public string Key;
+                [JsonProperty("messages")] public string[] Messages;
+            }
+
+            [JsonProperty("errors")] public DeepStructuredError[] ErrorData;
+        }
+
+        private static string CollectErrors(string contentAsString)
+        {
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiDeepStructuredErrors>(contentAsString, out var deepStructuredErrors))
+            {
+                return BuildErrorStringFromDeepStructuredErrors(deepStructuredErrors.ErrorData);
+            }
+
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiSimpleErrors>(contentAsString, out var simpleErrorsData))
+            {
+                return BuildErrorString(simpleErrorsData.ErrorsArray);
+            }
+
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiStructuredErrors>(contentAsString, out var structuredErrorsData))
+            {
+                return BuildErrorStringFromStructuredErrors(structuredErrorsData.ErrorData);
+            }
+
+
+            string BuildErrorString(string[] errors)
+            {
+                var stringBuilder = new StringBuilder(errors[0]);
+                for (int i = 1; i < errors.Length; i++)
+                {
+                    stringBuilder.Append($" {errors[i]}");
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            string BuildErrorStringFromStructuredErrors(ApiStructuredErrors.ErrorModel[] errors)
+            {
+                var stringBuilder = new StringBuilder(BuildElement(errors[0]));
+                for (int i = 1; i < errors.Length; i++)
+                {
+                    stringBuilder.Append(BuildElement(errors[i]));
+                }
+
+                string BuildElement(ApiStructuredErrors.ErrorModel errorElementData)
+                {
+                    return $"{errorElementData.Key} {errorElementData.Message}";
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            string BuildErrorStringFromDeepStructuredErrors(ApiDeepStructuredErrors.DeepStructuredError[] errors)
+            {
+                var stringBuilder = new StringBuilder(BuildElement(errors[0]));
+                for (int i = 1; i < errors.Length; i++)
+                {
+                    stringBuilder.Append(BuildElement(errors[i]));
+                }
+
+                string BuildElement(ApiDeepStructuredErrors.DeepStructuredError errorElementData)
+                {
+                    return $"{errorElementData.Key} {BuildMessageString(errorElementData.Messages)}";
+
+                    string BuildMessageString(string[] messageStrings)
+                    {
+                        var messageStringBuilder = new StringBuilder(messageStrings[0]);
+                        for (int i = 1; i < messageStrings.Length; i++)
+                        {
+                            messageStringBuilder.Append($" {messageStrings[i]}");
+                        }
+
+                        return messageStringBuilder.ToString();
+                    }
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            LogUtility.PrintLogError(Tag, "Given content has no errors");
+            return null;
         }
     }
 }

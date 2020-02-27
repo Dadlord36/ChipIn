@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
@@ -16,7 +17,7 @@ namespace ViewModels
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         private const string Tag = nameof(LoginViewModel);
-        
+
         [SerializeField] private LoginModelValidation loginModelValidation;
         [SerializeField] private SessionController sessionController;
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
@@ -96,7 +97,15 @@ namespace ViewModels
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
-            await sessionController.TryToSignIn(_userLoginRequestModel);
+            try
+            {
+                await sessionController.TryToSignIn(_userLoginRequestModel);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+            
             IsPendingLogin = false;
         }
 
