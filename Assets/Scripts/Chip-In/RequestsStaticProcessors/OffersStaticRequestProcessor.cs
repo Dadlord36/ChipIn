@@ -52,8 +52,7 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, 
-            IOfferCreationRequestModel requestModel)
+        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
         {
             var filePath = requestModel.PosterFilePath.Path;
             var imageAsBytesArray = File.ReadAllBytes(filePath);
@@ -86,10 +85,12 @@ namespace RequestsStaticProcessors
                 else
                 {
                     var asString = await response.Content.ReadAsStringAsync();
+                    LogUtility.PrintLogError(Tag,"Offer was not created");
                     LogUtility.PrintLog(Tag, $"Response body: {asString}");
-                    throw new Exception("Offer was not created");
                 }
             }
+
+            return null;
         }
     }
 }

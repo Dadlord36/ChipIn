@@ -110,8 +110,10 @@ namespace HttpRequests.RequestsProcessors
                 errorMessageBuilder.Append(responseAsString);
                 errorMessageBuilder.Append("\r\n");
                 errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
-                throw new ApiException(errorMessageBuilder.ToString());
+                // throw new ApiException(errorMessageBuilder.ToString());
+                LogUtility.PrintLogError(Tag,errorMessageBuilder.ToString());
             }
+            return default;
         }
 
         public struct HttpResponse
@@ -129,7 +131,8 @@ namespace HttpRequests.RequestsProcessors
             {
                 if (responseMessage == null)
                 {
-                    throw new ApiException("Response message is null");
+                    LogUtility.PrintLogError(Tag,"Response message is null");
+                    return httpResponse;
                 }
 
                 var requestResponse =
@@ -145,8 +148,9 @@ namespace HttpRequests.RequestsProcessors
                 }
                 else
                 {
-                    LogUtility.PrintLogError(Tag, responseMessage.ReasonPhrase);
-                    LogUtility.PrintLogError(Tag, responseMessage.Content.ToString());
+                    var contentAsString = await responseMessage.Content.ReadAsStringAsync();
+                    LogUtility.PrintLogError(Tag,$"ResponsePhrase: {responseMessage.ReasonPhrase}" );
+                    LogUtility.PrintLogError(Tag,$"Content string: {contentAsString}");
                 }
 
                 return httpResponse;

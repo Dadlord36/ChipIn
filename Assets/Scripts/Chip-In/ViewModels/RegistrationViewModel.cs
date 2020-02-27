@@ -18,7 +18,7 @@ namespace ViewModels
         INotifyPropertyChanged
     {
         private const string Tag = nameof(RegistrationViewModel);
-        
+
         private readonly RegistrationRequestModel
             _registrationRequestModel = new RegistrationRequestModel();
 
@@ -131,11 +131,11 @@ namespace ViewModels
         private async Task Register()
         {
             var result = await RegistrationStaticProcessor.TryRegisterUserFull(_registrationRequestModel);
-
+            if (result == null) return;
             // If registration was successful 
             if (result.Success)
             {
-                LogUtility.PrintLog(Tag,"User have been registered successfully!");
+                LogUtility.PrintLog(Tag, "User have been registered successfully!");
                 SwitchToCheckYourEmailView();
             }
         }

@@ -1,11 +1,14 @@
 ﻿using System;
 using Common.Interfaces;
 using UnityEngine;
+using Utilities;
 
 namespace Common.Timers
 {
     public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline
     {
+        private const string Tag = nameof(BaseBehaviourTimeline);
+        
         public event Action OnElapsed;
         public event Action<float> Progressing;
 
@@ -22,7 +25,7 @@ namespace Common.Timers
 
         private void CheckIfTimerIntervalIsValid()
         {
-            if (_interval <= 0) throw new ArgumentOutOfRangeException(nameof(_interval));
+            if (_interval <= 0) LogUtility.PrintLogError(Tag,nameof(_interval), this);
         }
 
         protected abstract void InitializeTimer(out float timerInterval);

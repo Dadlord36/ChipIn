@@ -5,6 +5,7 @@ using DataModels.MatchModels;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using Utilities;
 using ViewModels.UI.Elements.Icons;
 using Views.Interfaces;
 
@@ -12,6 +13,8 @@ namespace Views
 {
     public class SlotsView : UIBehaviour, ISlotsView
     {
+        private const string Tag = nameof(SlotsView);
+
         [SerializeField] private GameSlotIconView[] slotIconViews;
         [SerializeField] private float slotsSpritesAnimationSwitchingInterval = 0.1f;
 
@@ -20,7 +23,10 @@ namespace Views
             var length = boardIconsData.Count;
 
             if (length != slotIconViews.Length)
-                throw new Exception("There is not enough sprites in given array for this slots grid");
+            {
+                LogUtility.PrintLogError(Tag, "There is not enough sprites in given array for this slots grid", this);
+                return;
+            }
 
             for (int i = 0; i < length; i++)
             {
