@@ -13,7 +13,7 @@ namespace DataModels
     
     public class UserAvatar
     {
-        public struct Thumb
+        public class Thumb
         {
 
             [JsonProperty("url")]

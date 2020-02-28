@@ -1,6 +1,6 @@
 ﻿namespace DataModels.SimpleTypes
 {
-    public struct FilePath
+    public class FilePath
     {
         public readonly string Path;
 

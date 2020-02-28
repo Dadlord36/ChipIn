@@ -9,7 +9,7 @@ namespace DataModels.ResponsesModels
     public sealed class CommunityInterestLabelDataRequestResponse : ICommunityInterestLabelDataRequestResponse
     {
         [JsonObject(MemberSerialization.OptIn)]
-        public struct CommunityInterestLabelData
+        public class CommunityInterestLabelData
         {
             [JsonProperty("id")] public int Id;
             [JsonProperty("name")] public string Name;

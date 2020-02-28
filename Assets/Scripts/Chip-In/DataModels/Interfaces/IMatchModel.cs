@@ -28,7 +28,7 @@ namespace DataModels.Interfaces
         [JsonProperty("url")] string Url { get; set; }
     }
 
-    public struct IndexedUrl : IIdentifier, IUrl
+    public class IndexedUrl : IIdentifier, IUrl
     {
         public int Id { get; set; }
         public string Url { get; set; }

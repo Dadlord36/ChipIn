@@ -58,7 +58,7 @@ namespace DataModels.MatchModels
     {
     }
 
-    public struct MatchBoardElementData : ISlotIconBaseData, IPosterImageUri
+    public class MatchBoardElementData : ISlotIconBaseData, IPosterImageUri
     {
         public bool Active { get; set; }
         public int IconId { get; set; }

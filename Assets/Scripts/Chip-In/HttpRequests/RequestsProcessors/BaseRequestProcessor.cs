@@ -161,14 +161,14 @@ namespace HttpRequests.RequestsProcessors
             }
         }
 
-        private struct ApiSimpleErrors
+        private class ApiSimpleErrors
         {
             [JsonProperty("errors")] public string[] ErrorsArray;
         }
 
-        private struct ApiStructuredErrors
+        private class ApiStructuredErrors
         {
-            public struct ErrorModel
+            public class ErrorModel
             {
                 [JsonProperty("key")] public string Key;
                 [JsonProperty("messages")] public string Message;
@@ -177,9 +177,9 @@ namespace HttpRequests.RequestsProcessors
             [JsonProperty("errors")] public ErrorModel[] ErrorData;
         }
 
-        private struct ApiDeepStructuredErrors
+        private class ApiDeepStructuredErrors
         {
-            public struct DeepStructuredError
+            public class DeepStructuredError
             {
                 [JsonProperty("key")] public string Key;
                 [JsonProperty("messages")] public string[] Messages;

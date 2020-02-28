@@ -2,7 +2,7 @@
 
 namespace DataModels.MatchModels
 {
-    public struct BoardIconData
+    public class BoardIconData
     {
         public readonly SimpleImageAnimator.SpritesAnimatorResource AnimatedIconResource;
         public readonly int Id;

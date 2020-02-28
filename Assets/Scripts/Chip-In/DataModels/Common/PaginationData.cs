@@ -2,7 +2,7 @@
 
 namespace DataModels.Common
 {
-    public struct PaginationData
+    public class PaginationData
     {
         [JsonProperty("total")] public int Total;
         [JsonProperty("page")] public int Page;
