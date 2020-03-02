@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using Utilities;
 using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Views.ViewElements
@@ -8,6 +9,8 @@ namespace Views.ViewElements
     [RequireComponent(typeof(Canvas))]
     public class ViewSlot : UIBehaviour
     {
+        private const string Tag = nameof(ViewSlot);
+        
         public bool Occupied => _view != null;
         private BaseView _view;
 
@@ -49,14 +52,15 @@ namespace Views.ViewElements
         public void AttachView(BaseView view)
         {
             _view = view;
-            FormatView();
+            var viewRectTransform = _view.ViewRootRectTransform;
+            viewRectTransform.SetParent(transform,false);
+            FormatView(viewRectTransform);
+            LogUtility.PrintLog(Tag, viewRectTransform.localScale.ToString());
             _view.Show();
         }
 
-        private void FormatView()
+        private void FormatView(RectTransform viewRectTransform)
         {
-            var viewRectTransform = _view.ViewRootRectTransform;
-            viewRectTransform.SetParent(transform);
             ResetTransform(viewRectTransform);
             RectTransformUtility.Stretch(viewRectTransform);
         }

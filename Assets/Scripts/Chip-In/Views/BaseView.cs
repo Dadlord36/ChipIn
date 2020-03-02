@@ -11,15 +11,9 @@ namespace Views
         public event Action BeingSwitchedTo;
         public event Action BeingSwitchedSwitchedFrom;
 
-        private RectTransform _viewRootRectTransform;
         public string ViewName => GetType().Name;
-        public RectTransform ViewRootRectTransform => _viewRootRectTransform;
+        public RectTransform ViewRootRectTransform => transform as RectTransform;
 
-        protected override void Awake()
-        {
-            Assert.IsTrue(TryGetComponent(out _viewRootRectTransform), "There is no RectTransform on GameObject," +
-                                                                       "where ViewModel is attached");
-        }
 
         public void Show()
         {

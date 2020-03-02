@@ -5,15 +5,21 @@ using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views.Cards.Settings;
+using Views.ViewElements.ViewsPlacers;
 
 namespace ViewModels
 {
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private SessionStateRepository sessionStateRepository; 
+        [SerializeField] private SessionStateRepository sessionStateRepository;
+        [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
+        
+        
+        
         private void Start()
         {
+            viewsPlacer.Initialize();    
             ShowMyProfile();
         }
         

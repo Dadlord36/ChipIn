@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Interfaces;
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Events;
@@ -6,7 +7,7 @@ using Utilities;
 
 namespace Views.ViewElements.ViewsPlacers
 {
-    public class TwoSlotsViewsPlacer : MultiViewsPlacer
+    public class TwoSlotsViewsPlacer : MultiViewsPlacer, IInitialize
     {
         [Serializable]
         public class ViewsSwitchingEvent : UnityEvent<ViewsSwitchData.AppearingSide>
@@ -23,10 +24,11 @@ namespace Views.ViewElements.ViewsPlacers
         private const string SwitchingFromViewContainerName = "SwitchingFromViewContainer",
             SwitchingToViewContainerName = "SwitchingToViewContainer";
 
-        private void Awake()
+        public void Initialize()
         {
             InitializeContainers();
         }
+        
 
 #if UNITY_EDITOR
         public void Editor_InitializeContainers()
@@ -92,5 +94,7 @@ namespace Views.ViewElements.ViewsPlacers
                 ReleaseSingleSlot(slots[i]);
             }
         }
+
+
     }
 }

@@ -2,11 +2,18 @@
 using Controllers;
 using HttpRequests;
 using UnityEngine;
+using UnityEngine.UI;
+using Utilities;
+using Views.ViewElements.ViewsPlacers;
 
 public class GameManager : MonoBehaviour
 {
+    private const string Tag = nameof(GameManager);
+    
     [SerializeField] private SessionController sessionController;
     [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+    [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
+    [SerializeField] private CanvasScaler canvasScaler;
 
     private IUpdatable _updatable;
 
@@ -14,9 +21,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        Initialize();
+    }
+
+    private void Initialize()
+    {
         _updatable = inputActionsTranslator;
-        ApiHelper.InitializeClient();
+        InitializeSystems();
         sessionController.ProcessAppLaunching();
+        LogUtility.PrintLog(Tag,ScreenUtility.GetScreenSize().ToString());
+    }
+    private void InitializeSystems()
+    {
+        viewsPlacer.Initialize();
+        ApiHelper.InitializeClient();
     }
 
     private void OnApplicationQuit()
