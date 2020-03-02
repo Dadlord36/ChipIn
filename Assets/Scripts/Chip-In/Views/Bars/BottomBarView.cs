@@ -30,7 +30,7 @@ namespace Views.Bars
 
             if (highlightCorrespondingButtonOnViewSwitching)
                 SelectionOptionsDictionary[viewsSwitchData.ViewToSwitchTo.ViewName]
-                    .PerformGroupActionWithoutNotification();
+                    .PerformGroupAction();
         }
     }
 }

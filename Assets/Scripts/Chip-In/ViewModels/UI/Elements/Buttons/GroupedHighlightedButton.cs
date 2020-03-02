@@ -62,7 +62,7 @@ namespace ViewModels.UI.Elements.Buttons
             SetTextFontAsset(highlightedFont, highlightedTextColor);
         }
 
-        public void PerformGroupActionWithoutNotification()
+        public void PerformGroupAction()
         {
             SwitchToHighlightedStyle();
         }

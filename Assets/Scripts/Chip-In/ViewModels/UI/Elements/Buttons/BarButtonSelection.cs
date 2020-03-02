@@ -34,9 +34,11 @@ namespace ViewModels.UI.Elements.Buttons
         [SerializeField] private FloatParameter crossFadeColorTime;
         [SerializeField] private StateSwitchableButton stateSwitchableButton;
         [SerializeField] private Button interactiveButton;
-        
+
         [HideInInspector] public UnityEvent onClick;
         public event UnityAction GroupActionPerformed;
+        private bool _isSelected;
+
 
         protected override void Awake()
         {
@@ -69,12 +71,19 @@ namespace ViewModels.UI.Elements.Buttons
 
         private void SubscribeOnEvents()
         {
-            interactiveButton.onClick.AddListener(OnClick);
+            interactiveButton.onClick.AddListener(OnInteractiveButtonClicked);
         }
 
         private void UnsubscribeOnEvent()
         {
-            interactiveButton.onClick.RemoveListener(OnClick);
+            interactiveButton.onClick.RemoveListener(OnInteractiveButtonClicked);
+        }
+
+        private void OnInteractiveButtonClicked()
+        {
+            if (_isSelected) return;
+            OnClick();
+            PerformGroupAction();
         }
 
         private void ShowUpCrossFaded()
@@ -123,16 +132,23 @@ namespace ViewModels.UI.Elements.Buttons
         public void OnOtherOnePerformGroupAction()
         {
             Hide();
+            _isSelected = false;
         }
 
+        public void PerformGroupAction()
+        {
+            Show();
+            OnGroupActionPerformed();
+            _isSelected = true;
+        }
+
+        
         private void OnClick()
         {
             onClick?.Invoke();
         }
-
-        public void PerformGroupActionWithoutNotification()
+        private void OnGroupActionPerformed()
         {
-            Show();
             GroupActionPerformed?.Invoke();
         }
     }

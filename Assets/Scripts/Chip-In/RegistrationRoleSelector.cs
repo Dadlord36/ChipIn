@@ -42,7 +42,7 @@ public sealed class RegistrationRoleSelector : MonoBehaviour
     
     private void OnEnable()
     {
-        selectedByDefaultButton.PerformGroupActionWithoutNotification();
+        selectedByDefaultButton.PerformGroupAction();
         SelectUserRole();
     }
 
