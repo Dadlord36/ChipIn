@@ -2,27 +2,51 @@
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Utilities;
 using ViewModels.SwitchingControllers;
 
 namespace ViewModels.UI.Elements
 {
     public class ReturnButton : UIBehaviour
     {
+        private const string Tag = nameof(ReturnButton);
+        
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
-            
-            var button = GetComponent<Button>();
-            AssertIsNotNullComponent(button);
-
-            button.onClick.AddListener(delegate { viewsSwitchingController.SwitchToPreviousView(); });
+            base.OnEnable();
+            SubscribeOnEvents();
         }
 
-        private void AssertIsNotNullComponent<T>(T component) where T : Component
+        protected override void OnDisable()
         {
-            Assert.IsNotNull(component, $"There is no {nameof(T)} on this Form");
+            base.OnDisable();
+            UnsubscribeFromEvents();
+        }
+
+        private void SubscribeOnEvents()
+        {
+            var button = GetComponent<Button>();
+            button.onClick.AddListener(SwitchToPreviousView);
+            button.onClick.AddListener(PrintLog);
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            var button = GetComponent<Button>();
+            button.onClick.RemoveListener(SwitchToPreviousView);
+            button.onClick.RemoveListener(PrintLog);
+        }
+
+        void PrintLog()
+        {
+            LogUtility.PrintLog(Tag, "Button was clicked");
+        }
+
+        private void SwitchToPreviousView()
+        {
+            viewsSwitchingController.SwitchToPreviousView();
         }
     }
 }
