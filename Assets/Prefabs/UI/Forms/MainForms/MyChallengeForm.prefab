@@ -2193,6 +2193,7 @@ GameObject:
   - component: {fileID: 6171234175942120881}
   - component: {fileID: 368519094082678793}
   - component: {fileID: 6315347293648289115}
+  - component: {fileID: 4838238917403711310}
   m_Layer: 5
   m_Name: ChallengeButton
   m_TagString: Untagged
@@ -2313,6 +2314,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.MyChallengeViewModel.Challenge_OnButtonClick
   viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &4838238917403711310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8018046460512764960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.MyChallengeViewModel.ChallengeIsSelected
+  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!1 &8476191140343502775
 GameObject:
   m_ObjectHideFlags: 0
@@ -3221,7 +3238,7 @@ PrefabInstance:
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_Name
-      value: MyChallanges
+      value: MyChallengeForm
       objectReference: {fileID: 0}
     - target: {fileID: 8858336980473145823, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}

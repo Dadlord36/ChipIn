@@ -16,9 +16,10 @@ namespace ViewModels
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         private int _selectedElementIndexInGamesList;
+        private bool _challengeIsSelected;
 
 
-        private MyChallengeView ThisView => ((MyChallengeView) View);
+        private MyChallengeView ThisView => (MyChallengeView) View;
 
         private int SelectedElementIndexInGamesList
         {
@@ -27,10 +28,23 @@ namespace ViewModels
                 _selectedElementIndexInGamesList = value;
                 selectedGameRepository.SelectedElementIndexInGamesList = value;
                 SelectedGameIndex = userGamesRemoteRepository[_selectedElementIndexInGamesList].Id;
+                ChallengeIsSelected = true;
                 OnPropertyChanged();
             }
         }
 
+
+        [Binding]
+        public bool ChallengeIsSelected
+        {
+            get => _challengeIsSelected;
+            private set
+            {
+                if (value == _challengeIsSelected) return;
+                _challengeIsSelected = value;
+                OnPropertyChanged();
+            }
+        }
 
         private int SelectedGameIndex
         {
@@ -85,7 +99,7 @@ namespace ViewModels
         {
             SelectedElementIndexInGamesList = 0;
         }
-        
+
         private void OnSelectedItemIndexChanged(int newIndex)
         {
             SelectedElementIndexInGamesList = newIndex;
