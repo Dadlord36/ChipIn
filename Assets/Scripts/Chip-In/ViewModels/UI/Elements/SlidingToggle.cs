@@ -11,28 +11,17 @@ using ViewModels.UI.Interfaces;
 namespace ViewModels.UI.Elements
 {
     [Binding]
-    public sealed class SlidingToggle : BaseAnimatedToggle, IProgress<float>, IPointerClickHandler
+    public sealed class SlidingToggle : BaseAnimatedToggle, IProgress<float>
     {
         [SerializeField, Range(0f, 0.5f)] private double handleDockingPositionPercentage;
         [SerializeField] private RectTransform handleTransform;
-
+        [SerializeField] private PointClickRetranslator clickRetranslator;
+        
         private float _onPosX, _offPosX;
         private Vector3 _tempHandlePosition;
         private ITimeline _timeline;
         [SerializeField] private BaseAnimatedToggle[] toggles;
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            Assert.IsNotNull(handleTransform);
-
-            _timeline = GetComponent<ITimeline>();
-            _timeline.Initialize();
-            
-            CalculateMovementBounds();
-            SubscribeChangeableSliderPartsToTimelineProgression();
-            SubscribeRelatedGraphicsSwitchers();
-        }
+        
 
 
         protected override void Start()
@@ -41,10 +30,24 @@ namespace ViewModels.UI.Elements
             SetToggleInitState();
             for (int i = 0; i < toggles.Length; i++)
             {
-                //Todo: figure out why should be used inverted Condition 
                 toggles[i].Condition = !Condition;
                 toggles[i].SetToggleInitState();
             }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            Assert.IsNotNull(handleTransform);
+
+            _timeline = GetComponent<ITimeline>();
+            _timeline.Initialize();
+
+            CalculateMovementBounds();
+
+            SubscribeChangeableSliderPartsToTimelineProgression();
+            SubscribeRelatedGraphicsSwitchers();
+            SubscribeOnPointClickRetranslator();
         }
 
         protected override void OnDisable()
@@ -52,6 +55,17 @@ namespace ViewModels.UI.Elements
             base.OnDisable();
             UnsubscribeChangeableSliderPartsFromTimelineProgression();
             UnsubscribeRelatedGraphicsSwitchers();
+            UnsubscribeFromPointClickRetranslator();
+        }
+
+        private void SubscribeOnPointClickRetranslator()
+        {
+            clickRetranslator.PointerClicked += SwitchCondition;
+        }
+
+        private void UnsubscribeFromPointClickRetranslator()
+        {
+            clickRetranslator.PointerClicked -= SwitchCondition;
         }
 
         private void SubscribeRelatedGraphicsSwitchers()
@@ -118,11 +132,6 @@ namespace ViewModels.UI.Elements
             base.OnToggleSwitched();
             if (enabled)
                 _timeline.RestartTimer();
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            SwitchCondition();
         }
     }
 }
