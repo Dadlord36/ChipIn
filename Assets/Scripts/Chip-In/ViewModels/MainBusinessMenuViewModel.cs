@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Net.Http;
 using System.Runtime.Serialization;
+using Controllers;
 using DataModels;
 using DataModels.RequestsModels;
 using DataModels.SimpleTypes;
@@ -19,6 +20,7 @@ namespace ViewModels
     public class MainBusinessMenuViewModel : BaseViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
+        [SerializeField] private SessionController _sessionController;
         [SerializeField] private int startingAfterMinutes = 1;
 
         private DateTime InMinute
@@ -51,6 +53,17 @@ namespace ViewModels
         public void CreateOffer_OnClick()
         {
             CreateOffer();
+        }
+
+        [Binding]
+        public void LogOut_OnClick()
+        {
+            SignOutFromAccount();
+        }
+
+        private void SignOutFromAccount()
+        {
+            _sessionController.SignOut();
         }
 
         private async void CreateOffer()

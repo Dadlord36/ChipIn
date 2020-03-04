@@ -16,11 +16,26 @@ namespace Repositories.Remote
     public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider,
         IClearable
     {
-        private IUserProfileRequestHeadersProvider _authorisationModel =
-            new UserProfileRequestHeadersProvider();
+        
+        private class UserLoginDataModel
+        {
+            public readonly UserProfileRequestHeadersProvider AuthorisationModel;
+            public readonly string UserRole;
 
+            public UserLoginDataModel(UserProfileRequestHeadersProvider authorisationModel, string userRole)
+            {
+                AuthorisationModel = authorisationModel;
+                UserRole = userRole;
+            }
+        }
+        
         private const string EncryptionKey = "crowdcrowdcrowdcrowdcrowdcrowdSD";
         private const string SaveFileName = "Player.dat";
+        
+        private UserProfileRequestHeadersProvider _authorisationModel = new UserProfileRequestHeadersProvider();
+
+        private string _userRole;
+        public string UserRole => _userRole;
 
         private static string FileName => Path.Combine(Application.persistentDataPath, SaveFileName);
 
@@ -68,6 +83,10 @@ namespace Repositories.Remote
 
         #endregion
 
+        public void SetUserRole(string userRole)
+        {
+            _userRole = userRole;
+        }
 
         public List<KeyValuePair<string, string>> GetRequestHeaders()
         {
@@ -89,8 +108,9 @@ namespace Repositories.Remote
         {
             try
             {
-                var authenticationDataAsString = JsonConverterUtility.ConvertModelToJson(_authorisationModel);
-                var encryptedStringAsBytes = RijndaelEncryptor.Encrypt(authenticationDataAsString, EncryptionKey);
+                var userLoginData = new UserLoginDataModel(_authorisationModel, _userRole);
+                var userLoginDataAsString = JsonConverterUtility.ConvertModelToJson(userLoginData);
+                var encryptedStringAsBytes = RijndaelEncryptor.Encrypt(userLoginDataAsString, EncryptionKey);
                 
                 ClearSavedData();
                 File.WriteAllBytes(FileName, encryptedStringAsBytes);
@@ -109,7 +129,9 @@ namespace Repositories.Remote
                 var authenticationDatAsBytes = File.ReadAllBytes(FileName);
                 var decryptedStringAsString = RijndaelEncryptor.Decrypt(authenticationDatAsBytes, EncryptionKey);
 
-                _authorisationModel = JsonConverterUtility.ConvertJsonString<UserProfileRequestHeadersProvider>(decryptedStringAsString);
+                var userLoginData = JsonConverterUtility.ConvertJsonString<UserLoginDataModel>(decryptedStringAsString);
+                _authorisationModel = userLoginData.AuthorisationModel;
+                _userRole = userLoginData.UserRole;
                 LogUtility.PrintLog(nameof(UserAuthorisationDataRepository), "Authentication data was loaded");
             }
             catch (Exception e)

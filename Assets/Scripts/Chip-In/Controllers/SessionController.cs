@@ -1,14 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DataModels.RequestsModels;
 using GlobalVariables;
 using Repositories;
+using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Utilities;
-using ViewModels;
 using ViewModels.SwitchingControllers;
 using Views;
 
@@ -25,6 +24,7 @@ namespace Controllers
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private CachingController cachingController;
+        [SerializeField] private SessionStateRepository sessionStateRepository;
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
@@ -41,19 +41,8 @@ namespace Controllers
             {
                 repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
 
-                SaveUserAuthentication();
-
-                var role = response.ResponseModelInterface.UserProfileData.Role;
-                switch (role)
-                {
-                    case MainNames.UserRoles.Client:
-                    case MainNames.UserRoles.Guest:
-                        SwitchToMiniGame();
-                        break;
-                    case MainNames.UserRoles.BusinessOwner:
-                        SwitchToBusinessMainMenu();
-                        break;
-                }
+                SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
+                SwitchToViewCorrespondingToUseRole();
             }
             else
             {
@@ -61,8 +50,31 @@ namespace Controllers
             }
         }
 
-        private void SaveUserAuthentication()
+        public async void SignOut()
         {
+           await sessionStateRepository.SignOut();
+           SwitchToLoginView();
+        }
+
+
+
+        private void SwitchToViewCorrespondingToUseRole()
+        {
+            switch (authorisationDataRepository.UserRole)
+            {
+                case MainNames.UserRoles.Client:
+                case MainNames.UserRoles.Guest:
+                    SwitchToMiniGame();
+                    break;
+                case MainNames.UserRoles.BusinessOwner:
+                    SwitchToBusinessMainMenu();
+                    break;
+            }
+        }
+
+        private void SaveUserAuthentication(string role)
+        {
+            authorisationDataRepository.SetUserRole(role);
             //Save authentication data, so that it will be used on next app launch and user won't have to sign in again
             authorisationDataRepository.TrySaveDataLocally();
         }
@@ -73,7 +85,8 @@ namespace Controllers
             {
                 authorisationDataRepository.TryLoadLocalData();
                 repositoriesController.InvokeRepositoriesLoading();
-                SwitchToMiniGame();
+                SwitchToViewCorrespondingToUseRole();
+
             }
             else
             {
@@ -87,6 +100,11 @@ namespace Controllers
             SwitchToView(nameof(WelcomeView));
         }
 
+        private void SwitchToLoginView()
+        {
+            SwitchToView(nameof(LoginView));
+        }
+        
         private void SwitchToMiniGame()
         {
             SwitchToView(nameof(CoinsGameView));
@@ -107,7 +125,7 @@ namespace Controllers
             var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
 
             repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
-            SaveUserAuthentication();
+            SaveUserAuthentication(MainNames.UserRoles.Guest);
             return true;
         }
     }

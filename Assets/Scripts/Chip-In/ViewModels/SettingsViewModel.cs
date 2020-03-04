@@ -12,9 +12,9 @@ namespace ViewModels
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private SessionStateRepository sessionStateRepository;
-        [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
         
+        [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
+        [SerializeField] private SessionController sessionController;
         
         
         private void Start()
@@ -48,7 +48,7 @@ namespace ViewModels
 
         private void LogOut()
         {
-            sessionStateRepository.SignOut();
+            sessionController.SignOut();
             Destroy(gameObject);
         }
     }
