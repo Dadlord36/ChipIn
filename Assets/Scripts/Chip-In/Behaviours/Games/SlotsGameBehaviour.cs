@@ -17,7 +17,7 @@ namespace Behaviours.Games
     public class SlotsGameBehaviour : MonoBehaviour
     {
         private const string Tag = nameof(SlotsGameBehaviour);
-        
+
         #region Public structs declaration
 
         public struct SlotGameRoundData
@@ -25,7 +25,7 @@ namespace Behaviours.Games
             public int Number { get; private set; }
             public float RoundEndsInSeconds { get; private set; }
             public int? WinnerId { get; private set; }
-            
+
             private SlotsBoardData _slotsBoardData;
             public ISlotIconBaseData[] SlotsIconsData => _slotsBoardData.GetIconsData();
             public MatchUserDownloadingData[] UsersData { get; private set; }
@@ -117,15 +117,21 @@ namespace Behaviours.Games
         {
             try
             {
-                var startTime = DateTime.Now;
                 var matchData = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, selectedGameRepository.GameId);
-                var endTime = DateTime.Now;
-                var timeSpan = endTime - startTime;
-                LogUtility.PrintLog(Tag, $"Time been spent on animation generation: {timeSpan.TotalSeconds.ToString(CultureInfo.InvariantCulture)}");
-                matchData.MatchData.RoundEndsAt -= timeSpan.Seconds;
-                _roundData.Update(matchData.MatchData);
 
+                var roundTime = matchData.MatchData.RoundEndsAt;
+                var roundNumber = matchData.MatchData.RoundNumber;
+                var timeForPassedRounds = (int) (roundNumber * roundTime);
+                
                 await GameInterface.RefillIconsSet(matchData.MatchData.IndexedSpritesSheetsUrls);
+
+                var timeSpanFromGameStarted = DateTime.Now - selectedGameRepository.SelectedGameData.StartedAt;
+                var secondsSinsRoundHaveStarted = timeForPassedRounds - timeSpanFromGameStarted.Seconds;
+                
+                LogUtility.PrintLog(Tag, $"Seconds sins round has started: {secondsSinsRoundHaveStarted.ToString()}");
+                matchData.MatchData.RoundEndsAt = secondsSinsRoundHaveStarted;
+                
+                _roundData.Update(matchData.MatchData);
             }
             catch (Exception e)
             {
