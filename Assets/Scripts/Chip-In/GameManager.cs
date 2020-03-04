@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SessionController sessionController;
     [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
-    [SerializeField] private CanvasScaler canvasScaler;
 
     private IUpdatable _updatable;
 
