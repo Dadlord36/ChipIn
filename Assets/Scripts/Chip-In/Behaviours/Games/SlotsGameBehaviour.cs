@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -15,6 +16,8 @@ namespace Behaviours.Games
 {
     public class SlotsGameBehaviour : MonoBehaviour
     {
+        private const string Tag = nameof(SlotsGameBehaviour);
+        
         #region Public structs declaration
 
         public struct SlotGameRoundData
@@ -114,9 +117,12 @@ namespace Behaviours.Games
         {
             try
             {
-                var matchData =
-                    await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository,
-                        selectedGameRepository.GameId);
+                var startTime = DateTime.Now;
+                var matchData = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, selectedGameRepository.GameId);
+                var endTime = DateTime.Now;
+                var timeSpan = endTime - startTime;
+                LogUtility.PrintLog(Tag, $"Time been spent on animation generation: {timeSpan.TotalSeconds.ToString(CultureInfo.InvariantCulture)}");
+                matchData.MatchData.RoundEndsAt -= timeSpan.Seconds;
                 _roundData.Update(matchData.MatchData);
 
                 await GameInterface.RefillIconsSet(matchData.MatchData.IndexedSpritesSheetsUrls);
@@ -147,9 +153,9 @@ namespace Behaviours.Games
         {
             if (_roundEnds)
             {
+                _roundEnds = false;
                 UpdateUsersData();
                 StartNewRound();
-                _roundEnds = false;
             }
 
             if (_gameShouldBeFinished)
@@ -216,8 +222,8 @@ namespace Behaviours.Games
 
         private void UdataRoundData(MatchStateData matchStateData)
         {
-            _roundEnds = true;
             _roundData.Update(matchStateData);
+            _roundEnds = true;
         }
 
         private void SpinFrame()
@@ -242,11 +248,6 @@ namespace Behaviours.Games
                 spinBoardParameters);
             _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
             UpdateSlotsIconsPositionsAndActivity();
-        }
-
-        private static bool GameIsInProgress(IGameModel gameModel)
-        {
-            return gameModel.Status == "in_progress";
         }
 
         private void UpdateSlotsIconsPositionsAndActivity()

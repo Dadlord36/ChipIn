@@ -567,44 +567,6 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6904810008941185216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7577433387335682968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c7754f3f51348ce8434271709399ec2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemsContainer: {fileID: 5711612079638863947}
-  itemPrefab: {fileID: 2833480288528878049, guid: ff9a32205f46c9141bbe812a8148f34d,
-    type: 3}
-  playButton: {fileID: 2586473203126185639}
---- !u!114 &7595894347547417973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7577433387335682968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c0ac95991d749a8938bf00a429df9b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 6904810008941185216}
-  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
-    type: 2}
-  challengesCardsParametersRepository: {fileID: 11400000, guid: 2d459134051140f4182a7cfd7d2b221f,
-    type: 2}
-  challengesRemoteRepository: {fileID: 11400000, guid: 0f1535152227571468d84452f20c80c2,
-    type: 2}
-  selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
-    type: 2}
-  timer: {fileID: 8697698272704502772}
 --- !u!1 &4000389076230548238
 GameObject:
   m_ObjectHideFlags: 0
@@ -1456,6 +1418,45 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6904810008941185216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7577433387335682968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c7754f3f51348ce8434271709399ec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsContainer: {fileID: 5711612079638863947}
+  itemPrefab: {fileID: 2833480288528878049, guid: ff9a32205f46c9141bbe812a8148f34d,
+    type: 3}
+--- !u!114 &7595894347547417973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7577433387335682968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c0ac95991d749a8938bf00a429df9b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 6904810008941185216}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
+  challengesCardsParametersRepository: {fileID: 11400000, guid: 2d459134051140f4182a7cfd7d2b221f,
+    type: 2}
+  challengesRemoteRepository: {fileID: 11400000, guid: 0f1535152227571468d84452f20c80c2,
+    type: 2}
+  selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
+    type: 2}
+  authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  timer: {fileID: 8697698272704502772}
 --- !u!1 &8086415414136145870
 GameObject:
   m_ObjectHideFlags: 0
@@ -1834,7 +1835,7 @@ PrefabInstance:
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_Name
-      value: ChallengesForm
+      value: ChallengeForm
       objectReference: {fileID: 0}
     - target: {fileID: 7688300194149487256, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -1848,9 +1849,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &3324359009276254565 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
+--- !u!1 &7577433387335682968 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}
@@ -1860,15 +1861,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7577433387335682968 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3863514999743777286}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &138284196379576604 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3780418747909423898, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3863514999743777286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3324359009276254565 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}

@@ -13,7 +13,7 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
-        public static async Task<Texture2D[]> TryDownloadImagesArray(string[] imagesUrls)
+        public static Task<Texture2D[]> TryDownloadImagesArray(string[] imagesUrls)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace WebOperationUtilities
                     tasks[i] = TryDownloadImageAsync(imagesUrls[i]);
                 }
 
-                return await Task.WhenAll(tasks);
+                return Task.WhenAll(tasks);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace WebOperationUtilities
                     while (!webRequest.isDone)
                     {
                         PrintLog($"ImageLoadingProgress: {webRequest.progress.ToString()}");
-                        await Task.Delay(500);
+                        await Task.Delay(100);
                     }
 
                     PrintLog("Image Loaded");
@@ -81,14 +81,14 @@ namespace WebOperationUtilities
     {
         private const string Tag = "DataDownloading";
 
-        public static async Task<byte[]> DownloadRawImageData(string uri)
+        public static Task<byte[]> DownloadRawImageData(string uri)
         {
             using (var myWebClient = new WebClient())
             {
                 // Download home page data.
                 PrintLog($"Downloading {uri}");
                 // Download the Web resource and save it into a data buffer.
-                return await myWebClient.DownloadDataTaskAsync(uri);
+                return  myWebClient.DownloadDataTaskAsync(uri);
             }
         }
 

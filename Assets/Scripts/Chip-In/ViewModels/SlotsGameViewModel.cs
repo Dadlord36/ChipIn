@@ -130,7 +130,7 @@ namespace ViewModels
         {
             timer.Initialize();
         }
-        
+
         private void OnInteraction()
         {
             CanInteract = false;
@@ -148,9 +148,9 @@ namespace ViewModels
             timer.SetAndStartTimer(timeInterval);
         }
 
-        public async Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls)
+        public Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls)
         {
-            await _boardIconsHolder.Refill(indexedUrls);
+            return _boardIconsHolder.Refill(indexedUrls);
         }
 
         public void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData)
@@ -202,7 +202,5 @@ namespace ViewModels
         }
 
         #endregion
-
-
     }
 }

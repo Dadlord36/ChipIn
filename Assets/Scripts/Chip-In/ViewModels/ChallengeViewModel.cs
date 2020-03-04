@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Remote;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
@@ -16,6 +18,7 @@ namespace ViewModels
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private Timer timer;
         private bool _canStartTheGame;
 
@@ -34,18 +37,25 @@ namespace ViewModels
         }
 
         [Binding]
-        public void Play_OnButtonClick()
+        public async Task Play_OnButtonClick()
         {
+            if (await CanGameStarts());
             SwitchToSlotsGameView();
+        }
+
+        private async Task<bool> CanGameStarts()
+        {
+            var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, selectedGameRepository.GameId);
+            return response.Success;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            
+
             InitializeComponents();
             ResetComponents();
-            
+
             SubscribeOnEvents();
             CheckIfGameCanBePlayed();
         }
@@ -54,7 +64,7 @@ namespace ViewModels
         {
             CanStartTheGame = false;
         }
-        
+
         private void InitializeComponents()
         {
             timer.Initialize();
@@ -115,7 +125,7 @@ namespace ViewModels
 
         private void AllowToPlayOnTimer()
         {
-            StartTimerCountdown(Mathf.Abs((float) selectedGameRepository.TimeTillGameStarts.TotalSeconds)+1f);
+            StartTimerCountdown(Mathf.Abs((float) selectedGameRepository.TimeTillGameStarts.TotalSeconds) + 1f);
         }
 
         private void StartTimerCountdown(float intervalInSeconds)
