@@ -24,9 +24,14 @@ namespace ViewModels
             set => _repeatedPassword = value;
         }
 
-        public bool PasswordIsValid()
+        public bool IsOriginalPasswordValid()
         {
-            return passwordValidation.CheckIsValid(_originalPassword);
+            return IsPasswordValid(_originalPassword);
+        }
+
+        public bool IsPasswordValid(in string password)
+        {
+            return passwordValidation.CheckIsValid(password);
         }
 
         public bool CheckPasswordsAreMatch()
@@ -36,7 +41,10 @@ namespace ViewModels
 
         public bool CheckIfPasswordsAreMatchAndItIsValid()
         {
-            return CheckPasswordsAreMatch() && PasswordIsValid();
+            var originalPasswordIsValid = IsOriginalPasswordValid();
+            var passwordsAreMatch = CheckPasswordsAreMatch();
+            
+            return originalPasswordIsValid && passwordsAreMatch;
         }
     }
 }

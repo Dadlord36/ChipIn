@@ -56,6 +56,7 @@ namespace ViewModels.Elements
             {
                 if (value == _currentPassword) return;
                 _currentPassword = value;
+                CheckIfCanConfirmChange();
                 OnPropertyChanged();
             }
         }
@@ -94,8 +95,7 @@ namespace ViewModels.Elements
         {
             try
             {
-                return await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(
-                    authorisationDataRepository,
+                return await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(authorisationDataRepository,
                     new UserProfilePasswordChangingModel
                     {
                         Password = this.Password, PasswordConfirmation = PasswordRepeat,
@@ -113,7 +113,7 @@ namespace ViewModels.Elements
 
         private void CheckIfCanConfirmChange()
         {
-            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid();
+            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid() && passwordAnalyzer.IsPasswordValid(CurrentPassword);
         }
 
         [NotifyPropertyChangedInvocator]
