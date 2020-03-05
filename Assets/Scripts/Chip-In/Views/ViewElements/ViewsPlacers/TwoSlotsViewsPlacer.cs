@@ -74,18 +74,23 @@ namespace Views.ViewElements.ViewsPlacers
 
                 MoveViewFromNextToPreviousSlot();
             }
+            
+            PlaceViewInMainSlot(view);
+        }
 
+        private void PlaceViewInMainSlot(BaseView view)
+        {
             _nextSlot.AttachView(view);
             view.ConfirmBeingSwitchedTo();
         }
 
         private void MoveViewFromNextToPreviousSlot()
         {
-            _nextSlot.ViewInSlot.ConfirmedBeingSwitchedFrom();
-            _previousSlot.AttachView(_nextSlot.DetachView());
+            var view = _nextSlot.DetachView();
+            _previousSlot.AttachView(view);
+            view.ConfirmedBeingSwitchedFrom();
         }
-
-
+        
         private void ReleaseAllSlots()
         {
             var slots = new[] {_previousSlot, _nextSlot};

@@ -7,7 +7,7 @@ namespace ViewModels
     /// <summary>
     /// Base view model class
     /// </summary>
-    public abstract class BaseViewModel : MonoBehaviour
+    public abstract class BaseViewModel : MonoBehaviour, INotifySwitching
     {
         [SerializeField] private BaseView view;
 
@@ -23,26 +23,12 @@ namespace ViewModels
 #endif
         protected virtual void OnEnable()
         {
-            SubscribeOnViewEvents();
+            View.SetViewModelNotifier(this);
         }
 
         protected virtual void OnDisable()
         {
-            UnsubscribeFromViewEvents();
         }
-
-        private void SubscribeOnViewEvents()
-        {
-            view.BeingSwitchedTo += OnBecomingActiveView;
-            view.BeingSwitchedSwitchedFrom += OnBecomingInactiveView;
-        }
-
-        private void UnsubscribeFromViewEvents()
-        {
-            view.BeingSwitchedTo -= OnBecomingActiveView;
-            view.BeingSwitchedSwitchedFrom -= OnBecomingInactiveView;
-        }
-
 
         /// <summary>
         /// Fires up when view becoming the one, that user is currently interacts with
@@ -56,6 +42,16 @@ namespace ViewModels
         /// </summary>
         protected virtual void OnBecomingInactiveView()
         {
+        }
+
+        void INotifySwitching.BeingSwitchedTo()
+        {
+            OnBecomingActiveView();
+        }
+
+        void INotifySwitching.BeingSwitchedFrom()
+        {
+            OnBecomingInactiveView();
         }
     }
 }
