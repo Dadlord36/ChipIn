@@ -44,6 +44,7 @@ namespace ViewModels
         [Binding]
         public void ShowMyInterest()
         {
+            SwitchToView(nameof(MyInterestView));
         }
 
         private void LogOut()

@@ -43,12 +43,12 @@ namespace Views
 
         private void OnBeingSwitchedTo()
         {
-            _viewModelNotifier.BeingSwitchedTo();
+            _viewModelNotifier?.BeingSwitchedTo();
         }
 
         private void OnBeingSwitchedSwitchedFrom()
         {
-            _viewModelNotifier.BeingSwitchedFrom();
+            _viewModelNotifier?.BeingSwitchedFrom();
         }
     }
 }
