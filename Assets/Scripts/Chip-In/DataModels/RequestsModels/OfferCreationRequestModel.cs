@@ -1,17 +1,17 @@
-﻿using DataModels.Interfaces;
-using DataModels.SimpleTypes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using UnityEngine;
 
 namespace DataModels.RequestsModels
 {
-    public interface IOfferCreationRequestModel : IPosterImageFile
+    public interface IOfferCreationRequestModel 
     {
         [JsonProperty("offer")] UserCreatedOffer Offer { get; set; }
+        [JsonProperty("poster")] TextAsset PosterAsText { get; set; }
     }
 
     public class OfferCreationRequestModel : IOfferCreationRequestModel
     {
-        [JsonProperty("poster")] public FilePath PosterFilePath { get; set; }
-        [JsonProperty("offer")] public UserCreatedOffer Offer { get; set; }
+        public TextAsset PosterAsText { get; set; }
+        public UserCreatedOffer Offer { get; set; }
     }
 }

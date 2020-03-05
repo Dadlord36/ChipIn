@@ -20,7 +20,7 @@ namespace ViewModels
     public class MainBusinessMenuViewModel : BaseViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
-        [SerializeField] private SessionController _sessionController;
+        [SerializeField] private SessionController sessionController;
         [SerializeField] private int startingAfterMinutes = 1;
 
         private DateTime InMinute
@@ -36,8 +36,7 @@ namespace ViewModels
 
         private  OfferCreationRequestModel Offer => new OfferCreationRequestModel
         {
-            PosterFilePath = new FilePath(
-                @"C:\Users\Dadlo\Documents\UnityProjects\chip-in\Assets\UIDesign\MyChallenges\Nike.png"),
+            PosterAsText = Resources.Load<TextAsset>("Images/OfferPoster"),
 
             Offer = new UserCreatedOffer
             {
@@ -63,7 +62,7 @@ namespace ViewModels
 
         private void SignOutFromAccount()
         {
-            _sessionController.SignOut();
+            sessionController.SignOut();
         }
 
         private async void CreateOffer()

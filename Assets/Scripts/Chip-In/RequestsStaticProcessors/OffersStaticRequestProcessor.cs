@@ -18,6 +18,7 @@ namespace RequestsStaticProcessors
     public static class OffersStaticRequestProcessor
     {
         private const string Tag = nameof(OffersStaticRequestProcessor);
+
         public static async Task<PaginatedList<ChallengingOfferWithIdentifierModel>> TryGetListOfOffers(IRequestHeaders requestHeaders)
         {
             try
@@ -54,11 +55,10 @@ namespace RequestsStaticProcessors
 
         public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
         {
-            var filePath = requestModel.PosterFilePath.Path;
-            var imageAsBytesArray = File.ReadAllBytes(filePath);
+            var imageAsBytesArray = requestModel.PosterAsText.bytes;
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
-            
-            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName(filePath)}};
+
+            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName($"{requestModel.PosterAsText.name}.png")}};
 
             foreach (var element in elements)
             {
@@ -85,7 +85,7 @@ namespace RequestsStaticProcessors
                 else
                 {
                     var asString = await response.Content.ReadAsStringAsync();
-                    LogUtility.PrintLogError(Tag,"Offer was not created");
+                    LogUtility.PrintLogError(Tag, "Offer was not created");
                     LogUtility.PrintLog(Tag, $"Response body: {asString}");
                 }
             }
