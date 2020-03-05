@@ -7,6 +7,9 @@ using DataModels.HttpRequestsHeadersModels;
 using Encryption;
 using UnityEngine;
 using Utilities;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Repositories.Remote
 {
@@ -16,7 +19,15 @@ namespace Repositories.Remote
     public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider,
         IClearable
     {
-        
+#if UNITY_EDITOR
+        // Add a menu item named "Do Something" to MyMenu in the menu bar.
+        [MenuItem("ChipIn/DataControl/Clear Authorisation Data SaveFile")]
+        private static void DoSomething()
+        {
+            ClearSavedData();
+        }
+#endif
+
         private class UserLoginDataModel
         {
             public readonly UserProfileRequestHeadersProvider AuthorisationModel;
@@ -28,16 +39,16 @@ namespace Repositories.Remote
                 UserRole = userRole;
             }
         }
-        
+
         private const string EncryptionKey = "crowdcrowdcrowdcrowdcrowdcrowdSD";
         private const string SaveFileName = "Player.dat";
-        
+        private static string FileName => Path.Combine(Application.persistentDataPath, SaveFileName);
+
         private UserProfileRequestHeadersProvider _authorisationModel = new UserProfileRequestHeadersProvider();
 
         private string _userRole;
         public string UserRole => _userRole;
 
-        private static string FileName => Path.Combine(Application.persistentDataPath, SaveFileName);
 
         public void Set(IAuthorisationModel source)
         {
@@ -111,7 +122,7 @@ namespace Repositories.Remote
                 var userLoginData = new UserLoginDataModel(_authorisationModel, _userRole);
                 var userLoginDataAsString = JsonConverterUtility.ConvertModelToJson(userLoginData);
                 var encryptedStringAsBytes = RijndaelEncryptor.Encrypt(userLoginDataAsString, EncryptionKey);
-                
+
                 ClearSavedData();
                 File.WriteAllBytes(FileName, encryptedStringAsBytes);
             }
@@ -140,7 +151,7 @@ namespace Repositories.Remote
             }
         }
 
-        private void ClearSavedData()
+        private static void ClearSavedData()
         {
             if (File.Exists(FileName))
             {
