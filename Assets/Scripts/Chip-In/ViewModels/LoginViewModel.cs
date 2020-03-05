@@ -49,7 +49,7 @@ namespace ViewModels
 
         private void OnEscapeButtonPressed()
         {
-            SwitchToView(nameof(WelcomeView));
+            SwitchToWelcomeView();
         }
 
         [Binding]
@@ -118,12 +118,18 @@ namespace ViewModels
         }
 
         [Binding]
+        public void SwitchToWelcomeView()
+        {
+            SwitchToView(nameof(WelcomeView));
+        }
+
+        [Binding]
         public void LoginButton_Click()
         {
             ProcessLogin();
         }
 
-        private async Task ProcessLogin()
+        private async void ProcessLogin()
         {
             IsPendingLogin = true;
             try
