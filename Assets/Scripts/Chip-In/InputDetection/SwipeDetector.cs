@@ -19,9 +19,16 @@ namespace InputDetection
             _parameters = parameters;
         }
 
+#if UNITY_EDITOR
+        public void Update()
+        {
+            
+        }
+#else
         public void Update()
         {
             var touches = Input.touches;
+            if(touches.Length < 1) return;
 
             if (touches[0].phase == TouchPhase.Began)
             {
@@ -40,6 +47,7 @@ namespace InputDetection
                 DetectSwipe();
             }
         }
+#endif
 
         private void DetectSwipe()
         {
