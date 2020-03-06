@@ -22,24 +22,22 @@ namespace InputDetection
         public void Update()
         {
             var touches = Input.touches;
-            for (int i = 0; i < touches.Length; i++)
+
+            if (touches[0].phase == TouchPhase.Began)
             {
-                if (touches[i].phase == TouchPhase.Began)
-                {
-                    _touchDownPosition = _touchUpPosition = touches[i].position;
-                }
+                _touchDownPosition = _touchUpPosition = touches[0].position;
+            }
 
-                if (!_parameters.DetectSwipeOnlyAfterRelease && touches[i].phase == TouchPhase.Moved)
-                {
-                    _touchDownPosition = touches[i].position;
-                    DetectSwipe();
-                }
+            if (!_parameters.DetectSwipeOnlyAfterRelease && touches[0].phase == TouchPhase.Moved)
+            {
+                _touchDownPosition = touches[0].position;
+                DetectSwipe();
+            }
 
-                if (touches[i].phase == TouchPhase.Ended)
-                {
-                    _touchDownPosition = touches[i].position;
-                    DetectSwipe();
-                }
+            if (touches[0].phase == TouchPhase.Ended)
+            {
+                _touchDownPosition = touches[0].position;
+                DetectSwipe();
             }
         }
 
@@ -82,11 +80,12 @@ namespace InputDetection
         {
             return HorizontalMovementDistance() > VerticalMovementDistance();
         }
-        
+
         float VerticalMovementDistance()
         {
             return Mathf.Abs(_touchDownPosition.y - _touchUpPosition.y);
         }
+
         float HorizontalMovementDistance()
         {
             return Mathf.Abs(_touchDownPosition.x - _touchUpPosition.x);

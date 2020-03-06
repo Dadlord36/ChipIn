@@ -1,24 +1,68 @@
-﻿using ScriptableObjects.Comparators;
+﻿using System;
+using ActionsTranslators;
+using InputDetection;
+using ScriptableObjects.Comparators;
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using Views;
 using Views.Bars;
 
+public interface INotifyViewSwitching
+{
+    void OnViewSwitched(string viewName);
+}
+
 namespace ViewModels
 {
     [Binding]
-    public class BottomBarViewModel : ViewsSwitchingViewModel
+    public class BottomBarViewModel : ViewsSwitchingViewModel, INotifyVisibilityChanged, INotifyViewSwitching
     {
         [SerializeField] private ViewsComparisonContainer associativeViewsContainer;
+        [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+
+        private string _currentViewName;
+
+        private void OnSwiped(SwipeDetector.SwipeData swipeData)
+        {
+            switch (swipeData.Direction)
+            {
+                case MoveDirection.Left:
+                    SwitchToLefterBarItem();
+                    break;
+                case MoveDirection.Right:
+                    SwitchToRighterBarItem();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            View.SetViewModelVisibilityNotifier(this);
+            ((BottomBarView) View).SetViewsSwitchingListener(this); 
+        }
 
         private void Awake()
         {
             Assert.IsNotNull(View as BottomBarView);
         }
 
-        private string CurrentView => ((BottomBarView) View).CurrentViewName;
+        public void OnShowUp()
+        {
+            inputActionsTranslator.Swiped += OnSwiped;
+        }
+
+        public void OnHideOut()
+        {
+            inputActionsTranslator.Swiped -= OnSwiped;
+        }
+
 
         [Binding]
         public void SwitchToMarketplaceView()
@@ -50,13 +94,34 @@ namespace ViewModels
             SwitchToViewAndChooseAppearingSide(nameof(SettingsView));
         }
 
+        void INotifyViewSwitching.OnViewSwitched(string viewName)
+        {
+            _currentViewName = viewName;
+        }
+
+        private void SwitchToLefterBarItem()
+        {
+            TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray.After);
+        }
+
+        private void SwitchToRighterBarItem()
+        {
+            TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray.Before);
+        }
+
+        private void TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray relativePositionInArray)
+        {
+            if (associativeViewsContainer.GetRelativeViewName(_currentViewName, relativePositionInArray, out var viewName))
+            {
+                SwitchToViewAndChooseAppearingSide(viewName);
+            }
+        }
 
         private void SwitchToViewAndChooseAppearingSide(string viewToSwitchToName)
         {
-            var relativePositionInArray =
-                associativeViewsContainer.GetRelativePositionInContainer(CurrentView, viewToSwitchToName);
+            var relativePositionInArray = associativeViewsContainer.GetRelativePositionInContainer(_currentViewName, viewToSwitchToName);
 
-            SwitchToView(viewToSwitchToName, CurrentView,
+            SwitchToView(viewToSwitchToName, _currentViewName,
                 relativePositionInArray == ViewsComparisonContainer.RelativePositionInArray.Before
                     ? ViewsSwitchData.AppearingSide.FromLeft
                     : ViewsSwitchData.AppearingSide.FromRight);

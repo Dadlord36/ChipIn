@@ -11,7 +11,12 @@ namespace Views.Bars
         [SerializeField] private bool shouldAutoControlVisibility = true;
         [SerializeField] private bool highlightCorrespondingButtonOnViewSwitching = true;
 
-        public string CurrentViewName { get; private set; }
+        private INotifyViewSwitching _viewSwitchingListener;
+
+        public void SetViewsSwitchingListener(INotifyViewSwitching listener)
+        {
+            _viewSwitchingListener = listener;
+        }
 
         protected override void SwitchTo(ViewsSwitchData viewsSwitchData)
         {
@@ -25,8 +30,9 @@ namespace Views.Bars
             if (shouldAutoControlVisibility)
             {
                 Show();
-                CurrentViewName = viewsSwitchData.ViewToSwitchTo.ViewName;
             }
+
+            _viewSwitchingListener?.OnViewSwitched(viewsSwitchData.ViewToSwitchTo.ViewName);
 
             if (highlightCorrespondingButtonOnViewSwitching)
                 SelectionOptionsDictionary[viewsSwitchData.ViewToSwitchTo.ViewName]

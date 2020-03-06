@@ -23,7 +23,7 @@ namespace ViewModels
 #endif
         protected virtual void OnEnable()
         {
-            View.SetViewModelNotifier(this);
+            View.SetViewModelSwitchNotifier(this);
         }
 
         protected virtual void OnDisable()
