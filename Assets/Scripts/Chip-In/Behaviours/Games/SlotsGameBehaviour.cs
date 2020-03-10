@@ -247,7 +247,7 @@ namespace Behaviours.Games
         #endregion
 
 
-        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
+        private async void MakeASpin(SpinBoardParameters spinBoardParameters)
         {
             var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository,
                 selectedGameRepository.GameId,
