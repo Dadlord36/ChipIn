@@ -31,8 +31,7 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async
-            Task TryUpdateUserProfileData(IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyProvider)
+        public static async Task TryUpdateUserProfileData(IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyProvider)
         {
             try
             {
@@ -54,7 +53,7 @@ namespace RequestsStaticProcessors
             try
             {
                 var response = await new UserProfilePasswordChangePutProcessor(requestHeaders, requestBodyModel).SendRequest("User password was changed successfully");
-                return response.ResponseModelInterface.Success;
+                return response.ResponseModelInterface != null && response.ResponseModelInterface.Success;
             }
             catch (Exception e)
             {
