@@ -15,6 +15,7 @@ namespace Views
         [SerializeField] private ItemsDropdownList dropdownList;
         [SerializeField] private ScrollableItemsSelector itemsSelector;
         [SerializeField] private GameObject scrollableMenu;
+
         public event Action<int> RelatedItemSelected
         {
             add => dropdownList.RelatedItemSelected += value;
@@ -26,26 +27,39 @@ namespace Views
             add => dropdownList.ItemsListUpdated += value;
             remove => dropdownList.ItemsListUpdated -= value;
         }
+
         public string CurrentlySelectedOffersCategory => StringDataComponent.GetStringDataFromComponent(itemsSelector.SelectedItem);
         public int CurrentlySelectedOfferId => dropdownList.CurrentlySelectedOfferId;
-        
+
         public void FillDropdownList(Dictionary<int, string> itemsDictionary)
         {
             dropdownList.FillDropdownList(itemsDictionary);
         }
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
-            scrollableMenu.SetActive(true);
+
             itemsSelector.NewItemSelected += OnNewOffersCategorySelected;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            scrollableMenu.SetActive(false);
+
             itemsSelector.NewItemSelected -= OnNewOffersCategorySelected;
+        }
+
+        protected override void OnBeingSwitchedTo()
+        {
+            base.OnBeingSwitchedTo();
+            scrollableMenu.SetActive(true);
+        }
+
+        protected override void OnBeingSwitchedSwitchedFrom()
+        {
+            base.OnBeingSwitchedSwitchedFrom();
+            scrollableMenu.SetActive(false);
         }
 
         private void OnNewOffersCategorySelected(Transform obj)
@@ -57,7 +71,5 @@ namespace Views
         {
             NewCategorySelected?.Invoke(obj);
         }
-
-
     }
 }

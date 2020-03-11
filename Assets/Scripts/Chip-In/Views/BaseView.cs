@@ -38,7 +38,7 @@ namespace Views
             if (gameObject.activeSelf) return;
 
             gameObject.SetActive(true);
-            OnBeingShowUp();
+            OnBeingShown();
         }
 
         public void Hide()
@@ -46,7 +46,7 @@ namespace Views
             if (!gameObject.activeSelf) return;
 
             gameObject.SetActive(false);
-            OnBeingHide();
+            OnBeingHidden();
         }
 
         public void ConfirmBeingSwitchedTo()
@@ -59,22 +59,22 @@ namespace Views
             OnBeingSwitchedSwitchedFrom();
         }
 
-        private void OnBeingShowUp()
+        private void OnBeingShown()
         {
             _viewModelVisibilityNotifier?.OnShowUp();
         }
 
-        private void OnBeingHide()
+        private void OnBeingHidden()
         {
             _viewModelVisibilityNotifier?.OnHideOut();
         }
 
-        private void OnBeingSwitchedTo()
+        protected virtual void OnBeingSwitchedTo()
         {
             _viewModelNotifier?.BeingSwitchedTo();
         }
 
-        private void OnBeingSwitchedSwitchedFrom()
+        protected virtual void OnBeingSwitchedSwitchedFrom()
         {
             _viewModelNotifier?.BeingSwitchedFrom();
         }
