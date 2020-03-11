@@ -86,7 +86,7 @@ namespace Views.InteractiveWindows
         {
             var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility.TryDownloadImageAsync(offerWithGameModel.PosterUri));
 
-            infoPanelView.FillCardWithData(new InfoPanelView.InfoPanelData(label, offerWithGameModel.Title, offerWithGameModel.Category, offerWithGameModel.Description));
+            infoPanelView.FillCardWithData(new InfoPanelData(label, offerWithGameModel.Title, offerWithGameModel.Category, offerWithGameModel.Description));
         }
     }
 }

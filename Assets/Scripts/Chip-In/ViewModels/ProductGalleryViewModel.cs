@@ -68,7 +68,7 @@ namespace ViewModels
         public async Task ConfirmItemSelection()
         {
             OfferIsSelected = SelectedOfferId != int.MinValue;
-            var responseModel = await GetOfferDetails(SelectedOfferId);
+            var responseModel = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository,SelectedOfferId);
             await InfoPanelView.FillWithData(ViewAsProductGalleryView, responseModel.Offer);
         }
 
@@ -82,7 +82,7 @@ namespace ViewModels
         [Binding]
         public async Task SubscribeToSelectedOfferGame()
         {
-            var offerDetails = await GetOfferDetails(SelectedOfferId);
+            var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository,SelectedOfferId);
             var gameId = offerDetails.Offer.GameData.Id;
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
@@ -137,12 +137,6 @@ namespace ViewModels
 
             ViewAsProductGalleryView.FillDropdownList(items);
         }
-
-        private Task<IOfferDetailsResponseModel> GetOfferDetails(int offerId)
-        {
-            return OffersStaticRequestProcessor.TryGetOfferDetails(new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(authorisationDataRepository, offerId));
-        }
-
 
         [Binding]
         public void SwitchToChallengesView()

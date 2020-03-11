@@ -7,7 +7,9 @@ using JetBrains.Annotations;
 using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
+using Views.InteractiveWindows;
 
 namespace ViewModels
 {
@@ -16,6 +18,7 @@ namespace ViewModels
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+
         private bool _challengeIsSelected;
 
 
@@ -26,7 +29,7 @@ namespace ViewModels
             get => selectedGameRepository.GameId;
             set
             {
-                if(value==selectedGameRepository.GameId) return;
+                if (value == selectedGameRepository.GameId) return;
                 selectedGameRepository.GameId = value;
                 ChallengeIsSelected = true;
                 OnPropertyChanged();
@@ -47,11 +50,20 @@ namespace ViewModels
         }
 
 
-
         [Binding]
-        public void ShowInfo_OnButtonClick()
+        public async Task ShowInfo_OnButtonClick()
         {
-            throw new NotImplementedException();
+            try
+            {
+                await FillInfoCardWithGameRelatedOfferData(SelectedGameId);
+                ThisView.ShowInfoCard();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            
         }
 
         [Binding]
@@ -59,8 +71,8 @@ namespace ViewModels
         {
             SwitchToChallengeView();
         }
-        
-        
+
+
         private void SwitchToChallengeView()
         {
             SwitchToView(nameof(ChallengeView));
@@ -94,12 +106,21 @@ namespace ViewModels
 
         private void OnItemsListUpdated()
         {
-            SelectedGameId = 0;
+            var itemsList = userGamesRemoteRepository.ItemsData;
+            //Set first game id as selected in list
+            if (itemsList.Count > 0)
+                SelectedGameId = itemsList[0].Id;
         }
 
         private void OnSelectedItemIndexChanged(int newId)
         {
             SelectedGameId = newId;
+        }
+
+        private async Task FillInfoCardWithGameRelatedOfferData(int selectedGameId)
+        {
+            var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedGameId);
+            await InfoPanelView.FillWithData(ThisView, responseModel.Offer);
         }
 
         private async Task LoadGamesList()
@@ -116,19 +137,18 @@ namespace ViewModels
         private void FillDropdownList()
         {
             var itemsList = userGamesRemoteRepository.ItemsData;
-            
-            var itemsNamesDictionary = new Dictionary<int,string>(itemsList.Count);
 
+            var itemsNamesDictionary = new Dictionary<int, string>(itemsList.Count);
             for (int i = 0; i < itemsList.Count; i++)
             {
                 var gameId = itemsList[i].Id;
-                itemsNamesDictionary.Add(gameId,gameId.ToString());
+                itemsNamesDictionary.Add(gameId, gameId.ToString());
             }
 
             FillDropdownList(itemsNamesDictionary);
         }
 
-        private void FillDropdownList(Dictionary<int,string> dictionary)
+        private void FillDropdownList(Dictionary<int, string> dictionary)
         {
             var myChallengeView = View as MyChallengeView;
             Debug.Assert(myChallengeView != null, nameof(myChallengeView) + " != null");
