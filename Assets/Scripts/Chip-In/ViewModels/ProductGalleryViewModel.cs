@@ -62,9 +62,17 @@ namespace ViewModels
         }
 
         [Binding]
-        public void ConfirmItemSelection()
+        public async Task ConfirmItemSelection()
         {
             OfferIsSelected = SelectedOfferId != int.MinValue;
+            var offerDetails = await GetOfferDetails(SelectedOfferId);
+            await ViewAsProductGalleryView.FillOfferInfoCard(offerDetails.Offer);
+        }
+
+        [Binding]
+        public void HideOfferInfoCard()
+        {
+            ViewAsProductGalleryView.HideOfferInfo();
         }
 
         [Binding]
@@ -75,12 +83,18 @@ namespace ViewModels
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
             {
-                
+               
             }
             else
             {
                 alertCardController.ShowAlertWithText(response.Error);
             }
+        }
+
+        [Binding]
+        public void ShowSelectedOfferInfo()
+        {
+            ViewAsProductGalleryView.ShowOfferInfo();
         }
 
         protected override void OnEnable()

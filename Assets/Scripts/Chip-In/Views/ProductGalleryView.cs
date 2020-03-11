@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Common;
 using DataComponents;
+using DataModels;
 using UnityEngine;
+using Views.InteractiveWindows;
 using Views.ViewElements;
 using Views.ViewElements.ScrollableList;
 
@@ -15,6 +18,7 @@ namespace Views
         [SerializeField] private ItemsDropdownList dropdownList;
         [SerializeField] private ScrollableItemsSelector itemsSelector;
         [SerializeField] private GameObject scrollableMenu;
+        [SerializeField] private InfoPanelView offerInfoCard;
 
         public event Action<int> RelatedItemSelected
         {
@@ -53,13 +57,23 @@ namespace Views
         protected override void OnBeingSwitchedTo()
         {
             base.OnBeingSwitchedTo();
-            scrollableMenu.SetActive(true);
+            ShowScrollMenu();
         }
 
         protected override void OnBeingSwitchedSwitchedFrom()
         {
             base.OnBeingSwitchedSwitchedFrom();
+            HideScrollMenu();
+        }
+
+        private void HideScrollMenu()
+        {
             scrollableMenu.SetActive(false);
+        }
+
+        private void ShowScrollMenu()
+        {
+            scrollableMenu.SetActive(true);
         }
 
         private void OnNewOffersCategorySelected(Transform obj)
@@ -70,6 +84,21 @@ namespace Views
         private void OnNewCategorySelected(string obj)
         {
             NewCategorySelected?.Invoke(obj);
+        }
+
+        public Task FillOfferInfoCard(OfferWithGameModel offerDetailsOffer)
+        {
+            return offerInfoCard.FillWithData(offerDetailsOffer);
+        }
+
+        public void ShowOfferInfo()
+        {
+            offerInfoCard.gameObject.SetActive(true);
+        }
+
+        public void HideOfferInfo()
+        {
+            offerInfoCard.gameObject.SetActive(false);
         }
     }
 }
