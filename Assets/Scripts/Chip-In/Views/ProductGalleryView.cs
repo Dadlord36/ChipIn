@@ -6,12 +6,14 @@ using DataComponents;
 using DataModels;
 using UnityEngine;
 using Views.InteractiveWindows;
+using Views.InteractiveWindows.Interfaces;
 using Views.ViewElements;
 using Views.ViewElements.ScrollableList;
+using WebOperationUtilities;
 
 namespace Views
 {
-    public sealed class ProductGalleryView : BaseView, IDropdownList, IRelatedItemsSelection
+    public sealed class ProductGalleryView : BaseView, IDropdownList, IRelatedItemsSelection, IInfoPanelView
     {
         public event Action<string> NewCategorySelected;
 
@@ -86,19 +88,20 @@ namespace Views
             NewCategorySelected?.Invoke(obj);
         }
 
-        public Task FillOfferInfoCard(OfferWithGameModel offerDetailsOffer)
+
+        public void FillCardWithData(IInfoPanelData data)
         {
-            return offerInfoCard.FillWithData(offerDetailsOffer);
+            offerInfoCard.FillCardWithData(data);
         }
 
-        public void ShowOfferInfo()
+        public void ShowInfoCard()
         {
-            offerInfoCard.gameObject.SetActive(true);
+            offerInfoCard.ShowInfoCard();
         }
 
-        public void HideOfferInfo()
+        public void HideInfoCard()
         {
-            offerInfoCard.gameObject.SetActive(false);
+            offerInfoCard.HideInfoCard();
         }
     }
 }

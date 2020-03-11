@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DataModels;
 using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
@@ -13,6 +14,8 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views;
+using Views.InteractiveWindows;
+using WebOperationUtilities;
 
 namespace ViewModels
 {
@@ -65,14 +68,15 @@ namespace ViewModels
         public async Task ConfirmItemSelection()
         {
             OfferIsSelected = SelectedOfferId != int.MinValue;
-            var offerDetails = await GetOfferDetails(SelectedOfferId);
-            await ViewAsProductGalleryView.FillOfferInfoCard(offerDetails.Offer);
+            var responseModel = await GetOfferDetails(SelectedOfferId);
+            await InfoPanelView.FillWithData(ViewAsProductGalleryView, responseModel.Offer);
         }
+
 
         [Binding]
         public void HideOfferInfoCard()
         {
-            ViewAsProductGalleryView.HideOfferInfo();
+            ViewAsProductGalleryView.HideInfoCard();
         }
 
         [Binding]
@@ -83,7 +87,6 @@ namespace ViewModels
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
             {
-               
             }
             else
             {
@@ -94,7 +97,7 @@ namespace ViewModels
         [Binding]
         public void ShowSelectedOfferInfo()
         {
-            ViewAsProductGalleryView.ShowOfferInfo();
+            ViewAsProductGalleryView.ShowInfoCard();
         }
 
         protected override void OnEnable()
