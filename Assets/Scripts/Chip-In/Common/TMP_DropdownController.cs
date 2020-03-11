@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using Utilities;
@@ -8,9 +9,8 @@ namespace Common
 {
     public interface IDropdownList
     {
-        event Action<int> SelectedItemIndexChanged;
         event Action ItemsListUpdated;
-        void FillDropdownList(string[] itemsList);
+        void FillDropdownList(Dictionary<int,string> itemsDictionary);
     }
 
     [Serializable]
@@ -55,8 +55,9 @@ namespace Common
             LogUtility.PrintLog(Tag, $"Dropdown list \"{tmp_Dropdown.name}\" was refilled");
         }
 
-        public void FillDropdownList(string[] itemsList)
+        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
         {
+            var itemsList = itemsDictionary.Values.ToArray();
             var optionsList = new List<TMP_Dropdown.OptionData>(itemsList.Length);
 
             for (int i = 0; i < itemsList.Length; i++)
@@ -76,5 +77,7 @@ namespace Common
         {
             ItemsListUpdated?.Invoke();
         }
+
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Behaviours.Games;
 using DataModels;
@@ -21,13 +22,11 @@ namespace Repositories.Local
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
         private MatchUserData[] _matchUsersData;
-
-
-        public GameDataModel SelectedGameData => userGamesRemoteRepository[SelectedElementIndexInGamesList];
+        
+        
+        public GameDataModel SelectedGameData => userGamesRemoteRepository.ItemsData.First(gameData => gameData.Id == GameId);
         public bool GameHasStarted => DateTime.UtcNow >= SelectedGameData.StartedAt;
         public TimeSpan TimeTillGameStarts => SelectedGameData.StartedAt - DateTime.UtcNow;
-
-        public int SelectedElementIndexInGamesList { get; set; }
 
         public int GameId
         {

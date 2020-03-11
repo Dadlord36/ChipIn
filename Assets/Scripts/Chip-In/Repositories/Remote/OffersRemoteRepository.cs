@@ -6,7 +6,9 @@ using UnityEngine;
 
 namespace Repositories.Remote
 {
-    public class OffersModelRemoteRepository : BaseItemsListRepository<ChallengingOfferWithIdentifierModel>
+    [CreateAssetMenu(fileName = nameof(OffersRemoteRepository),
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(OffersRemoteRepository), order = 0)]
+    public class OffersRemoteRepository : BaseItemsListRepository<ChallengingOfferWithIdentifierModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 

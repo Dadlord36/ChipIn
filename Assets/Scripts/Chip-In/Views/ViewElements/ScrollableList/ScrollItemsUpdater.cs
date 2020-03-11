@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
-namespace Views.ViewElements
+namespace Views.ViewElements.ScrollableList
 {
     [DisallowMultipleComponent]
     public class ScrollItemsUpdater : UIBehaviour
@@ -37,8 +37,7 @@ namespace Views.ViewElements
         {
             for (int i = 0; i < _contentItems.Length; i++)
             {
-                SendDataToContentItemControllers(_contentItems[i],
-                    Mathf.Clamp01(GetItemPathPercentage(_contentItems[i])));
+                SendDataToContentItemControllers(_contentItems[i], Mathf.Clamp01(GetItemPathPercentage(_contentItems[i])));
             }
 
             void SendDataToContentItemControllers(Transform item, float pathPercentage)

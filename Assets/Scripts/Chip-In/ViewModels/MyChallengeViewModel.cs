@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -15,19 +16,18 @@ namespace ViewModels
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
-        private int _selectedElementIndexInGamesList;
         private bool _challengeIsSelected;
 
 
         private MyChallengeView ThisView => (MyChallengeView) View;
 
-        private int SelectedElementIndexInGamesList
+        private int SelectedGameId
         {
+            get => selectedGameRepository.GameId;
             set
             {
-                _selectedElementIndexInGamesList = value;
-                selectedGameRepository.SelectedElementIndexInGamesList = value;
-                SelectedGameIndex = userGamesRemoteRepository[_selectedElementIndexInGamesList].Id;
+                if(value==selectedGameRepository.GameId) return;
+                selectedGameRepository.GameId = value;
                 ChallengeIsSelected = true;
                 OnPropertyChanged();
             }
@@ -46,11 +46,7 @@ namespace ViewModels
             }
         }
 
-        private int SelectedGameIndex
-        {
-            get => selectedGameRepository.GameId;
-            set => selectedGameRepository.GameId = value;
-        }
+
 
         [Binding]
         public void ShowInfo_OnButtonClick()
@@ -63,7 +59,8 @@ namespace ViewModels
         {
             SwitchToChallengeView();
         }
-
+        
+        
         private void SwitchToChallengeView()
         {
             SwitchToView(nameof(ChallengeView));
@@ -85,24 +82,24 @@ namespace ViewModels
 
         private void SubscribeToViewEvents()
         {
-            ThisView.SelectedItemIndexChanged += OnSelectedItemIndexChanged;
+            ThisView.RelatedItemSelected += OnSelectedItemIndexChanged;
             ThisView.ItemsListUpdated += OnItemsListUpdated;
         }
 
         private void UnsubscribeFromViewEvents()
         {
-            ThisView.SelectedItemIndexChanged -= OnSelectedItemIndexChanged;
+            ThisView.RelatedItemSelected -= OnSelectedItemIndexChanged;
             ThisView.ItemsListUpdated -= OnItemsListUpdated;
         }
 
         private void OnItemsListUpdated()
         {
-            SelectedElementIndexInGamesList = 0;
+            SelectedGameId = 0;
         }
 
-        private void OnSelectedItemIndexChanged(int newIndex)
+        private void OnSelectedItemIndexChanged(int newId)
         {
-            SelectedElementIndexInGamesList = newIndex;
+            SelectedGameId = newId;
         }
 
         private async Task LoadGamesList()
@@ -119,21 +116,23 @@ namespace ViewModels
         private void FillDropdownList()
         {
             var itemsList = userGamesRemoteRepository.ItemsData;
-            var itemsNamesList = new string[itemsList.Count];
+            
+            var itemsNamesDictionary = new Dictionary<int,string>(itemsList.Count);
 
             for (int i = 0; i < itemsList.Count; i++)
             {
-                itemsNamesList[i] = itemsList[i].Id.ToString();
+                var gameId = itemsList[i].Id;
+                itemsNamesDictionary.Add(gameId,gameId.ToString());
             }
 
-            FillDropdownList(itemsNamesList);
+            FillDropdownList(itemsNamesDictionary);
         }
 
-        private void FillDropdownList(string[] itemsList)
+        private void FillDropdownList(Dictionary<int,string> dictionary)
         {
             var myChallengeView = View as MyChallengeView;
             Debug.Assert(myChallengeView != null, nameof(myChallengeView) + " != null");
-            myChallengeView.FillDropdownList(itemsList);
+            myChallengeView.FillDropdownList(dictionary);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

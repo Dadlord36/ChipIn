@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using Common;
 using UnityEngine;
 using Views.ViewElements;
 
 namespace Views
 {
-    public class MyChallengeView : BaseView, IDropdownList
+    public class MyChallengeView : BaseView, IDropdownList, IRelatedItemsSelection
     {
         [SerializeField] private ItemsDropdownList dropdownList;
 
-        public event Action<int> SelectedItemIndexChanged
+        public event Action<int> RelatedItemSelected
         {
-            add => dropdownList.SelectedItemIndexChanged += value;
-            remove => dropdownList.SelectedItemIndexChanged -= value;
+            add => dropdownList.RelatedItemSelected += value;
+            remove => dropdownList.RelatedItemSelected -= value;
         }
 
         public event Action ItemsListUpdated
@@ -20,11 +21,11 @@ namespace Views
             add => dropdownList.ItemsListUpdated += value;
             remove => dropdownList.ItemsListUpdated -= value;
         }
-
-
-        public void FillDropdownList(string[] itemsList)
+        
+        
+        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
         {
-            dropdownList.FillDropdownList(itemsList);
+            dropdownList.FillDropdownList(itemsDictionary);
         }
     }
 }
