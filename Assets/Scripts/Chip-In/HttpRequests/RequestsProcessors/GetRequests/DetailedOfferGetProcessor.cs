@@ -22,7 +22,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         }
 
         public DetailedOfferGetProcessor(DetailedOfferGetProcessorParameters parameters) : base(
-            new BaseRequestProcessorParameters(RequestsSuffixes.Offers,
+            new BaseRequestProcessorParameters(ApiCategories.Offers,
                 HttpMethod.Get, parameters.RequestHeaders, null, new[] {parameters.OfferId.ToString()}))
         {
         }

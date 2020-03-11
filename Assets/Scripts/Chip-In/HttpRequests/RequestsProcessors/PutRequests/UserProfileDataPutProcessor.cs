@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
         IUserProfileDataWebModel>
     {
         public UserProfileDataPutProcessor(IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyModel) :
-            base(RequestsSuffixes.Profile, HttpMethod.Put,
+            base(ApiCategories.Profile, HttpMethod.Put,
                 requestHeaders, requestBodyModel)
         {
         }
@@ -53,7 +53,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
         UserProfileResponseModel, IUserProfileResponseModel>
     {
         public UserProfilePasswordChangePutProcessor(IRequestHeaders requestHeaders,
-            IUserProfilePasswordChangeModel requestBodyModel) : base(RequestsSuffixes.Profile,
+            IUserProfilePasswordChangeModel requestBodyModel) : base(ApiCategories.Profile,
             HttpMethod.Put, requestHeaders, requestBodyModel)
         {
         }
@@ -63,7 +63,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
         UserProfileResponseModel, IUserProfileResponseModel>
     {
         public UserProfilePasswordChangeDummyPutProcessor(IRequestHeaders requestHeaders,
-            IUserName requestBodyModel) : base(RequestsSuffixes.Profile,
+            IUserName requestBodyModel) : base(ApiCategories.Profile,
             HttpMethod.Put, requestHeaders, requestBodyModel)
         {
         }

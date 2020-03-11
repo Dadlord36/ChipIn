@@ -33,7 +33,7 @@ namespace HttpRequests.RequestsProcessors.DeleteRequests
     {
         public SignOutRequestProcessor(IRequestHeaders requestHeaders,
             IBaseDeviceData requestBodyModel) :
-            base(RequestsSuffixes.SingOut, HttpMethod.Delete, requestHeaders, requestBodyModel)
+            base(ApiCategories.SingOut, HttpMethod.Delete, requestHeaders, requestBodyModel)
         {
         }
     }

@@ -7,7 +7,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public sealed class OffersGetProcessor : BaseRequestProcessor<object, OffersResponseModel, IOffersResponseModel>
     {
-        public OffersGetProcessor(IRequestHeaders requestHeaders) : base(RequestsSuffixes.Offers, HttpMethod.Get,
+        public OffersGetProcessor(IRequestHeaders requestHeaders) : base(ApiCategories.Offers, HttpMethod.Get,
             requestHeaders, null)
         {
         }

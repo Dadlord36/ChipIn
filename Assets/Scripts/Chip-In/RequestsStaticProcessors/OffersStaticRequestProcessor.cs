@@ -70,7 +70,7 @@ namespace RequestsStaticProcessors
             LogUtility.PrintLog(Tag, formAsString);
 
 
-            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, RequestsSuffixes.Offers, form, requestHeaders.GetRequestHeaders()))
+            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, ApiCategories.Offers, form, requestHeaders.GetRequestHeaders()))
             {
                 LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
                 LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");

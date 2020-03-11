@@ -10,7 +10,7 @@ namespace HttpRequests.RequestsProcessors.PostRequests
         , ICreateAnOfferResponseModel>
     {
         public CreateAnOfferPutProcessor(IRequestHeaders requestHeaders, IOfferCreationRequestModel requestBodyModel) :
-            base(RequestsSuffixes.Offers, HttpMethod.Post, requestHeaders, requestBodyModel)
+            base(ApiCategories.Offers, HttpMethod.Post, requestHeaders, requestBodyModel)
         {
         }
     }

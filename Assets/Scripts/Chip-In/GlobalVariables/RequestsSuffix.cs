@@ -1,6 +1,6 @@
 ﻿namespace GlobalVariables
 {
-    public static class RequestsSuffixes
+    public static class ApiCategories
     {
         public const string Games = "games";
         public const string UserGames = "user_games";

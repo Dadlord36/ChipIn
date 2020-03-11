@@ -8,7 +8,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public class ShowMatchGetProcessor : RequestWithoutBodyProcessor<ShowMatchResponseModel, IShowMatchResponseModel>
     {
-        public ShowMatchGetProcessor(IRequestHeaders requestHeaders, int gameId) : base(RequestsSuffixes.Games,
+        public ShowMatchGetProcessor(IRequestHeaders requestHeaders, int gameId) : base(ApiCategories.Games,
             HttpMethod.Get, requestHeaders, new[] {gameId.ToString(), GameRequestParameters.Match})
         {
         }

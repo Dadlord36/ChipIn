@@ -24,7 +24,7 @@ namespace HttpRequests.RequestsProcessors.PostRequests
         RegistrationResponseDataModel, IRegistrationResponseDataModel>
     {
         public RegistrationRequestProcessor(RegistrationRequestModel requestBodyModel) : base(
-            RequestsSuffixes.SignUp, HttpMethod.Post, null, requestBodyModel)
+            ApiCategories.SignUp, HttpMethod.Post, null, requestBodyModel)
         {
         }
     }
@@ -34,7 +34,7 @@ namespace HttpRequests.RequestsProcessors.PostRequests
             UserProfileDataWebModel, IUserProfileDataWebModel>
     {
         public SimpleRegistrationRequestProcessor(SimpleRegistrationRequestModel requestBodyModel) : base(
-            RequestsSuffixes.SignUp, HttpMethod.Post, null, requestBodyModel)
+            ApiCategories.SignUp, HttpMethod.Post, null, requestBodyModel)
         {
         }
     }
