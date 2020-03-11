@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
+using Repositories.Remote;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -18,6 +21,7 @@ namespace ViewModels
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
         private bool _challengeIsSelected;
 
@@ -63,7 +67,6 @@ namespace ViewModels
                 LogUtility.PrintLogException(e);
                 throw;
             }
-            
         }
 
         [Binding]
@@ -128,21 +131,37 @@ namespace ViewModels
             await userGamesRemoteRepository.LoadDataFromServer();
         }
 
-        private async Task LoadDataAndFillTheList()
+        private async void LoadDataAndFillTheList()
         {
-            await LoadGamesList();
-            FillDropdownList();
+            try
+            {
+                await LoadGamesList();
+                await FillDropdownList();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private void FillDropdownList()
+        private async Task FillDropdownList()
         {
             var itemsList = userGamesRemoteRepository.ItemsData;
+
+            var tasks = new List<Task<IOfferDetailsResponseModel>>(itemsList.Count);
+
+            for (int i = 0; i < itemsList.Count; i++)
+            {
+                tasks.Add(userGamesRemoteRepository.GetOfferDataForGivenGameId(itemsList[i].Id));
+            }
+
+            var correspondingOffers = await Task.WhenAll(tasks);
 
             var itemsNamesDictionary = new Dictionary<int, string>(itemsList.Count);
             for (int i = 0; i < itemsList.Count; i++)
             {
-                var gameId = itemsList[i].Id;
-                itemsNamesDictionary.Add(gameId, gameId.ToString());
+                itemsNamesDictionary.Add(itemsList[i].Id, correspondingOffers[i].Offer.Title);
             }
 
             FillDropdownList(itemsNamesDictionary);
