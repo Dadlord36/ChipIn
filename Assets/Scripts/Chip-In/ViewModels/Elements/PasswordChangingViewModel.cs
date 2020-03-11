@@ -78,6 +78,7 @@ namespace ViewModels.Elements
         {
             if (await TryChangePassword())
                 HideView();
+            ClearFields();
         }
 
         [Binding]
@@ -89,6 +90,7 @@ namespace ViewModels.Elements
         private void HideView()
         {
             View.Hide();
+            ClearFields();
         }
 
         private async Task<bool> TryChangePassword()
@@ -110,6 +112,10 @@ namespace ViewModels.Elements
             return false;
         }
 
+        private void ClearFields()
+        {
+            CurrentPassword = PasswordRepeat = Password = string.Empty;
+        }
 
         private void CheckIfCanConfirmChange()
         {
