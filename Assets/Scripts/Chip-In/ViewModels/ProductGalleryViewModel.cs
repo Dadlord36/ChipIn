@@ -8,6 +8,7 @@ using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -16,7 +17,7 @@ using Views;
 namespace ViewModels
 {
     [Binding]
-    public class ProductGalleryViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    public sealed class ProductGalleryViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         private const string Tag = nameof(ProductGalleryViewModel);
         public event PropertyChangedEventHandler PropertyChanged;
@@ -25,6 +26,7 @@ namespace ViewModels
 
         [SerializeField] private OffersRemoteRepository offersRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private AlertCardController alertCardController;
 
         #endregion
 
@@ -71,6 +73,14 @@ namespace ViewModels
             var offerDetails = await GetOfferDetails(SelectedOfferId);
             var gameId = offerDetails.Offer.GameData.Id;
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
+            if (response.Success)
+            {
+                
+            }
+            else
+            {
+                alertCardController.ShowAlertWithText(response.Error);
+            }
         }
 
         protected override void OnEnable()
@@ -125,7 +135,7 @@ namespace ViewModels
 
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
