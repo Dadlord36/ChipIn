@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
-namespace Views.ViewElements
+namespace Views.ViewElements.ScrollableList
 {
     public class ContentItemOrderController : UIBehaviour, IContentItemCanvasReceiver
     {

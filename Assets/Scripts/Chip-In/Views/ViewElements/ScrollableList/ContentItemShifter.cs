@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
-namespace Views.ViewElements
+namespace Views.ViewElements.ScrollableList
 {
     [DisallowMultipleComponent]
     public class ContentItemShifter : UIBehaviour, IContentItemUpdater

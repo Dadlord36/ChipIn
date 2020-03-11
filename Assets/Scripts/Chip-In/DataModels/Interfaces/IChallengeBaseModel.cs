@@ -9,13 +9,13 @@ namespace DataModels.Interfaces
         [JsonProperty("challenge_type")] string ChallengeType { get; set; }
 
         [JsonProperty("started_at")]
-        [JsonConverter(typeof(ServerDateTimeConverter))]
+        [JsonConverter(typeof(ServerFullDateTimeConverter))]
         DateTime StartedAt { get; set; }
     }
 
-    internal class ServerDateTimeConverter : IsoDateTimeConverter
+    internal class ServerFullDateTimeConverter : IsoDateTimeConverter
     {
-        public ServerDateTimeConverter()
+        public ServerFullDateTimeConverter()
         {
             DateTimeFormat = "dd/MM/yyyy hh:mmtt";
         }

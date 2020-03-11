@@ -1,6 +1,7 @@
 ﻿using System;
 using DataModels.SimpleTypes;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace DataModels.Interfaces
 {
@@ -11,12 +12,20 @@ namespace DataModels.Interfaces
         [JsonProperty("category")] string Category { get; set; }
 
         [JsonProperty("expired_at")]
-        [JsonConverter(typeof(ServerDateTimeConverter))]
+        [JsonConverter(typeof(ServerShortDateTimeConverter))]
         DateTime ExpireDate { get; set; }
 
         [JsonProperty("segment")] string Segment { get; set; }
         [JsonProperty("quantity")] uint Quantity { get; set; }
         [JsonProperty("price")] uint Price { get; set; }
+    }
+    
+    internal class ServerShortDateTimeConverter : IsoDateTimeConverter
+    {
+        public ServerShortDateTimeConverter()
+        {
+            DateTimeFormat = "dd/MM/yyyy";
+        }
     }
 
     public interface IPosterImageUri

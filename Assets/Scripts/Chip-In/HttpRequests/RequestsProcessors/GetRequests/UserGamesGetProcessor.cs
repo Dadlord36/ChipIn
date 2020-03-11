@@ -4,8 +4,10 @@ using System.Net.Http;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
+using DataModels.MatchModels;
 using DataModels.ResponsesModels;
 using GlobalVariables;
+using Newtonsoft.Json;
 using Repositories.Interfaces;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
@@ -20,23 +22,50 @@ namespace HttpRequests.RequestsProcessors.GetRequests
             SpinBoard = spinBoard;
         }
 
-        public static SpinBoardParameters JustFrame = new SpinBoardParameters(true,false);
+        public static SpinBoardParameters JustFrame = new SpinBoardParameters(true, false);
         public static SpinBoardParameters JustBoard = new SpinBoardParameters(false, true);
         public static SpinBoardParameters Both = new SpinBoardParameters(true, true);
     }
 
     public class UserGamesGetProcessor : RequestWithoutBodyProcessor<UserGamesResponseModel, IUserGamesResponseModel>
     {
-        public UserGamesGetProcessor(IRequestHeaders requestHeaders) : base(RequestsSuffixes.UserGames, HttpMethod.Get,
+        public UserGamesGetProcessor(IRequestHeaders requestHeaders) : base(ApiCategories.UserGames, HttpMethod.Get,
             requestHeaders, null)
         {
         }
     }
 
-    public class JoinGamePostProcessor : RequestWithoutBodyProcessor<SuccessConfirmationModel, ISuccess>
+    public interface IIconsBackgroundUrl
+    {
+        [JsonProperty("background")] string BackgroundUrl { get; set; }
+    }
+
+    public class IdentifiedIconUrl : IIdentifier, IUrl
+    {
+        public int Id { get; set; }
+        public string Url { get; set; }
+    }
+
+    public interface ISlotGameIconsSet
+    {
+        [JsonProperty("icons")] IdentifiedIconUrl[] Icons { get; set; }
+    }
+
+    public interface IJoinGameResponseModel : ISuccess, IIconsBackgroundUrl, ISlotGameIconsSet
+    {
+    }
+
+    public sealed class JoinGameResponseDataModel : IJoinGameResponseModel
+    {
+        public bool Success { get; set; }
+        public string BackgroundUrl { get; set; }
+        public IdentifiedIconUrl[] Icons { get; set; }
+    }
+
+    public class JoinGamePostProcessor : RequestWithoutBodyProcessor<JoinGameResponseDataModel, IJoinGameResponseModel>
     {
         public JoinGamePostProcessor(IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters) :
-            base(RequestsSuffixes.Games, HttpMethod.Post, requestHeaders, requestParameters)
+            base(ApiCategories.Games, HttpMethod.Post, requestHeaders, requestParameters)
         {
         }
     }
@@ -47,7 +76,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public MakeAMovePostProcessor(IRequestHeaders requestHeaders, int gameId,
             SpinBoardParameters spinBoardParameters)
-            : base(RequestsSuffixes.Games, HttpMethod.Post, requestHeaders, new[]
+            : base(ApiCategories.Games, HttpMethod.Post, requestHeaders, new[]
             {
                 gameId.ToString(), GameRequestParameters.Match, GameRequestParameters.Move
             }, FormNameValueCollectionForQueryStringParameters(spinBoardParameters))
