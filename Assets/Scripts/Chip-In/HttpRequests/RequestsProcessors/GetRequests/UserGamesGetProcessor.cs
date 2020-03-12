@@ -40,26 +40,26 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         [JsonProperty("background")] string BackgroundUrl { get; set; }
     }
 
-    public class IdentifiedIconUrl : IIdentifier, IUrl
-    {
-        public int Id { get; set; }
-        public string Url { get; set; }
-    }
-
     public interface ISlotGameIconsSet
     {
-        [JsonProperty("icons")] IdentifiedIconUrl[] Icons { get; set; }
+        [JsonProperty("icons")] IndexedUrl[] Icons { get; set; }
     }
 
-    public interface IJoinGameResponseModel : ISuccess, IIconsBackgroundUrl, ISlotGameIconsSet
+    public interface IJoinGameResponseModel : ISuccess
     {
+        [JsonProperty("game")] GameBoardData GameBoard { get; set; }
+    }
+
+    public class GameBoardData : IIconsBackgroundUrl, ISlotGameIconsSet
+    {
+        public string BackgroundUrl { get; set; }
+        public IndexedUrl[] Icons { get; set; }
     }
 
     public sealed class JoinGameResponseDataModel : IJoinGameResponseModel
     {
         public bool Success { get; set; }
-        public string BackgroundUrl { get; set; }
-        public IdentifiedIconUrl[] Icons { get; set; }
+        public GameBoardData GameBoard { get; set; }
     }
 
     public class JoinGamePostProcessor : RequestWithoutBodyProcessor<JoinGameResponseDataModel, IJoinGameResponseModel>

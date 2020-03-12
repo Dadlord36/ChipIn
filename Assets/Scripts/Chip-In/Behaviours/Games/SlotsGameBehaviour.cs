@@ -123,7 +123,7 @@ namespace Behaviours.Games
                 var roundNumber = matchData.MatchData.RoundNumber;
                 var timeForPassedRounds = (int) (roundNumber * roundTime);
                 
-                await GameInterface.RefillIconsSet(matchData.MatchData.IndexedSpritesSheetsUrls);
+                GameInterface.RefillIconsSet();
 
                 var timeSpanFromGameStarted = DateTime.Now - selectedGameRepository.SelectedGameData.StartedAt;
                 var secondsSinsRoundHaveStarted = timeForPassedRounds - timeSpanFromGameStarted.Seconds;

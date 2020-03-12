@@ -40,6 +40,5 @@ namespace DataModels.Interfaces
         [JsonProperty("round")] uint RoundNumber { get; set; }
         [JsonProperty("background")] string BackgroundUrl { get; set; }
         [JsonProperty("stage")] int StageNumber { get; set; }
-        [JsonProperty("icons")] IndexedUrl[] IndexedSpritesSheetsUrls { get; set; }
     }
 }

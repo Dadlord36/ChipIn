@@ -12,6 +12,5 @@ namespace DataModels.MatchModels
         public int StageNumber { get; set; }
         public int? WinnerId { get; set; }
         public float RoundEndsAt { get; set; }
-        public IndexedUrl[] IndexedSpritesSheetsUrls { get; set; }
     }
 }

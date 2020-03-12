@@ -21,7 +21,7 @@ namespace ViewModels
         event Action SpinFrameRequested;
         event Action SpinBoardRequested;
         void StartTimer(float timeInterval);
-        Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls);
+        void RefillIconsSet();
         void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData);
         void AllowInteractivity();
         void OnMatchEnds();
@@ -29,8 +29,7 @@ namespace ViewModels
     }
 
     [Binding]
-    public sealed partial class SlotsGameViewModel : ViewsSwitchingViewModel, ISlotsGame,
-        INotifyPropertyChanged
+    public sealed partial class SlotsGameViewModel : ViewsSwitchingViewModel, ISlotsGame, INotifyPropertyChanged
     {
         #region Events
 
@@ -44,6 +43,7 @@ namespace ViewModels
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private Timer timer;
+        [SerializeField] private GameIconsRepository gameIconsRepository;
 
         /// <summary>
         /// Number of rows and columns on witch all spites-sheets will be slit, forming arrays of Sprites 
@@ -148,9 +148,9 @@ namespace ViewModels
             timer.SetAndStartTimer(timeInterval);
         }
 
-        public Task RefillIconsSet(IReadOnlyList<IndexedUrl> indexedUrls)
+        public void RefillIconsSet()
         {
-            return _boardIconsHolder.Refill(indexedUrls);
+            _boardIconsHolder.Refill(gameIconsRepository.BoardIconsData);
         }
 
         public void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData)

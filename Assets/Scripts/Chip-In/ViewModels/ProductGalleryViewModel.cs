@@ -3,10 +3,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DataModels;
-using DataModels.Interfaces;
-using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
+using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
@@ -15,7 +13,6 @@ using UnityWeld.Binding;
 using Utilities;
 using Views;
 using Views.InteractiveWindows;
-using WebOperationUtilities;
 
 namespace ViewModels
 {
@@ -30,6 +27,7 @@ namespace ViewModels
         [SerializeField] private OffersRemoteRepository offersRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
+        [SerializeField] private GameIconsRepository gameIconsRepository;
 
         #endregion
 
@@ -68,7 +66,7 @@ namespace ViewModels
         public async Task ConfirmItemSelection()
         {
             OfferIsSelected = SelectedOfferId != int.MinValue;
-            var responseModel = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository,SelectedOfferId);
+            var responseModel = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository, SelectedOfferId);
             await InfoPanelView.FillWithData(ViewAsProductGalleryView, responseModel.Offer);
         }
 
@@ -82,11 +80,12 @@ namespace ViewModels
         [Binding]
         public async Task SubscribeToSelectedOfferGame()
         {
-            var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository,SelectedOfferId);
+            var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository, SelectedOfferId);
             var gameId = offerDetails.Offer.GameData.Id;
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
             {
+                await gameIconsRepository.LoadBoardIconsSetFromUrls(response.ResponseModelInterface.GameBoard.Icons);
             }
             else
             {
