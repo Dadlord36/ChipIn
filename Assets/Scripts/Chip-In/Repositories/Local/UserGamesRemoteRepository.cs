@@ -27,7 +27,7 @@ namespace Repositories.Local
             return ItemsData.First(gameData => gameData.Id == gameId);
         }
 
-        public int GetCorrespondingToTheGameIdOfferId(int gameId) => GetGameDataByGameId(gameId).GameableData.Id;
+        public int? GetCorrespondingToTheGameIdOfferId(int gameId) => GetGameDataByGameId(gameId).GameableData.Id;
 
         public bool UserHasSubscribedToGivenOffer(int offerId)
         {

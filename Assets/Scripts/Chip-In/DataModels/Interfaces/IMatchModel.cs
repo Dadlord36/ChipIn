@@ -30,7 +30,7 @@ namespace DataModels.Interfaces
 
     public class IndexedUrl : IIdentifier, IUrl
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Url { get; set; }
     }
 

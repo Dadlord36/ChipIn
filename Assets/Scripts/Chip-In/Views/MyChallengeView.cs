@@ -25,7 +25,7 @@ namespace Views
             remove => dropdownList.ItemsListUpdated -= value;
         }
 
-        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
+        public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
             dropdownList.FillDropdownList(itemsDictionary);
         }

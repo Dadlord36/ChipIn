@@ -18,7 +18,7 @@ namespace Views.ViewElements
         public event Action<int> RelatedItemSelected;
 
         private int _currentlySelectedDropdownItemNum; 
-        private int[] _relatedItemsIndexes;
+        private int?[] _relatedItemsIndexes;
 
         public event Action ItemsListUpdated
         {
@@ -26,7 +26,7 @@ namespace Views.ViewElements
             remove => dropdownController.ItemsListUpdated -= value;
         }
 
-        public int CurrentlySelectedOfferId
+        public int? CurrentlySelectedOfferId
         {
             get
             {
@@ -57,7 +57,7 @@ namespace Views.ViewElements
         private void OnRelatedItemSelected(int index)
         {
             _currentlySelectedDropdownItemNum = index;
-            RelatedItemSelected?.Invoke(CurrentlySelectedOfferId);
+            RelatedItemSelected?.Invoke(index);
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace Views.ViewElements
         /// to send them via event RelatedItemSelected, so that it was easy to get corresponding to selection item form related array.
         /// </summary>
         /// <param name="itemsDictionary">Dictionary of items, consisted from related array indexes and some string values.
-        /// String values will be used to fill the dropdown menu. </param>
-        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
+        ///     String values will be used to fill the dropdown menu. </param>
+        public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
             _relatedItemsIndexes = itemsDictionary.Keys.ToArray();
             dropdownController.FillDropdownList(itemsDictionary);

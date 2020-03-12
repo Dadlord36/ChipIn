@@ -13,7 +13,7 @@ namespace DataModels
         public string Segment { get; set; }
         public uint Quantity { get; set; }
         public uint Price { get; set; }
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public DateTime StartedAt { get; set; }
         public string ChallengeType { get; set; }
     }

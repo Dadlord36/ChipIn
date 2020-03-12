@@ -42,7 +42,7 @@ namespace ViewModels.Settings
         }
 
         [Binding]
-        public int Id
+        public int? Id
         {
             get => UserSettingsModel.Id;
             set => UserSettingsModel.Id = value;

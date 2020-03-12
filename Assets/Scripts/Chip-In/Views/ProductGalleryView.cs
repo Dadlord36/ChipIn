@@ -35,9 +35,9 @@ namespace Views
         }
 
         public string CurrentlySelectedOffersCategory => StringDataComponent.GetStringDataFromComponent(itemsSelector.SelectedItem);
-        public int CurrentlySelectedOfferId => dropdownList.CurrentlySelectedOfferId;
+        public int? CurrentlySelectedOfferId => dropdownList.CurrentlySelectedOfferId;
 
-        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
+        public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
             dropdownList.FillDropdownList(itemsDictionary);
         }

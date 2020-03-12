@@ -36,7 +36,7 @@ namespace ViewModels
         private uint _selectedOfferPrice;
         private bool _offerIsSelected;
 
-        private int SelectedOfferId => ViewAsProductGalleryView.CurrentlySelectedOfferId;
+        private int? SelectedOfferId => ViewAsProductGalleryView.CurrentlySelectedOfferId;
 
         [Binding]
         public uint SelectedOfferPrice

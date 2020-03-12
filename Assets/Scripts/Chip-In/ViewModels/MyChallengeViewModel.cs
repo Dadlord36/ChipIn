@@ -158,7 +158,7 @@ namespace ViewModels
 
             var correspondingOffers = await Task.WhenAll(tasks);
 
-            var itemsNamesDictionary = new Dictionary<int, string>(itemsList.Count);
+            var itemsNamesDictionary = new Dictionary<int?, string>(itemsList.Count);
             for (int i = 0; i < itemsList.Count; i++)
             {
                 itemsNamesDictionary.Add(itemsList[i].Id, correspondingOffers[i].Offer.Title);
@@ -167,7 +167,7 @@ namespace ViewModels
             FillDropdownList(itemsNamesDictionary);
         }
 
-        private void FillDropdownList(Dictionary<int, string> dictionary)
+        private void FillDropdownList(Dictionary<int?, string> dictionary)
         {
             var myChallengeView = View as MyChallengeView;
             Debug.Assert(myChallengeView != null, nameof(myChallengeView) + " != null");

@@ -10,7 +10,7 @@ namespace Common
     public interface IDropdownList
     {
         event Action ItemsListUpdated;
-        void FillDropdownList(Dictionary<int,string> itemsDictionary);
+        void FillDropdownList(Dictionary<int?, string> itemsDictionary);
     }
 
     [Serializable]
@@ -55,7 +55,7 @@ namespace Common
             LogUtility.PrintLog(Tag, $"Dropdown list \"{tmp_Dropdown.name}\" was refilled");
         }
 
-        public void FillDropdownList(Dictionary<int, string> itemsDictionary)
+        public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
             var itemsList = itemsDictionary.Values.ToArray();
             var optionsList = new List<TMP_Dropdown.OptionData>(itemsList.Length);

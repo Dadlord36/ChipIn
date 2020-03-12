@@ -93,7 +93,7 @@ namespace RequestsStaticProcessors
             return null;
         }
 
-        public static Task<IOfferDetailsResponseModel> GetOfferDetails(IRequestHeaders requestHeaders, int offerId)
+        public static Task<IOfferDetailsResponseModel> GetOfferDetails(IRequestHeaders requestHeaders, int? offerId)
         {
             return TryGetOfferDetails(new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
         }

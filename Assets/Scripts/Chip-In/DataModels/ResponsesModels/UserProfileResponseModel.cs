@@ -15,7 +15,7 @@ namespace DataModels.ResponsesModels
         [JsonProperty("user")] public UserProfileDataWebModel User { get; set; }
         [JsonProperty("auth")] public AuthorisationModel Authorisation { get; set; }
 
-        public int Id
+        public int? Id
         {
             get => User.Id;
             set => User.Id = value;

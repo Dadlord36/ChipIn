@@ -4,6 +4,6 @@ namespace DataModels.Interfaces
 {
     public interface IIdentifier
     {
-        [JsonProperty("id")] int Id { get; set; }
+        [JsonProperty("id")] int? Id { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace DataModels
 {
     public class Gameable : IIdentifier, IUrl
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [JsonProperty("gameable_type")] public string Type { get; set; }
         public string Url { get; set; }
     }

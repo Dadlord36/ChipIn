@@ -57,7 +57,7 @@ namespace Repositories.Remote
             set => UserProfileDataRemote.Name = value;
         }
 
-        public int Id
+        public int? Id
         {
             get => UserProfileDataRemote.Id;
             set => UserProfileDataRemote.Id = value;

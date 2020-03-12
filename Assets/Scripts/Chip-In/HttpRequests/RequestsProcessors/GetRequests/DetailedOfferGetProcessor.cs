@@ -12,9 +12,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         public class DetailedOfferGetProcessorParameters
         {
             public readonly IRequestHeaders RequestHeaders;
-            public readonly int OfferId;
+            public readonly int? OfferId;
 
-            public DetailedOfferGetProcessorParameters(IRequestHeaders requestHeaders, int offerId) 
+            public DetailedOfferGetProcessorParameters(IRequestHeaders requestHeaders, int? offerId) 
             {
                 RequestHeaders = requestHeaders;
                 OfferId = offerId;

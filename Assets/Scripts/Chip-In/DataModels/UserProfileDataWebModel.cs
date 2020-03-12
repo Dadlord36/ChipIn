@@ -64,7 +64,7 @@ namespace DataModels
     [Serializable]
     public class UserProfileDataWebModel : IUserProfileDataWebModel, INotifyPropertyChanged
     {
-        [SerializeField] private int id;
+        [SerializeField] private int? id;
         [SerializeField] private string email;
         [SerializeField] private string name;
         [SerializeField] private string role;
@@ -104,7 +104,7 @@ namespace DataModels
         public static UserProfileDataWebModel Empty => new UserProfileDataWebModel(0, "", "", "", 0, "", false,
             false, false, false, new GeoLocation(), "", "", "");
 
-        public int Id
+        public int? Id
         {
             get => id;
             set

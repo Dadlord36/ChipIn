@@ -9,7 +9,7 @@ namespace DataModels.Interfaces
         GeoLocation UserLocation { get; set; }
         Texture2D AvatarImage { get; set; }
         string Name { get; set; }
-        int Id { get; set; }
+        int? Id { get; set; }
         string Email { get; set; }
         string Role { get; set; }
         string Gender { get; set; }

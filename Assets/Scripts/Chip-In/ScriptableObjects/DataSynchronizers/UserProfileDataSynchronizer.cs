@@ -40,7 +40,7 @@ namespace ScriptableObjects.DataSynchronizers
 
         #region IUserProfileDataWebModel implementation
 
-        public int Id
+        public int? Id
         {
             get => UserProfile.Id;
             set => UserProfile.Id = value;
