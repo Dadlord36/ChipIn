@@ -71,6 +71,12 @@ namespace ViewModels
             await InfoPanelView.FillWithData(ViewAsProductGalleryView, responseModel.Offer);
         }
 
+        [Binding]
+        public void ReturnToItemsSelectionState()
+        {
+            OfferIsSelected = false;
+        }
+
 
         [Binding]
         public void HideOfferInfoCard()
