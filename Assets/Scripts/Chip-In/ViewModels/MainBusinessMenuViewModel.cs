@@ -13,6 +13,7 @@ using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views;
 
 namespace ViewModels
 {
@@ -23,6 +24,8 @@ namespace ViewModels
         [SerializeField] private SessionController sessionController;
         [SerializeField] private int startingAfterMinutes = 1;
 
+        private MainBusinessMenuView ThisView => View as MainBusinessMenuView;
+        
         private DateTime InMinute
         {
             get
@@ -41,10 +44,8 @@ namespace ViewModels
             Offer = new UserCreatedOffer
             {
                 Category = MainNames.OfferCategories.BulkOffer, Description = "Something",
-                Price = 10, Quantity = 1, Segment = MainNames.OfferSegments.Food, Title = "Title",
-                ChallengeType = MainNames.ChallengeTypes.Match,
-                ExpireDate = DateTime.Today,
-                StartedAt = InMinute
+                Price = 10, Quantity = 1, Segment = MainNames.OfferSegments.Food, Title = ThisView.OfferTitle,
+                ChallengeType = MainNames.ChallengeTypes.Match, ExpireDate = DateTime.Today, StartedAt = InMinute
             }
         };
 
