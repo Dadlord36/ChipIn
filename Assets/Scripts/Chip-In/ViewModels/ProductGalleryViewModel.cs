@@ -13,6 +13,7 @@ using UnityWeld.Binding;
 using Utilities;
 using Views;
 using Views.InteractiveWindows;
+using NotifyCollectionChangedEventArgs = System.Collections.Specialized.NotifyCollectionChangedEventArgs;
 
 namespace ViewModels
 {
@@ -104,15 +105,24 @@ namespace ViewModels
             base.OnEnable();
             ViewAsProductGalleryView.NewCategorySelected += OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected += OnOfferSelected;
+            offersRemoteRepository.DataWasLoaded+= OffersRemoteRepositoryOnCollectionChanged;
         }
+
+
 
         protected override void OnDisable()
         {
             base.OnDisable();
             ViewAsProductGalleryView.NewCategorySelected -= OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected -= OnOfferSelected;
+            offersRemoteRepository.DataWasLoaded-= OffersRemoteRepositoryOnCollectionChanged;
         }
 
+        private void OffersRemoteRepositoryOnCollectionChanged()
+        {
+            FillDropdownListWithItemsOfCurrentCategory(ViewAsProductGalleryView.CurrentlySelectedOffersCategory);
+        }
+        
         private void OnOfferSelected(int offerId)
         {
             LogUtility.PrintLog(Tag, $"Selected offer Id is: {offerId.ToString()}");
@@ -135,6 +145,12 @@ namespace ViewModels
             }
 
             ViewAsProductGalleryView.FillDropdownList(items);
+        }
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            offersRemoteRepository.LoadDataFromServer();
         }
 
         [Binding]
