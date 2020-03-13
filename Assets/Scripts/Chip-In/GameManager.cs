@@ -2,7 +2,6 @@
 using Controllers;
 using HttpRequests;
 using UnityEngine;
-using UnityEngine.UI;
 using Utilities;
 using Views.ViewElements.ViewsPlacers;
 
@@ -13,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SessionController sessionController;
     [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
+    [SerializeField] private DataRestorationController restorationController;
 
     private IUpdatable _updatable;
 
@@ -27,9 +27,16 @@ public class GameManager : MonoBehaviour
     {
         _updatable = inputActionsTranslator;
         InitializeSystems();
-        sessionController.ProcessAppLaunching();
+        InitializeControllers();
         LogUtility.PrintLog(Tag,ScreenUtility.GetScreenSize().ToString());
     }
+
+    private void InitializeControllers()
+    {
+        sessionController.ProcessAppLaunching();
+        restorationController.Restore();
+    }
+    
     private void InitializeSystems()
     {
         viewsPlacer.Initialize();

@@ -19,6 +19,8 @@ namespace ViewModels
     [Binding]
     public sealed class MyChallengeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
+        private const string Tag = nameof(MyChallengeView);
+
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -49,6 +51,7 @@ namespace ViewModels
             {
                 if (value == _challengeIsSelected) return;
                 _challengeIsSelected = value;
+                LogUtility.PrintLog(Tag, $"ChallengeIsSelected: {_challengeIsSelected.ToString()}");
                 OnPropertyChanged();
             }
         }
@@ -93,8 +96,7 @@ namespace ViewModels
             base.OnDisable();
             UnsubscribeFromViewEvents();
         }
-
-
+        
         private void SubscribeToViewEvents()
         {
             ThisView.RelatedItemSelected += OnSelectedItemIndexChanged;
@@ -112,7 +114,10 @@ namespace ViewModels
             var itemsList = userGamesRemoteRepository.ItemsData;
             //Set first game id as selected in list
             if (itemsList.Count > 0)
+            {
                 SelectedGameId = itemsList[0].Id;
+                ChallengeIsSelected = true;
+            }
         }
 
         private void OnSelectedItemIndexChanged(int newId)
@@ -126,9 +131,9 @@ namespace ViewModels
             await InfoPanelView.FillWithData(ThisView, responseModel.Offer);
         }
 
-        private async Task LoadGamesList()
+        private Task LoadGamesList()
         {
-            await userGamesRemoteRepository.LoadDataFromServer();
+            return userGamesRemoteRepository.LoadDataFromServer();
         }
 
         private async void LoadDataAndFillTheList()

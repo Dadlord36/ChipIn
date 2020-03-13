@@ -13,7 +13,6 @@ using UnityWeld.Binding;
 using Utilities;
 using Views;
 using Views.InteractiveWindows;
-using NotifyCollectionChangedEventArgs = System.Collections.Specialized.NotifyCollectionChangedEventArgs;
 
 namespace ViewModels
 {
@@ -92,7 +91,7 @@ namespace ViewModels
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
             {
-                await gameIconsRepository.LoadBoardIconsSetFromUrls(response.ResponseModelInterface.GameBoard.Icons);
+                await gameIconsRepository.StoreNewGameIconsSet(response.ResponseModelInterface.GameBoard.Icons);
             }
             else
             {
