@@ -29,6 +29,7 @@ namespace Views.ViewElements
         public void Initialize()
         {
             timeline.Initialize();
+            CountdownText = 0.ToString();
         }
 
         protected override void OnEnable()
