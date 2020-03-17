@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CustomAnimators;
+﻿using System.Collections.Generic;
 using DataModels.MatchModels;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -30,8 +28,8 @@ namespace Views
 
             for (int i = 0; i < length; i++)
             {
-                slotIconViews[i].InitializeAnimator(boardIconsData[i].AnimatedIconResource,
-                    slotsSpritesAnimationSwitchingInterval, true);
+                slotIconViews[i].InitializeAnimator(boardIconsData[i].AnimatedIconResource, slotsSpritesAnimationSwitchingInterval,
+                    true);
             }
         }
 

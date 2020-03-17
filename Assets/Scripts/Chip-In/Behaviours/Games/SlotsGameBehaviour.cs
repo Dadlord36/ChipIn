@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -33,6 +33,9 @@ namespace Behaviours.Games
             public void SetSlotsBoardData(SlotsBoardData boardDataData)
             {
                 _slotsBoardData = boardDataData;
+#if UseLOG
+                LogBoardIndexes(_slotsBoardData);
+#endif
             }
 
             public void Update(MatchStateData matchStateData)
@@ -47,11 +50,23 @@ namespace Behaviours.Games
 
             private void Update(IBaseMatchModel matchDataModel, uint roundNumber)
             {
-                _slotsBoardData = matchDataModel.BoardData;
+                SetSlotsBoardData(matchDataModel.BoardData);
                 UsersData = matchDataModel.Users;
                 WinnerId = matchDataModel.WinnerId;
                 RoundEndsInSeconds = matchDataModel.RoundEndsAt;
                 Number = (int) roundNumber;
+            }
+
+            private static void LogBoardIndexes(SlotsBoardData slotsBoardData)
+            {
+                var iconsData = slotsBoardData.GetIconsData();
+                var stringBuilder = new StringBuilder(iconsData[0].IconId.ToString());
+                for (int i = 1; i < iconsData.Length; i++)
+                {
+                    stringBuilder.Append($" : {iconsData[i].IconId.ToString()}");
+                }
+
+                LogUtility.PrintLog(Tag, $"New indexes: {stringBuilder}");
             }
         }
 
@@ -122,15 +137,15 @@ namespace Behaviours.Games
                 var roundTime = matchData.MatchData.RoundEndsAt;
                 var roundNumber = matchData.MatchData.RoundNumber;
                 var timeForPassedRounds = (int) (roundNumber * roundTime);
-                
+
                 GameInterface.RefillIconsSet();
 
                 var timeSpanFromGameStarted = DateTime.Now - selectedGameRepository.SelectedGameData.StartedAt;
                 var secondsSinsRoundHaveStarted = timeForPassedRounds - timeSpanFromGameStarted.Seconds;
-                
+
                 LogUtility.PrintLog(Tag, $"Seconds sins round has started: {secondsSinsRoundHaveStarted.ToString()}");
                 matchData.MatchData.RoundEndsAt = secondsSinsRoundHaveStarted;
-                
+
                 _roundData.Update(matchData.MatchData);
             }
             catch (Exception e)
@@ -141,6 +156,7 @@ namespace Behaviours.Games
 
         private void StartNewRound()
         {
+            LogUtility.PrintLog(Tag, "Round has started");
             RoundNumber = _roundData.Number;
             UpdateSlotsIconsPositionsAndActivity();
             GameInterface.StartTimer(_roundData.RoundEndsInSeconds);
@@ -249,9 +265,7 @@ namespace Behaviours.Games
 
         private async void MakeASpin(SpinBoardParameters spinBoardParameters)
         {
-            var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository,
-                selectedGameRepository.GameId,
-                spinBoardParameters);
+            var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository, selectedGameRepository.GameId, spinBoardParameters);
             _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
             UpdateSlotsIconsPositionsAndActivity();
         }

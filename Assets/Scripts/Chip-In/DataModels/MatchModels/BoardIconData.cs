@@ -1,4 +1,5 @@
 ﻿using CustomAnimators;
+using DataModels.Interfaces;
 
 namespace DataModels.MatchModels
 {
@@ -7,9 +8,9 @@ namespace DataModels.MatchModels
         public readonly SimpleImageAnimator.SpritesAnimatorResource AnimatedIconResource;
         public readonly int? Id;
 
-        public BoardIconData(SimpleImageAnimator.SpritesAnimatorResource animatedIconResource, int? id)
+        public BoardIconData(SimpleImageAnimator.SpritesAnimatorResource animatedIconResource, IIdentifier identifier)
         {
-            Id = id;
+            Id = identifier.Id;
             AnimatedIconResource = animatedIconResource;
         }
     }

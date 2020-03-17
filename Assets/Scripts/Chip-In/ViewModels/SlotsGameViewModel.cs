@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Common.Interfaces;
-using DataModels.Interfaces;
 using DataModels.MatchModels;
 using JetBrains.Annotations;
 using Repositories.Local;
@@ -121,7 +119,7 @@ namespace ViewModels
 
         public SlotsGameViewModel()
         {
-            _boardIconsHolder = new BoardIconsSetHolder(rowsColumns.x, rowsColumns.y);
+            _boardIconsHolder = new BoardIconsSetHolder();
         }
 
         #endregion

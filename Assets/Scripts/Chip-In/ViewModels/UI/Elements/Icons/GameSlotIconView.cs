@@ -46,6 +46,11 @@ namespace ViewModels.UI.Elements.Icons
             InitializeComponents();
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+        }
+
         #endregion
 
 
@@ -55,11 +60,10 @@ namespace ViewModels.UI.Elements.Icons
         {
             _simpleImageAnimator.Initialize();
         }
-        
+
         private void CollectComponentReferences()
         {
-            Assert.IsTrue(TryGetComponent(out _simpleImageAnimator),
-                $"There is not {nameof(SimpleImageAnimator)} on {name}");
+            Assert.IsTrue(TryGetComponent(out _simpleImageAnimator), $"There is not {nameof(SimpleImageAnimator)} on {name}");
         }
 
         private void UpdateActivityStateRepresentation()
@@ -92,6 +96,7 @@ namespace ViewModels.UI.Elements.Icons
             _simpleImageAnimator.Setup(spritesAnimatorResource, updateInterval, loopTheAnimation);
         }
 
+
         public void StartAnimating()
         {
             _simpleImageAnimator.StartAnimating();
@@ -108,5 +113,10 @@ namespace ViewModels.UI.Elements.Icons
         }
 
         #endregion
+
+        public void SetSprite(Sprite sprite)
+        {
+            IconSprite = sprite;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common.Interfaces;
+using DataModels.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,9 +10,6 @@ namespace CustomAnimators
 {
     public interface IImageAnimator
     {
-        /*void InitializeAnimator(SimpleImageAnimator.SpritesAnimatorResource spritesAnimatorResource,
-            float updateInterval, bool loopTheAnimation);*/
-
         void StartAnimating();
         void Pause();
         void StopAnimating();
@@ -19,16 +17,19 @@ namespace CustomAnimators
 
     public class SimpleImageAnimator : UIBehaviour, IImageAnimator, IInitialize
     {
-        public struct SpritesSheet
+        public struct SpritesSheet : IIdentifier
         {
             public readonly Texture2D SpritesSheetTexture;
             public readonly int RowsNumber, ColumnsNumber;
 
-            public SpritesSheet(Texture2D spritesSheetTexture, int rowsNumber, int columnsNumber)
+            public int? Id { get; set; }
+
+            public SpritesSheet(Texture2D spritesSheetTexture, int rowsNumber, int columnsNumber, int? id)
             {
                 SpritesSheetTexture = spritesSheetTexture;
                 RowsNumber = rowsNumber;
                 ColumnsNumber = columnsNumber;
+                Id = id;
             }
         }
 
@@ -38,19 +39,14 @@ namespace CustomAnimators
 
             public SpritesAnimatorResource(SpritesSheet spritesSheet)
             {
-                SpritesSequence = SpriteSheetUtility.GetSprites(spritesSheet.SpritesSheetTexture,
-                    new Vector2Int(spritesSheet.RowsNumber, spritesSheet.ColumnsNumber));
-            }
-
-            public SpritesAnimatorResource(List<Sprite> spritesSequence)
-            {
-                SpritesSequence = spritesSequence;
+                SpritesSequence = SpriteSheetUtility.GetSpritesFromSpritesSheet(spritesSheet.SpritesSheetTexture,
+                    spritesSheet.RowsNumber, spritesSheet.ColumnsNumber);
             }
         }
 
         [SerializeField] private Image image;
 
-        private Sprite[] _sprites;
+        private SpritesAnimatorResource _spritesAnimatorResource;
         private float _spriteUpdateInterval;
         private float _playbackLength;
         private int _spriteIndex;
@@ -62,14 +58,13 @@ namespace CustomAnimators
             set => image.sprite = value;
         }
 
-        public void Setup(SpritesAnimatorResource resource, float updateInterval,
-            bool loopTheAnimation = false)
+        public void Setup(SpritesAnimatorResource resource, float updateInterval, bool loopTheAnimation = false)
         {
             StopAnimating();
-            _sprites = resource.SpritesSequence.ToArray();
+            _spritesAnimatorResource = resource;
             _spriteUpdateInterval = updateInterval;
             _playInLoop = loopTheAnimation;
-            _playbackLength = (_sprites.Length - 1) * _spriteUpdateInterval;
+            _playbackLength = (_spritesAnimatorResource.SpritesSequence.Count - 1) * _spriteUpdateInterval;
         }
 
         public void Initialize()
@@ -103,7 +98,7 @@ namespace CustomAnimators
             {
                 if (_spriteIndex == value) return;
                 _spriteIndex = value;
-                ImageSprite = _sprites[_spriteIndex];
+                ImageSprite = _spritesAnimatorResource.SpritesSequence[_spriteIndex];
             }
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Common;
 using CustomAnimators;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
@@ -55,9 +55,10 @@ namespace Repositories.Local
         {
             try
             {
-                var indexedTextures = await SpritesAnimationResourcesCreator.CreateIndexedTextures(indexedUrls);
-                SaveIconsData(indexedTextures, indexedUrls);
-                FillBoardIconsData(indexedTextures);
+                IReadOnlyList<byte[]> textures = await ImagesDownloadingUtility.DownloadMultipleDataArrayFromUrls(indexedUrls);
+                SaveIconsData(textures, indexedUrls);
+                FillBoardIconsData(SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,
+                    rowsNumber, columnsNumber));
             }
             catch (Exception e)
             {
@@ -66,68 +67,34 @@ namespace Repositories.Local
             }
         }
 
-        private BoardIconData[] GenerateSpritesAnimation(IReadOnlyList<IndexedTexture> indexedTextures)
+        private void FillBoardIconsData(IEnumerable<BoardIconData> indexedTextures)
         {
-            return SpritesAnimationResourcesCreator.CreateBoardIcons(indexedTextures, rowsNumber, columnsNumber).ToArray();
+            _boardIconsData = indexedTextures.ToArray();
         }
 
-        private void FillBoardIconsData(IReadOnlyList<IndexedTexture> indexedTextures)
+        private class ImageStoringHeader : IIdentifier, IUrl
         {
-            _boardIconsData = GenerateSpritesAnimation(indexedTextures);
-        }
-
-        private int[] GetArrayOfImageBitmapsSizes(IReadOnlyList<byte[]> listOfPngData)
-        {
-            var bitmapsSizes = new int[listOfPngData.Count];
-            for (var index = 0; index < listOfPngData.Count; index++)
-            {
-                bitmapsSizes[index] = listOfPngData[index].Length;
-            }
-
-            return bitmapsSizes;
-        }
-
-        private List<byte[]> GetPngsAsByteArrays(IReadOnlyList<IndexedTexture> indexedTextures)
-        {
-            var pngsBytes = new List<byte[]>(indexedTextures.Count);
-
-            for (int i = 0; i < indexedTextures.Count; i++)
-            {
-                pngsBytes.Add(indexedTextures[i].SpriteSheetTexture.GetRawTextureData());
-            }
-
-            return pngsBytes;
-        }
-
-        private class ImageStoringHeader
-        {
-            public int Index { get; }
-            public string ImageUrl { get; }
-            public int Width { get; }
-            public int Height { get; }
+            public int? Id { get; set; }
+            public string Url { get; set; }
             public int RawImageSize { get; }
-            public TextureFormat TextureFormat { get; }
 
-            public ImageStoringHeader(int index, string imageUrl, int rawImageSize, int width, int height, TextureFormat textureFormat)
+            public ImageStoringHeader(int index, string url, int rawImageSize)
             {
-                Index = index;
-                ImageUrl = imageUrl;
+                Id = index;
+                Url = url;
                 RawImageSize = rawImageSize;
-                Width = width;
-                Height = height;
-                TextureFormat = textureFormat;
             }
 
-            public static ImageStoringHeader Create(IIdentifier identifierModel, IUrl urlModel, int rawImageSize, int width, int height, TextureFormat textureFormat)
+            public static ImageStoringHeader Create(int? id, IUrl urlModel, int rawImageSize)
             {
-                Debug.Assert(identifierModel.Id != null, "identifierModel.Id != null");
-                return new ImageStoringHeader((int) identifierModel.Id, urlModel.Url, rawImageSize, width, height, textureFormat);
+                Debug.Assert(id != null, "identifierModel.Id != null");
+                return new ImageStoringHeader((int) id, urlModel.Url, rawImageSize);
             }
         }
 
         private class ImagesStoringHeaderDataModel
         {
-            public ImageStoringHeader[] ImagesStoringHeaders { get; set; }
+            public ImageStoringHeader[] ImagesStoringHeaders { get; }
             public ImageStoringHeader this[int index] => ImagesStoringHeaders[index];
 
             public ImagesStoringHeaderDataModel(ImageStoringHeader[] imagesStoringHeaders)
@@ -136,27 +103,26 @@ namespace Repositories.Local
             }
 
 
-            public static ImagesStoringHeaderDataModel Create(IReadOnlyList<IndexedTexture> indexedTextures, IReadOnlyList<IndexedUrl> indexedUrls, IReadOnlyList<byte[]> pngsBytes)
+            public static ImagesStoringHeaderDataModel Create(IReadOnlyList<IndexedUrl> indexedUrls, IReadOnlyList<byte[]> imagesBytes)
             {
-                var count = indexedTextures.Count;
+                var count = indexedUrls.Count;
                 Assert.IsTrue(count > 0);
-                Assert.IsTrue(count == indexedUrls.Count && count == pngsBytes.Count);
+                Assert.IsTrue(count == indexedUrls.Count && count == imagesBytes.Count);
 
                 var imagesStoringHeaders = new ImageStoringHeader[count];
 
                 for (int i = 0; i < count; i++)
                 {
-                    var texture = indexedTextures[i].SpriteSheetTexture;
-                    imagesStoringHeaders[i] = ImageStoringHeader.Create(indexedTextures[i], indexedUrls[i], pngsBytes[i].Length, texture.width, texture.height, texture.format);
+                    imagesStoringHeaders[i] = ImageStoringHeader.Create(indexedUrls[i].Id, indexedUrls[i], imagesBytes[i].Length);
                 }
 
                 return new ImagesStoringHeaderDataModel(imagesStoringHeaders);
             }
         }
 
-        private byte[] MergeIntoSingleArray(IEnumerable<byte[]> bytesArrays)
+        private byte[] MergeIntoSingleArray(IReadOnlyList<byte[]> bytesArrays)
         {
-            var mergedList = new List<byte>();
+            var mergedList = new List<byte>(CalculateTotalLength(bytesArrays));
             foreach (var array in bytesArrays)
             {
                 mergedList.AddRange(array);
@@ -165,52 +131,57 @@ namespace Repositories.Local
             return mergedList.ToArray();
         }
 
-        private void SaveIconsData(IReadOnlyList<IndexedTexture> indexedTextures, IReadOnlyList<IndexedUrl> indexedUrls)
+        private int CalculateTotalLength(IReadOnlyList<byte[]> bytesArrays)
         {
-            var pngsBytes = GetPngsAsByteArrays(indexedTextures);
-            var imagesStoringHeaderData = ImagesStoringHeaderDataModel.Create(indexedTextures, indexedUrls, pngsBytes);
+            int length = 0;
+            for (int i = 0; i < bytesArrays.Count; i++)
+            {
+                length += bytesArrays[i].Length;
+            }
+
+            return length;
+        }
+
+        private void SaveIconsData(IReadOnlyList<byte[]> indexedTexturesBytesData, IReadOnlyList<IndexedUrl> indexedUrls)
+        {
+            var imagesStoringHeaderData = ImagesStoringHeaderDataModel.Create(indexedUrls, indexedTexturesBytesData);
             var json = JsonConverterUtility.ConvertModelToJson(imagesStoringHeaderData);
 
             File.WriteAllText(IconsDataHeaderFilePath, json);
-            File.WriteAllBytes(IconsDataFilePath, MergeIntoSingleArray(pngsBytes));
+            File.WriteAllBytes(IconsDataFilePath, MergeIntoSingleArray(indexedTexturesBytesData));
+        }
+
+        private void LoadIconsData(ImagesStoringHeaderDataModel storingHeaderDataModel, byte[] packedIconsData)
+        {
+            var imagesBytesList = RestoreImagesBytesList(storingHeaderDataModel.ImagesStoringHeaders, packedIconsData);
+            FillBoardIconsData(SpritesAnimationResourcesCreator.CreateBoardIcons(imagesBytesList,
+                storingHeaderDataModel.ImagesStoringHeaders, rowsNumber, columnsNumber));
         }
 
 
-        private ImagesStoringHeaderDataModel LoadStoringHeaderData()
+        private static ImagesStoringHeaderDataModel LoadStoringHeaderData()
         {
             var headersAsString = File.ReadAllText(IconsDataHeaderFilePath);
             return JsonConverterUtility.ConvertJsonString<ImagesStoringHeaderDataModel>(headersAsString);
         }
 
-        private byte[] LoadPackedIconsData()
+        private static byte[] LoadPackedIconsData()
         {
             return File.ReadAllBytes(IconsDataFilePath);
         }
 
-        private void LoadIconsData(ImagesStoringHeaderDataModel storingHeaderDataModel, byte[] packedIconsData)
-        {
-            var imagesBytesList = GetImagesBytesList(storingHeaderDataModel.ImagesStoringHeaders, packedIconsData);
-            var indexedTextures = new List<IndexedTexture>();
 
-            for (int i = 0; i < storingHeaderDataModel.ImagesStoringHeaders.Length; i++)
-            {
-                var headerData = storingHeaderDataModel[i];
-                indexedTextures.Add(new IndexedTexture(imagesBytesList[i], headerData.Index, storingHeaderDataModel[i].Width, storingHeaderDataModel[i].Height, headerData.TextureFormat));
-            }
-
-            FillBoardIconsData(indexedTextures);
-        }
-
-        private List<byte[]> GetImagesBytesList(ImageStoringHeader[] imageStoringHeaders, byte[] packedImagesArray)
+        private static List<byte[]> RestoreImagesBytesList(IReadOnlyList<ImageStoringHeader> imageStoringHeaders, byte[] packedImagesArray)
         {
             int fromIndex = 0, toIndex = -1;
-            var listOfImagesRawData = new List<byte[]>(imageStoringHeaders.Length);
+            var listOfImagesRawData = new List<byte[]>(imageStoringHeaders.Count);
 
-            for (int i = 0; i < imageStoringHeaders.Length; i++)
+            for (int i = 0; i < imageStoringHeaders.Count; i++)
             {
                 var sizeOfCurrentImage = imageStoringHeaders[i].RawImageSize;
                 AdjustFromToIndexes(sizeOfCurrentImage);
-                listOfImagesRawData.Add(CutPartOfArray(packedImagesArray, fromIndex, sizeOfCurrentImage));
+                var cutCompressedBytesArray = CutPartOfArray(packedImagesArray, fromIndex, sizeOfCurrentImage);
+                listOfImagesRawData.Add(cutCompressedBytesArray);
             }
 
             void AdjustFromToIndexes(int rawImageSize)
@@ -251,88 +222,44 @@ namespace Repositories.Local
 
         private static class SpritesAnimationResourcesCreator
         {
-            public static List<SimpleImageAnimator.SpritesAnimatorResource> CreateAnimatorResourcesFromSpritesSheetsTextures(IReadOnlyList<Texture2D> spritesSheets, int rowsNumber,
-                int columnsNumber)
+            public static List<BoardIconData> CreateBoardIcons(IReadOnlyList<SimpleImageAnimator.SpritesSheet> spritesSheets)
             {
-                var spritesSheetsList = new List<SimpleImageAnimator.SpritesSheet>(spritesSheets.Count);
-                for (int i = 0; i < spritesSheets.Count; i++)
+                var boardIcons = new List<BoardIconData>(spritesSheets.Count);
+                for (var i = 0; i < spritesSheets.Count; i++)
                 {
-                    spritesSheetsList.Add(new SimpleImageAnimator.SpritesSheet(spritesSheets[i], rowsNumber, columnsNumber));
-                }
-
-                return CreateAnimatorResourcesFromSpritesSheets(spritesSheetsList);
-            }
-
-            public static List<BoardIconData> CreateBoardIcons(
-                IReadOnlyList<IndexedTexture> indexedTextures,
-                int rowsNumber, int columnsNumber)
-            {
-                var boardIcons = new List<BoardIconData>(indexedTextures.Count);
-                for (var index = 0; index < indexedTextures.Count; index++)
-                {
-                    boardIcons.Add(new BoardIconData(new SimpleImageAnimator.SpritesAnimatorResource(new SimpleImageAnimator.SpritesSheet(indexedTextures[index].SpriteSheetTexture,
-                        rowsNumber, columnsNumber)), indexedTextures[index].Id));
+                    boardIcons.Add(new BoardIconData(new SimpleImageAnimator.SpritesAnimatorResource(spritesSheets[i]),
+                        spritesSheets[i]));
                 }
 
                 return boardIcons;
             }
 
-            public static async Task<List<BoardIconData>> CreateBoardIcons(IReadOnlyList<IndexedUrl> boardElementsData,
-                int rowsNumber, int columnsNumber)
+            public static List<BoardIconData> CreateBoardIcons(IReadOnlyList<byte[]> textures,
+                IReadOnlyList<IIdentifier> boardElementsIdentifiers, int rowsNumber, int columnsNumber)
             {
-                try
-                {
-                    var indexedTextures = await CreateIndexedTextures(boardElementsData);
-                    return CreateBoardIcons(indexedTextures, rowsNumber, columnsNumber);
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                    throw;
-                }
+                var indexedTextures = CreateIndexedTextures(textures, boardElementsIdentifiers, rowsNumber, columnsNumber);
+                return CreateBoardIcons(indexedTextures);
             }
 
-            public static List<SimpleImageAnimator.SpritesAnimatorResource> CreateAnimatorResourcesFromSpritesSheets(
-                IReadOnlyList<SimpleImageAnimator.SpritesSheet> spritesSheets)
+
+            public static List<SimpleImageAnimator.SpritesSheet> CreateIndexedTextures(IReadOnlyList<byte[]> textures,
+                IReadOnlyList<IIdentifier> identifiers, int rowsNumber, int columnsNumber)
             {
-                var resources = new List<SimpleImageAnimator.SpritesAnimatorResource>(spritesSheets.Count);
-                for (int i = 0; i < spritesSheets.Count; i++)
+                Assert.IsTrue(textures.Count == identifiers.Count);
+
+                var elementsCount = textures.Count;
+                var indexedTextures = new List<SimpleImageAnimator.SpritesSheet>(elementsCount);
+
+                for (var index = 0; index < elementsCount; index++)
                 {
-                    resources.Add(new SimpleImageAnimator.SpritesAnimatorResource(spritesSheets[i]));
+                    var texture = new Texture2D(0, 0);
+                    texture.LoadImage(textures[index]);
+
+                    indexedTextures.Add(new SimpleImageAnimator.SpritesSheet(texture, rowsNumber, columnsNumber,
+                        identifiers[index].Id));
                 }
 
-                return resources;
-            }
-
-            public static async Task<List<IndexedTexture>> CreateIndexedTextures(IReadOnlyList<IndexedUrl> indexedUrls)
-            {
-                try
-                {
-                    var elementsCount = indexedUrls.Count;
-
-                    var uris = new string[elementsCount];
-
-                    for (int i = 0; i < elementsCount; i++)
-                    {
-                        uris[i] = indexedUrls[i].Url;
-                    }
-
-                    var textures = await ImagesDownloadingUtility.TryDownloadImagesArray(uris);
-
-                    var indexedTextures = new List<IndexedTexture>(elementsCount);
-
-                    for (var index = 0; index < elementsCount; index++)
-                    {
-                        indexedTextures.Add(new IndexedTexture(textures[index], indexedUrls[index].Id));
-                    }
-
-                    return indexedTextures;
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                    throw;
-                }
+                return indexedTextures;
             }
         }
     }

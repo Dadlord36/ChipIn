@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
@@ -66,6 +67,30 @@ namespace WebOperationUtilities
             }
         }
 
+        public static async Task<List<byte[]>> DownloadMultipleDataArrayFromUrls(IReadOnlyList<IUrl> imagesUrls)
+        {
+            try
+            {
+                var tasks = new List<Task<byte[]>>(imagesUrls.Count);
+                for (int i = 0; i < imagesUrls.Count; i++)
+                {
+                    using (var client = new WebClient())
+                    {
+                        tasks.Add(client.DownloadDataTaskAsync(imagesUrls[i].Url));
+                        client.DownloadProgressChanged += (sender, args) => LogUtility.PrintLog(Tag, $"{sender} progress: {args.ProgressPercentage.ToString()}");
+                    }
+                }
+
+                var bytesArray = await Task.WhenAll(tasks);
+                return bytesArray.ToList();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
         private static void PrintLog(string message)
         {
             LogUtility.PrintLog(Tag, message);
@@ -88,7 +113,7 @@ namespace WebOperationUtilities
                 // Download home page data.
                 PrintLog($"Downloading {uri}");
                 // Download the Web resource and save it into a data buffer.
-                return  myWebClient.DownloadDataTaskAsync(uri);
+                return myWebClient.DownloadDataTaskAsync(uri);
             }
         }
 

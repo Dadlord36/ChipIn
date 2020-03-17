@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Common;
-using CustomAnimators;
-using DataModels.Interfaces;
+﻿using System.Collections.Generic;
 using DataModels.MatchModels;
-using UnityEngine;
-using Utilities;
 using Views;
-using WebOperationUtilities;
 
 namespace ViewModels
 {
@@ -21,7 +13,7 @@ namespace ViewModels
         private class BoardIconsSetHolder
         {
             private readonly List<BoardIconData> _boardIcons = new List<BoardIconData>();
-            private readonly int _rowsNumber, _columnsNumber;
+            // private readonly int _rowsNumber, _columnsNumber;
 
             private BoardIconData[] BoardIcons
             {
@@ -33,23 +25,11 @@ namespace ViewModels
                 }
             }
 
-            public BoardIconsSetHolder(int rowsNumber, int columnsNumber)
-            {
-                _rowsNumber = rowsNumber;
-                _columnsNumber = columnsNumber;
-            }
 
             public void Refill(BoardIconData[] boardIconsData)
             {
                 BoardIcons = boardIconsData;
             }
-
-            // public void Refill(IReadOnlyList<IndexedTexture> indexedTextures)
-            // {
-            //     BoardIcons = SpritesAnimationResourcesCreator
-            //         .CreateBoardIcons(indexedTextures, _rowsNumber, _columnsNumber).ToArray();
-            // }
-
 
             private BoardIconData GetBordIconDataWithId(int index)
             {
@@ -67,8 +47,5 @@ namespace ViewModels
                 return sprites;
             }
         }
-
-
-        
     }
 }
