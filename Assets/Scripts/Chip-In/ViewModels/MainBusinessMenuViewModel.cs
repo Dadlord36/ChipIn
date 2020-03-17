@@ -22,7 +22,6 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private SessionController sessionController;
-        [SerializeField] private int startingAfterMinutes = 1;
 
         private MainBusinessMenuView ThisView => View as MainBusinessMenuView;
         
@@ -31,7 +30,7 @@ namespace ViewModels
             get
             {
                 var now = DateTime.UtcNow;
-                now = now.AddMinutes(startingAfterMinutes);
+                now = now.AddMinutes(ThisView.GameStartingTimeDelay);
                 now = now.AddSeconds(1);
                 return now;
             }
