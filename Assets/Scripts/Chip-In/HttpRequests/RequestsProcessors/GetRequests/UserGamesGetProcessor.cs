@@ -74,8 +74,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         MakeAMovePostProcessor : RequestWithoutBodyProcessor<UpdateUserScoreResponseModel, IUpdateUserScoreResponseModel
         >
     {
-        public MakeAMovePostProcessor(IRequestHeaders requestHeaders, int gameId,
-            SpinBoardParameters spinBoardParameters)
+        public MakeAMovePostProcessor(IRequestHeaders requestHeaders, int gameId, SpinBoardParameters spinBoardParameters)
             : base(ApiCategories.Games, HttpMethod.Post, requestHeaders, new[]
             {
                 gameId.ToString(), GameRequestParameters.Match, GameRequestParameters.Move
@@ -86,11 +85,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         private static NameValueCollection FormNameValueCollectionForQueryStringParameters(
             SpinBoardParameters spinBoardParameters)
         {
-            var collection = new NameValueCollection(2);
-            collection.Add(GameRequestParameters.SpinFrame,
-                GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinFrame));
-            collection.Add(GameRequestParameters.SpinIcons,
-                GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinBoard));
+            var collection = new NameValueCollection(2) 
+                {{GameRequestParameters.SpinFrame, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinFrame)}, 
+                    {GameRequestParameters.SpinIcons, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinBoard)}};
             return collection;
         }
     }

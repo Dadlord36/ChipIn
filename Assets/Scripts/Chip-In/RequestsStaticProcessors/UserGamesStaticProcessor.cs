@@ -62,8 +62,7 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                var response =
-                    await new MakeAMovePostProcessor(requestHeaders, gameId, spinBoardParameters).SendRequest(
+                var response = await new MakeAMovePostProcessor(requestHeaders, gameId, spinBoardParameters).SendRequest(
                         "Player has made a move successfully");
                 return response.ResponseModelInterface;
             }
