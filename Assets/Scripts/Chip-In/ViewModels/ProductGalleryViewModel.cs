@@ -91,7 +91,7 @@ namespace ViewModels
             var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
             if (response.Success)
             {
-                await gameIconsRepository.StoreNewGameIconsSet(response.ResponseModelInterface.GameBoard.Icons);
+                await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons);
             }
             else
             {
@@ -110,9 +110,8 @@ namespace ViewModels
             base.OnEnable();
             ViewAsProductGalleryView.NewCategorySelected += OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected += OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded+= OffersRemoteRepositoryOnCollectionChanged;
+            offersRemoteRepository.DataWasLoaded += OffersRemoteRepositoryOnCollectionChanged;
         }
-
 
 
         protected override void OnDisable()
@@ -120,14 +119,14 @@ namespace ViewModels
             base.OnDisable();
             ViewAsProductGalleryView.NewCategorySelected -= OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected -= OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded-= OffersRemoteRepositoryOnCollectionChanged;
+            offersRemoteRepository.DataWasLoaded -= OffersRemoteRepositoryOnCollectionChanged;
         }
 
         private void OffersRemoteRepositoryOnCollectionChanged()
         {
             FillDropdownListWithItemsOfCurrentCategory(ViewAsProductGalleryView.CurrentlySelectedOffersCategory);
         }
-        
+
         private void OnOfferSelected(int offerId)
         {
             LogUtility.PrintLog(Tag, $"Selected offer Id is: {offerId.ToString()}");

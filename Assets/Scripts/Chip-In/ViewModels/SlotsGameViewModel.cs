@@ -148,7 +148,7 @@ namespace ViewModels
 
         public void RefillIconsSet()
         {
-            _boardIconsHolder.Refill(gameIconsRepository.BoardIconsData);
+            _boardIconsHolder.Refill(gameIconsRepository.GetBoardIconsData(selectedGameRepository.GameId));
         }
 
         public void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData)
