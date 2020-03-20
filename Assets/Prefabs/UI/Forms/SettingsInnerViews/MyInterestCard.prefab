@@ -10,8 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5287359769153577158}
   - component: {fileID: 4316779279444161854}
+  - component: {fileID: 6323979298919673005}
+  - component: {fileID: 7304691981515648896}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: MainPart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,6 +66,44 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!223 &6323979298919673005
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709317375955845754}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &7304691981515648896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709317375955845754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4993374905573885557
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +198,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5287359769153577158}
     m_Modifications:
+    - target: {fileID: 1027382748539039827, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1027382748539039827, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291770442220837396, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291770442220837396, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1291770442220837396, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -17
+      objectReference: {fileID: 0}
     - target: {fileID: 2375289479470209144, guid: d0abb3428ec418240a6690a30307f3e0,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -287,6 +352,38 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942920059263430315, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942920059263430315, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942920059263430315, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
+    - target: {fileID: 6942920059263430315, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+        type: 2}
+    - target: {fileID: 6942920059263430315, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8313612026285100320, guid: d0abb3428ec418240a6690a30307f3e0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9043636002015731781, guid: d0abb3428ec418240a6690a30307f3e0,
         type: 3}
