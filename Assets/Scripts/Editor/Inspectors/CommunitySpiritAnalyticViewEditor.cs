@@ -1,6 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 using ViewModels.UI.Elements;
+using Views.ViewElements;
 
 namespace Inspectors
 {

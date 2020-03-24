@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
-using Views;
 
-namespace ViewModels.UI.Elements
+namespace Views.ViewElements
 {
     [RequireComponent(typeof(UICircle))]
     public class CommunitySpiritAnalyticView : BaseView
@@ -64,9 +63,9 @@ namespace ViewModels.UI.Elements
                 SetCircleSize(innerCircle.gameObject, analyticViewCirclesBaseSize);
                 innerCircle.raycastTarget = false;
                 innerCircle.SetFill(fill);
-                innerCircle.SetThickness((int)thickness);
+                innerCircle.SetThickness((int) thickness);
                 innerCircle.SetBaseColor(color);
-                innerCircle.SetArcSteps((int)arcSteps);
+                innerCircle.SetArcSteps((int) arcSteps);
             }
         }
 
