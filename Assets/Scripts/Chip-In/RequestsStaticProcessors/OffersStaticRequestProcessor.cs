@@ -53,12 +53,14 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
+        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, 
+            IOfferCreationRequestModel requestModel)
         {
-            var imageAsBytesArray = requestModel.PosterAsText.bytes;
+            var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterImageFilePath) ;
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
 
-            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName($"{requestModel.PosterAsText.name}.png")}};
+            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]",
+                Path.GetFileName(requestModel.PosterImageFilePath)}};
 
             foreach (var element in elements)
             {
@@ -70,7 +72,8 @@ namespace RequestsStaticProcessors
             LogUtility.PrintLog(Tag, formAsString);
 
 
-            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, ApiCategories.Offers, form, requestHeaders.GetRequestHeaders()))
+            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, ApiCategories.Offers, form,
+                requestHeaders.GetRequestHeaders()))
             {
                 LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
                 LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");

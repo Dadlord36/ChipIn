@@ -17,12 +17,16 @@
             public const string Gadgets = "gadgets";
             public const string Home = "home";
             public const string Transport = "transport";
+
+            public static readonly string[] OffersSegmentsArray = {Food, Travels, Apparels, Gadgets, Home, Transport};
         }
 
         public static class OfferCategories
         {
             public const string TailoredOffer = "tailored";
             public const string BulkOffer = "bulk";
+
+            public static readonly string[] OfferCategoriesArray = {TailoredOffer, BulkOffer};
         }
 
         public static class ChallengeTypes
@@ -31,6 +35,8 @@
             public const string Contest = "contes";
             public const string League = "league";
             public const string Tournament = "tournament";
+
+            public static readonly string[] ChallengeTypesArray = {Match, Contest, League, Tournament};
         }
     }
 }

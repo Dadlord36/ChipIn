@@ -55,9 +55,7 @@ namespace Controllers
            await sessionStateRepository.SignOut();
            SwitchToLoginView();
         }
-
-
-
+        
         private void SwitchToViewCorrespondingToUseRole()
         {
             switch (authorisationDataRepository.UserRole)
@@ -112,7 +110,7 @@ namespace Controllers
 
         private void SwitchToBusinessMainMenu()
         {
-            SwitchToView(nameof(MainBusinessMenuView));
+            SwitchToView(nameof(CreateOfferView));
         }
 
         private void SwitchToView(string toViewName)

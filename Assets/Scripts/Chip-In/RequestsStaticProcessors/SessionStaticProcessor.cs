@@ -22,7 +22,7 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                LogUtility.PrintLog(Tag,$"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
+                LogUtility.PrintLog(Tag, $"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
                 return await new LoginRequestProcessor(userLoginRequestModel).SendRequest("User was LoggedIn");
             }
             catch (Exception e)
@@ -37,8 +37,7 @@ namespace RequestsStaticProcessors
             try
             {
                 var response = await new SignOutRequestProcessor(requestHeaders, deviceData).SendRequest("User");
-                LogUtility.PrintLog(Tag,
-                    $"SignOut success message: {response.ResponseModelInterface.Success.ToString()}");
+                LogUtility.PrintLog(Tag, $"SignOut success message: {response.ResponseModelInterface.Success.ToString()}");
                 if (!response.ResponseModelInterface.Success)
                 {
                     LogUtility.PrintLog(Tag, $"Error message: {response.ResponseModelInterface.Errors[0]}");

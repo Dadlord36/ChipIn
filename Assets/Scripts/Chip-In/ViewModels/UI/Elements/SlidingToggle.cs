@@ -60,12 +60,12 @@ namespace ViewModels.UI.Elements
 
         private void SubscribeOnPointClickRetranslator()
         {
-            clickRetranslator.PointerClicked += SwitchCondition;
+            clickRetranslator.pointerClicked.AddListener(SwitchCondition);
         }
 
         private void UnsubscribeFromPointClickRetranslator()
         {
-            clickRetranslator.PointerClicked -= SwitchCondition;
+            clickRetranslator.pointerClicked.RemoveListener(SwitchCondition);
         }
 
         private void SubscribeRelatedGraphicsSwitchers()

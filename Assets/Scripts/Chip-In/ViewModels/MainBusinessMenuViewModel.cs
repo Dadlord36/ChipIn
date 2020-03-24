@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Globalization;
-using System.Net.Http;
-using System.Runtime.Serialization;
 using Controllers;
 using DataModels;
 using DataModels.RequestsModels;
-using DataModels.SimpleTypes;
 using GlobalVariables;
-using Newtonsoft.Json;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -17,7 +12,7 @@ using Views;
 
 namespace ViewModels
 {
-    [Binding]
+    /*[Binding]
     public class MainBusinessMenuViewModel : BaseViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
@@ -77,5 +72,5 @@ namespace ViewModels
                 LogUtility.PrintLogError(nameof(MainBusinessMenuViewModel), "Can't create an offer");
             }
         }
-    }
+    }*/
 }
