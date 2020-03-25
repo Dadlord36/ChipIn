@@ -8,6 +8,7 @@ namespace Views.ViewElements.ViewsSwitching
     {
         [SerializeField] private DotOnCircle[] dotsOnCircles;
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             var circlesNum = dotsOnCircles.Length;
@@ -20,5 +21,6 @@ namespace Views.ViewElements.ViewsSwitching
             }
             Points[circlesNum] = dotsOnCircles.First().DotPosition;
         }
+#endif
     }
 }

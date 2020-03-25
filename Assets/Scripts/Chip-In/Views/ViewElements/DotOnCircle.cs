@@ -14,6 +14,7 @@ namespace Views.ViewElements
 
         public Vector2 DotPosition => circle.rectTransform.InverseTransformPoint(_dotPosition);
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -21,6 +22,7 @@ namespace Views.ViewElements
             _dotPosition = circle.rectTransform.position;
             _dotPosition += CalculateVector2DotPosition();
         }
+#endif
 
         private void DrawDotOnCircle()
         {
@@ -39,9 +41,11 @@ namespace Views.ViewElements
             return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * Radius;
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             DrawDotOnCircle();
         }
+#endif
     }
 }

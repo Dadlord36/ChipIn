@@ -1,11 +1,47 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 
 namespace Views.ViewElements
 {
+    [Serializable]
+    public class DotInCircle
+    {
+        [SerializeField, Range(0, 360)] private float angle;
+        [SerializeField, Range(0f, 1f)] private float percentageOfRadius;
+
+        private float GetRadius(UICircle circle)
+        {
+            var rectTransform = circle.rectTransform;
+            return rectTransform.sizeDelta.x / 2 * rectTransform.localScale.x * percentageOfRadius;
+        }
+
+        private float Rad => Mathf.Deg2Rad * angle;
+
+        public Vector2 DotPosition { get; private set; }
+
+        public void CalculatePosition(UICircle circle)
+        {
+            DotPosition = circle.rectTransform.position;
+            DotPosition += CalculateVector2DotPosition(GetRadius(circle));
+        }
+
+        private Vector3 CalculateVector3DotPosition(float radius)
+        {
+            var rad = Rad;
+            return new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad)) * radius;
+        }
+
+        private Vector2 CalculateVector2DotPosition(float radius)
+        {
+            var rad = Rad;
+            return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
+        }
+    }
+
     [RequireComponent(typeof(UICircle))]
-    public class CommunitySpiritAnalyticView : BaseView
+    public class RadarView : BaseView
     {
         private const string Tag = "CommunitySpiritAnalyticView";
 
@@ -17,6 +53,21 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public float scaleFactor;
         [SerializeField, HideInInspector] public int circlesBaseSize;
         [SerializeField, HideInInspector] public uint arcSteps;
+
+        [SerializeField] private DotInCircle[] dots;
+
+        private UICircle LargestCircle => innerCircles[0];
+
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            for (int i = 0; i < dots.Length; i++)
+            {
+                dots[i].CalculatePosition(LargestCircle);
+                Gizmos.DrawSphere(dots[i].DotPosition, 10f);
+            }
+        }
+#endif
 
         protected override void OnEnable()
         {
