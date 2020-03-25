@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class FpsLimit : MonoBehaviour
+
+public class FpsLimiter : MonoBehaviour
 {
     [SerializeField] private int maxFPS=60;
     public void ChangeFrameRate()
