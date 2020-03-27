@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Common.Structures;
 using DataModels.Interfaces;
+using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -15,6 +16,8 @@ namespace ViewModels.Settings
         private const string Tag = nameof(UserProfileViewModel);
 
         [SerializeField] private UserProfileRemoteRepository repository;
+        [SerializeField] private GeoLocationRepository geoLocationRepository;
+
         [SerializeField] private SimpleView passwordChangingView;
 
         private IUserProfileModel UserSettingsModel => repository;
@@ -129,6 +132,12 @@ namespace ViewModels.Settings
         public void EditProfile_Click()
         {
             LogUtility.PrintLog(Tag, "Editing profile");
+        }
+
+        [Binding]
+        public void UserRadar_OnTryToTurnOn()
+        {
+            geoLocationRepository.SetLocationServiceActivity(!UserRadarState);
         }
 
         private void ShowPasswordSwitchingView()
