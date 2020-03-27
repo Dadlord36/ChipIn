@@ -8,27 +8,27 @@ using Views.ViewElements.ViewsPlacers;
 public class GameManager : MonoBehaviour
 {
     private const string Tag = nameof(GameManager);
-    
+
     [SerializeField] private SessionController sessionController;
-    [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+    [SerializeField] private UpdatableGroupController mainUpdatableGroupController;
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
     [SerializeField] private DataRestorationController restorationController;
 
-    private IUpdatable _updatable;
 
     // Start is called before the first frame update
 
     private void Start()
     {
         Initialize();
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 1;
     }
 
     private void Initialize()
     {
-        _updatable = inputActionsTranslator;
         InitializeSystems();
         InitializeControllers();
-        LogUtility.PrintLog(Tag,ScreenUtility.GetScreenSize().ToString());
+        LogUtility.PrintLog(Tag, ScreenUtility.GetScreenSize().ToString());
     }
 
     private void InitializeControllers()
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
         sessionController.ProcessAppLaunching();
         restorationController.Restore();
     }
-    
+
     private void InitializeSystems()
     {
         viewsPlacer.Initialize();
@@ -50,6 +50,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        _updatable.Update();
+        mainUpdatableGroupController.Update();
     }
 }

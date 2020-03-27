@@ -1,5 +1,4 @@
-﻿using System;
-using ActionsTranslators;
+﻿using ActionsTranslators;
 using InputDetection;
 using ScriptableObjects.Comparators;
 using ScriptableObjects.SwitchBindings;
@@ -7,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
+using ViewModels.UI.Elements.Buttons;
 using Views;
 using Views.Bars;
 
@@ -35,9 +35,22 @@ namespace ViewModels
                 case MoveDirection.Right:
                     SwitchToRighterBarItem();
                     break;
+            }
+        }
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+        private void SubscribeBarButtons()
+        {
+            foreach (var barButton in GetComponentsInChildren<BarButtonSelection>())
+            {
+                barButton.ViewSelected += SwitchToViewAndChooseAppearingSide;
+            }
+        }
+
+        private void UnsubscribeBarButtons()
+        {
+            foreach (var barButton in GetComponentsInChildren<BarButtonSelection>())
+            {
+                barButton.ViewSelected -= SwitchToViewAndChooseAppearingSide;
             }
         }
 
@@ -45,7 +58,14 @@ namespace ViewModels
         {
             base.OnEnable();
             View.SetViewModelVisibilityNotifier(this);
-            ((BottomBarView) View).SetViewsSwitchingListener(this); 
+            ((BottomBarView) View).SetViewsSwitchingListener(this);
+            SubscribeBarButtons();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            UnsubscribeBarButtons();
         }
 
         private void Awake()
@@ -64,7 +84,7 @@ namespace ViewModels
         }
 
 
-        [Binding]
+        /*[Binding]
         public void SwitchToMarketplaceView()
         {
             SwitchToViewAndChooseAppearingSide(nameof(MarketplaceView));
@@ -92,12 +112,17 @@ namespace ViewModels
         public void SwitchToSettingsView()
         {
             SwitchToViewAndChooseAppearingSide(nameof(SettingsView));
-        }
+        }*/
 
         void INotifyViewSwitching.OnViewSwitched(string viewName)
         {
             _currentViewName = viewName;
         }
+
+        /*private void SwitchToSelectedView(string viewName)
+        {
+            SwitchToViewAndChooseAppearingSide(viewName);
+        }*/
 
         private void SwitchToLefterBarItem()
         {

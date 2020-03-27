@@ -75,7 +75,6 @@ namespace Behaviours.Games
             if (coinsToPick == _coinsPicked)
             {
                 GameComplete?.Invoke();
-                Destroy(gameObject);
             }
         }
     }

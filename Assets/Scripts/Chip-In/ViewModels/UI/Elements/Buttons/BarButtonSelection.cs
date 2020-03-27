@@ -1,5 +1,6 @@
-﻿using ScriptableObjects.Parameters;
-using UnityEditor;
+﻿using System;
+using Common;
+using ScriptableObjects.Parameters;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Events;
@@ -36,9 +37,10 @@ namespace ViewModels.UI.Elements.Buttons
         [SerializeField] private Button interactiveButton;
 
         [HideInInspector] public UnityEvent onClick;
-        public event UnityAction GroupActionPerformed;
-        private bool _isSelected;
 
+        public event UnityAction GroupActionPerformed;
+        public event Action<string> ViewSelected;
+        private bool _isSelected;
 
         protected override void Awake()
         {
@@ -83,6 +85,7 @@ namespace ViewModels.UI.Elements.Buttons
         {
             if (_isSelected) return;
             OnClick();
+            OnViewSelected(GetComponent<NameObjectSetterFromViewName>().Name);
             PerformGroupAction();
         }
 
@@ -142,14 +145,20 @@ namespace ViewModels.UI.Elements.Buttons
             _isSelected = true;
         }
 
-        
+
         private void OnClick()
         {
             onClick?.Invoke();
         }
+
         private void OnGroupActionPerformed()
         {
             GroupActionPerformed?.Invoke();
+        }
+
+        private void OnViewSelected(string obj)
+        {
+            ViewSelected?.Invoke(obj);
         }
     }
 }

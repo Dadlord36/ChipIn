@@ -16,8 +16,8 @@ namespace Views.ViewElements
 
         public event Action OnElapsed
         {
-            add => timeline.OnElapsed += value;
-            remove => timeline.OnElapsed -= value;
+            add => timeline.Elapsed += value;
+            remove => timeline.Elapsed -= value;
         }
 
         private string CountdownText

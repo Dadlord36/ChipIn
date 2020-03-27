@@ -857,6 +857,41 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3022720748681832644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 6200066423486263298}
+  viewsSwitchingController: {fileID: 11400000, guid: 3d3d90c6cff5899438d2c36b60361266,
+    type: 2}
+  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+--- !u!114 &6200066423486263298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  avatarIconImage: {fileID: 624889568706242106}
+  validityPeriodTextField: {fileID: 795492272458828853}
+  startingTimerField: {fileID: 8574987030787021957}
+  categoriesDropdown: {fileID: 8884834771944452339}
+  challengeTypeDropdown: {fileID: 4172845345802050345}
+  offerTypeDropdown: {fileID: 3507858237475027667}
 --- !u!1 &1052295797806086072
 GameObject:
   m_ObjectHideFlags: 0
@@ -6704,7 +6739,7 @@ GameObject:
   - component: {fileID: 2858240473548916950}
   - component: {fileID: 3922155074331978622}
   m_Layer: 5
-  m_Name: AvatarIcon
+  m_Name: RelatedIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6786,41 +6821,6 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3022720748681832644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 6200066423486263298}
-  viewsSwitchingController: {fileID: 11400000, guid: 3d3d90c6cff5899438d2c36b60361266,
-    type: 2}
-  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
-    type: 2}
---- !u!114 &6200066423486263298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  avatarIconImage: {fileID: 624889568706242106}
-  validityPeriodTextField: {fileID: 795492272458828853}
-  startingTimerField: {fileID: 8574987030787021957}
-  categoriesDropdown: {fileID: 8884834771944452339}
-  challengeTypeDropdown: {fileID: 4172845345802050345}
-  offerTypeDropdown: {fileID: 3507858237475027667}
 --- !u!1 &5855379575544158247
 GameObject:
   m_ObjectHideFlags: 0
@@ -7992,6 +7992,48 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5199689007805899475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011353780675817451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.QuantityAsInt
+  viewEventName: UnityEngine.UI.Extensions.Stepper.onValueChanged
+  viewPropertyName: UnityEngine.UI.Extensions.Stepper.value
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &1083641132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011353780789288510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 60
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &7063045059229889402
 GameObject:
   m_ObjectHideFlags: 0
@@ -9517,48 +9559,6 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5199689007805899475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7011353780675817451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.QuantityAsInt
-  viewEventName: UnityEngine.UI.Extensions.Stepper.onValueChanged
-  viewPropertyName: UnityEngine.UI.Extensions.Stepper.value
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &1083641132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7011353780789288510}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: 60
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &8169372735841538525
 GameObject:
   m_ObjectHideFlags: 0
@@ -9926,6 +9926,7 @@ GameObject:
   - component: {fileID: 1317715697786958143}
   - component: {fileID: 4819828300116909211}
   - component: {fileID: 3710056059227410125}
+  - component: {fileID: 32412512682971024}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -9988,6 +9989,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &32412512682971024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9044872048255262778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &9083759267323606376
 GameObject:
   m_ObjectHideFlags: 0
@@ -10759,15 +10775,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e59910c2dc842348bdd2650aa742026, type: 3}
---- !u!224 &7011353780675817450 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1062578744760791736, guid: 2e59910c2dc842348bdd2650aa742026,
-    type: 3}
-  m_PrefabInstance: {fileID: 8066611727801703762}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7011353780675817451 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1062578744760791737, guid: 2e59910c2dc842348bdd2650aa742026,
+    type: 3}
+  m_PrefabInstance: {fileID: 8066611727801703762}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7011353780675817450 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1062578744760791736, guid: 2e59910c2dc842348bdd2650aa742026,
     type: 3}
   m_PrefabInstance: {fileID: 8066611727801703762}
   m_PrefabAsset: {fileID: 0}

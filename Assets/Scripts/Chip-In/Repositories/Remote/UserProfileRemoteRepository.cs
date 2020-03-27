@@ -21,9 +21,10 @@ namespace Repositories.Remote
         INotifyPropertyChanged
     {
         private const string Tag = nameof(UserProfileRemoteRepository);
-        
+
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
         [SerializeField] private SessionStateRepository sessionStateRepository;
+        [SerializeField] private GeoLocationRepository geoLocationRepository;
 
         private IUserProfileDataWebModel UserProfileDataRemote => userProfileDataSynchronizer;
         private IDataSynchronization UserProfileDataSynchronization => userProfileDataSynchronizer;
@@ -125,10 +126,16 @@ namespace Repositories.Remote
 
         #endregion
 
+        private void SetRadarActivityState(bool value)
+        {
+            UserRadarState = value;
+        }
+
         private void OnEnable()
         {
             BindToSynchronizerUpdatingEvent();
             PropertyChanged += OnProfileDataChanged;
+            geoLocationRepository.LocationServiceActivityChanged += SetRadarActivityState;
         }
 
 
@@ -136,6 +143,7 @@ namespace Repositories.Remote
         {
             UnbindFromSynchronizerUpdatingEvent();
             PropertyChanged -= OnProfileDataChanged;
+            geoLocationRepository.LocationServiceActivityChanged -= SetRadarActivityState;
         }
 
         private void BindToSynchronizerUpdatingEvent()
@@ -158,7 +166,7 @@ namespace Repositories.Remote
         {
             if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
             {
-                LogUtility.PrintLog(Tag,"There is not URL to load user profile avatar image from", this);
+                LogUtility.PrintLog(Tag, "There is not URL to load user profile avatar image from", this);
                 return;
             }
 
@@ -166,7 +174,7 @@ namespace Repositories.Remote
             {
                 AvatarImage =
                     await ImagesDownloadingUtility.TryDownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
-                LogUtility.PrintLog(Tag,AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded", this);
+                LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded", this);
             }
             catch (Exception e)
             {
@@ -206,14 +214,14 @@ namespace Repositories.Remote
         {
             base.ConfirmDataLoading();
             _isLoadingData = false;
-            LogUtility.PrintLog(Tag,"User profile data was loaded from server", this);
-            LogUtility.PrintLog(Tag,JsonConvert.SerializeObject(UserProfileDataRemote), this);
+            LogUtility.PrintLog(Tag, "User profile data was loaded from server", this);
+            LogUtility.PrintLog(Tag, JsonConvert.SerializeObject(UserProfileDataRemote), this);
         }
 
         protected override void ConfirmDataSaved()
         {
             base.ConfirmDataSaved();
-            LogUtility.PrintLog(Tag,"User profile data was saved to server", this);
+            LogUtility.PrintLog(Tag, "User profile data was saved to server", this);
         }
 
         void IClearable.Clear()

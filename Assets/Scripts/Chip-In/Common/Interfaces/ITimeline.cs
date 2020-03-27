@@ -1,4 +1,5 @@
 ﻿using System;
+using ActionsTranslators;
 
 namespace Common.Interfaces
 {
@@ -6,13 +7,16 @@ namespace Common.Interfaces
     {
         void UpdateProgress(float percentage);
     }
-    
-    public interface ITimeline : IInitialize
+
+    public interface ITimeline : IInitialize, IUpdatable
     {
-        event Action OnElapsed;
+        float Interval { get; set; }
+        event Action Elapsed;
         event Action<float> Progressing;
         bool AutoReset { get; set; }
         void StartTimer();
+        void StartTimer(float interval);
+        
         void StopTimer();
         void RestartTimer();
     }

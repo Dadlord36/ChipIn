@@ -1,7 +1,4 @@
-﻿using System;
-using Controllers;
-using Repositories.Local;
-using RequestsStaticProcessors;
+﻿using Controllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views.Cards.Settings;
@@ -15,8 +12,13 @@ namespace ViewModels
         
         [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
         [SerializeField] private SessionController sessionController;
-        
-        
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            Destroy(gameObject);
+        }
+
         private void Start()
         {
             viewsPlacer.Initialize();    
@@ -50,7 +52,6 @@ namespace ViewModels
         private void LogOut()
         {
             sessionController.SignOut();
-            Destroy(gameObject);
         }
     }
 }
