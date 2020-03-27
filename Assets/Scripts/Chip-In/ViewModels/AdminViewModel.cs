@@ -1,4 +1,6 @@
-﻿using UnityWeld.Binding;
+﻿using Controllers;
+using UnityEngine;
+using UnityWeld.Binding;
 using Views.Cards;
 
 namespace ViewModels
@@ -6,7 +8,10 @@ namespace ViewModels
     [Binding]
     public class AdminViewModel : ViewsSwitchingViewModel, IAdminProperties
     {
+        [SerializeField] private SessionController sessionController;
+        
         private IAdminProperties AdminViewProperties => View as IAdminProperties;
+        
 
         public uint TokenBallance
         {
@@ -39,6 +44,12 @@ namespace ViewModels
         }
 
         [Binding]
+        public void LogOut_OnClick()
+        {
+            LogOut();
+        }
+
+        [Binding]
         public void TokenBallance_OnClick()
         {
         }
@@ -56,6 +67,11 @@ namespace ViewModels
         [Binding]
         public void Library_OnClick()
         {
+        }
+        
+        private void LogOut()
+        {
+            sessionController.SignOut();
         }
     }
 }
