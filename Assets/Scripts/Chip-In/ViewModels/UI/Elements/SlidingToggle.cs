@@ -4,6 +4,7 @@ using Common;
 using Common.Interfaces;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using ViewModels.UI.Interfaces;
@@ -13,15 +14,17 @@ namespace ViewModels.UI.Elements
     [Binding]
     public sealed class SlidingToggle : BaseAnimatedToggle, IProgress<float>
     {
+        [HideInInspector] public UnityEvent onTryToTurnOn;
+        
         [SerializeField, Range(0f, 0.5f)] private double handleDockingPositionPercentage;
         [SerializeField] private RectTransform handleTransform;
         [SerializeField] private PointClickRetranslator clickRetranslator;
+        [SerializeField] private bool preventClickReaction = false;
         
         private float _onPosX, _offPosX;
         private Vector3 _tempHandlePosition;
         private ITimeline _timeline;
         [SerializeField] private BaseAnimatedToggle[] toggles;
-        
 
 
         protected override void Start()
@@ -60,12 +63,23 @@ namespace ViewModels.UI.Elements
 
         private void SubscribeOnPointClickRetranslator()
         {
-            clickRetranslator.pointerClicked.AddListener(SwitchCondition);
+            clickRetranslator.pointerClicked.AddListener(OnPointerClick);
         }
 
         private void UnsubscribeFromPointClickRetranslator()
         {
-            clickRetranslator.pointerClicked.RemoveListener(SwitchCondition);
+            clickRetranslator.pointerClicked.RemoveListener(OnPointerClick);
+        }
+
+        private void OnPointerClick()
+        {
+            if (preventClickReaction)
+            {
+                onTryToTurnOn.Invoke();
+                return;
+            }
+
+            SwitchCondition();
         }
 
         private void SubscribeRelatedGraphicsSwitchers()
