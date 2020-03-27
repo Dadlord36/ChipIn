@@ -14,6 +14,12 @@ namespace ViewModels
             Assert.IsNotNull(miniGame);
         }
 
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            Destroy(miniGame.gameObject);
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
