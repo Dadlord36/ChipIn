@@ -14,34 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referencedView: {fileID: 154498183300320067, guid: 138c6eb6b7b09d24ea5697128ebc7bfe,
     type: 3}
---- !u!114 &2040600817185051238
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 249122900942401675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.BottomBarViewModel.SwitchToCartView
-  viewEventName: ViewModels.UI.Elements.Buttons.BarButtonSelection.onClick
---- !u!114 &5096527580759442120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 864508208198732751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.BottomBarViewModel.SwitchToChallengesView
-  viewEventName: ViewModels.UI.Elements.Buttons.BarButtonSelection.onClick
 --- !u!114 &5373211744750046067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56,20 +28,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referencedView: {fileID: 4438691417400829327, guid: 87b959d3e6bf7a444bf6500d9605a2a6,
     type: 3}
---- !u!114 &3129329624324793438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3645958439210757757}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.BottomBarViewModel.SwitchToCommunityView
-  viewEventName: ViewModels.UI.Elements.Buttons.BarButtonSelection.onClick
 --- !u!114 &6768646519380864706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,20 +42,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referencedView: {fileID: 2885516565763138180, guid: 60bbf85db635f9d4495d8f5c1fb051d3,
     type: 3}
---- !u!114 &4727476184973386849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5816380493381219279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.BottomBarViewModel.SwitchToMarketplaceView
-  viewEventName: ViewModels.UI.Elements.Buttons.BarButtonSelection.onClick
 --- !u!114 &8930304837906210923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,20 +70,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referencedView: {fileID: 4303201889344921751, guid: c8d4c4e6136d7a3419fe83f9f5bce330,
     type: 3}
---- !u!114 &7660951310351131797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8320847196094783854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.BottomBarViewModel.SwitchToSettingsView
-  viewEventName: ViewModels.UI.Elements.Buttons.BarButtonSelection.onClick
 --- !u!1 &8583675340835622230
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,7 +360,7 @@ GameObject:
   - component: {fileID: 613090615860159955}
   - component: {fileID: 8944022625298648716}
   m_Layer: 5
-  m_Name: BottomBar
+  m_Name: UserBottomBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -455,7 +385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -650}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 339, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2197102818090163301
@@ -522,7 +452,10 @@ MonoBehaviour:
   view: {fileID: 613090615860159955}
   viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
     type: 2}
-  associativeViewsContainer: {fileID: 0}
+  associativeViewsContainer: {fileID: 11400000, guid: 7f4f6a848325c4d4d8c78c7a31124c79,
+    type: 2}
+  inputActionsTranslator: {fileID: 11400000, guid: 12577253c6615654bbbaed4306ee8998,
+    type: 2}
 --- !u!114 &613090615860159955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1346,15 +1279,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59ed3af1d746e3e49a92515afe628415, type: 3}
---- !u!224 &1806564858061652177 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4893063760452543277, guid: 59ed3af1d746e3e49a92515afe628415,
-    type: 3}
-  m_PrefabInstance: {fileID: 6554306162372928508}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3645958439210757757 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7524557682269408641, guid: 59ed3af1d746e3e49a92515afe628415,
+    type: 3}
+  m_PrefabInstance: {fileID: 6554306162372928508}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1806564858061652177 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4893063760452543277, guid: 59ed3af1d746e3e49a92515afe628415,
     type: 3}
   m_PrefabInstance: {fileID: 6554306162372928508}
   m_PrefabAsset: {fileID: 0}
@@ -1523,15 +1456,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59ed3af1d746e3e49a92515afe628415, type: 3}
---- !u!224 &2338607811906168163 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4893063760452543277, guid: 59ed3af1d746e3e49a92515afe628415,
-    type: 3}
-  m_PrefabInstance: {fileID: 7175290814803904078}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &864508208198732751 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7524557682269408641, guid: 59ed3af1d746e3e49a92515afe628415,
+    type: 3}
+  m_PrefabInstance: {fileID: 7175290814803904078}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &2338607811906168163 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4893063760452543277, guid: 59ed3af1d746e3e49a92515afe628415,
     type: 3}
   m_PrefabInstance: {fileID: 7175290814803904078}
   m_PrefabAsset: {fileID: 0}
