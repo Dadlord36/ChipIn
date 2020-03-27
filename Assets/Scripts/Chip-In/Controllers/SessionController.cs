@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels.RequestsModels;
 using GlobalVariables;
 using Repositories;
@@ -15,9 +16,16 @@ namespace Controllers
 {
     [CreateAssetMenu(fileName = nameof(SessionController),
         menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
-    public class SessionController : ScriptableObject
+    public sealed class SessionController : ScriptableObject
     {
+        public enum SessionMode
+        {
+            User, Merchant
+        }
+        
         private const string Tag = nameof(SessionController);
+
+       
 
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
@@ -26,6 +34,8 @@ namespace Controllers
         [SerializeField] private CachingController cachingController;
         [SerializeField] private SessionStateRepository sessionStateRepository;
 
+        public event Action<SessionMode> SwitchingToMode ;
+        
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
             var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
@@ -62,9 +72,11 @@ namespace Controllers
             {
                 case MainNames.UserRoles.Client:
                 case MainNames.UserRoles.Guest:
+                    OnSwitchingToMode(SessionMode.User);
                     SwitchToMiniGame();
                     break;
                 case MainNames.UserRoles.BusinessOwner:
+                    OnSwitchingToMode(SessionMode.Merchant);
                     SwitchToBusinessMainMenu();
                     break;
             }
@@ -110,7 +122,7 @@ namespace Controllers
 
         private void SwitchToBusinessMainMenu()
         {
-            SwitchToView(nameof(CreateOfferView));
+            SwitchToView(nameof(MarketView));
         }
 
         private void SwitchToView(string toViewName)
@@ -125,6 +137,11 @@ namespace Controllers
             repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
             SaveUserAuthentication(MainNames.UserRoles.Guest);
             return true;
+        }
+
+        private void OnSwitchingToMode(SessionMode obj)
+        {
+            SwitchingToMode?.Invoke(obj);
         }
     }
 }
