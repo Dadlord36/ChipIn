@@ -10,5 +10,6 @@
         public const string SignIn = "sign_in";
         public const string Profile = "profile";
         public const string SingOut = "sign_out";
+        public const string Radar = "radar";
     }
 }
