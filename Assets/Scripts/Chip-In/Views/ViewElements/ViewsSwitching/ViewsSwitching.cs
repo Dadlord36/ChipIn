@@ -21,8 +21,7 @@ namespace Views.ViewElements.ViewsSwitching
             SelectionOptionsDictionary = new Dictionary<string, IGroupAction>(buttonsCount);
             for (int i = 0; i < buttonsCount; i++)
             {
-                SelectionOptionsDictionary.Add(barButtonsNames[i].Name, barButtons[i]); 
-                barButtonsNames[i].Destroy();
+                SelectionOptionsDictionary.Add(barButtonsNames[i].Name, barButtons[i]);
             }
         }
     }

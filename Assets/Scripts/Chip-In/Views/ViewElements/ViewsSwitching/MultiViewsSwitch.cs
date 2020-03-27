@@ -12,7 +12,23 @@ namespace Views.ViewElements.ViewsSwitching
         {
             base.Awake();
             Assert.IsNotNull(viewsSwitchingBinding, $"There is not views switch binding on: {name}");
+            SubscribeOnViewsSwitchingNotification();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            UnsubscribeFromViewsSwitchingNotification();
+        }
+
+        private void SubscribeOnViewsSwitchingNotification()
+        {
             viewsSwitchingBinding.ViewSwitchingRequested += SwitchTo;
+        }
+
+        private void UnsubscribeFromViewsSwitchingNotification()
+        {
+            viewsSwitchingBinding.ViewSwitchingRequested -= SwitchTo;
         }
 
         protected abstract void SwitchTo(ViewsSwitchData viewsSwitchData);
