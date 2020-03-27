@@ -5,15 +5,14 @@ using Views.ViewElements;
 
 namespace Inspectors
 {
-    [CustomEditor(typeof(CommunitySpiritAnalyticView))]
-    public class CommunitySpiritAnalyticViewEditor : Editor
+    [CustomEditor(typeof(RadarView))]
+    public class RadarViewEditor : Editor
     {
-        private CommunitySpiritAnalyticView _analyticView;
-
+        private RadarView _analyticView;
 
         private void OnEnable()
         {
-            _analyticView = (CommunitySpiritAnalyticView) target;
+            _analyticView = (RadarView) target;
         }
 
         public override void OnInspectorGUI()

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using HttpRequests.RequestsProcessors.GetRequests;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
+using Object = UnityEngine.Object;
 
 namespace Views.ViewElements
 {
@@ -21,10 +23,19 @@ namespace Views.ViewElements
 
         public Vector2 DotPosition { get; private set; }
 
-        public void CalculatePosition(UICircle circle)
+        public Vector2 CalculatePosition(UICircle circle)
         {
             DotPosition = circle.rectTransform.position;
             DotPosition += CalculateVector2DotPosition(GetRadius(circle));
+
+            return DotPosition;
+        }
+
+        public Vector2 CalculatePosition(UICircle circle, float relativeAngle, float percentageOfRadius)
+        {
+            angle = relativeAngle;
+            this.percentageOfRadius = percentageOfRadius;
+            return CalculatePosition(circle);
         }
 
         private Vector3 CalculateVector3DotPosition(float radius)
@@ -45,6 +56,8 @@ namespace Views.ViewElements
     {
         private const string Tag = "CommunitySpiritAnalyticView";
 
+        #region Serialized Fields
+
         [SerializeField, HideInInspector] private List<UICircle> innerCircles;
         [SerializeField, HideInInspector] private UICircle backgroundCircle;
 
@@ -54,11 +67,15 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public int circlesBaseSize;
         [SerializeField, HideInInspector] public uint arcSteps;
 
-        [SerializeField] private DotInCircle[] dots;
+        [SerializeField] private Object dotViewPrefab;
+        #endregion
+
+        private GameObject[] _dotsViews;
 
         private UICircle LargestCircle => innerCircles[0];
 
 #if UNITY_EDITOR
+        [SerializeField] private DotInCircle[] dots;
         private void OnDrawGizmos()
         {
             for (int i = 0; i < dots.Length; i++)
@@ -167,11 +184,51 @@ namespace Views.ViewElements
 
             for (var index = 1; index < innerCircles.Count; index++)
             {
-                // progress = (float)index/innerCircles.Count;
-
                 progress += analyticViewScaleFactor;
                 SetCircleScale(innerCircles[index], Mathf.Lerp(1f, 0f, progress));
             }
+        }
+
+        public void SetDataToVisualize(RadarData radarData)
+        {
+            ClearDotsViews();
+
+            var maxPoint = radarData.Max;
+            var points = radarData.Points;
+            var pointsCount = points.GetLength(0);
+
+            _dotsViews = new GameObject[pointsCount];
+
+            var parent = transform;
+
+            for (int i = 0; i < pointsCount; i++)
+            {
+                var point = new Vector2(Mathf.Abs(points[i, 0]), Mathf.Abs(points[i, 1]));
+
+                var distance = Vector2.Distance(Vector2.zero, point);
+                var percentage = Mathf.InverseLerp(0, maxPoint, distance);
+
+                var position = new DotInCircle().CalculatePosition(LargestCircle,
+                    CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage);
+                
+                _dotsViews[i] = (GameObject) Instantiate(dotViewPrefab, parent);
+                _dotsViews[i].transform.position = position;
+            }
+        }
+
+        private void ClearDotsViews()
+        {
+            if (_dotsViews == null) return;
+
+            for (int i = 0; i < _dotsViews.Length; i++)
+            {
+                Destroy(_dotsViews[i]);
+            }
+        }
+
+        private static float CalculateAngleOfPointOnCircle(float x, float y)
+        {
+            return Mathf.Rad2Deg * Mathf.Atan2(y, x);
         }
     }
 }
