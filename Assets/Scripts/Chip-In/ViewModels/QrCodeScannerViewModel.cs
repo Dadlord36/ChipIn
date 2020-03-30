@@ -50,12 +50,6 @@ namespace ViewModels
             qrCodeReader.Initialize();
         }
 
-        private void Start()
-        {
-            CreatePreviewObject();
-            TryAuthorizeWebCameraAndStartQrReader();
-        }
-
         private void ActivateQrScanning()
         {
             Initialize();

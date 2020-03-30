@@ -248,6 +248,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696dbfcc65ee4c24882b4690f4d1421a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6444684728988137791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012957727382834691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f685948e534a4f3499940a8773888612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 6186533876970265824}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
 --- !u!1 &1339932122154798141
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,6 +431,7 @@ GameObject:
   - component: {fileID: 1473791643421853567}
   - component: {fileID: 7168037124998779389}
   - component: {fileID: 506914113152317074}
+  - component: {fileID: 6327113978911881735}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -522,6 +538,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6327113978911881735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5332511658833534332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.TransactViewModel.Redemption_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &6374106919315477388
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1077,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2225de59284c0a9468cf8240f53725dc, type: 3}
+--- !u!224 &6652342846046577179 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5551021758302612037, guid: 2225de59284c0a9468cf8240f53725dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1250011071241046110}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5261526856698944766 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6367065948319847584, guid: 2225de59284c0a9468cf8240f53725dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1250011071241046110}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1012957727382834691 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
@@ -1071,18 +1113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &6652342846046577179 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5551021758302612037, guid: 2225de59284c0a9468cf8240f53725dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1250011071241046110}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &5261526856698944766 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6367065948319847584, guid: 2225de59284c0a9468cf8240f53725dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1250011071241046110}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6741527514142638756
 PrefabInstance:
   m_ObjectHideFlags: 0
