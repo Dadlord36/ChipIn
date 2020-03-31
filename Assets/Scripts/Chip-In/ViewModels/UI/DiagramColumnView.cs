@@ -58,8 +58,8 @@ namespace ViewModels.UI
 
         public void SetValues(Vector2 topBottomValues)
         {
-            FillerYScale1 = topBottomValues.x;
-            FillerYScale2 = topBottomValues.y;
+            PercentageTop = topBottomValues.x;
+            PercentageBottom = topBottomValues.y;
         }
     }
 }

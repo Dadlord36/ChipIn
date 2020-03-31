@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HttpRequests.RequestsProcessors.GetRequests;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -66,13 +67,19 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public float scaleFactor;
         [SerializeField, HideInInspector] public int circlesBaseSize;
         [SerializeField, HideInInspector] public uint arcSteps;
+        [SerializeField] private Vector2 firstColumnAngles, secondColumnAngles, thirdColumnAngles;
+
+        [SerializeField] private UILineRenderer lineRenderer;
+        [SerializeField] private UILineRenderer axisLineRenderer;
 
         [SerializeField] private Object dotViewPrefab;
+
         #endregion
 
-        private GameObject[] _dotsViews;
+        private List<GameObject> _dotsViews = new List<GameObject>();
 
         private UICircle LargestCircle => innerCircles[0];
+
 
 #if UNITY_EDITOR
         [SerializeField] private DotInCircle[] dots;
@@ -197,9 +204,8 @@ namespace Views.ViewElements
             var points = radarData.Points;
             var pointsCount = points.GetLength(0);
 
-            _dotsViews = new GameObject[pointsCount];
+            _dotsViews = new List<GameObject>(pointsCount);
 
-            var parent = transform;
 
             for (int i = 0; i < pointsCount; i++)
             {
@@ -210,17 +216,24 @@ namespace Views.ViewElements
 
                 var position = new DotInCircle().CalculatePosition(LargestCircle,
                     CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage);
-                
-                _dotsViews[i] = (GameObject) Instantiate(dotViewPrefab, parent);
-                _dotsViews[i].transform.position = position;
+
+                CreateDotAtPosition(position);
             }
+        }
+
+        private GameObject CreateDotAtPosition(Vector2 position)
+        {
+            var gO = (GameObject) Instantiate(dotViewPrefab, transform);
+            gO.transform.position = position;
+            _dotsViews.Add(gO);
+            return gO;
         }
 
         private void ClearDotsViews()
         {
             if (_dotsViews == null) return;
 
-            for (int i = 0; i < _dotsViews.Length; i++)
+            for (int i = 0; i < _dotsViews.Count; i++)
             {
                 Destroy(_dotsViews[i]);
             }
@@ -229,6 +242,75 @@ namespace Views.ViewElements
         private static float CalculateAngleOfPointOnCircle(float x, float y)
         {
             return Mathf.Rad2Deg * Mathf.Atan2(y, x);
+        }
+
+        private void SetAxis()
+        {
+            var axisArray = GetDiagramAxisEndPoints();
+            var segmentsFromCenter = new List<Vector2>(axisArray.Length * 2);
+
+            var center = LargestCircle.transform.localPosition;
+
+            for (int i = 0; i < axisArray.Length; i++)
+            {
+                segmentsFromCenter.Add(center);
+                segmentsFromCenter.Add(axisArray[i]);
+            }
+
+            axisLineRenderer.Points = segmentsFromCenter.ToArray();
+        }
+
+        private Vector2[] GetDiagramAxisEndPoints()
+        {
+            var diagramAxisAngles = new[]
+            {
+                firstColumnAngles.x, secondColumnAngles.x, thirdColumnAngles.x,
+                thirdColumnAngles.y, secondColumnAngles.y, firstColumnAngles.y
+            };
+
+            var endPoints = new Vector2[diagramAxisAngles.Length];
+
+            for (int i = 0; i < diagramAxisAngles.Length; i++)
+            {
+                endPoints[i] = LargestCircle.transform.InverseTransformPoint(new DotInCircle().CalculatePosition(LargestCircle,
+                    diagramAxisAngles[i], 1f));
+            }
+
+            return endPoints;
+        }
+
+        public void SetDataToVisualize(Vector2 firstColumn, Vector2 secondColumn, Vector2 thirdColumn)
+        {
+            ClearDotsViews();
+            SetAxis();
+
+            var topPointsList = new List<Vector2>(3);
+            var bottomPointsList = new List<Vector2>(3);
+
+            AddColumnRelatedDots(firstColumn, firstColumnAngles);
+            AddColumnRelatedDots(secondColumn, secondColumnAngles);
+            AddColumnRelatedDots(thirdColumn, thirdColumnAngles);
+
+            var resultList = new List<Vector2>(3 * 2);
+            resultList.AddRange(topPointsList);
+            resultList.AddRange(bottomPointsList);
+            resultList.Add(topPointsList.First());
+
+
+            lineRenderer.Points = resultList.ToArray();
+
+            void AddColumnRelatedDots(Vector2 columnValues, Vector2 relativeAngles)
+            {
+                var positionA = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.x,
+                    columnValues.x);
+                var positionB = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.y,
+                    columnValues.y);
+                topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
+                bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB));
+
+                // CreateDotAtPosition(positionA);
+                // CreateDotAtPosition(positionB);
+            }
         }
     }
 }
