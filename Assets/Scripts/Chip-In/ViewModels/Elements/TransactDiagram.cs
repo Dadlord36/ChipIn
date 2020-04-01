@@ -10,19 +10,30 @@ namespace ViewModels.Elements
         [SerializeField] private RadarView radarView;
         [SerializeField] private DiagramView diagramView;
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            
-        }
-
         protected override void Start()
         {
             base.Start();
-            SetDiagramsValues();
+           SetMinimalDiagramValues();
         }
 
-        public void SetDiagramsValues()
+#if UNITY_EDITOR
+        public void DrawAxis()
+        {
+            radarView.SetAxis();
+        }
+
+        public void InsertMinimalValues()
+        {
+            SetMinimalDiagramValues();
+        }
+
+        public void InsertMaximalValues()
+        {
+            SetMaximalDiagramValues();
+        }
+#endif
+
+        public void SetRandomDiagramsValues()
         {
             var valuesArray = new Vector2[3];
 
@@ -31,14 +42,30 @@ namespace ViewModels.Elements
                 valuesArray[i] = CreateRandomVector();
             }
 
-            radarView.SetDataToVisualize(valuesArray[0],valuesArray[1],valuesArray[2]);
-            diagramView.SetValues(valuesArray[0],valuesArray[1],valuesArray[2]);
-            
+            SetDiagramValues(valuesArray);
+
             Vector2 CreateRandomVector()
             {
                 return new Vector2(Random.value, Random.value);
             }
         }
-        
+
+        private void SetDiagramValues(Vector2[] valuesArray)
+        {
+            radarView.SetDataToVisualize(valuesArray[0], valuesArray[1], valuesArray[2]);
+            diagramView.SetValues(valuesArray[0], valuesArray[1], valuesArray[2]);
+        }
+
+        private void SetMinimalDiagramValues()
+        {
+            var vector = new Vector2(0f, 0f);
+            SetDiagramValues(new[] {vector, vector, vector});
+        }
+
+        private void SetMaximalDiagramValues()
+        {
+            var vector = new Vector2(1f, 1f);
+            SetDiagramValues(new[] {vector, vector, vector});
+        }
     }
 }

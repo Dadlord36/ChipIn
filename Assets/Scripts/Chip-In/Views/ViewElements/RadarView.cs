@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HttpRequests.RequestsProcessors.GetRequests;
-using Shapes2D;
+using PathCreation;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
+using BezierPath = PathCreation.BezierPath;
 using Object = UnityEngine.Object;
 
 namespace Views.ViewElements
@@ -70,9 +70,11 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public uint arcSteps;
         [SerializeField] private Vector2 firstColumnAngles, secondColumnAngles, thirdColumnAngles;
 
-        [SerializeField] private Shape pointsPathVisualizer;
-        [SerializeField] private float distance;
+        [Space(15)] [SerializeField] private int sampleSteps;
         [SerializeField] private UILineRenderer axisLineRenderer;
+        [SerializeField] private UILineRenderer pointsVisualizerLineRenderer;
+        [SerializeField] private PathCreator pathCreator;
+        [Space(10f)] [SerializeField] private float minRadiusPercentageValue;
 
         [SerializeField] private Object dotViewPrefab;
 
@@ -81,10 +83,9 @@ namespace Views.ViewElements
         private List<GameObject> _dotsViews = new List<GameObject>();
 
         private UICircle LargestCircle => innerCircles[0];
-        private Vector2 LargestCircleCenter => LargestCircle.transform.position;
 
 
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
         [SerializeField] private DotInCircle[] dots;
         private void OnDrawGizmos()
         {
@@ -94,7 +95,7 @@ namespace Views.ViewElements
                 Gizmos.DrawSphere(dots[i].DotPosition, 10f);
             }
         }
-#endif
+#endif*/
 
         protected override void OnEnable()
         {
@@ -256,7 +257,7 @@ namespace Views.ViewElements
             return Mathf.Rad2Deg * Mathf.Atan2(y, x);
         }
 
-        private void SetAxis()
+        public void SetAxis()
         {
             var axisArray = GetDiagramAxisEndPoints();
             var segmentsFromCenter = new List<Vector2>(axisArray.Length * 2);
@@ -284,8 +285,9 @@ namespace Views.ViewElements
 
             for (int i = 0; i < diagramAxisAngles.Length; i++)
             {
-                endPoints[i] = LargestCircle.transform.InverseTransformPoint(new DotInCircle().CalculatePosition(LargestCircle,
-                    diagramAxisAngles[i], 1f));
+                var endPoint = new DotInCircle().CalculatePosition(LargestCircle,
+                    diagramAxisAngles[i], 1f);
+                endPoints[i] = transform.InverseTransformPoint(endPoint);
             }
 
             return endPoints;
@@ -294,7 +296,7 @@ namespace Views.ViewElements
         public void SetDataToVisualize(Vector2 firstColumn, Vector2 secondColumn, Vector2 thirdColumn)
         {
             ClearDotsViews();
-            SetAxis();
+            ClampDiagramValues(ref firstColumn, ref secondColumn, ref thirdColumn);
 
             var topPointsList = new List<Vector2>(3);
             var bottomPointsList = new List<Vector2>(3);
@@ -306,9 +308,9 @@ namespace Views.ViewElements
             var resultList = new List<Vector2>(3 * 2);
             resultList.AddRange(topPointsList);
             resultList.AddRange(bottomPointsList);
-            resultList.Add(topPointsList.First());
 
-            SetupPointsVisualization(resultList, LargestCircleCenter);
+
+            SetupPointsVisualization(resultList);
 
             void AddColumnRelatedDots(Vector2 columnValues, Vector2 relativeAngles)
             {
@@ -316,41 +318,62 @@ namespace Views.ViewElements
                     columnValues.x);
                 var positionB = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.y,
                     columnValues.y);
-                /*topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
-                bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB)); */
-                topPointsList.Add(positionA);
-                bottomPointsList.Add(positionB);
+                topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
+                bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB));
             }
         }
 
-        private void SetupPointsVisualization(IReadOnlyList<Vector2> pointsOnCircle, Vector2 circleCenter)
+        private void ClampDiagramValues(ref Vector2 firstColumn, ref Vector2 secondColumn, ref Vector2 thirdColumn)
         {
-            pointsPathVisualizer.settings.shapeType = ShapeType.Path;
-            var pathSegments = new List<PathSegment>();
+            firstColumn = ClampVector2(firstColumn);
+            secondColumn = ClampVector2(secondColumn);
+            thirdColumn = ClampVector2(thirdColumn);
 
-            for (int i = 0; i < pointsOnCircle.Count - 1; i++)
+            Vector2 ClampVector2(in Vector2 vector)
             {
-                var currentPointPosition = pointsOnCircle[i];
-                var nextPointPosition = pointsOnCircle[i + 1];
-
-                var middle = (nextPointPosition + currentPointPosition) / 2;
-                var directionToCenter = GetDirection(middle, circleCenter);
-
-                var curveOffset = middle + directionToCenter * distance;
-
-                pathSegments.Add(new PathSegment(currentPointPosition, curveOffset, nextPointPosition));
+                return new Vector2(Mathf.Clamp(vector.x, minRadiusPercentageValue, 1f),
+                    Mathf.Clamp(vector.y, minRadiusPercentageValue, 1f));
             }
-
-            pathSegments.Add(new PathSegment(pointsOnCircle[0], pointsOnCircle[pointsOnCircle.Count - 1]));
-            var resultArray = pathSegments.ToArray();
-            pointsPathVisualizer.SetPathWorldSegments(resultArray);
         }
 
-        private static Vector2 GetDirection(Vector2 from, Vector2 to)
+
+        private void SetupPointsVisualization(IEnumerable<Vector2> vectorsArray)
         {
-            // Gets a vector that points from the player's position to the target's.
-            var heading = from - to;
-            return heading / heading.magnitude; // This is now the normalized direction.
+            SetupPathCreator(vectorsArray);
+            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
+        }
+
+        private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
+        {
+            var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
+            {
+                ControlPointMode = BezierPath.ControlMode.Automatic
+            };
+            bezierPath.CalculateBoundsWithTransform(transform);
+            bezierPath.ResetNormalAngles();
+            pathCreator.bezierPath = bezierPath;
+            pathCreator.TriggerPathUpdate();
+        }
+
+        private Vector2[] GetPathPointsSample(int stepsCount)
+        {
+            var resultList = new List<Vector2>(pathCreator.path.NumPoints);
+            var pathLength = pathCreator.path.length;
+            var progress = 0f;
+            var stepLength = pathLength / stepsCount;
+
+            for (int i = 0; i < stepsCount; i++)
+            {
+                resultList.Add(GetPoint(progress));
+                progress += stepLength;
+            }
+
+            return resultList.ToArray();
+        }
+
+        private Vector2 GetPoint(float percentage)
+        {
+            return pathCreator.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
         }
     }
 }
