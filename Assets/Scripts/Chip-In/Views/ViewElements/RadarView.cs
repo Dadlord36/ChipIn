@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Shapes2D;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 using Object = UnityEngine.Object;
@@ -69,7 +70,8 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public uint arcSteps;
         [SerializeField] private Vector2 firstColumnAngles, secondColumnAngles, thirdColumnAngles;
 
-        [SerializeField] private UILineRenderer lineRenderer;
+        [SerializeField] private Shape pointsPathVisualizer;
+        [SerializeField] private float distance;
         [SerializeField] private UILineRenderer axisLineRenderer;
 
         [SerializeField] private Object dotViewPrefab;
@@ -79,6 +81,7 @@ namespace Views.ViewElements
         private List<GameObject> _dotsViews = new List<GameObject>();
 
         private UICircle LargestCircle => innerCircles[0];
+        private Vector2 LargestCircleCenter => LargestCircle.transform.position;
 
 
 #if UNITY_EDITOR
@@ -235,8 +238,17 @@ namespace Views.ViewElements
 
             for (int i = 0; i < _dotsViews.Count; i++)
             {
-                Destroy(_dotsViews[i]);
+                DoDestroy(_dotsViews[i]);
             }
+        }
+
+        private void DoDestroy(Object objectToDestroy)
+        {
+#if UNITY_EDITOR
+            DestroyImmediate(objectToDestroy);
+#else
+    Destroy(objectToDestroy);
+#endif
         }
 
         private static float CalculateAngleOfPointOnCircle(float x, float y)
@@ -296,8 +308,7 @@ namespace Views.ViewElements
             resultList.AddRange(bottomPointsList);
             resultList.Add(topPointsList.First());
 
-
-            lineRenderer.Points = resultList.ToArray();
+            SetupPointsVisualization(resultList, LargestCircleCenter);
 
             void AddColumnRelatedDots(Vector2 columnValues, Vector2 relativeAngles)
             {
@@ -305,12 +316,41 @@ namespace Views.ViewElements
                     columnValues.x);
                 var positionB = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.y,
                     columnValues.y);
-                topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
-                bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB));
-
-                // CreateDotAtPosition(positionA);
-                // CreateDotAtPosition(positionB);
+                /*topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
+                bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB)); */
+                topPointsList.Add(positionA);
+                bottomPointsList.Add(positionB);
             }
+        }
+
+        private void SetupPointsVisualization(IReadOnlyList<Vector2> pointsOnCircle, Vector2 circleCenter)
+        {
+            pointsPathVisualizer.settings.shapeType = ShapeType.Path;
+            var pathSegments = new List<PathSegment>();
+
+            for (int i = 0; i < pointsOnCircle.Count - 1; i++)
+            {
+                var currentPointPosition = pointsOnCircle[i];
+                var nextPointPosition = pointsOnCircle[i + 1];
+
+                var middle = (nextPointPosition + currentPointPosition) / 2;
+                var directionToCenter = GetDirection(middle, circleCenter);
+
+                var curveOffset = middle + directionToCenter * distance;
+
+                pathSegments.Add(new PathSegment(currentPointPosition, curveOffset, nextPointPosition));
+            }
+
+            pathSegments.Add(new PathSegment(pointsOnCircle[0], pointsOnCircle[pointsOnCircle.Count - 1]));
+            var resultArray = pathSegments.ToArray();
+            pointsPathVisualizer.SetPathWorldSegments(resultArray);
+        }
+
+        private static Vector2 GetDirection(Vector2 from, Vector2 to)
+        {
+            // Gets a vector that points from the player's position to the target's.
+            var heading = from - to;
+            return heading / heading.magnitude; // This is now the normalized direction.
         }
     }
 }

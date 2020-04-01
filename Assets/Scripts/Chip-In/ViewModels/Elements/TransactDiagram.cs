@@ -13,10 +13,16 @@ namespace ViewModels.Elements
         protected override void OnEnable()
         {
             base.OnEnable();
+            
+        }
+
+        protected override void Start()
+        {
+            base.Start();
             SetDiagramsValues();
         }
 
-        private void SetDiagramsValues()
+        public void SetDiagramsValues()
         {
             var valuesArray = new Vector2[3];
 
