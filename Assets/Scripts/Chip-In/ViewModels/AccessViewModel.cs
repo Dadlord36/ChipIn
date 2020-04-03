@@ -1,37 +1,91 @@
-﻿using UnityEngine;
+﻿using System.ComponentModel;
+using Repositories.Remote;
+using UnityEngine;
 using UnityWeld.Binding;
 
 namespace ViewModels
 {
-
-    public class AccessViewModel : ViewsSwitchingViewModel
+    [Binding]
+    public sealed class AccessViewModel : ViewsSwitchingViewModel, IMerchantProfileSettingsModel, INotifyPropertyChanged
     {
-        /*[Binding]
-        public bool ShowAdsState
+        [SerializeField] private MerchantProfileSettingsRepository merchantProfileSettingsRepository;
+        private IMerchantProfileSettingsModel MerchantProfileSettingsModelImplementation => merchantProfileSettingsRepository;
+
+
+        [Binding]
+        public string Name
         {
-            get => UserSettingsModel.ShowAdsState;
-            set => UserSettingsModel.ShowAdsState = value;
+            get => MerchantProfileSettingsModelImplementation.Name;
+            set => MerchantProfileSettingsModelImplementation.Name = value;
         }
 
         [Binding]
-        public bool ShowAlertsState
+        public int Id
         {
-            get => UserSettingsModel.ShowAlertsState;
-            set => UserSettingsModel.ShowAlertsState = value;
+            get => MerchantProfileSettingsModelImplementation.Id;
+            set => MerchantProfileSettingsModelImplementation.Id = value;
         }
 
         [Binding]
-        public bool UserRadarState
+        public string Email
         {
-            get => UserSettingsModel.UserRadarState;
-            set => UserSettingsModel.UserRadarState = value;
+            get => MerchantProfileSettingsModelImplementation.Email;
+            set => MerchantProfileSettingsModelImplementation.Email = value;
         }
 
         [Binding]
-        public bool ShowNotificationsState
+        public string PersonInChargeName
         {
-            get => UserSettingsModel.ShowNotificationsState;
-            set => UserSettingsModel.ShowNotificationsState = value;
-        }*/
+            get => MerchantProfileSettingsModelImplementation.PersonInChargeName;
+            set => MerchantProfileSettingsModelImplementation.PersonInChargeName = value;
+        }
+
+        [Binding]
+        public bool SetReminderSAdCAdExpiring
+        {
+            get => MerchantProfileSettingsModelImplementation.SetReminderSAdCAdExpiring;
+            set => MerchantProfileSettingsModelImplementation.SetReminderSAdCAdExpiring = value;
+        }
+
+        [Binding]
+        public bool ShowAlerts
+        {
+            get => MerchantProfileSettingsModelImplementation.ShowAlerts;
+            set => MerchantProfileSettingsModelImplementation.ShowAlerts = value;
+        }
+
+        [Binding]
+        public bool ShowNotifications
+        {
+            get => MerchantProfileSettingsModelImplementation.ShowNotifications;
+            set => MerchantProfileSettingsModelImplementation.ShowNotifications = value;
+        }
+
+        [Binding]
+        public string BranchCode1
+        {
+            get => MerchantProfileSettingsModelImplementation.BranchCode1;
+            set => MerchantProfileSettingsModelImplementation.BranchCode1 = value;
+        }
+
+        [Binding]
+        public string BranchCode2
+        {
+            get => MerchantProfileSettingsModelImplementation.BranchCode2;
+            set => MerchantProfileSettingsModelImplementation.BranchCode2 = value;
+        }
+
+        [Binding]
+        public string BranchCode3
+        {
+            get => MerchantProfileSettingsModelImplementation.BranchCode3;
+            set => MerchantProfileSettingsModelImplementation.BranchCode3 = value;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => merchantProfileSettingsRepository.PropertyChanged += value;
+            remove => merchantProfileSettingsRepository.PropertyChanged -= value;
+        }
     }
 }

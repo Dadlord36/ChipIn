@@ -1275,6 +1275,7 @@ GameObject:
   - component: {fileID: 2967741279719547228}
   - component: {fileID: 6755236631351063500}
   - component: {fileID: 4350422610026078214}
+  - component: {fileID: 2519995777042836236}
   m_Layer: 5
   m_Name: AccessButton
   m_TagString: Untagged
@@ -1381,6 +1382,34 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2519995777042836236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3300164362537818819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243f6e20765b4cd8a8b2961288382433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referencedView: {fileID: 873457403326839273, guid: 9f414fd2fa38e034aadefa460f188c27,
+    type: 3}
+  onNameAnnounced:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2195095572559738600}
+        m_MethodName: SwitchToView
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3376563943719210222
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,6 +2050,7 @@ GameObject:
   - component: {fileID: 6622307149303056927}
   - component: {fileID: 6051643170101449707}
   - component: {fileID: 1666183481544242178}
+  - component: {fileID: 2173086708435967941}
   m_Layer: 5
   m_Name: VerificationButton
   m_TagString: Untagged
@@ -2127,6 +2157,34 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2173086708435967941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698442349791550101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243f6e20765b4cd8a8b2961288382433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referencedView: {fileID: 8596839746887735513, guid: 691baf42f0c71514d9fb355192f03697,
+    type: 3}
+  onNameAnnounced:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2195095572559738600}
+        m_MethodName: SwitchToView
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5826641772043321316
 GameObject:
   m_ObjectHideFlags: 0
@@ -2717,6 +2775,7 @@ GameObject:
   - component: {fileID: 5409185422334048845}
   - component: {fileID: 1110206570233154676}
   - component: {fileID: 1699701351094316722}
+  - component: {fileID: 7996161925291590463}
   m_Layer: 5
   m_Name: LibraryButton
   m_TagString: Untagged
@@ -2823,6 +2882,34 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7996161925291590463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6637406850802372483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243f6e20765b4cd8a8b2961288382433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referencedView: {fileID: 440537614218598993, guid: b7750b7d9bd75e94baa06f36f58137a7,
+    type: 3}
+  onNameAnnounced:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2195095572559738600}
+        m_MethodName: SwitchToView
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6661343151198913335
 GameObject:
   m_ObjectHideFlags: 0
@@ -3668,15 +3755,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &7519286764543159215 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 2876569392976942359}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8889583910484038793 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 2876569392976942359}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7519286764543159215 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 2876569392976942359}
   m_PrefabAsset: {fileID: 0}
