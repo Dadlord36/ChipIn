@@ -8,6 +8,7 @@ using DataModels.RequestsModels;
 using GlobalVariables;
 using JetBrains.Annotations;
 using pingak9;
+using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -24,6 +25,7 @@ namespace ViewModels
         #region Serialized fields
 
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
+        [SerializeField] private OfferCreationRepository offerCreationRepository; 
 
         #endregion
 
@@ -185,6 +187,12 @@ namespace ViewModels
         private void SelectGameType(string challengeTypeName)
         {
             ChallengeType = challengeTypeName;
+        }
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            Segment = offerCreationRepository.OfferSegmentName;
         }
 
         private void Start()

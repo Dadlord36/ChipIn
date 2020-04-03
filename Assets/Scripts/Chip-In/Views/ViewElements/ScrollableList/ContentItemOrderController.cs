@@ -10,6 +10,7 @@ namespace Views.ViewElements.ScrollableList
 
         public void UpdateContentItemCanvas(Transform contentItem, Canvas canvas, float pathPercentage)
         {
+            if(!enabled) return;
             canvas.sortingOrder = (int) Mathf.Lerp(minOrder, maxOrder, pathPercentage);
         }
     }

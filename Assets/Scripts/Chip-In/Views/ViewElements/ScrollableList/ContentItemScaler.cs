@@ -14,6 +14,7 @@ namespace Views.ViewElements.ScrollableList
 
         public void UpdateContentItem(Transform contentItem, float pathPercentage)
         {
+            if(!enabled) return;
             clampedPercentage = Mathf.Clamp(pathPercentage, minScale, maxScale);
             tempScale.Set(clampedPercentage, clampedPercentage, clampedPercentage);
             contentItem.localScale = tempScale;

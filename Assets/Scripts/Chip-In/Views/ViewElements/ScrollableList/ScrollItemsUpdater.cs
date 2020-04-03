@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Common.Interfaces;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
 namespace Views.ViewElements.ScrollableList
 {
     [DisallowMultipleComponent]
-    public class ScrollItemsUpdater : UIBehaviour
+    public class ScrollItemsUpdater : UIBehaviour, IInitialize
     {
         [SerializeField] private Transform rectTransformMiddle;
         private Transform[] _contentItems;
@@ -16,9 +17,8 @@ namespace Views.ViewElements.ScrollableList
 
         private Vector3 _tempItemScale;
 
-        protected override void Awake()
+        public void Initialize()
         {
-            base.Awake();
             var objectTransform = transform;
 
             var childCount = objectTransform.childCount;
@@ -30,6 +30,7 @@ namespace Views.ViewElements.ScrollableList
             {
                 _contentItems[i] = objectTransform.GetChild(i);
             }
+
             rectTransform = transform as RectTransform;
         }
 

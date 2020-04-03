@@ -13,7 +13,7 @@ namespace ViewModels.Elements
         protected override void Start()
         {
             base.Start();
-           SetMinimalDiagramValues();
+            SetRandomDiagramsValues();
         }
 
 #if UNITY_EDITOR
