@@ -36,6 +36,7 @@ namespace Views.ViewElements.ScrollableList
 
         private void Update()
         {
+            if (!enabled) return;
             for (int i = 0; i < _contentItems.Length; i++)
             {
                 SendDataToContentItemControllers(_contentItems[i], Mathf.Clamp01(GetItemPathPercentage(_contentItems[i])));
