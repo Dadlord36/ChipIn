@@ -1,6 +1,7 @@
 ﻿using System.Collections.Specialized;
 using Repositories.Remote;
 using UnityEngine;
+using ViewModels.Basic;
 using Views;
 
 namespace ViewModels

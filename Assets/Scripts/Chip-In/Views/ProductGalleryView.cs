@@ -8,7 +8,7 @@ using UnityEngine;
 using Views.InteractiveWindows;
 using Views.InteractiveWindows.Interfaces;
 using Views.ViewElements;
-using Views.ViewElements.ScrollableList;
+using Views.ViewElements.Lists.ScrollableList;
 using WebOperationUtilities;
 
 namespace Views

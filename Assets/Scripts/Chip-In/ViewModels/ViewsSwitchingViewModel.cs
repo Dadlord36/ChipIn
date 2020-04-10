@@ -1,5 +1,6 @@
 ﻿using ScriptableObjects.SwitchBindings;
 using UnityEngine;
+using ViewModels.Basic;
 using ViewModels.SwitchingControllers;
 
 namespace ViewModels

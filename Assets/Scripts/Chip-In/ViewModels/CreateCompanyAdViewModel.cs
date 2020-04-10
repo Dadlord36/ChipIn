@@ -3,13 +3,14 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
+using ViewModels.Basic;
 using Views;
 using WebOperationUtilities;
 
 namespace ViewModels
 {
     [Binding]
-    public class CreateCompanyAdViewModel : BaseViewModel, INotifyPropertyChanged
+    public sealed class CreateCompanyAdViewModel : BaseViewModel, INotifyPropertyChanged
     {
         private bool _logoIsSelected;
         private bool _posterIsSelected;
@@ -67,7 +68,7 @@ namespace ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

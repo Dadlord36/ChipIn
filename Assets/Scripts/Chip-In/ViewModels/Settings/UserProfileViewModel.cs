@@ -6,6 +6,7 @@ using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.Basic;
 using Views.ViewElements;
 
 namespace ViewModels.Settings

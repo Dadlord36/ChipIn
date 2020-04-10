@@ -1,6 +1,7 @@
 ﻿using System;
 using Repositories.Local;
 using UnityWeld.Binding;
+using ViewModels.Basic;
 using Views.ViewElements;
 
 namespace ViewModels

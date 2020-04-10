@@ -1,4 +1,5 @@
 ﻿using UnityWeld.Binding;
+using ViewModels.Basic;
 
 namespace ViewModels.Settings
 {

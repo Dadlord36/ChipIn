@@ -1,7 +1,6 @@
 ﻿using System;
 using Common;
-using Game.TwitchSettingsMenu.Common;
-using Game.TwitchSettingsMenu.Common.Interfaces;
+using Common.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
