@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game.TwitchSettingsMenu.Common.Interfaces
+namespace Common.Interfaces
 {
     public interface ISelectableObject
     {

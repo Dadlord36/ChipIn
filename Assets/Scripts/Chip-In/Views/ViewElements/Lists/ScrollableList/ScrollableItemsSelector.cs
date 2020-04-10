@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
-namespace Views.ViewElements.ScrollableList
+namespace Views.ViewElements.Lists.ScrollableList
 {
     public sealed class ScrollableItemsSelector : UIBehaviour, IContentItemUpdater
     {
@@ -27,6 +27,11 @@ namespace Views.ViewElements.ScrollableList
         }
 
         public void UpdateContentItem(Transform contentItem, float pathPercentage)
+        {
+            TryToFigureOutWhatItemIsInCenter(contentItem);
+        }
+
+        private void TryToFigureOutWhatItemIsInCenter(Transform contentItem)
         {
             if (Math.Abs(scrollCenter.position.x - contentItem.position.x) < tolerance)
             {

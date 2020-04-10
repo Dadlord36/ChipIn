@@ -1,54 +1,20 @@
-﻿using TMPro;
-using UnityEngine;
-using ViewModels.UI.Elements.Icons;
+﻿using System;
+using UnityEngine.EventSystems;
+
 
 namespace Views.Cards
 {
-    public class EngageCardView : BaseView
+    public sealed class EngageCardView : BaseView, IPointerClickHandler
     {
-        [SerializeField] private TMP_Text titleTextField;
-        [SerializeField] private TMP_Text descriptionAgeTextField;
-        [SerializeField] private TMP_Text marketAgeTextField;
-        [SerializeField] private TMP_Text marketSizeTextField;
-        [SerializeField] private TMP_Text marketCapTextField;
-        [SerializeField] private TMP_Text marketSpiritTextField;
-        [SerializeField] private UserAvatarIcon icon;
-
-
-        public string Title
+        public event Action WasClicked;
+        public void OnPointerClick(PointerEventData eventData)
         {
-            get => titleTextField.text;
-            set => descriptionAgeTextField.text = value;
-        }
-        
-        public Sprite IconSprite
-        {
-            get => icon.AvatarSprite;
-            set => icon.AvatarSprite = value;
+            OnWasClicked();
         }
 
-        public string MarketAge
+        private void OnWasClicked()
         {
-            get => marketAgeTextField.text;
-            set => marketAgeTextField.text = value;
-        }
-
-        public string MarketSize
-        {
-            get => marketSizeTextField.text;
-            set => marketSizeTextField.text = value;
-        }
-
-        public string MarketCap
-        {
-            get => marketCapTextField.text;
-            set => marketCapTextField.text = value;
-        }
-
-        public string MarketSpirit
-        {
-            get => marketSpiritTextField.text;
-            set => marketSpiritTextField.text = value;
+            WasClicked?.Invoke();
         }
     }
 }

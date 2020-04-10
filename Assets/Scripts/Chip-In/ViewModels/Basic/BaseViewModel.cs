@@ -2,7 +2,7 @@
 using UnityEngine.Assertions;
 using Views;
 
-namespace ViewModels
+namespace ViewModels.Basic
 {
     /// <summary>
     /// Base view model class

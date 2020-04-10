@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI.Extensions;
 using Utilities;
 using Views.Bars.BarItems;
-using Views.ViewElements.ScrollableList;
+using Views.ViewElements.Lists.ScrollableList;
 
 namespace Views.Bars
 {
@@ -18,13 +18,13 @@ namespace Views.Bars
         public event Action<string> NewItemSelected;
 
         private bool _isInitialized;
-        private ScrollBarItemView[] _scrollBarItemViews;
+        private ScrollBarItemWithTitleAndIconView[] _scrollBarItemViews;
 
         private void Initialized()
         {
             if(_isInitialized) return;
             
-            InstantiateItems();
+            // InstantiateItems();
 
             infiniteScroll.Init();
             itemsUpdater.Initialize();
@@ -60,13 +60,10 @@ namespace Views.Bars
 
         private void OnNewItemSelected(string itemTitle)
         {
-            LogUtility.PrintLog(nameof(ScrollBarItemView),$"{itemTitle} item selected");
+            LogUtility.PrintLog(nameof(ScrollBarItemWithTitleAndIconView),$"{itemTitle} item selected");
             NewItemSelected?.Invoke(itemTitle);
         }
 
-        private void InstantiateItems()
-        {
-            _scrollBarItemViews = scrollBarElementsData.AttachItemsToContainer(itemsContainer);
-        }
+ 
     }
 }

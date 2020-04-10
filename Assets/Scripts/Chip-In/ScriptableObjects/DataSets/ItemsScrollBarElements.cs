@@ -1,16 +1,18 @@
 ﻿using System;
 using UnityEngine;
 using Views.Bars.BarItems;
-using Object = UnityEngine.Object;
 
 namespace ScriptableObjects.DataSets
 {
-    public interface IScrollBarItem
+    public interface IScrollBarItemBackground
     {
-        Sprite IconSprite { get; set; }
-        string Title { get; set; }
         Color BackgroundGradientColor1 { get; set; }
         Color BackgroundGradientColor2 { get; set; }
+    }
+    
+    public interface IScrollBarItem : IScrollBarItemBackground, ITitled
+    {
+        Sprite IconSprite { get; set; }
     }
 
     [Serializable]
@@ -51,20 +53,7 @@ namespace ScriptableObjects.DataSets
     public class ItemsScrollBarElements : ScriptableObject
     {
         [SerializeField] private ScrollBarItemData[] itemsData;
-        [SerializeField] private Object itemsPrefab;
 
-
-        public ScrollBarItemView[] AttachItemsToContainer(Transform container)
-        {
-            var scrollBarItemViews = new ScrollBarItemView[itemsData.Length];
-
-            for (int i = 0; i < itemsData.Length; i++)
-            {
-                scrollBarItemViews[i] = ((GameObject) Instantiate(itemsPrefab, container)).GetComponent<ScrollBarItemView>();
-                scrollBarItemViews[i].Set(itemsData[i]);
-            }
-
-            return scrollBarItemViews;
-        }
+        public ScrollBarItemData[] ItemsData => itemsData;
     }
 }

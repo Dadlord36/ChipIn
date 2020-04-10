@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Views.ViewElements.Interfaces;
 
-namespace Views.ViewElements.ScrollableList
+namespace Views.ViewElements.Lists.ScrollableList
 {
     [DisallowMultipleComponent]
     public class ScrollItemsUpdater : UIBehaviour, IInitialize
@@ -32,6 +32,7 @@ namespace Views.ViewElements.ScrollableList
             }
 
             rectTransform = transform as RectTransform;
+            Update();
         }
 
         private void Update()
@@ -65,7 +66,7 @@ namespace Views.ViewElements.ScrollableList
             }
 
             var point = Mathf.Abs(GetControlParameter());
-            return 1f - (point / rectTransform.rect.width);
+            return 1f - point / rectTransform.rect.width;
         }
     }
 }
