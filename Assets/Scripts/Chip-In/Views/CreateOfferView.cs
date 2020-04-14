@@ -4,6 +4,7 @@ using GlobalVariables;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 namespace Views
 {
@@ -20,7 +21,8 @@ namespace Views
 
         public event Action<string> NewCategorySelected;
         public event Action<string> NewGameTypeSelected;
-        public event Action<string> NewOfferTypeSelected; 
+        public event Action<string> NewOfferTypeSelected;
+
 
         protected override void OnEnable()
         {
@@ -29,7 +31,6 @@ namespace Views
             categoriesDropdown.onValueChanged.AddListener(OnNewCategoryItemSelected);
             challengeTypeDropdown.onValueChanged.AddListener(OnNewGameTypeSelected);
             offerTypeDropdown.onValueChanged.AddListener(OnNewOfferTypeSelected);
-            
         }
 
         protected override void OnDisable()
@@ -49,7 +50,7 @@ namespace Views
             challengeTypeDropdown.ClearOptions();
             challengeTypeDropdown.AddOptions(new List<string>(MainNames.ChallengeTypes.ChallengeTypesArray));
             OnNewGameTypeSelected(0);
-            
+
             offerTypeDropdown.ClearOptions();
             offerTypeDropdown.AddOptions(new List<string>(MainNames.OfferCategories.OfferCategoriesArray));
             OnNewOfferTypeSelected(0);
@@ -59,7 +60,7 @@ namespace Views
         {
             OnNewOfferTypeSelected(MainNames.OfferCategories.OfferCategoriesArray[index]);
         }
-        
+
         private void OnNewCategoryItemSelected(int index)
         {
             OnNewCategorySelected(MainNames.OfferSegments.OffersSegmentsArray[index]);

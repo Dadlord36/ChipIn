@@ -11,9 +11,11 @@ using pingak9;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Validators;
 using Views;
 using WebOperationUtilities;
 
@@ -25,9 +27,16 @@ namespace ViewModels
         #region Serialized fields
 
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
-        [SerializeField] private OfferCreationRepository offerCreationRepository; 
+        [SerializeField] private OfferCreationRepository offerCreationRepository;
 
+        [SerializeField] private BaseTextValidationWithAlert startDateTimeInputFieldTextValidationWithAlert;
+        [SerializeField] private BaseTextValidationWithAlert validityDateInputFieldTextValidationWithAlert;
+        [SerializeField] private BaseTextValidationWithAlert descriptionInputFieldTextValidationWithAlert;
+        [SerializeField] private BaseTextValidationWithAlert priceInputFieldTextValidationWithAlert;
+         
+        [SerializeField] private AlertCardController _alertCardController;
         #endregion
+
 
         private bool _iconIsSelected;
         private const string Tag = nameof(CreateOfferViewModel);
@@ -38,7 +47,7 @@ namespace ViewModels
         {
             Offer = new UserCreatedOffer
             {
-                Title = String.Empty, Description = String.Empty, Category = MainNames.OfferCategories.BulkOffer
+                Title = string.Empty, Description = string.Empty, Category = MainNames.OfferCategories.BulkOffer
             }
         };
 
@@ -169,11 +178,25 @@ namespace ViewModels
             }
         }
 
+        [Binding]
+        public bool CanCreateOffer
+        {
+            get => _canCreateOffer;
+            private set
+            {
+                if (value == _canCreateOffer) return;
+                _canCreateOffer = value;
+                OnPropertyChanged();
+                VerifyEnteredData();
+            }
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
             ThisView.NewCategorySelected += SetCategoryName;
             ThisView.NewGameTypeSelected += SelectGameType;
+            // priceInputFieldTextValidationWithAlert.ValidityChanged += VerifyEnteredData;
         }
 
         protected override void OnDisable()
@@ -181,7 +204,7 @@ namespace ViewModels
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
             ThisView.NewGameTypeSelected -= SelectGameType;
-
+            // priceInputFieldTextValidationWithAlert.ValidityChanged -= VerifyEnteredData;
         }
 
         private void SelectGameType(string challengeTypeName)
@@ -236,7 +259,17 @@ namespace ViewModels
             MobileNative.showDatePicker(now.Year, now.Month, now.Day);
         }
 
+        private void VerifyEnteredData()
+        {
+            CanCreateOffer = startDateTimeInputFieldTextValidationWithAlert.IsValid && validityDateInputFieldTextValidationWithAlert.IsValid
+                                                                                    && descriptionInputFieldTextValidationWithAlert.IsValid 
+                                                                                    && Quantity > 0 
+                                                                                    && priceInputFieldTextValidationWithAlert.IsValid;
+        }
+
         private DateTime _startingDate;
+        private bool _canCreateOffer;
+
 
         private void ShowUpDataPickerForStartingTime(DateTime dateTime)
         {
@@ -253,20 +286,24 @@ namespace ViewModels
 
             StartedAt = startingDateTime.ToUniversalTime();
             ThisView.StartingTime = startingDateTime;
+            startDateTimeInputFieldTextValidationWithAlert.CheckIsValid(startingDateTime);
+            VerifyEnteredData();
         }
 
         private void SetExpireDate(DateTime time)
         {
             ExpireDate = time.ToUniversalTime();
             ThisView.ValidityPeriod = time;
+            validityDateInputFieldTextValidationWithAlert.CheckIsValid(time);
+            VerifyEnteredData();
         }
-
 
         private async Task SendCreateOfferRequest()
         {
             try
             {
                 await OffersStaticRequestProcessor.TryCreateAnOffer(userAuthorisationDataRepository, _offerDataModel);
+                _alertCardController.ShowAlertWithText("Offer was created");
             }
             catch (Exception e)
             {
@@ -296,6 +333,7 @@ namespace ViewModels
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            VerifyEnteredData();
         }
     }
 }
