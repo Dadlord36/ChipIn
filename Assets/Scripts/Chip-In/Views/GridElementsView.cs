@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 namespace Views
 {
-    public class CommunityInterestGridView : BaseView
+    public class GridElementsView : BaseView
     {
 #if UNITY_EDITOR
         [SerializeField, HideInInspector] public int rowsAmount;
@@ -36,7 +36,7 @@ namespace Views
 
             if (rows == 0)
             {
-                Debug.unityLogger.Log(LogType.Error, nameof(CommunityInterestGridView), "Rows amount can't be 0");
+                Debug.unityLogger.Log(LogType.Error, nameof(GridElementsView), "Rows amount can't be 0");
             }
 
             for (var i = 0; i < rows; i++)

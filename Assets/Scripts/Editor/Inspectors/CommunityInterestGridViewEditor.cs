@@ -3,15 +3,15 @@ using Views;
 
 namespace Inspectors
 {
-    [CustomEditor(typeof(CommunityInterestGridView))]
+    [CustomEditor(typeof(GridElementsView))]
     public class CommunityInterestGridViewEditor : Editor
     {
-        private CommunityInterestGridView _gridView;
+        private GridElementsView _gridElementsView;
         private bool _started;
 
         private void OnEnable()
         {
-            _gridView = (CommunityInterestGridView) target;
+            _gridElementsView = (GridElementsView) target;
             _started = true;
         }
 
@@ -20,11 +20,11 @@ namespace Inspectors
             if(!_started) return;
             
             EditorGUI.BeginChangeCheck();
-            _gridView.rowsAmount = EditorGUILayout.IntField(_gridView.rowsAmount);
+            _gridElementsView.rowsAmount = EditorGUILayout.IntField(_gridElementsView.rowsAmount);
             
             if (EditorGUI.EndChangeCheck())
             {
-                _gridView.AddEmptyItemsRows((uint) _gridView.rowsAmount);
+                _gridElementsView.AddEmptyItemsRows((uint) _gridElementsView.rowsAmount);
             }
             
             base.OnInspectorGUI();

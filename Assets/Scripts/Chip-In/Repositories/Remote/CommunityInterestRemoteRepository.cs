@@ -13,8 +13,7 @@ namespace Repositories.Remote
     [CreateAssetMenu(fileName = nameof(CommunityInterestRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunityInterestRemoteRepository),
         order = 0)]
-    public sealed class CommunityInterestRemoteRepository : BaseItemsListRepository<
-        CommunityInterestGridItemView.CommunityInterestGridItemData>
+    public sealed class CommunityInterestRemoteRepository : BaseItemsListRepository<CommunityInterestGridItemView.CommunityInterestGridItemData>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
@@ -22,8 +21,7 @@ namespace Repositories.Remote
         {
             try
             {
-                var result =
-                    await CommunityInterestsStaticRequestProcessor.TryGetCommunityInterestsLabelsData(
+                var result = await CommunityInterestsStaticRequestProcessor.TryGetCommunityInterestsLabelsData(
                         authorisationDataRepository);
 
                 var itemsData = result.ResponseModelInterface.Communities;

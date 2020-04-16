@@ -6,7 +6,7 @@ using Views;
 
 namespace ViewModels
 {
-    public sealed class CommunityInterestGridViewModel : BaseViewModel
+    public sealed class GridElementsViewModel : BaseViewModel
     {
         [SerializeField] private CommunityInterestRemoteRepository remoteRepository;
 
@@ -30,7 +30,7 @@ namespace ViewModels
 
         private void UpdateGridContent()
         {
-            var gridView = (CommunityInterestGridView) View;
+            var gridView = (GridElementsView) View;
             var itemsData = remoteRepository.ItemsData;
             gridView.ClearItems();
 
