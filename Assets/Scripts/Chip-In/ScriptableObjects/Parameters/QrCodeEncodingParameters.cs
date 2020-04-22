@@ -7,7 +7,7 @@ namespace ScriptableObjects.Parameters
     [Serializable]
     public struct QrCodeWriterParameters
     {
-        public BarcodeFormat codingFormat;
+        public CodeWriter.CodeType codingFormat;
         public int width;
         public int height;
     }

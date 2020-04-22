@@ -14,14 +14,7 @@ namespace Utilities
             {
                 for (int j = 0; j != mCodeTex.height; j++)
                 {
-                    if (bitMatrix[i, j])
-                    {
-                        mCodeTex.SetPixel(i, j, Color.black);
-                    }
-                    else
-                    {
-                        mCodeTex.SetPixel(i, j, Color.white);
-                    }
+                    mCodeTex.SetPixel(i, j, bitMatrix[i, j] ? Color.black : Color.white);
                 }
             }
 

@@ -1,13 +1,9 @@
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System; 
-
+using UnityEngine;
 using ZXing;
-using ZXing.QrCode;
-using ZXing.QrCode.Internal;
 using ZXing.Common;
-
+using ZXing.QrCode.Internal;
 
 public class CodeWriter : MonoBehaviour {
 
@@ -31,30 +27,18 @@ public class CodeWriter : MonoBehaviour {
 	public static event QREncodeError onCodeEncodeError;  
 
 	BitMatrix byteMatrix;
-	private int CodeWidth  =512;
 
-	CodeType codetype = CodeType.QRCode;
 	public Texture2D e_LogoTex;
 	public float e_EmbedLogoRatio;
 
 	Texture2D tempLogoTex = null;
 
-	void Start ()
-	{
-		
-	}
 
-	/// <summary>
-	/// Creates the code by codetype and code content
-	/// </summary>
-	/// <returns><c>true</c>, if code was created, <c>false</c> otherwise.</returns>
-	/// <param name="type">Type.</param>
-	/// <param name="content">Content.</param>
-	public bool CreateCode(CodeType type, string content)
+	public bool CreateCode(CodeType type,int codeWidth, string content)
 	{
-		int imgWidth = CodeWidth;
-		int imgHeight = CodeWidth;
-		codetype = type;
+		int imgWidth = codeWidth;
+		int imgHeight = codeWidth;
+
 		BarcodeFormat codeFormat = BarcodeFormat.QR_CODE;
 		switch (type) {
 		case CodeType.QRCode:
@@ -64,29 +48,29 @@ public class CodeWriter : MonoBehaviour {
 			break;
 		case CodeType.CODE_39:
 			{
-				imgWidth = CodeWidth;
-				imgHeight = CodeWidth / 2;
+				imgWidth = codeWidth;
+				imgHeight = codeWidth / 2;
 				codeFormat = BarcodeFormat.CODE_39;
 			}
 			break;
 		case CodeType.CODE_128:
 			{
-				imgWidth = CodeWidth;
-				imgHeight = CodeWidth / 2;
+				imgWidth = codeWidth;
+				imgHeight = codeWidth / 2;
 				codeFormat = BarcodeFormat.CODE_128;
 			}
 			break;
 		case CodeType.EAN_8:
 			{
-				imgWidth = CodeWidth;
-				imgHeight = CodeWidth / 2;
+				imgWidth = codeWidth;
+				imgHeight = codeWidth / 2;
 				codeFormat = BarcodeFormat.EAN_8;
 			}
 			break;
 		case CodeType.EAN_13:
 			{
-				imgWidth = CodeWidth;
-				imgHeight = CodeWidth / 2;
+				imgWidth = codeWidth;
+				imgHeight = codeWidth / 2;
 				codeFormat = BarcodeFormat.EAN_13;
 			}
 			break;
@@ -259,7 +243,7 @@ public class CodeWriter : MonoBehaviour {
 
 
 
-	public void CreateQRCode_WiFi(string ssid, string password, CreateCodeManager.WIFIMode authenticationMode, bool isHiddenSSID = false, CodeType format = CodeType.QRCode)
+	/*public void CreateQRCode_WiFi(string ssid, string password, CreateCodeManager.WIFIMode authenticationMode, bool isHiddenSSID = false, CodeType format = CodeType.QRCode)
 	{
 		CreateCodeManager.WiFi wiFi = new CreateCodeManager.WiFi(ssid, password, authenticationMode, isHiddenSSID);
 		this.CreateCode(format,wiFi.ToString());
@@ -313,7 +297,7 @@ public class CodeWriter : MonoBehaviour {
 	{
 		CreateCodeManager.BusinessCard bcard = new CreateCodeManager.BusinessCard(n,tel,em,url,companyName,address);
 		this.CreateCode(format, bcard.ToString());
-	}
+	}*/
 
 
 }

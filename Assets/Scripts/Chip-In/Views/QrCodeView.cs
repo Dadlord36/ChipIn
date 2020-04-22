@@ -1,8 +1,8 @@
-﻿using ScriptableObjects.Parameters;
+﻿using Repositories.Remote;
+using ScriptableObjects.Parameters;
 using UnityEngine;
 using UnityEngine.UI;
-using Utilities;
-using ZXing.QrCode;
+using WebOperationUtilities;
 
 namespace Views
 {
@@ -10,8 +10,27 @@ namespace Views
     {
         [SerializeField] private Image qrImage;
         [SerializeField] private QrCodeEncodingParameters qrCodeParameters;
-        private readonly QRCodeWriter _codeWriter = new QRCodeWriter();
+        [SerializeField] private UserProductsRepository userProductsRepository;
 
+        [SerializeField] private CodeWriter codeWriter;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            CodeWriter.onCodeEncodeFinished += CodeWriterOnCodeEncodeFinished;
+            QrCode = userProductsRepository.CurrentlySelectedProduct.QrData;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            CodeWriter.onCodeEncodeFinished -= CodeWriterOnCodeEncodeFinished;
+        }
+
+        private void CodeWriterOnCodeEncodeFinished(Texture2D tex)
+        {
+            QrImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(tex);
+        }
 
         private Sprite QrImageSprite
         {
@@ -20,12 +39,7 @@ namespace Views
 
         public string QrCode
         {
-            set
-            {
-                var bitMatrix = _codeWriter.encode(value, qrCodeParameters.Parameters.codingFormat, qrCodeParameters.Parameters.width,
-                    qrCodeParameters.Parameters.height);
-                QrImageSprite = QrCodeUtility.ConvertBitMatrixToSprite(bitMatrix);
-            }
+            set => codeWriter.CreateCode(qrCodeParameters.Parameters.codingFormat, qrCodeParameters.Parameters.height, value);
         }
     }
 }
