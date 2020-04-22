@@ -51,10 +51,10 @@ namespace ViewModels
 
         private void Initialize()
         {
-            if (_isInitialized) return;
-            _isInitialized = true;
             qrPreviewController.rawimg = _qrPreviewRoot.GetComponentInChildren<RawImage>();
+            if (_isInitialized) return;
             qrCodeReader.Initialize();
+            _isInitialized = true;
         }
 
         private void ActivateQrScanning()

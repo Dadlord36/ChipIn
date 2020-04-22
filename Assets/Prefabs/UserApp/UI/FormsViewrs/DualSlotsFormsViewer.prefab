@@ -154,7 +154,7 @@ CanvasGroup:
   m_GameObject: {fileID: 2432336027447563383}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
+  m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &8025968333580710513
@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 2586570308273284876}
   - component: {fileID: 4061549197036614120}
   - component: {fileID: 2920213367789628257}
+  - component: {fileID: 8757379986443090069}
   m_Layer: 0
   m_Name: SwitchingToViewContainer
   m_TagString: Untagged
@@ -260,8 +261,20 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 10
   m_TargetDisplay: 0
+--- !u!225 &8757379986443090069
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894328114593047288}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &2360339432727283641
 PrefabInstance:
   m_ObjectHideFlags: 0
