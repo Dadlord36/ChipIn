@@ -3,6 +3,7 @@ using DataModels.Interfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Views.Bars.BarItems;
 using Views.InteractiveWindows.Interfaces;
 using WebOperationUtilities;
 
@@ -14,17 +15,17 @@ namespace Views.InteractiveWindows
         void ShowInfoCard();
         void HideInfoCard();
     }
-    
-    public class InfoPanelView : BaseView, IInfoPanelData,IInfoPanelView
+
+    public class InfoPanelView : BaseView, IInfoPanelData, IInfoPanelView
     {
         public class InfoPanelData : IInfoPanelData
         {
-            public InfoPanelData(Sprite itemLabel, string itemName, string itemType, string itemDescription)
+            public InfoPanelData(Sprite itemLabel, IDescription description, ITitled titled, ICategory category)
             {
                 ItemLabel = itemLabel;
-                ItemName = itemName;
-                ItemType = itemType;
-                ItemDescription = itemDescription;
+                ItemName = titled?.Title;
+                ItemType = category?.Category;
+                ItemDescription = description?.Description;
             }
 
             public Sprite ItemLabel { get; set; }
@@ -32,8 +33,8 @@ namespace Views.InteractiveWindows
             public string ItemType { get; set; }
             public string ItemDescription { get; set; }
         }
-        
-        
+
+
         [SerializeField] private Image productIconImage;
         [SerializeField] private TMP_Text itemNameField;
         [SerializeField] private TMP_Text itemTypeField;
@@ -66,10 +67,14 @@ namespace Views.InteractiveWindows
 
         public void FillCardWithData(IInfoPanelData data)
         {
-            ItemLabel = data.ItemLabel;
-            ItemName = data.ItemName;
-            ItemType = data.ItemType;
-            ItemDescription = data.ItemDescription;
+            if (data.ItemLabel != null)
+                ItemLabel = data.ItemLabel;
+            if (data.ItemName != null)
+                ItemName = data.ItemName;
+            if (data.ItemType != null)
+                ItemType = data.ItemType;
+            if (data.ItemDescription != null)
+                ItemDescription = data.ItemDescription;
         }
 
         public void ShowInfoCard()
@@ -81,12 +86,12 @@ namespace Views.InteractiveWindows
         {
             gameObject.SetActive(false);
         }
-        
-        public static async Task FillWithData(IInfoPanelView infoPanelView, IOfferWithGameModel offerWithGameModel)
-        {
-            var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility.TryDownloadImageAsync(offerWithGameModel.PosterUri));
 
-            infoPanelView.FillCardWithData(new InfoPanelData(label, offerWithGameModel.Title, offerWithGameModel.Category, offerWithGameModel.Description));
+        public static async Task FillWithData(IInfoPanelView infoPanelView, IPosterImageUri posterUri, IDescription description,
+            ITitled titled, ICategory category)
+        {
+            var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility.TryDownloadImageAsync(posterUri.PosterUri));
+            infoPanelView.FillCardWithData(new InfoPanelData(label, description, titled, category));
         }
     }
 }

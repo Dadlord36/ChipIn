@@ -1,6 +1,8 @@
-﻿namespace Views
+﻿using Views.Base;
+
+namespace Views
 {
-    public class CartView : BaseView
+    public class CartView : ItemsListBaseView
     {
     }
 }

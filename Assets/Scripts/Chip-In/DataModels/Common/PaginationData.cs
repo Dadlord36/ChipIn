@@ -8,4 +8,9 @@ namespace DataModels.Common
         [JsonProperty("page")] public int Page;
         [JsonProperty("per_page")] public int PerPage;
     }
+
+    public interface IPaginated
+    {
+        PaginationData Pagination { get; set; }
+    }
 }

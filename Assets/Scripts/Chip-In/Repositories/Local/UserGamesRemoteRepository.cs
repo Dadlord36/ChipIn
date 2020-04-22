@@ -20,8 +20,6 @@ namespace Repositories.Local
             ItemsLiveData.AddRange(await UserGamesStaticProcessor.GetUserGames(userAuthorisationDataRepository));
         }
 
-        public GameDataModel this[int index] => ItemsData[index];
-
         public GameDataModel GetGameDataByGameId(int gameId)
         {
             return ItemsData.First(gameData => gameData.Id == gameId);

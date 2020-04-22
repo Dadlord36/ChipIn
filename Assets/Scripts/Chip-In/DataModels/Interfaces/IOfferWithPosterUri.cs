@@ -2,19 +2,20 @@
 using DataModels.SimpleTypes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Views.Bars.BarItems;
 
 namespace DataModels.Interfaces
 {
-    public interface IOfferBaseModel
+    public interface ICategory
     {
-        [JsonProperty("title")] string Title { get; set; }
-        [JsonProperty("description")] string Description { get; set; }
         [JsonProperty("category")] string Category { get; set; }
-
+    }
+    
+    public interface IOfferBaseModel : ICategory, ITitled, IDescription
+    {
         [JsonProperty("expired_at")]
         [JsonConverter(typeof(ServerShortDateTimeConverter))]
         DateTime ExpireDate { get; set; }
-
         [JsonProperty("segment")] string Segment { get; set; }
         [JsonProperty("quantity")] uint Quantity { get; set; }
         [JsonProperty("price")] uint Price { get; set; }

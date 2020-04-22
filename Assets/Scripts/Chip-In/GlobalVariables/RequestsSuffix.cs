@@ -2,6 +2,7 @@
 {
     public static class ApiCategories
     {
+        public const string UserProducts = "user_products";
         public const string Games = "games";
         public const string UserGames = "user_games";
         public const string Offers = "offers";

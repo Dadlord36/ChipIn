@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using Common;
 using DataModels.Common;
-using RequestsStaticProcessors;
 
 namespace Repositories.Remote
 {
@@ -14,6 +11,7 @@ namespace Repositories.Remote
         public IReadOnlyList<TDataType> ItemsData => ItemsLiveData.GetData;
         public PaginationData Pagination => ItemsLiveData.Pagination;
 
+        public TDataType this[int index] => ItemsData[index];
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {

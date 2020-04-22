@@ -67,7 +67,8 @@ namespace ViewModels
         {
             OfferIsSelected = SelectedOfferId != int.MinValue;
             var responseModel = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository, SelectedOfferId);
-            await InfoPanelView.FillWithData(ViewAsProductGalleryView, responseModel.Offer);
+            var offer = responseModel.Offer;
+            await InfoPanelView.FillWithData(ViewAsProductGalleryView, offer, offer, offer, offer);
         }
 
         [Binding]
