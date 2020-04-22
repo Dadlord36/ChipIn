@@ -10,6 +10,11 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class ProductQrCode : IQrData
     {
         public string QrData { get; set; }
+        public ProductQrCode(string qrData)
+        {
+            QrData = qrData;
+        }
+
     }
 
     public class ActivateProductRequestProcessor : BaseRequestProcessor<IQrData, SuccessConfirmationModel,

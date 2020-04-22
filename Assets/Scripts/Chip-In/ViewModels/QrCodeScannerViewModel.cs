@@ -1,6 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading.Tasks;
+using HttpRequests.RequestsProcessors.PutRequests;
+using Repositories.Remote;
+using RequestsStaticProcessors;
+using UnityEngine;
 using UnityEngine.UI;
 using Utilities;
+using Object = UnityEngine.Object;
 
 namespace ViewModels
 {
@@ -8,6 +14,7 @@ namespace ViewModels
     {
         private const string Tag = nameof(QrCodeScannerViewModel);
 
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private Object qrPreviewPrefab;
         [SerializeField] private CodeReader qrCodeReader;
         [SerializeField] private PreviewController qrPreviewController;
@@ -53,12 +60,34 @@ namespace ViewModels
         private void ActivateQrScanning()
         {
             Initialize();
+            CodeReader.OnCodeFinished += CodeReaderOnCodeFinished;
             qrCodeReader.StartWork();
         }
 
         private void DeactivateQrScanning()
         {
+            CodeReader.OnCodeFinished -= CodeReaderOnCodeFinished;
             qrCodeReader.StopWork();
+        }
+
+        private void CodeReaderOnCodeFinished(string decodedText)
+        {
+            Handheld.Vibrate();
+            ActivateProduct(decodedText);
+        }
+
+        private async void ActivateProduct(string decodedText)
+        {
+            try
+            {
+                await UserProductsStaticRequestsProcessor.ActivateProduct(authorisationDataRepository,
+                    new ProductQrCode(decodedText));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void TryAuthorizeWebCameraAndStartQrReader()
