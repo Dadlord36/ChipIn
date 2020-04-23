@@ -1,10 +1,7 @@
-﻿using System;
-
-namespace Behaviours.Games.Interfaces
+﻿namespace Behaviours.Games.Interfaces
 {
     public interface IInteractiveUintValue
     {
-        event Action<uint> Collected;
-        void GenerateValue();
+        void SetValue(uint value);
     }
 }
