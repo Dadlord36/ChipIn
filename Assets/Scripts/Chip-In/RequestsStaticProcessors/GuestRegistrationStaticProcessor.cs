@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common;
 using DataModels;
-using Newtonsoft.Json;
-using UnityEngine;
+using DataModels.RequestsModels;
+using HttpRequests.RequestsProcessors;
+using HttpRequests.RequestsProcessors.PostRequests;
 using Utilities;
 
 namespace RequestsStaticProcessors
@@ -11,21 +11,12 @@ namespace RequestsStaticProcessors
     public static class GuestRegistrationStaticProcessor
     {
         private const string Tag = nameof(GuestRegistrationStaticProcessor);
-        public static async Task<IAuthorisationModel> TryRegisterUserAsGuest()
+
+        public static Task<BaseRequestProcessor<RegistrationRequestModel, RegistrationResponseDataModel, 
+            IRegistrationResponseDataModel>.HttpResponse> TryRegisterUserAsGuest()
         {
-            try
-            {
-                LogUtility.PrintLog(Tag,$"Registration Request Model Data: {JsonConvert.SerializeObject(PredefinedUserData.GuestDataRequestModel)}");
-                LogUtility.PrintLog(Tag,"Trying to login as guest");
-                var registrationResponse = await RegistrationStaticProcessor.TryRegisterUserFull(PredefinedUserData.GuestDataRequestModel);
-                LogUtility.PrintLog(Tag,registrationResponse.Success ? "User was register as Guest" : "Failed to register user as Guest");
-                return registrationResponse.ResponseModelInterface.AuthorisationData;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            LogUtility.PrintLog(Tag, "Trying to login as guest");
+            return RegistrationStaticProcessor.TryRegisterUserFull(PredefinedUserData.GuestDataRequestModel);
         }
     }
 }

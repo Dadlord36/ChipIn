@@ -20,12 +20,12 @@ namespace Controllers
     {
         public enum SessionMode
         {
-            User, Merchant
+            User,
+            Merchant
         }
-        
+
         private const string Tag = nameof(SessionController);
 
-       
 
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
@@ -34,8 +34,8 @@ namespace Controllers
         [SerializeField] private CachingController cachingController;
         [SerializeField] private SessionStateRepository sessionStateRepository;
 
-        public event Action<SessionMode> SwitchingToMode ;
-        
+        public event Action<SessionMode> SwitchingToMode;
+
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
             var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
@@ -62,10 +62,10 @@ namespace Controllers
 
         public async void SignOut()
         {
-           await sessionStateRepository.SignOut();
-           SwitchToLoginView();
+            await sessionStateRepository.SignOut();
+            SwitchToLoginView();
         }
-        
+
         private void SwitchToViewCorrespondingToUseRole()
         {
             switch (authorisationDataRepository.UserRole)
@@ -96,7 +96,6 @@ namespace Controllers
                 authorisationDataRepository.TryLoadLocalData();
                 repositoriesController.InvokeRepositoriesLoading();
                 SwitchToViewCorrespondingToUseRole();
-
             }
             else
             {
@@ -114,7 +113,7 @@ namespace Controllers
         {
             SwitchToView(nameof(LoginView));
         }
-        
+
         private void SwitchToMiniGame()
         {
             SwitchToView(nameof(CoinsGameView));
@@ -133,8 +132,15 @@ namespace Controllers
         public async Task<bool> TryRegisterAndLoginAsGuest()
         {
             var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+            var result = authorisationModel;
+            if (!result.Success)
+            {
+                LogUtility.PrintLog(Tag, "Failed to register user as Guest");
+                alertCardController.ShowAlertWithText(result.Error);
+                return false;
+            }
 
-            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
+            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(result.ResponseModelInterface.AuthorisationData);
             SaveUserAuthentication(MainNames.UserRoles.Guest);
             return true;
         }
