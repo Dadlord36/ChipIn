@@ -38,5 +38,17 @@
 
             public static readonly string[] ChallengeTypesArray = {Match, Contest, League, Tournament};
         }
+
+        public static class Pagination
+        {
+            public const string Page = "page";
+            public const string PerPage = "per_page";
+        }
+
+        public static class CommunityActions
+        {
+            public const string Leave = "leave";
+            public const string Join = "join";
+        }
     }
 }

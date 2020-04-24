@@ -12,8 +12,8 @@ namespace ViewModels.Cards
     public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IEngageModel, INotifyPropertyChanged
     {
         public event Action<EngageCardDataModel> CardWasSelected;
-
         private readonly EngageCardDataModel _cardData = new EngageCardDataModel();
+
 
         protected override void OnEnable()
         {

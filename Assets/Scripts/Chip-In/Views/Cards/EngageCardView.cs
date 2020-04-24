@@ -7,7 +7,8 @@ namespace Views.Cards
     public sealed class EngageCardView : BaseView, IPointerClickHandler
     {
         public event Action WasClicked;
-        public void OnPointerClick(PointerEventData eventData)
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
             OnWasClicked();
         }

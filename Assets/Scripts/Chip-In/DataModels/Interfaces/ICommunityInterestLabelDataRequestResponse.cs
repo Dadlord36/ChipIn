@@ -8,6 +8,6 @@ namespace DataModels.Interfaces
     public interface ICommunityInterestLabelDataRequestResponse : ISuccess
     {
         [JsonProperty("pagination")]  PaginationData Pagination { get; set; }
-        [JsonProperty("communities")] CommunityInterestLabelDataRequestResponse.CommunityInterestLabelData[] Communities { get; set; }
+        [JsonProperty("communities")] CommunityInterestLabelData[] Communities { get; set; }
     }
 }

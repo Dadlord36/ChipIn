@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using UnityEngine;
 using ViewModels.Cards;
+using WebOperationUtilities;
 
 namespace Views
 {
@@ -8,19 +9,22 @@ namespace Views
     {
         [SerializeField] private EngageCardViewModel prefab;
         [SerializeField] private Transform scrollViewContainer;
-        
+
         public void ClearScrollList()
         {
             foreach (Transform child in scrollViewContainer)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
         }
 
-        public EngageCardViewModel AddCardToScrollList(EngageCardDataModel engageCardDataModel)
-        { 
+        public EngageCardViewModel AddCardToScrollList(CommunityInterestGridItemView.CommunityInterestGridItemData engageCardDataModel)
+        {
             var engageCardView = Instantiate(prefab, scrollViewContainer);
-            engageCardView.FillCardWithData(engageCardDataModel);
+            engageCardView.FillCardWithData(new EngageCardDataModel(engageCardDataModel.ItemName,
+                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
+                SpritesUtility.CreateSpriteWithDefaultParameters(engageCardDataModel.IconTextureData)));
+
             return engageCardView;
         }
     }

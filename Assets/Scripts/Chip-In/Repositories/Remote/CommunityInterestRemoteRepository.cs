@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DataModels.ResponsesModels;
+using DataModels;
 using RequestsStaticProcessors;
 using UnityEngine;
 using Utilities;
@@ -11,8 +11,7 @@ using WebOperationUtilities;
 namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(CommunityInterestRemoteRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunityInterestRemoteRepository),
-        order = 0)]
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunityInterestRemoteRepository), order = 0)]
     public sealed class CommunityInterestRemoteRepository : BaseItemsListRepository<CommunityInterestGridItemView.CommunityInterestGridItemData>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -21,8 +20,7 @@ namespace Repositories.Remote
         {
             try
             {
-                var result = await CommunityInterestsStaticRequestProcessor.TryGetCommunityInterestsLabelsData(
-                        authorisationDataRepository);
+                var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(authorisationDataRepository);
 
                 var itemsData = result.ResponseModelInterface.Communities;
                 int itemsCount = itemsData.Length;
@@ -40,8 +38,7 @@ namespace Repositories.Remote
 
                 for (int i = 0; i < itemsCount; i++)
                 {
-                    async Task<CommunityInterestGridItemView.CommunityInterestGridItemData> FromItemData(
-                        CommunityInterestLabelDataRequestResponse.CommunityInterestLabelData itemData)
+                    async Task<CommunityInterestGridItemView.CommunityInterestGridItemData> FromItemData(CommunityInterestLabelData itemData)
                     {
                         var textureData = await DataDownloadingUtility.DownloadRawImageData(itemData.PosterUri);
                         return new CommunityInterestGridItemView.CommunityInterestGridItemData(itemData.Id,
@@ -57,7 +54,9 @@ namespace Repositories.Remote
 
                 await Task.WhenAll(tasks);
 
+                ItemsLiveData.Clear();
                 ItemsLiveData.AddRange(gridItemsData);
+
                 ConfirmDataLoading();
             }
 
@@ -70,7 +69,7 @@ namespace Repositories.Remote
         protected override void ConfirmDataLoading()
         {
             base.ConfirmDataLoading();
-            LogUtility.PrintLog( "Repositories", "Community repository data was loaded from server");
+            LogUtility.PrintLog("Repositories", "Community repository data was loaded from server");
         }
 
         public override Task SaveDataToServer()

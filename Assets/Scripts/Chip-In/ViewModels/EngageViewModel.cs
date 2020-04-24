@@ -10,45 +10,44 @@ namespace ViewModels
     public class EngageViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private OfferCreationRepository offerCreationRepository;
-        [SerializeField] private ItemsScrollBarView itemsScrollBarView;
+        [SerializeField] private CommunityInterestRemoteRepository interestRemoteRepository;
 
-        [SerializeField] private MerchantCommunityInterestsRepository merchantCommunityInterestsRepository;
         private EngageView RelativeView => View as EngageView;
 
 
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            itemsScrollBarView.Activate();
             RefillInterestsList();
         }
 
         protected override void OnBecomingInactiveView()
         {
             base.OnBecomingInactiveView();
-            itemsScrollBarView.Deactivate();
         }
 
         private void RefillInterestsList()
         {
             RelativeView.ClearScrollList();
 
-            var itemsData = merchantCommunityInterestsRepository.ItemsData;
+            var itemsData = interestRemoteRepository.ItemsData;
+
             for (int i = 0; i < itemsData.Count; i++)
             {
                 CreateAndAddEngageCardToScrollList(itemsData[i]);
             }
         }
 
-        private void CreateAndAddEngageCardToScrollList(EngageCardDataModel engageCardDataModel)
+        private void CreateAndAddEngageCardToScrollList(in CommunityInterestGridItemView.CommunityInterestGridItemData
+            interestGridData)
         {
-            RelativeView.AddCardToScrollList(engageCardDataModel).CardWasSelected += OnNewCommunityInterestCardSelected;
+            RelativeView.AddCardToScrollList(interestGridData).CardWasSelected += OnNewCommunityInterestCardSelected;
         }
 
         private void OnNewCommunityInterestCardSelected(EngageCardDataModel engageCardDataModel)
         {
             offerCreationRepository.SelectedInterestData = engageCardDataModel;
+            SwitchToView(nameof(MerchantInterestView));
         }
-        
     }
 }

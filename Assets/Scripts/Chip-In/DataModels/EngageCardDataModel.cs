@@ -25,7 +25,20 @@ namespace DataModels
         private string _marketCap;
         private string _marketSpirit;
         private Sprite _icon;
-
+        
+        public EngageCardDataModel(){}
+        
+        public EngageCardDataModel(string title, string description, string marketAge, string marketSize, 
+            string marketCap, string marketSpirit, Sprite icon)
+        {
+            _title = title;
+            _description = description;
+            _marketAge = marketAge;
+            _marketSize = marketSize;
+            _marketCap = marketCap;
+            _marketSpirit = marketSpirit;
+            _icon = icon;
+        }
 
         public string Title
         {
