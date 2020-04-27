@@ -62,7 +62,8 @@ namespace Controllers
 
         public async void SignOut()
         {
-            await sessionStateRepository.SignOut();
+            if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
+                await sessionStateRepository.SignOut();
             SwitchToLoginView();
         }
 
