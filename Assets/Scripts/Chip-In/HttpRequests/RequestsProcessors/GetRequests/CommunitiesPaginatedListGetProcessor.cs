@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Net.Http;
+﻿using System.Net.Http;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -13,18 +12,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public CommunitiesPaginatedListGetProcessor(IRequestHeaders requestHeaders, PaginationData pagination) :
             base(new BaseRequestProcessorParameters(ApiCategories.Communities, HttpMethod.Get, requestHeaders,
-                null, null, ConvertPaginationToNameValueCollection(pagination)))
+                null, null, pagination.ConvertPaginationToNameValueCollection()))
         {
-        }
-
-        private static NameValueCollection ConvertPaginationToNameValueCollection(in PaginationData paginationData)
-        {
-            var collection = new NameValueCollection(2)
-            {
-                {MainNames.Pagination.Page, paginationData.Page.ToString()},
-                {MainNames.Pagination.PerPage, paginationData.PerPage.ToString()}
-            };
-            return collection;
         }
     }
 }
