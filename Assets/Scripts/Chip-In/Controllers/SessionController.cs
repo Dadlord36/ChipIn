@@ -21,7 +21,8 @@ namespace Controllers
         public enum SessionMode
         {
             User,
-            Merchant
+            Merchant,
+            Guest
         }
 
         private const string Tag = nameof(SessionController);
@@ -71,8 +72,11 @@ namespace Controllers
         {
             switch (authorisationDataRepository.UserRole)
             {
-                case MainNames.UserRoles.Client:
                 case MainNames.UserRoles.Guest:
+                    OnSwitchingToMode(SessionMode.Guest);
+                    SwitchToMiniGame();
+                    break;
+                case MainNames.UserRoles.Client:
                     OnSwitchingToMode(SessionMode.User);
                     SwitchToMiniGame();
                     break;

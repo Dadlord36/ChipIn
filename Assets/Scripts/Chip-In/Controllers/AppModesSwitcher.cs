@@ -12,6 +12,7 @@ namespace Controllers
 
         [Space(10)] [SerializeField] private Object userAppBottomBarPrefab;
         [SerializeField] private Object merchantAppBottomBarPrefab;
+        [SerializeField] private Object guestBottomBarPrefab;
 
         private void Start()
         {
@@ -22,6 +23,9 @@ namespace Controllers
         {
             switch (mode)
             {
+                case SessionController.SessionMode.Guest:
+                    SwitchToGuestMode();
+                    break;
                 case SessionController.SessionMode.User:
                     SwitchToUserMode();
                     break;
@@ -31,6 +35,12 @@ namespace Controllers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
+        }
+
+        private void SwitchToGuestMode()
+        {
+            ClearContainer();
+            Instantiate(guestBottomBarPrefab, bottomBarContainer);
         }
 
         private void SwitchToUserMode()
