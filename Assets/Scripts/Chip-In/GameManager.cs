@@ -1,6 +1,7 @@
 ﻿using ActionsTranslators;
 using Controllers;
 using HttpRequests;
+using Notifications;
 using UnityEngine;
 using Utilities;
 using Views.ViewElements.ViewsPlacers;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
         Initialize();
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
+        FireBaseNotificationsController.Initialize();
     }
 
     private void Initialize()
@@ -29,6 +31,7 @@ public class GameManager : MonoBehaviour
         InitializeSystems();
         InitializeControllers();
         LogUtility.PrintLog(Tag, ScreenUtility.GetScreenSize().ToString());
+        FireBaseNotificationsController.Dispose();
     }
 
     private void InitializeControllers()
