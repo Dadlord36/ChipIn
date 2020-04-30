@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataModels;
+using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -13,7 +14,7 @@ namespace ViewModels
     public class CommunityInterestLabelsViewModel : BaseMenuViewModel<CommunityBasicDataModel>
     {
         [SerializeField] private CommunitiesDataRepository communitiesDataRepository;
-
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         protected override BaseItemsListRepository<CommunityBasicDataModel> ItemsRemoteRepository => communitiesDataRepository;
 
 
@@ -27,22 +28,14 @@ namespace ViewModels
         {
             base.UpdateItems();
             var itemsData = ItemsRemoteRepository.ItemsData;
-            var tasks = new List<Task<Texture2D>>(itemsData.Count);
-
+            var parameters = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters[itemsData.Count]; 
+            
             for (int i = 0; i < itemsData.Count; i++)
             {
-                var index = i;
-                var task = ImagesDownloadingUtility.TryDownloadImageAsync(itemsData[index].PosterUri);
-                await task.ContinueWith
-                (
-                    delegate(Task<Texture2D> finishedTask) 
-                    { newItemsScrollView.AddElement(SpritesUtility.CreateSpriteWithDefaultParameters(finishedTask.Result)); }
-                , TaskScheduler.FromCurrentSynchronizationContext());
-                 
-                tasks.Add(task);
+                parameters[i] = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(itemsData[i].PosterUri,
+                    newItemsScrollView.AddElement);
             }
-
-            await Task.WhenAll(tasks);
+            await downloadedSpritesRepository.TryToLoadSpritesAsync(parameters);
         }
     }
 }

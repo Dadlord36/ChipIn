@@ -2,13 +2,11 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using WebOperationUtilities;
 
 namespace Views
 {
     public class CommunityInterestGridItemView : BaseView
     {
-
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
@@ -26,14 +24,24 @@ namespace Views
             set => textField.text = value;
         }
 
-        public void SetItemImageAndText(in CommunityBasicDataModel gridItemData, Sprite icon)
+        public void SetImage(Sprite icon)
         {
             ItemImageSprite = icon;
+        }
+
+        public void SetItemImageAndText(in CommunityBasicDataModel gridItemData, Sprite icon)
+        {
+            SetItemText(gridItemData);
+            SetImage(icon);
+        }
+
+        public void SetItemText(in CommunityBasicDataModel gridItemData)
+        {
             ItemName = gridItemData.Name;
             _interestId = gridItemData.Id;
         }
-        
-        public void SetItemImageAndText(int id,string itemName,Sprite sprite)
+
+        public void SetItemImageAndText(int id, string itemName, Sprite sprite)
         {
             ItemImageSprite = sprite;
             ItemName = itemName;

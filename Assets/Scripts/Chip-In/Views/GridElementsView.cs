@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using DataModels;
-using Firebase.Extensions;
+using Repositories.Local;
 using UnityEngine;
 using UnityEngine.Assertions;
-using WebOperationUtilities;
 
 namespace Views
 {
@@ -14,12 +12,14 @@ namespace Views
         [SerializeField, HideInInspector] public int rowsAmount;
 #endif
 
-        private int _lastFilledGridItemIndex;
 
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private CommunityInterestGridItemView itemPrefab;
         [SerializeField] private Sprite defaultSprite;
-
         [SerializeField, HideInInspector] private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
+
+
+        private int _lastFilledGridItemIndex;
 
         public void AddEmptyItemsRow()
         {
@@ -48,19 +48,14 @@ namespace Views
             }
         }
 
-        public async void FillOneItemWithData(CommunityBasicDataModel gridItemData)
+        public void FillOneItemWithData(CommunityBasicDataModel gridItemData)
         {
             Assert.IsTrue(_lastFilledGridItemIndex < items.Count);
+            items[_lastFilledGridItemIndex].SetItemText(gridItemData);
 
-            var downloadImageTask = ImagesDownloadingUtility.TryDownloadImageAsync(gridItemData.PosterUri);
-            await downloadImageTask.ContinueWith(async delegate(Task<Texture2D> task)
-            {
-                var texture = await task;
-                var sprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-                items[_lastFilledGridItemIndex].SetItemImageAndText(gridItemData, sprite);
-            }, TaskScheduler.FromCurrentSynchronizationContext());
-
-
+            downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.
+                SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
+            
             _lastFilledGridItemIndex++;
         }
 
