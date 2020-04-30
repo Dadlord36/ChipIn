@@ -10,13 +10,13 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public interface ICommunityItemResponseModel : ISuccess
     {
-        [JsonProperty("community")] CommunityInterestLabelData LabelData { get; set; }
+        [JsonProperty("community")] CommunityDetailsDataModel LabelDetailsDataModel { get; set; }
     }
 
-    public sealed class CommunitiesByIdGetProcessor : RequestWithoutBodyProcessor<CommunityItemResponseDataModel,
+    public sealed class CommunityDetailsGetProcessor : RequestWithoutBodyProcessor<CommunityItemResponseDataModel,
         ICommunityItemResponseModel>
     {
-        public CommunitiesByIdGetProcessor(IRequestHeaders requestHeaders, int communityId) :
+        public CommunityDetailsGetProcessor(IRequestHeaders requestHeaders, int communityId) :
             base(ApiCategories.Communities, HttpMethod.Get, requestHeaders, new []{communityId.ToString()})
         {
         }

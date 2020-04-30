@@ -1,24 +1,26 @@
 ﻿using System.Threading.Tasks;
+using DataModels;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Repositories.Interfaces;
 
 namespace RequestsStaticProcessors
 {
     public static class CommunitiesStaticRequestsProcessor
     {
-        public static Task<BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse,
-                ICommunityInterestLabelDataRequestResponse>.HttpResponse>
+        public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse,
+                ICommunitiesBasicDataRequestResponse>.HttpResponse>
             GetCommunitiesList(IRequestHeaders requestHeaders)
         {
             return new CommunitiesListGetProcessor(requestHeaders)
                 .SendRequest("Communities data was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, CommunityInterestLabelDataRequestResponse, ICommunityInterestLabelDataRequestResponse>.HttpResponse> GetPaginatedCommunitiesList(IRequestHeaders requestHeaders,
+        public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse> GetPaginatedCommunitiesList(IRequestHeaders requestHeaders,
             PaginationData paginationData)
         {
             return new CommunitiesPaginatedListGetProcessor(requestHeaders, paginationData)
@@ -26,19 +28,23 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, CommunityItemResponseDataModel, ICommunityItemResponseModel>.HttpResponse>
-            GetCommunityById(IRequestHeaders requestHeaders, int communityId)
+            GetCommunityDetails(IRequestHeaders requestHeaders, int communityId)
         {
-            return new CommunitiesByIdGetProcessor(requestHeaders, communityId).SendRequest("Community was retrieved");
+            return new CommunityDetailsGetProcessor(requestHeaders, communityId).SendRequest("Community was retrieved");
         }
 
-        public static void JoinCommunity()
+        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
+            JoinCommunity(IRequestHeaders requestHeaders, int communityId)
         {
-            
+            return new CommunityJoinPostProcessor(requestHeaders, communityId)
+                .SendRequest($"Joined successfully to community {communityId.ToString()}");
         }
 
-        public static void LeaveCommunity()
+        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
+            LeaveCommunity(IRequestHeaders requestHeaders, int communityId)
         {
-            
+            return new CommunityLeaveDeleteProcessor(requestHeaders, communityId)
+                .SendRequest($"Leaving successfully community {communityId.ToString()}");
         }
     }
 }

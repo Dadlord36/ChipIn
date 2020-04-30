@@ -1,4 +1,5 @@
-﻿using DataModels;
+﻿using System.Threading.Tasks;
+using DataModels;
 using UnityEngine;
 using ViewModels.Cards;
 using WebOperationUtilities;
@@ -18,12 +19,13 @@ namespace Views
             }
         }
 
-        public EngageCardViewModel AddCardToScrollList(CommunityInterestGridItemView.CommunityInterestGridItemData engageCardDataModel)
+        public async Task<EngageCardViewModel> AddCardToScrollList(ICommunityDetailsDataModel communityDetailsDataModel)
         {
+            var posterTexture = await ImagesDownloadingUtility.TryDownloadImageAsync(communityDetailsDataModel.PosterUri);
             var engageCardView = Instantiate(prefab, scrollViewContainer);
-            engageCardView.FillCardWithData(new EngageCardDataModel(engageCardDataModel.ItemName,
-                string.Empty, string.Empty, string.Empty, string.Empty, string.Empty,
-                SpritesUtility.CreateSpriteWithDefaultParameters(engageCardDataModel.IconTextureData)));
+            
+            engageCardView.FillCardWithData(new EngageCardDataModel(communityDetailsDataModel,
+                SpritesUtility.CreateSpriteWithDefaultParameters(posterTexture)));
 
             return engageCardView;
         }

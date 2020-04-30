@@ -36,56 +36,7 @@ namespace ViewModels.Cards
         {
             _cardData.Set(cardData);
         }
-
-        [Binding]
-        public string Title
-        {
-            get => _cardData.Title;
-            set => _cardData.Title = value;
-        }
-
-        [Binding]
-        public string Description
-        {
-            get => _cardData.Description;
-            set => _cardData.Description = value;
-        }
-
-        [Binding]
-        public string MarketAge
-        {
-            get => _cardData.MarketAge;
-            set => _cardData.MarketAge = value;
-        }
-
-        [Binding]
-        public string MarketSize
-        {
-            get => _cardData.MarketSize;
-            set => _cardData.MarketSize = value;
-        }
-
-        [Binding]
-        public string MarketCap
-        {
-            get => _cardData.MarketCap;
-            set => _cardData.MarketCap = value;
-        }
-
-        [Binding]
-        public string MarketSpirit
-        {
-            get => _cardData.MarketSpirit;
-            set => _cardData.MarketSpirit = value;
-        }
-
-        [Binding]
-        public Sprite Icon
-        {
-            get => _cardData.Icon;
-            set => _cardData.Icon = value;
-        }
-
+        
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => _cardData.PropertyChanged += value;
@@ -96,5 +47,73 @@ namespace ViewModels.Cards
         {
             CardWasSelected?.Invoke(obj);
         }
+
+        #region IEngageModel implementation 
+
+        [Binding]
+        public uint Size
+        {
+            get => _cardData.Size;
+            set => _cardData.Size = value;
+        }
+
+        [Binding]
+        public uint MinCap
+        {
+            get => _cardData.MinCap;
+            set => _cardData.MinCap = value;
+        }
+
+        [Binding]
+        public uint MaxCap
+        {
+            get => _cardData.MaxCap;
+            set => _cardData.MaxCap = value;
+        }
+
+        [Binding]
+        public string Age
+        {
+            get => _cardData.Age;
+            set => _cardData.Age = value;
+        }
+
+        [Binding]
+        public int? Id
+        {
+            get => _cardData.Id;
+            set => _cardData.Id = value;
+        }
+
+        [Binding]
+        public string Name
+        {
+            get => _cardData.Name;
+            set => _cardData.Name = value;
+        }
+
+        [Binding]
+        public string Description
+        {
+            get => _cardData.Description;
+            set => _cardData.Description = value;
+        }
+
+        [Binding]
+        public Sprite Icon
+        {
+            get => _cardData.Icon;
+            set => _cardData.Icon = value;
+        }
+        
+        [Binding]
+        public string Spirit
+        {
+            get => _cardData.Spirit;
+            set => _cardData.Spirit = value;
+        }
+
+        #endregion
+
     }
 }

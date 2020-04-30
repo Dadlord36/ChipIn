@@ -1,52 +1,121 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
+using Views;
 
 namespace DataModels
 {
-    public interface IEngageModel
+    public interface IEngageModel : IMarketModel, IIdentifier, INamed, IDescription, IIconSprite
     {
-        string Title { get; set; }
-        string Description { get; set; }
-        string MarketAge { get; set; }
-        string MarketSize { get; set; }
-        string MarketCap { get; set; }
-        string MarketSpirit { get; set; }
-        Sprite Icon { get; set; }
     }
 
-    public class EngageCardDataModel : IEngageModel, INotifyPropertyChanged
+    public sealed class EngageCardDataModel : IEngageModel, INotifyPropertyChanged
     {
-        private string _title;
+        private uint _size;
+        private uint _minCap;
+        private uint _maxCap;
+        private string _age;
+        private int? _id;
+        private string _name;
         private string _description;
-        private string _marketAge;
-        private string _marketSize;
-        private string _marketCap;
-        private string _marketSpirit;
         private Sprite _icon;
-        
-        public EngageCardDataModel(){}
-        
-        public EngageCardDataModel(string title, string description, string marketAge, string marketSize, 
-            string marketCap, string marketSpirit, Sprite icon)
+        private string _spirit;
+
+        public EngageCardDataModel()
         {
-            _title = title;
-            _description = description;
-            _marketAge = marketAge;
-            _marketSize = marketSize;
-            _marketCap = marketCap;
-            _marketSpirit = marketSpirit;
-            _icon = icon;
         }
 
-        public string Title
+        public EngageCardDataModel(ICommunityDetailsDataModel communityDetailsDataModel, Sprite icon)
         {
-            get => _title;
+            Age = communityDetailsDataModel.Age;
+            Size = communityDetailsDataModel.Size;
+            Description = communityDetailsDataModel.Description;
+            Icon = icon;
+            Id = communityDetailsDataModel.Id;
+            Name = communityDetailsDataModel.Name;
+            MaxCap = communityDetailsDataModel.MaxCap;
+            MinCap = communityDetailsDataModel.MinCap;
+        }
+
+        public void Set(IEngageModel model)
+        {
+            Age = model.Age;
+            Size = model.Size;
+            Description = model.Description;
+            Icon = model.Icon;
+            Id = model.Id;
+            Name = model.Name;
+            MaxCap = model.MaxCap;
+            MinCap = model.MinCap;
+        }
+
+        #region IEngageModel implementation
+
+        public uint Size
+        {
+            get => _size;
             set
             {
-                if (value == _title) return;
-                _title = value;
+                if (value == _size) return;
+                _size = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Age
+        {
+            get => _age;
+            set
+            {
+                if (value == _age) return;
+                _age = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public uint MinCap
+        {
+            get => _minCap;
+            set
+            {
+                if (value == _minCap) return;
+                _minCap = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public uint MaxCap
+        {
+            get => _maxCap;
+            set
+            {
+                if (value == _maxCap) return;
+                _maxCap = value;
+                OnPropertyChanged();
+            }
+        }
+        
+
+        public int? Id
+        {
+            get => _id;
+            set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value == _name) return;
+                _name = value;
                 OnPropertyChanged();
             }
         }
@@ -62,50 +131,6 @@ namespace DataModels
             }
         }
 
-        public string MarketAge
-        {
-            get => _marketAge;
-            set
-            {
-                if (value == _marketAge) return;
-                _marketAge = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string MarketSize
-        {
-            get => _marketSize;
-            set
-            {
-                if (value == _marketSize) return;
-                _marketSize = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string MarketCap
-        {
-            get => _marketCap;
-            set
-            {
-                if (value == _marketCap) return;
-                _marketCap = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string MarketSpirit
-        {
-            get => _marketSpirit;
-            set
-            {
-                if (value == _marketSpirit) return;
-                _marketSpirit = value;
-                OnPropertyChanged();
-            }
-        }
-
         public Sprite Icon
         {
             get => _icon;
@@ -117,21 +142,23 @@ namespace DataModels
             }
         }
 
-        public void Set(EngageCardDataModel data)
+        public string Spirit
         {
-            Title = data.Title;
-            Description = data.Description;
-            MarketAge = data.MarketAge;
-            MarketSize = data.MarketSize;
-            MarketCap = data.MarketCap;
-            MarketSpirit = MarketSpirit;
-            Icon = data.Icon;
+            get => _spirit;
+            set
+            {
+                if (value == _spirit) return;
+                _spirit = value;
+                OnPropertyChanged();
+            }
         }
+
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

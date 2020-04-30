@@ -183,9 +183,9 @@ MonoBehaviour:
   view: {fileID: 4296858027046102862}
   viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
     type: 2}
-  communityInterestRemoteRepository: {fileID: 11400000, guid: 260d9e3f22b09b543bb0bf4be74bb7a6,
-    type: 2}
   newItemsScrollView: {fileID: 1376255374927074990}
+  communitiesDataRepository: {fileID: 11400000, guid: 260d9e3f22b09b543bb0bf4be74bb7a6,
+    type: 2}
 --- !u!1 &5702155625224748650
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +713,12 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2288834604738330065, guid: 2097b8fae72332f4f859381fdbb92417,
+        type: 3}
+      propertyPath: dataRepository
+      value: 
+      objectReference: {fileID: 11400000, guid: 260d9e3f22b09b543bb0bf4be74bb7a6,
+        type: 2}
     - target: {fileID: 2354839954232180060, guid: 2097b8fae72332f4f859381fdbb92417,
         type: 3}
       propertyPath: m_AnchorMin.y

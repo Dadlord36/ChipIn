@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DataModels;
+using Firebase.Extensions;
 using UnityEngine;
 using UnityEngine.Assertions;
+using WebOperationUtilities;
 
 namespace Views
 {
@@ -15,8 +19,7 @@ namespace Views
         [SerializeField] private CommunityInterestGridItemView itemPrefab;
         [SerializeField] private Sprite defaultSprite;
 
-        [SerializeField, HideInInspector]
-        private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
+        [SerializeField, HideInInspector] private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
 
         public void AddEmptyItemsRow()
         {
@@ -45,11 +48,19 @@ namespace Views
             }
         }
 
-        public void FillOneItemWithData(CommunityInterestGridItemView.CommunityInterestGridItemData gridItemData)
+        public async void FillOneItemWithData(CommunityBasicDataModel gridItemData)
         {
             Assert.IsTrue(_lastFilledGridItemIndex < items.Count);
 
-            items[_lastFilledGridItemIndex].SetItemImageAndText(gridItemData);
+            var downloadImageTask = ImagesDownloadingUtility.TryDownloadImageAsync(gridItemData.PosterUri);
+            await downloadImageTask.ContinueWith(async delegate(Task<Texture2D> task)
+            {
+                var texture = await task;
+                var sprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
+                items[_lastFilledGridItemIndex].SetItemImageAndText(gridItemData, sprite);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+
+
             _lastFilledGridItemIndex++;
         }
 
@@ -65,7 +76,7 @@ namespace Views
         private void RemoveItems()
         {
             items.Clear();
-            
+
             var gameObjects = new List<GameObject>();
             foreach (Transform child in transform)
             {

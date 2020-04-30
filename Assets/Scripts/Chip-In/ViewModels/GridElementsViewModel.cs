@@ -8,19 +8,19 @@ namespace ViewModels
 {
     public sealed class GridElementsViewModel : BaseViewModel
     {
-        [SerializeField] private CommunityInterestRemoteRepository remoteRepository;
+        [SerializeField] private CommunitiesDataRepository dataRepository;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            remoteRepository.DataWasLoaded += UpdateGridContent;
+            dataRepository.DataWasLoaded += UpdateGridContent;
             UpdateGridContent();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            remoteRepository.DataWasLoaded -= UpdateGridContent;
+            dataRepository.DataWasLoaded -= UpdateGridContent;
         }
 
         private void RemoteRepositoryOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -31,13 +31,12 @@ namespace ViewModels
         private void UpdateGridContent()
         {
             var gridView = (GridElementsView) View;
-            var itemsData = remoteRepository.ItemsData;
+            var itemsData = dataRepository.ItemsData;
             gridView.ClearItems();
 
             for (var index = 0; index < itemsData.Count; index++)
             {
-                var itemData = itemsData[index];
-                gridView.FillOneItemWithData(itemData);
+                gridView.FillOneItemWithData(itemsData[index]);
             }
         }
     }

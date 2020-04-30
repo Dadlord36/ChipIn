@@ -7,8 +7,7 @@ using GlobalVariables;
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public sealed class CommunitiesListGetProcessor : BaseRequestProcessor<object,
-        CommunityInterestLabelDataRequestResponse,
-        ICommunityInterestLabelDataRequestResponse>
+        CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
     {
         public CommunitiesListGetProcessor(IRequestHeaders requestHeaders) :
             base(new BaseRequestProcessorParameters(ApiCategories.Communities, HttpMethod.Get, requestHeaders,

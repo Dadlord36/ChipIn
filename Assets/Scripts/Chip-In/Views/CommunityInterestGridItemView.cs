@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using DataModels;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WebOperationUtilities;
@@ -7,24 +8,11 @@ namespace Views
 {
     public class CommunityInterestGridItemView : BaseView
     {
-        public struct CommunityInterestGridItemData
-        {
-            public readonly int InterestId;
-            public readonly string ItemName;
-            public readonly byte[] IconTextureData;
-
-            public CommunityInterestGridItemData(int interestId, string itemName, byte[] iconTextureData)
-            {
-                InterestId = interestId;
-                ItemName = itemName;
-                IconTextureData = iconTextureData;
-            }
-        }
 
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
-        private int _interestId;
+        private int? _interestId;
 
         private Sprite ItemImageSprite
         {
@@ -38,11 +26,11 @@ namespace Views
             set => textField.text = value;
         }
 
-        public void SetItemImageAndText(in CommunityInterestGridItemData gridItemData)
+        public void SetItemImageAndText(in CommunityBasicDataModel gridItemData, Sprite icon)
         {
-            ItemImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters( gridItemData.IconTextureData);
-            ItemName = gridItemData.ItemName;
-            _interestId = gridItemData.InterestId;
+            ItemImageSprite = icon;
+            ItemName = gridItemData.Name;
+            _interestId = gridItemData.Id;
         }
         
         public void SetItemImageAndText(int id,string itemName,Sprite sprite)

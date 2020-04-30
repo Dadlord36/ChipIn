@@ -7,11 +7,11 @@ namespace ViewModels.Basic
 {
     public abstract class BaseMenuViewModel<T> : ViewsSwitchingViewModel
     {
-        [SerializeField] protected BaseItemsListRepository<T> itemsRemoteRepository;
         [SerializeField] protected IconsScrollView newItemsScrollView;
-        
-        
-        protected override void OnEnable()
+
+        protected abstract BaseItemsListRepository<T> ItemsRemoteRepository { get; }
+
+    protected override void OnEnable()
         {
             base.OnEnable();
             SubscribeOnEvents();
@@ -26,14 +26,14 @@ namespace ViewModels.Basic
         
         private void SubscribeOnEvents()
         {
-            itemsRemoteRepository.CollectionChanged += ItemsRemoteRepositoryOnCollectionChanged;
-            itemsRemoteRepository.DataWasLoaded += ItemsRemoteRepositoryOnDataWasLoaded;
+            ItemsRemoteRepository.CollectionChanged += ItemsRemoteRepositoryOnCollectionChanged;
+            ItemsRemoteRepository.DataWasLoaded += ItemsRemoteRepositoryOnDataWasLoaded;
         }
 
         private void UnsubscribeFromEvents()
         {
-            itemsRemoteRepository.CollectionChanged -= ItemsRemoteRepositoryOnCollectionChanged;
-            itemsRemoteRepository.DataWasLoaded -= ItemsRemoteRepositoryOnDataWasLoaded;
+            ItemsRemoteRepository.CollectionChanged -= ItemsRemoteRepositoryOnCollectionChanged;
+            ItemsRemoteRepository.DataWasLoaded -= ItemsRemoteRepositoryOnDataWasLoaded;
         }
         
         protected virtual void UpdateItems()
