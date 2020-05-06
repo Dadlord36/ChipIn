@@ -24,12 +24,13 @@ namespace Repositories.Local
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private CachingController cachingController;
         
-        public event Action SigningOut; 
+        public event Action SigningOut;
+        public event Action SignedIn;
         
         private bool _isLoggedIn;
         public string UserRole { get; private set; }
-
         public bool IsLoggedIn => _isLoggedIn;
+
 
         public void SetLoginState(in string loginAsRole)
         {
@@ -45,9 +46,19 @@ namespace Repositories.Local
             OnSigningOut();
         }
 
+        public void ConfirmSingingIn()
+        {
+            OnSignedIn();
+        }
+
         private void OnSigningOut()
         {
             SigningOut?.Invoke();
+        }
+
+        private void OnSignedIn()
+        {
+            SignedIn?.Invoke();
         }
     }
 }

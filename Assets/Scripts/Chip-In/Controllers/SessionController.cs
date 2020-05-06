@@ -26,8 +26,7 @@ namespace Controllers
         }
 
         private const string Tag = nameof(SessionController);
-
-
+        
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -54,6 +53,7 @@ namespace Controllers
 
                 SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
                 SwitchToViewCorrespondingToUseRole();
+                sessionStateRepository.ConfirmSingingIn();
             }
             else
             {
