@@ -36,8 +36,7 @@ namespace HttpRequests
         }
 
         private static string FormRequestUri(string requestSuffix, string requestParameters,
-            NameValueCollection queryStringParams
-        )
+            NameValueCollection queryStringParams)
         {
             var queryString = "";
             if (queryStringParams != null)
