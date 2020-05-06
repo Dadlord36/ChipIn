@@ -5,7 +5,7 @@ using Repositories.Interfaces;
 
 namespace DataModels.ResponsesModels
 {
-    public interface IOffersResponseModel : ISuccess, IPagination
+    public interface IOffersResponseModel : ISuccess, IPaginatedResponse
     {
         [JsonProperty("offers")] ChallengingOfferWithIdentifierModel[] Offers { get; set; }
     }
@@ -13,7 +13,7 @@ namespace DataModels.ResponsesModels
     public class OffersResponseModel : IOffersResponseModel
     {
         public bool Success { get; set; }
-        public PaginationData Pagination { get; set; }
+        public PaginatedResponseData Paginated { get; set; }
         public ChallengingOfferWithIdentifierModel[] Offers { get; set; }
     }
 

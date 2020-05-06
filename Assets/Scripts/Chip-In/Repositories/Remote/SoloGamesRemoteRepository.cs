@@ -15,7 +15,7 @@ namespace Repositories.Remote
     
     [CreateAssetMenu(fileName = nameof(SoloGamesRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(SoloGamesRemoteRepository), order = 0)]
-    public class SoloGamesRemoteRepository : BaseItemsListRepository<SingleGameData>
+    public class SoloGamesRemoteRepository : BaseNotPaginatedListRepository<SingleGameData>
     {
         protected override void ConfirmDataLoading()
         {

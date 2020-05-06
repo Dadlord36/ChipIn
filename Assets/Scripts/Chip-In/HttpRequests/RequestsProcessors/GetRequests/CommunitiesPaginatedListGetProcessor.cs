@@ -10,9 +10,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     public sealed class CommunitiesPaginatedListGetProcessor : BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse,
         ICommunitiesBasicDataRequestResponse>
     {
-        public CommunitiesPaginatedListGetProcessor(IRequestHeaders requestHeaders, PaginationData pagination) :
+        public CommunitiesPaginatedListGetProcessor(IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData) :
             base(new BaseRequestProcessorParameters(ApiCategories.Communities, HttpMethod.Get, requestHeaders,
-                null, null, pagination.ConvertPaginationToNameValueCollection()))
+                null, null, paginatedRequestData.ConvertPaginationToNameValueCollection()))
         {
         }
     }

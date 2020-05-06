@@ -1,4 +1,4 @@
-﻿using DataModels;
+﻿using DataModels.Interfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,18 +29,18 @@ namespace Views
             ItemImageSprite = icon;
         }
 
-        public void SetItemImageAndText(in CommunityBasicDataModel gridItemData, Sprite icon)
+        public void SetItemImageAndText(IIndexedAndNamed gridItemData, Sprite icon)
         {
             SetItemText(gridItemData);
             SetImage(icon);
         }
 
-        public void SetItemText(in CommunityBasicDataModel gridItemData)
+        public void SetItemText(IIndexedAndNamed gridItemData)
         {
             ItemName = gridItemData.Name;
             _interestId = gridItemData.Id;
         }
-
+        
         public void SetItemImageAndText(int id, string itemName, Sprite sprite)
         {
             ItemImageSprite = sprite;

@@ -11,7 +11,6 @@ using Repositories.Local;
 using ScriptableObjects.DataSynchronizers;
 using UnityEngine;
 using Utilities;
-using WebOperationUtilities;
 
 namespace Repositories.Remote
 {
@@ -22,6 +21,7 @@ namespace Repositories.Remote
     {
         private const string Tag = nameof(UserProfileRemoteRepository);
 
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private UserProfileDataSynchronizer userProfileDataSynchronizer;
         [SerializeField] private SessionStateRepository sessionStateRepository;
         [SerializeField] private GeoLocationRepository geoLocationRepository;
@@ -172,8 +172,10 @@ namespace Repositories.Remote
 
             try
             {
-                AvatarImage =
-                    await ImagesDownloadingUtility.TryDownloadImageAsync(UserProfileDataRemote.AvatarImageUrl);
+                await downloadedSpritesRepository.CreateLoadSpriteTask(
+                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(UserProfileDataRemote.AvatarImageUrl,
+                        delegate(Sprite sprite) { AvatarImage = sprite.texture; }));
+
                 LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded", this);
             }
             catch (Exception e)

@@ -1,41 +1,89 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using DataModels;
+﻿using System;
+using Repositories;
 using Repositories.Local;
-using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using ViewModels.Basic;
-using WebOperationUtilities;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public class CommunityInterestLabelsViewModel : BaseMenuViewModel<CommunityBasicDataModel>
+    public class CommunityInterestLabelsViewModel : BaseMenuViewModel<CommunityInterestLabelsView>
     {
-        [SerializeField] private CommunitiesDataRepository communitiesDataRepository;
+        private const string Tag = nameof(CommunityInterestLabelsViewModel);
+        
+        [SerializeField] private CommunitiesBaseDataPaginatedListRepository communitiesDataRepository;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        protected override BaseItemsListRepository<CommunityBasicDataModel> ItemsRemoteRepository => communitiesDataRepository;
 
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            communitiesDataRepository.DataWasLoaded += UpdateItems;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            communitiesDataRepository.DataWasLoaded -= UpdateItems;
+        }
 
         [Binding]
         public void Button_StartAnInterest_OnClick()
         {
         }
 
+        [Binding]
+        public void NextPage_OnClick()
+        {
+            if (communitiesDataRepository.TryGetNextListPage(out var items))
+            {
+                RelatedView.UpdateGridItemsContent(items); 
+            }
+            else
+            {
+                LogUtility.PrintLog(Tag,"There are no items to fill the grid");
+            }
+        }
 
-        protected override async void UpdateItems()
+        protected override void UpdateItems()
         {
             base.UpdateItems();
-            var itemsData = ItemsRemoteRepository.ItemsData;
-            var parameters = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters[itemsData.Count]; 
-            
-            for (int i = 0; i < itemsData.Count; i++)
+            UpdateNewItemsList();
+            if (communitiesDataRepository.TryGetCurrentPageItems(out var items))
             {
-                parameters[i] = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(itemsData[i].PosterUri,
-                    newItemsScrollView.AddElement);
+                RelatedView.UpdateGridItemsContent(items); 
             }
-            await downloadedSpritesRepository.TryToLoadSpritesAsync(parameters);
+            else
+            {
+                LogUtility.PrintLog(Tag,"There are no items to fill the grid");
+            }
+        }
+
+        private async void UpdateNewItemsList()
+        {
+            try
+            {
+                var itemsData = communitiesDataRepository.ItemsData;
+                if (itemsData == null) return;
+
+                var parameters = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters[itemsData.Count];
+
+                for (int i = 0; i < itemsData.Count; i++)
+                {
+                    parameters[i] = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(itemsData[i].PosterUri,
+                        newItemsScrollView.AddElement);
+                }
+
+                await downloadedSpritesRepository.TryToLoadSpritesAsync(parameters);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

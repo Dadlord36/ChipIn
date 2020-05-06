@@ -6,14 +6,14 @@ namespace DataModels.ResponsesModels
     public sealed class CommunitiesBasicDataRequestResponse : ICommunitiesBasicDataRequestResponse
     {
         public bool Success { get; set; }
-        public PaginationData Pagination { get; set; }
+        public PaginatedResponseData PaginatedResponse { get; set; }
         public CommunityBasicDataModel[] Communities { get; set; }
 
-        public CommunitiesBasicDataRequestResponse(bool success, PaginationData paginationData,
+        public CommunitiesBasicDataRequestResponse(bool success, PaginatedResponseData paginatedResponseData,
             CommunityBasicDataModel[] communities)
         {
             Success = success;
-            Pagination = paginationData;
+            PaginatedResponse = paginatedResponseData;
             Communities = communities;
         }
     }

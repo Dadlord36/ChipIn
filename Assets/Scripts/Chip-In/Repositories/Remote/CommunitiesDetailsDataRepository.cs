@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.Common;
 using DataModels.ResponsesModels;
@@ -14,7 +15,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(CommunitiesDetailsDataRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunitiesDetailsDataRepository), order = 0)]
-    public sealed class CommunitiesDetailsDataRepository : BaseItemsListRepository<CommunityDetailsDataModel>
+    public sealed class CommunitiesDetailsDataRepository : BaseNotPaginatedListRepository<CommunityDetailsDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
@@ -26,7 +27,7 @@ namespace Repositories.Remote
                 var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
                 var items = await LoadCommunitiesDetailsData(responseInterface.Communities);
-                ItemsLiveData = new PaginatedList<CommunityDetailsDataModel>(responseInterface.Pagination, items);
+                ItemsLiveData = new LiveData<CommunityDetailsDataModel>(items);
                 ConfirmDataLoading();
             }
 

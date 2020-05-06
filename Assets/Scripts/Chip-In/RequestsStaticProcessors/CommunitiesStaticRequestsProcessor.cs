@@ -20,10 +20,10 @@ namespace RequestsStaticProcessors
                 .SendRequest("Communities data was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse> GetPaginatedCommunitiesList(IRequestHeaders requestHeaders,
-            PaginationData paginationData)
+        public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse> 
+            GetPaginatedCommunitiesList(IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData)
         {
-            return new CommunitiesPaginatedListGetProcessor(requestHeaders, paginationData)
+            return new CommunitiesPaginatedListGetProcessor(requestHeaders, paginatedRequestData)
                 .SendRequest("Communities paginated data was retrieved successfully");
         }
 

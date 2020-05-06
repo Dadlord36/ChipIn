@@ -4,17 +4,18 @@ using Newtonsoft.Json;
 namespace DataModels
 {
 
-    public interface ICommunityBasicModel :INamed , IPosterImageUri, IIdentifier
+    
+    public interface ICommunityBasicModel : IIndexedNamedPosterUrl
     {
     }
-    
+
     public class CommunityBasicDataModel : ICommunityBasicModel
     {
         public string Name { get; set; }
         public string PosterUri { get; set; }
         public int? Id { get; set; }
     }
-    
+
     public interface ICommunityDetailsDataModel : ICommunityBasicModel, IDescription, IMarketModel
     {
     }

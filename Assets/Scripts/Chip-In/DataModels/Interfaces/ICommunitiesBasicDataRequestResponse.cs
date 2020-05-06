@@ -6,7 +6,7 @@ namespace DataModels.Interfaces
 {
     public interface ICommunitiesBasicDataRequestResponse : ISuccess
     {
-        [JsonProperty("pagination")] PaginationData Pagination { get; set; }
+        [JsonProperty("pagination")] PaginatedResponseData PaginatedResponse { get; set; }
         [JsonProperty("communities")] CommunityBasicDataModel[] Communities { get; set; }
     }
 }

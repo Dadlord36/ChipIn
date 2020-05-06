@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Common;
 using DataModels;
-using DataModels.Common;
 using RequestsStaticProcessors;
 using UnityEngine;
 using Utilities;
@@ -10,7 +10,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProductsRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProductsRepository), order = 0)]
-    public class UserProductsRepository : BaseItemsListRepository<ProductDataModel>
+    public class UserProductsRepository : BaseNotPaginatedListRepository<ProductDataModel>
     {
         private const string Tag = nameof(UserProductsRepository);
 
@@ -30,8 +30,7 @@ namespace Repositories.Remote
                     return;
                 }
 
-                ItemsLiveData = new PaginatedList<ProductDataModel>(result.ResponseModelInterface.Pagination,
-                    result.ResponseModelInterface.ProductsData);
+                ItemsLiveData = new LiveData<ProductDataModel>(result.ResponseModelInterface.ProductsData);
 
                 ConfirmDataLoading();
             }

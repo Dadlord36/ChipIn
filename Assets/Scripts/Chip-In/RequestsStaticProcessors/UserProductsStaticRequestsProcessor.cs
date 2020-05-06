@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
+using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
 using HttpRequests.RequestsProcessors.PutRequests;

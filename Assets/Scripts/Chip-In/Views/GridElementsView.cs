@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DataModels;
+using DataModels.Interfaces;
 using Repositories.Local;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -48,7 +49,7 @@ namespace Views
             }
         }
 
-        public void FillOneItemWithData(CommunityBasicDataModel gridItemData)
+        public void FillOneItemWithData(IIndexedNamedPosterUrl gridItemData)
         {
             Assert.IsTrue(_lastFilledGridItemIndex < items.Count);
             items[_lastFilledGridItemIndex].SetItemText(gridItemData);

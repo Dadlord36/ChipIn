@@ -17,7 +17,7 @@ namespace Repositories.Remote
 
     [CreateAssetMenu(fileName = nameof(ChallengesRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(ChallengesRemoteRepository), order = 0)]
-    public class ChallengesRemoteRepository : BaseItemsListRepository<ChallengeData>
+    public class ChallengesRemoteRepository : BaseNotPaginatedListRepository<ChallengeData>
     {
         protected override void ConfirmDataLoading()
         {

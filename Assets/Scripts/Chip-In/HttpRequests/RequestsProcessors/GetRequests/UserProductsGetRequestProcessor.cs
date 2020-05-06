@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using DataModels.HttpRequestsHeadersModels;
+using DataModels.Interfaces;
 using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors.GetRequests

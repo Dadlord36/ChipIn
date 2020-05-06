@@ -8,7 +8,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(OffersRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(OffersRemoteRepository), order = 0)]
-    public class OffersRemoteRepository : BaseItemsListRepository<ChallengingOfferWithIdentifierModel>
+    public class OffersRemoteRepository : BaseNotPaginatedListRepository<ChallengingOfferWithIdentifierModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
