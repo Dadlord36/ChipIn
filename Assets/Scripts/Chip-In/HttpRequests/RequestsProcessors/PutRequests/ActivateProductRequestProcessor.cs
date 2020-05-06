@@ -1,8 +1,8 @@
 ﻿using System.Net.Http;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
+using DataModels.Interfaces;
 using GlobalVariables;
-using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Interfaces;
 
 namespace HttpRequests.RequestsProcessors.PutRequests

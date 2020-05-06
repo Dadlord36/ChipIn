@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HttpRequests.RequestsProcessors.GetRequests
+namespace DataModels.Interfaces
 {
     public interface IQrData
     {
