@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -16,6 +16,14 @@ namespace RequestsStaticProcessors
         {
             return new CommunityOwnersInterestsPaginatedGetProcessor(requestHeaders, paginatedRequestData)
                 .SendRequest("Community owners interests list was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel,
+            ICommunityInterestsResponseModel>.HttpResponse> GetCommunityClientsInterests(IRequestHeaders requestHeaders,
+            int communityId, PaginatedRequestData paginatedRequestData)
+        {
+            return new CommunityClientsInterestsPaginatedGetProcessor(requestHeaders, communityId, paginatedRequestData)
+                .SendRequest("Community clients interests list was retrieved successfully");
         }
     }
 }
