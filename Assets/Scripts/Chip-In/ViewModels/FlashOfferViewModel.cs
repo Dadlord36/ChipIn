@@ -51,7 +51,7 @@ namespace ViewModels
         }
 
         [Binding]
-        public int Quantity
+        public uint Quantity
         {
             get => _flashOfferData.Quantity;
             set => _flashOfferData.Quantity = value;

@@ -15,6 +15,7 @@ namespace DataModels
     {
         public string ChallengeType { get; set; }
         public DateTime StartedAt { get; set; }
+
         [JsonProperty("gameable")] public Gameable GameableData { get; set; }
         public int Id { get; set; }
         public string Status { get; set; }
