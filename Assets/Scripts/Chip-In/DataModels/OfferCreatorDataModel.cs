@@ -8,14 +8,13 @@ namespace DataModels
 {
     public interface IUserAvatarModel
     {
-       [JsonProperty("avatar")] Avatar UserAvatar { get; set; }
+        [JsonProperty("avatar")] Avatar UserAvatar { get; set; }
     }
 
     public interface IOfferCreatorDataModel : IIdentifier, IUserMainData, IUserExtraData, IUserPreferences,
         IDataLifeCycleModel, IUserAvatarModel
     {
-        [JsonProperty("provider")]
-        string Provider { get; set; }
+        [JsonProperty("provider")] string Provider { get; set; }
     }
 
     public class OfferCreatorDataModel : IOfferCreatorDataModel
