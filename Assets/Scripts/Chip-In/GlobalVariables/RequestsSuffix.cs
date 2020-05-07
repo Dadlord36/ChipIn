@@ -13,5 +13,10 @@
         public const string Profile = "profile";
         public const string SingOut = "sign_out";
         public const string Radar = "radar";
+
+        public static class Subcategories
+        {
+            public const string Interests = "interests";
+        }
     }
 }
