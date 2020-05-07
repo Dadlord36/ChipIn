@@ -1,66 +1,88 @@
-﻿using Repositories.Remote;
+﻿using System;
+using Repositories;
+using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
-using Views.ViewElements;
-using NotifyCollectionChangedEventArgs = System.Collections.Specialized.NotifyCollectionChangedEventArgs;
+using Utilities;
+using ViewModels.Basic;
+using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public class CommunityInterestLabelsViewModel : ViewsSwitchingViewModel
+    public class CommunityInterestLabelsViewModel : BaseMenuViewModel<CommunityInterestLabelsView>
     {
-        [SerializeField] private CommunityInterestRemoteRepository communityInterestRemoteRepository;
-        [SerializeField] private IconsScrollView newItemsScrollView;
-
-        [Binding]
-        public void Button_StartAnInterest_OnClick()
-        {
-            
-        }
+        private const string Tag = nameof(CommunityInterestLabelsViewModel);
         
+        [SerializeField] private CommunitiesBaseDataPaginatedListRepository communitiesDataRepository;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+
+
         protected override void OnEnable()
         {
             base.OnEnable();
-            SubscribeOnEvents();
-            UpdateItems();
+            communitiesDataRepository.DataWasLoaded += UpdateItems;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            UnsubscribeFromEvents();
+            communitiesDataRepository.DataWasLoaded -= UpdateItems;
         }
 
-        private void SubscribeOnEvents()
+        [Binding]
+        public void Button_StartAnInterest_OnClick()
         {
-            communityInterestRemoteRepository.CollectionChanged += CommunityInterestRemoteRepositoryOnCollectionChanged;
-            communityInterestRemoteRepository.DataWasLoaded += CommunityInterestRemoteRepositoryOnDataWasLoaded;
         }
 
-        private void UnsubscribeFromEvents()
+        [Binding]
+        public void NextPage_OnClick()
         {
-            communityInterestRemoteRepository.CollectionChanged -= CommunityInterestRemoteRepositoryOnCollectionChanged;
-            communityInterestRemoteRepository.DataWasLoaded -= CommunityInterestRemoteRepositoryOnDataWasLoaded;
-        }
-
-        private void CommunityInterestRemoteRepositoryOnDataWasLoaded()
-        {
-            UpdateItems();
-        }
-
-        private void CommunityInterestRemoteRepositoryOnCollectionChanged(object sender,
-            NotifyCollectionChangedEventArgs e)
-        {
-            UpdateItems();
-        }
-
-        private void UpdateItems()
-        {
-            newItemsScrollView.RemoveAllItems();
-            var itemsData = communityInterestRemoteRepository.ItemsData;
-            for (int i = 0; i < itemsData.Count; i++)
+            if (communitiesDataRepository.TryGetNextListPage(out var items))
             {
-                newItemsScrollView.AddElement(itemsData[i].IconTextureData);
+                RelatedView.UpdateGridItemsContent(items); 
+            }
+            else
+            {
+                LogUtility.PrintLog(Tag,"There are no items to fill the grid");
+            }
+        }
+
+        protected override void UpdateItems()
+        {
+            base.UpdateItems();
+            UpdateNewItemsList();
+            if (communitiesDataRepository.TryGetCurrentPageItems(out var items))
+            {
+                RelatedView.UpdateGridItemsContent(items); 
+            }
+            else
+            {
+                LogUtility.PrintLog(Tag,"There are no items to fill the grid");
+            }
+        }
+
+        private async void UpdateNewItemsList()
+        {
+            try
+            {
+                var itemsData = communitiesDataRepository.ItemsData;
+                if (itemsData == null) return;
+
+                var parameters = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters[itemsData.Count];
+
+                for (int i = 0; i < itemsData.Count; i++)
+                {
+                    parameters[i] = new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(itemsData[i].PosterUri,
+                        newItemsScrollView.AddElement);
+                }
+
+                await downloadedSpritesRepository.TryToLoadSpritesAsync(parameters);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
     }

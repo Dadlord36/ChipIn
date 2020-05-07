@@ -26,12 +26,13 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<BaseRequestProcessor<object, JoinGameResponseDataModel, IJoinGameResponseModel>.HttpResponse> TryJoinAGame(IRequestHeaders requestHeaders, int gameId)
+        public static async Task<BaseRequestProcessor<object, JoinGameResponseDataModel, IJoinGameResponseModel>.HttpResponse>
+            TryJoinAGame(IRequestHeaders requestHeaders, int gameId)
         {
             try
             {
-                var response = await new JoinGamePostProcessor(requestHeaders, new[] {gameId.ToString(), GameRequestParameters.Join})
-                        .SendRequest("User has successfully joined the game");
+                var response = await new JoinGamePostProcessor(requestHeaders, new[] {gameId.ToString(),
+                        GameRequestParameters.Join}).SendRequest("User has successfully joined the game");
                 return response;
             }
             catch (Exception e)
@@ -45,8 +46,7 @@ namespace RequestsStaticProcessors
         {
             try
             {
-                var response =
-                    await new ShowMatchGetProcessor(requestHeaders, gameId).SendRequest(
+                var response = await new ShowMatchGetProcessor(requestHeaders, gameId).SendRequest(
                         "Matches data was retrieved successfully");
                 return response.ResponseModelInterface;
             }

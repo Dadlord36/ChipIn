@@ -124,8 +124,7 @@ namespace HttpRequests.RequestsProcessors
             public string Error;
             public bool Success { get; set; }
         }
-
-
+        
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
             using (var responseMessage = await SendRequestToWebServer(_requestProcessorParameters.RequestBodyModel,

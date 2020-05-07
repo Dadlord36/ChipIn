@@ -9,6 +9,7 @@ using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.Basic;
 
 namespace ViewModels.Elements
 {

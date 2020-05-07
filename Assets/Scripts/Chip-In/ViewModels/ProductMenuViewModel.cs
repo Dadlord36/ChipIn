@@ -1,15 +1,52 @@
-﻿using UnityWeld.Binding;
+﻿using DataModels;
+using Repositories;
+using Repositories.Local;
+using UnityEngine;
+using UnityWeld.Binding;
+using ViewModels.Basic;
 using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public class ProductMenuViewModel : ViewsSwitchingViewModel
+    public class ProductMenuViewModel : BaseMenuViewModel<ProductMenuView>
     {
+        [SerializeField] private CommunitiesBaseDataPaginatedListRepository dataRepository;
+        [SerializeField] private DownloadedSpritesRepository spritesRepository;
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            UpdateItems();
+        }
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+        }
+
+
         [Binding]
         public void SwitchToProductGallery()
         {
             SwitchToView(nameof(ProductGalleryView));
+        }
+
+        [Binding]
+        public void Button_StartAnInterest_OnClick()
+        {
+        }
+        
+
+        protected override void UpdateItems()
+        {
+            base.UpdateItems();
+            if (!dataRepository.TryGetCurrentPageItems(out var items)) return;
+            for (int i = 0; i < items.Count; i++)
+            {
+                spritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(
+                    items[i].PosterUri, newItemsScrollView.AddElement));
+            }
         }
     }
 }

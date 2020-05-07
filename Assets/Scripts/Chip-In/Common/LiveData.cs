@@ -6,46 +6,51 @@ namespace Common
 {
     public class LiveData<T> : INotifyCollectionChanged, IEnumerable<T>
     {
-        private List<T> _items;
+        protected readonly List<T> Items;
 
         public LiveData(int length)
         {
-            _items = new List<T>(length);
+            Items = new List<T>(length);
         }
 
-        public IReadOnlyList<T> GetData => _items;
+        public LiveData(T[] items)
+        {
+            Items = new List<T>(items);
+        }
+
+        public IReadOnlyList<T> DataList => Items;
 
         public LiveData()
         {
-            _items = new List<T>();
+            Items = new List<T>();
         }
 
         protected LiveData(IEnumerable<T> itemsList)
         {
-            _items = new List<T>(itemsList);
+            Items = new List<T>(itemsList);
         }
 
         public void Add(T item)
         {
-            _items.Add(item);
+            Items.Add(item);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
         }
-        
+
         public void Clear()
         {
-            _items.Clear();
+            Items.Clear();
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         public void AddRange(T[] itemsArray)
         {
-            _items.AddRange(itemsArray);
+            Items.AddRange(itemsArray);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, itemsArray));
         }
 
         public void Remove(T item)
         {
-            _items.Remove(item);
+            Items.Remove(item);
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         }
 
@@ -59,18 +64,18 @@ namespace Common
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return Items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) _items).GetEnumerator();
+            return ((IEnumerable) Items).GetEnumerator();
         }
-        
-        public T this[int index]    // Indexer declaration  
-        {  
-             get => _items[index];
-             set => _items[index] = value;
-        }  
+
+        public T this[int index] // Indexer declaration  
+        {
+            get => Items[index];
+            set => Items[index] = value;
+        }
     }
 }

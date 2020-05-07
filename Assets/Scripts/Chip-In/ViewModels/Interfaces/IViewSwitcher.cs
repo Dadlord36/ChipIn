@@ -1,4 +1,6 @@
-﻿namespace ViewModels.Interfaces
+﻿using ViewModels.Basic;
+
+namespace ViewModels.Interfaces
 {
     public interface IViewSwitcher
     {

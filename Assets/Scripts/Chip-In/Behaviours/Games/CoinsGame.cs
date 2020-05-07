@@ -1,32 +1,37 @@
 ﻿using System;
 using Behaviours.Games.Interfaces;
-using Controllers;
 using Repositories.Remote;
-using ScriptableObjects.ActionsConnectors;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Utilities;
 
 namespace Behaviours.Games
 {
-    public class CoinsGame : MonoBehaviour, IGame
+    public sealed class CoinsGame : MonoBehaviour, IGame
     {
+        private const string Tag = nameof(CoinsGame);
+        
         [SerializeField] private UserCoinsAmountRepository coinsAmountRepository;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private int coinsToPick;
 
         public event Action GameComplete;
         private int _coinsAmount, _coinsPicked;
         private bool _isInitialized;
 
+        private Coin[] _coins;
+
         private void Awake()
         {
             Assert.IsNotNull(coinsAmountRepository);
         }
 
-        private void AddCoinsToCoinsRepository(uint amount)
+        private void UpdateCoinsRepository()
         {
-            coinsAmountRepository.Add(amount);
+            coinsAmountRepository.UpdateRepositoryData();
         }
-        
+
         private void OnEnable()
         {
             InitializeCoinsGame();
@@ -38,18 +43,18 @@ namespace Behaviours.Games
             if (_isInitialized) return;
             _isInitialized = true;
 
-            var coins = FindObjectsOfType<Component>();
+            _coins = FindObjectsOfType<Coin>();
 
-            for (var i = 0; i < coins.Length; i++)
+            for (var i = 0; i < _coins.Length; i++)
             {
-                if (coins[i] is IInteractiveUintValue interactiveValue)
-                {
-                    SubscribeToInteractiveValue(interactiveValue);
-                }
-
-                if (coins[i] is IFinishingAction finishingAction)
+                if (_coins[i] is IFinishingAction finishingAction)
                 {
                     SubscribeOnFinishingAction(finishingAction);
+                }
+
+                if (_coins[i] is ICollectable collectable)
+                {
+                    SubscribeToCollectable(collectable);
                 }
             }
 
@@ -58,25 +63,67 @@ namespace Behaviours.Games
                 finishingAction.FinishingActionDone += CheckIfGameIsComplete;
             }
 
-            void SubscribeToInteractiveValue(IInteractiveUintValue interactiveValue)
+            void SubscribeToCollectable(ICollectable collectable)
             {
-                interactiveValue.GenerateValue();
-                interactiveValue.Collected += delegate(uint value)
+                collectable.WasCollected += async delegate(IInteractiveUintValue value)
                 {
-                    _coinsPicked++;
-                    AddCoinsToCoinsRepository(value);
+                    try
+                    {
+                        _coinsPicked++;
+                        var result = await CoinsMiniGameStaticProcessor.TossACoin(authorisationDataRepository);
+
+                        if (!result.Success)
+                        {
+                            LogUtility.PrintLog(Tag, "Failed to toss a coin");
+                            return;
+                        }
+
+                        var responseInterface = result.ResponseModelInterface;
+                        value.SetValue(responseInterface.CoinsTossingResultData.NewCoins);
+                        UpdateCoinsRepository();
+                    }
+                    catch (Exception e)
+                    {
+                        LogUtility.PrintLogException(e);
+                        throw;
+                    }
                 };
             }
         }
-        
+
+        private void LockCoins()
+        {
+            foreach (var component in _coins)
+            {
+                ((ILockable) component).Lock();
+            }
+        }
+
+        private void UnlockCoins()
+        {
+            foreach (var component in _coins)
+            {
+                ((ILockable) component).Unlock();
+            }
+        }
 
         private void CheckIfGameIsComplete()
         {
             if (coinsToPick == _coinsPicked)
             {
-                GameComplete?.Invoke();
-                Destroy(gameObject);
+                CompleteTheGame();
             }
+        }
+
+        private void CompleteTheGame()
+        {
+            LockCoins();
+            OnGameComplete();
+        }
+
+        private void OnGameComplete()
+        {
+            GameComplete?.Invoke();
         }
     }
 }

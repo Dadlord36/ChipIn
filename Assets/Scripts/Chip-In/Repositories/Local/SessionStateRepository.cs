@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Controllers;
 using GlobalVariables;
 using Repositories.Remote;
@@ -17,21 +18,24 @@ namespace Repositories.Local
 
     [CreateAssetMenu(fileName = nameof(SessionStateRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SessionStateRepository), order = 0)]
-    public class SessionStateRepository : ScriptableObject, ILoginState
+    public sealed class SessionStateRepository : ScriptableObject, ILoginState
     {
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private CachingController cachingController;
         
+        public event Action SigningOut;
+        public event Action SignedIn;
+        
         private bool _isLoggedIn;
-        private string _userRole;
-
+        public string UserRole { get; private set; }
         public bool IsLoggedIn => _isLoggedIn;
+
 
         public void SetLoginState(in string loginAsRole)
         {
             _isLoggedIn = loginAsRole != MainNames.UserRoles.Guest;
-            _userRole = loginAsRole;
+            UserRole = loginAsRole;
         }
 
         public async Task SignOut()
@@ -39,6 +43,22 @@ namespace Repositories.Local
             await SessionStaticProcessor.TryLogOut(authorisationDataRepository,DeviceUtility.BaseDeviceData);
             cachingController.ClearCache();
             viewsSwitchingController.RequestSwitchToView("",nameof(LoginView));
+            OnSigningOut();
+        }
+
+        public void ConfirmSingingIn()
+        {
+            OnSignedIn();
+        }
+
+        private void OnSigningOut()
+        {
+            SigningOut?.Invoke();
+        }
+
+        private void OnSignedIn()
+        {
+            SignedIn?.Invoke();
         }
     }
 }

@@ -11,11 +11,12 @@ namespace HttpRequests.RequestsProcessors.PutRequests
         IUserProfileDataWebModel>
     {
         public UserProfileDataPutProcessor(IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyModel) :
-            base(ApiCategories.Profile, HttpMethod.Put,
-                requestHeaders, requestBodyModel)
+            base(ApiCategories.Profile, HttpMethod.Put, requestHeaders, requestBodyModel)
         {
         }
     }
+    
+    
 
     public interface IUserProfilePasswordChangeModel
     {

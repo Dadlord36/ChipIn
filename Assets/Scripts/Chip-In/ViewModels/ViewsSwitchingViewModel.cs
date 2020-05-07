@@ -1,5 +1,6 @@
 ﻿using ScriptableObjects.SwitchBindings;
 using UnityEngine;
+using ViewModels.Basic;
 using ViewModels.SwitchingControllers;
 
 namespace ViewModels
@@ -15,6 +16,11 @@ namespace ViewModels
         {
             viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(fromView) ? View.ViewName : fromView,
                 toViewName, viewAppearingSide);
+        }
+
+        public void SwitchToView(string viewName)
+        {
+            SwitchToView(viewName,null);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace WebOperationUtilities
             
             if (keys.Count < 1) return stringBuilder.ToString();
 
-            for (int i = 1; i < keys.Count; i++)
+            for (int i = 0; i < keys.Count; i++)
             {
                 FormElementAndAddItNextToString(keys[i]);
             }

@@ -2,6 +2,7 @@
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
+using ViewModels.Basic;
 
 namespace ViewModels.UI.Elements
 {

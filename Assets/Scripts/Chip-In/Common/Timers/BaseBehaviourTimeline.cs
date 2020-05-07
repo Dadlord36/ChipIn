@@ -1,85 +1,75 @@
 ﻿using System;
 using Common.Interfaces;
 using UnityEngine;
-using Utilities;
 
 namespace Common.Timers
 {
     public abstract class BaseBehaviourTimeline : MonoBehaviour, ITimeline
     {
         private const string Tag = nameof(BaseBehaviourTimeline);
-        
-        public event Action OnElapsed;
-        public event Action<float> Progressing;
 
-        private float _elapsedTime, _interval;
+        private readonly ITimeline _timeline = new TimerController();
+
+        public event Action<float> Progressing
+        {
+            add => _timeline.Progressing += value;
+            remove => _timeline.Progressing -= value;
+        }
+
+        public event Action Elapsed
+        {
+            add => _timeline.Elapsed += value;
+            remove => _timeline.Elapsed -= value;
+        }
+
         public bool AutoReset { get; set; }
-        
+
+        public float Interval
+        {
+            get => _timeline.Interval;
+            set => _timeline.Interval = value;
+        }
 
         public void Initialize()
         {
             enabled = false;
-            InitializeTimer(out _interval);
-            CheckIfTimerIntervalIsValid();
+            InitializeTimer(out var interval);
+            Interval = interval;
         }
-
-        private void CheckIfTimerIntervalIsValid()
-        {
-            if (_interval <= 0) LogUtility.PrintLogError(Tag,nameof(_interval), this);
-        }
-
-        protected abstract void InitializeTimer(out float timerInterval);
 
         public void StartTimer()
         {
+            Elapsed += StopTimer;
+            _timeline.StartTimer();
             enabled = true;
         }
 
         public void StartTimer(float interval)
         {
-            _interval = interval;
-            RestartTimer();
+            Elapsed += StopTimer;
+            _timeline.StartTimer(interval);
+            enabled = true;
         }
 
         public void StopTimer()
         {
             enabled = false;
-            ResetProgress();
-        }
-
-        private void ResetProgress()
-        {
-            _progress = _elapsedTime = 0f;
+            _timeline.Elapsed -= StopTimer;
+            _timeline.StopTimer();
         }
 
         public void RestartTimer()
         {
-            ResetProgress();
+            _timeline.RestartTimer();
+            Elapsed += StopTimer;
             enabled = true;
         }
 
-        private float _progress;
-
+        protected abstract void InitializeTimer(out float timerInterval);
+        
         public void Update()
         {
-            _elapsedTime += Time.deltaTime;
-            _progress = Mathf.Clamp01(_elapsedTime / _interval);
-            OnProgressing(_progress);
-            if (!(_progress >= 1.0f)) return;
-            OnElapsed?.Invoke();
-            if (AutoReset)
-            {
-                RestartTimer();
-            }
-            else
-            {
-                StopTimer();
-            }
-        }
-
-        private void OnProgressing(float percentage)
-        {
-            Progressing?.Invoke(percentage);
+            _timeline.Update();
         }
     }
 }

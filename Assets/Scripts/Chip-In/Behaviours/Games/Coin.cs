@@ -1,6 +1,5 @@
 ﻿using System;
 using Behaviours.Games.Interfaces;
-using Common.ValueGenerators;
 using Controllers;
 using TMPro;
 using UnityEngine;
@@ -8,16 +7,25 @@ using UnityEngine.EventSystems;
 
 namespace Behaviours.Games
 {
-    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveUintValue, IFinishingAction, IResettable
+    public interface ILockable
     {
-        public event Action<uint> Collected;
+        void Lock();
+        void Unlock();
+    }
+
+    public interface ICollectable
+    {
+       event Action<IInteractiveUintValue> WasCollected;
+    }
+    
+    public sealed class Coin : MonoBehaviour, IPointerClickHandler, IInteractiveUintValue, IFinishingAction, IResettable,
+        ILockable,ICollectable
+    {
+        public event Action<IInteractiveUintValue> WasCollected;
         public event Action FinishingActionDone;
 
-
         [SerializeField] private TextMeshProUGUI valueMultiplierTextField;
-        [SerializeField] private byte minValue;
-        [SerializeField] private byte maxValue;
-
+        
 
         private uint _coinValue;
         private static readonly int Play = Animator.StringToHash("play");
@@ -29,7 +37,6 @@ namespace Behaviours.Games
             set => valueMultiplierTextField.text = $"x{value.ToString()}";
         }
 
-
         private void RefreshValueView()
         {
             ValueView = _coinValue;
@@ -38,9 +45,19 @@ namespace Behaviours.Games
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
             if (_wasPicked) return;
-            OnCollected(_coinValue);
+            OnWasCollected();
             MakeFinishingAction();
+            Lock();
+        }
+
+        public void Lock()
+        {
             _wasPicked = true;
+        }
+
+        public void Unlock()
+        {
+            _wasPicked = false;
         }
 
         private void MakeFinishingAction()
@@ -61,20 +78,11 @@ namespace Behaviours.Games
             animator.SetTrigger(Idle);
             animator.ResetTrigger(Play);
         }
+        
 
-        private void OnCollected(uint obj)
+        public void SetValue(uint value)
         {
-            Collected?.Invoke(obj);
-        }
-
-        private void GenerateCoinValue()
-        {
-            _coinValue = (uint) SimpleValueGenerator.GenerateIntValueInclusive(minValue, maxValue);
-        }
-
-        public void GenerateValue()
-        {
-            GenerateCoinValue();
+            _coinValue = value;
             RefreshValueView();
         }
 
@@ -82,13 +90,18 @@ namespace Behaviours.Games
         {
             SwitchPlayTrigger();
             FinishingActionDone?.Invoke();
-            
         }
 
         public void Reset()
         {
             _wasPicked = false;
             ResetAnimation();
+        }
+
+
+        private void OnWasCollected()
+        {
+            WasCollected?.Invoke(this);
         }
     }
 }

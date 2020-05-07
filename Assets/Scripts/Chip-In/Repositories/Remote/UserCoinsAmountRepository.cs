@@ -9,8 +9,6 @@ namespace Repositories.Remote
     public interface IUserCoinsAmount
     {
         uint CoinsAmount { get; }
-        void Add(uint amount);
-        void Subtract(uint amount);
     }
 
     [CreateAssetMenu(fileName = nameof(UserCoinsAmountRepository),
@@ -22,15 +20,9 @@ namespace Repositories.Remote
 
         [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
         private uint _amount;
-        private int _tempAmount;
-        private bool _userDataWasSynchronised;
 
-        
-        private int TokensBalance
-        {
-            get =>  userProfileRemoteRepository.TokensBalance;
-            set => userProfileRemoteRepository.TokensBalance =  value;
-        }
+
+        private int TokensBalance => userProfileRemoteRepository.TokensBalance;
 
         public uint CoinsAmount
         {
@@ -40,65 +32,38 @@ namespace Repositories.Remote
                 if (value == _amount) return;
                 _amount = value;
                 OnPropertyChanged();
-                SynchronizeDataWithServer();
             }
         }
 
         private void OnEnable()
         {
-            userProfileRemoteRepository.DataWasLoaded += UpdateRepositoryData;
+            userProfileRemoteRepository.DataWasLoaded += SyncRepositoryDataWithRemote;
         }
 
         private void OnDisable()
         {
-            userProfileRemoteRepository.DataWasLoaded -= UpdateRepositoryData;
+            userProfileRemoteRepository.DataWasLoaded -= SyncRepositoryDataWithRemote;
         }
 
-        private void UpdateRepositoryData()
+        private void SyncRepositoryDataWithRemote()
         {
-            _userDataWasSynchronised = true;
-            CoinsAmount = (uint) (TokensBalance += _tempAmount);
+            CoinsAmount = (uint) TokensBalance;
         }
 
-        public void Add(uint amount)
+        public void UpdateRepositoryData()
         {
-            if (_userDataWasSynchronised)
-            {
-                TokensBalance += (int)amount;
-            }
-            else
-            {
-                _tempAmount += (int)amount;
-            }
+            userProfileRemoteRepository.LoadDataFromServer();
         }
 
-        public void Subtract(uint amount)
+        public void Clear()
         {
-            if (_userDataWasSynchronised)
-            {
-                TokensBalance -= (int)amount;
-            }
-            else
-            {
-                _tempAmount -= (int)amount;
-            }
-        }
-
-        private void SynchronizeDataWithServer()
-        {
-            userProfileRemoteRepository.TokensBalance = (int) CoinsAmount;
+            _amount = 0;
         }
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        
-
-        public void Clear()
-        {
-            _amount = 0;
         }
     }
 }

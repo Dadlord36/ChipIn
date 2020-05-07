@@ -1,34 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
-using JetBrains.Annotations;
 using Repositories.Local;
-using Repositories.Remote;
-using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.Basic;
 using Views;
 using Views.InteractiveWindows;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class MyChallengeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    public sealed class MyChallengeViewModel : BaseItemsListViewModel<MyChallengeView>
     {
-        private const string Tag = nameof(MyChallengeView);
-
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        private bool _challengeIsSelected;
-
-
-        private MyChallengeView ThisView => (MyChallengeView) View;
 
         private int SelectedGameId
         {
@@ -37,21 +26,7 @@ namespace ViewModels
             {
                 if (value == selectedGameRepository.GameId) return;
                 selectedGameRepository.GameId = value;
-                ChallengeIsSelected = true;
-                OnPropertyChanged();
-            }
-        }
-
-
-        [Binding]
-        public bool ChallengeIsSelected
-        {
-            get => _challengeIsSelected;
-            private set
-            {
-                if (value == _challengeIsSelected) return;
-                _challengeIsSelected = value;
-                LogUtility.PrintLog(Tag, $"ChallengeIsSelected: {_challengeIsSelected.ToString()}");
+                ItemIsSelected = true;
                 OnPropertyChanged();
             }
         }
@@ -62,8 +37,8 @@ namespace ViewModels
         {
             try
             {
-                await FillInfoCardWithGameRelatedOfferData(SelectedGameId);
-                ThisView.ShowInfoCard();
+                await FillInfoCardWithRelatedData(SelectedGameId);
+                RelatedView.ShowInfoCard();
             }
             catch (Exception e)
             {
@@ -78,57 +53,34 @@ namespace ViewModels
             SwitchToChallengeView();
         }
 
-
         private void SwitchToChallengeView()
         {
             SwitchToView(nameof(ChallengeView));
         }
 
-        protected override void OnEnable()
+        /*protected override void OnItemsListUpdated()
         {
-            base.OnEnable();
-            SubscribeToViewEvents();
-            LoadDataAndFillTheList();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            UnsubscribeFromViewEvents();
-        }
-        
-        private void SubscribeToViewEvents()
-        {
-            ThisView.RelatedItemSelected += OnSelectedItemIndexChanged;
-            ThisView.ItemsListUpdated += OnItemsListUpdated;
-        }
-
-        private void UnsubscribeFromViewEvents()
-        {
-            ThisView.RelatedItemSelected -= OnSelectedItemIndexChanged;
-            ThisView.ItemsListUpdated -= OnItemsListUpdated;
-        }
-
-        private void OnItemsListUpdated()
-        {
+            
             var itemsList = userGamesRemoteRepository.ItemsData;
             //Set first game id as selected in list
             if (itemsList.Count > 0)
             {
                 SelectedGameId = itemsList[0].Id;
-                ChallengeIsSelected = true;
+                ItemIsSelected = true;
             }
+        }*/
+
+        protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
+        {
+            base.OnSelectedItemIndexChanged(relatedItemIndex);
+            SelectedGameId = relatedItemIndex;
         }
 
-        private void OnSelectedItemIndexChanged(int newId)
+        protected override async Task FillInfoCardWithRelatedData(int selectedId)
         {
-            SelectedGameId = newId;
-        }
-
-        private async Task FillInfoCardWithGameRelatedOfferData(int selectedGameId)
-        {
-            var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedGameId);
-            await InfoPanelView.FillWithData(ThisView, responseModel.Offer);
+            var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
+            var offer = responseModel.Offer;
+            await InfoPanelView.FillWithData(RelatedView, offer, offer, offer, offer);
         }
 
         private Task LoadGamesList()
@@ -136,7 +88,7 @@ namespace ViewModels
             return userGamesRemoteRepository.LoadDataFromServer();
         }
 
-        private async void LoadDataAndFillTheList()
+        protected override async void LoadDataAndFillTheList()
         {
             try
             {
@@ -150,7 +102,7 @@ namespace ViewModels
             }
         }
 
-        private async Task FillDropdownList()
+        protected override async Task FillDropdownList()
         {
             var itemsList = userGamesRemoteRepository.ItemsData;
 
@@ -170,21 +122,6 @@ namespace ViewModels
             }
 
             FillDropdownList(itemsNamesDictionary);
-        }
-
-        private void FillDropdownList(Dictionary<int?, string> dictionary)
-        {
-            var myChallengeView = View as MyChallengeView;
-            Debug.Assert(myChallengeView != null, nameof(myChallengeView) + " != null");
-            myChallengeView.FillDropdownList(dictionary);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

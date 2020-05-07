@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels.RequestsModels;
 using GlobalVariables;
 using Repositories;
@@ -15,16 +16,25 @@ namespace Controllers
 {
     [CreateAssetMenu(fileName = nameof(SessionController),
         menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
-    public class SessionController : ScriptableObject
+    public sealed class SessionController : ScriptableObject
     {
-        private const string Tag = nameof(SessionController);
+        public enum SessionMode
+        {
+            User,
+            Merchant,
+            Guest
+        }
 
+        private const string Tag = nameof(SessionController);
+        
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private CachingController cachingController;
         [SerializeField] private SessionStateRepository sessionStateRepository;
+
+        public event Action<SessionMode> SwitchingToMode;
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
@@ -43,6 +53,7 @@ namespace Controllers
 
                 SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
                 SwitchToViewCorrespondingToUseRole();
+                sessionStateRepository.ConfirmSingingIn();
             }
             else
             {
@@ -52,21 +63,25 @@ namespace Controllers
 
         public async void SignOut()
         {
-           await sessionStateRepository.SignOut();
-           SwitchToLoginView();
+            if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
+                await sessionStateRepository.SignOut();
+            SwitchToLoginView();
         }
-
-
 
         private void SwitchToViewCorrespondingToUseRole()
         {
             switch (authorisationDataRepository.UserRole)
             {
-                case MainNames.UserRoles.Client:
                 case MainNames.UserRoles.Guest:
+                    OnSwitchingToMode(SessionMode.Guest);
+                    SwitchToMiniGame();
+                    break;
+                case MainNames.UserRoles.Client:
+                    OnSwitchingToMode(SessionMode.User);
                     SwitchToMiniGame();
                     break;
                 case MainNames.UserRoles.BusinessOwner:
+                    OnSwitchingToMode(SessionMode.Merchant);
                     SwitchToBusinessMainMenu();
                     break;
             }
@@ -86,7 +101,6 @@ namespace Controllers
                 authorisationDataRepository.TryLoadLocalData();
                 repositoriesController.InvokeRepositoriesLoading();
                 SwitchToViewCorrespondingToUseRole();
-
             }
             else
             {
@@ -104,7 +118,7 @@ namespace Controllers
         {
             SwitchToView(nameof(LoginView));
         }
-        
+
         private void SwitchToMiniGame()
         {
             SwitchToView(nameof(CoinsGameView));
@@ -112,7 +126,7 @@ namespace Controllers
 
         private void SwitchToBusinessMainMenu()
         {
-            SwitchToView(nameof(MainBusinessMenuView));
+            SwitchToView(nameof(MarketView));
         }
 
         private void SwitchToView(string toViewName)
@@ -123,10 +137,22 @@ namespace Controllers
         public async Task<bool> TryRegisterAndLoginAsGuest()
         {
             var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+            var result = authorisationModel;
+            if (!result.Success)
+            {
+                LogUtility.PrintLog(Tag, "Failed to register user as Guest");
+                alertCardController.ShowAlertWithText(result.Error);
+                return false;
+            }
 
-            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
+            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(result.ResponseModelInterface.AuthorisationData);
             SaveUserAuthentication(MainNames.UserRoles.Guest);
             return true;
+        }
+
+        private void OnSwitchingToMode(SessionMode obj)
+        {
+            SwitchingToMode?.Invoke(obj);
         }
     }
 }

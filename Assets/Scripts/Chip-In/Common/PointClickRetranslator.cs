@@ -1,11 +1,11 @@
-﻿using System;
+﻿using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Common
 {
     public sealed class PointClickRetranslator : UIBehaviour, IPointerClickHandler
     {
-        public event Action PointerClicked;
+        public UnityEvent pointerClicked;
         
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -14,7 +14,7 @@ namespace Common
 
         private void OnPointerClicked()
         {
-            PointerClicked?.Invoke();
+            pointerClicked?.Invoke();
         }
     }
 }

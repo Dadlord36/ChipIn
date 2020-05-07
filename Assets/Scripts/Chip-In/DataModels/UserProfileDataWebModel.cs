@@ -26,10 +26,13 @@ namespace DataModels
         Texture2D AvatarImage { get; set; }
     }
 
-    public interface IUserExtraData
+    public interface IUserGeoLocation
     {
         [JsonProperty("location")] GeoLocation UserLocation { get; set; }
-
+    }
+    
+    public interface IUserExtraData : IUserGeoLocation
+    {
         [JsonProperty("birthdate")] string Birthday { get; set; }
     }
 
@@ -81,8 +84,7 @@ namespace DataModels
         [SerializeField] private Texture2D avatarImage;
 
         public UserProfileDataWebModel(int id, string email, string name, string role, int tokensBalance,
-            string gender,
-            bool showAdsState, bool showAlertsState, bool userRadarState, bool showNotificationsState,
+            string gender, bool showAdsState, bool showAlertsState, bool userRadarState, bool showNotificationsState,
             GeoLocation userLocation, string avatarImageUrl, string birthday, string countryCode)
         {
             this.id = id;

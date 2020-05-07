@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.Interfaces;
@@ -10,7 +11,7 @@ namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(UserGamesRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserGamesRemoteRepository), order = 0)]
-    public class UserGamesRemoteRepository : BaseItemsListRepository<GameDataModel>
+    public class UserGamesRemoteRepository : BaseNotPaginatedListRepository<GameDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
 
@@ -19,8 +20,6 @@ namespace Repositories.Local
             ItemsLiveData.Clear();
             ItemsLiveData.AddRange(await UserGamesStaticProcessor.GetUserGames(userAuthorisationDataRepository));
         }
-
-        public GameDataModel this[int index] => ItemsData[index];
 
         public GameDataModel GetGameDataByGameId(int gameId)
         {
@@ -36,7 +35,7 @@ namespace Repositories.Local
 
         public override Task SaveDataToServer()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<IOfferDetailsResponseModel> GetOfferDataForGivenGameId(int selectedGameId)
