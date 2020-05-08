@@ -1,14 +1,14 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(FpsLimit))]
+[CustomEditor(typeof(FpsLimiter))]
 public class FPSLimitEditror : Editor
 {
     public override void OnInspectorGUI()
     {
         if (GUILayout.Button("Change FPS"))
         {
-            ((FpsLimit) target).ChangeFrameRate();
+            ((FpsLimiter) target).ChangeFrameRate();
         }
 
         base.OnInspectorGUI();

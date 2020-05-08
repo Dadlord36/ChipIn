@@ -1,59 +1,127 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Controllers
 {
+    public class PathMovingObject
+    {
+        private readonly Transform _movingObject;
+        private float _percentageOnPath;
+
+        public float PercentageOnPath => _percentageOnPath;
+        public Vector3 Position => _movingObject.position;
+
+        public PathMovingObject(Transform movingObject, float initialRelativePathPercentage)
+        {
+            _movingObject = movingObject;
+            _percentageOnPath = initialRelativePathPercentage;
+        }
+
+
+        public void SetPositionAndAdjustPathPercentage(in Vector3 position, float pathPercentage)
+        {
+            _movingObject.position = position;
+            _percentageOnPath = pathPercentage;
+        }
+
+        public void Deactivate()
+        {
+            _movingObject.gameObject.SetActive(false);
+        }
+
+        public void Activate()
+        {
+            _movingObject.gameObject.SetActive(true);
+        }
+    }
+
     public class SlotSpinner : UIBehaviour
     {
         #region Serialized Fields
 
         [SerializeField] private float spinTime;
         [SerializeField] private float offset;
-        [SerializeField] private int laps = 1;
 
-        [SerializeField] private int itemToFocusIndex;
+        [SerializeField] private uint laps = 1;
+        [SerializeField] private uint itemToFocusIndex;
+        [SerializeField] private uint controlItemIndex;
 
         [SerializeField] private AnimationCurve speedCurve;
-        [SerializeField] private Transform center;
         [SerializeField] private Vector2 itemSize;
-        [SerializeField] private Vector3 movementDirection;
+        [Range(0f, 360f)] [SerializeField] private float movementAngle;
 
-        [SerializeField] private BoxCollider2D collider;
+        [SerializeField] private BoxCollider2D boundingCollider;
 
         #endregion
 
-        private RectTransform[] _objectsToSpin;
-        private Transform _targetItem;
-        private RectTransform _thisTransform;
-        private Vector3 _targetPosition;
 
-        public SlotSpinner(Transform targetItem)
+        private PathMovingObject[] _pathMovingObjects;
+        private RectTransform _thisTransform;
+        private Vector3 _lapStartPoint, _lapEndPoint;
+        private Vector3 _wholePathStartPoint, _wholePathEndPoint;
+
+        private float _wholePathLength;
+        private float _lapLength;
+
+        private int ChildCount => transform.childCount;
+
+        protected override void Start()
         {
-            _targetItem = targetItem;
+            base.Start();
+            Stop();
         }
 
         public void StartSpinning()
         {
-            _targetPosition = _targetItem.position;
+            ResetParameters();
             enabled = true;
         }
 
-        private bool _isInitialized;
+        private void ResetParameters()
+        {
+            Stop();
+            CalculateMainParameters();
+            Initialize();
+        }
 
         public void Initialize()
         {
-            if(_isInitialized) return;
-            _isInitialized = true;
-            _thisTransform = transform as RectTransform;
+            CalculateMainParameters();
             Debug.Assert(_thisTransform != null, nameof(_thisTransform) + " != null");
-            var originalObjectsCount = _thisTransform.childCount;
 
-            PrepareItems();
+            PathMovingObject[] CreatePathMovingObjectsForChildren()
+            {
+                var childCount = _thisTransform.childCount;
+                var pathMovingObjects = new PathMovingObject[childCount];
 
-            var targetIndex = (laps - 1) * originalObjectsCount + itemToFocusIndex;
-            _targetItem = _thisTransform.GetChild(targetIndex);
+
+                for (int i = 0; i < _thisTransform.childCount; i++)
+                {
+                    var progress = _itemsStep * i;
+                    pathMovingObjects[i] = new PathMovingObject(_thisTransform.GetChild(i), progress);
+                }
+
+                return pathMovingObjects;
+            }
+
+            _pathMovingObjects = CreatePathMovingObjectsForChildren();
         }
+
+        private float CalculateSingleItemLength()
+        {
+            return offset + itemSize.x;
+        }
+
+        private float CalculateLapLength()
+        {
+            return _thisTransform.childCount * CalculateSingleItemLength();
+        }
+
+        private float CalculateWholePathLength()
+        {
+            return _itemLength * controlItemIndex + laps * CalculateLapLength() + _itemLength * (ChildCount - itemToFocusIndex);
+        }
+
 
         private void Stop()
         {
@@ -62,104 +130,153 @@ namespace Controllers
             _passedTime = 0f;
         }
 
-        private void PrepareItems()
-        {
-            var collectedObjects = CollectItems();
-            var objects = new List<RectTransform>(collectedObjects.Length * laps);
-            objects.AddRange(collectedObjects);
-
-            for (int i = 1; i < laps; i++)
-            {
-                objects.AddRange(CreateItemsSetCopy(collectedObjects));
-            }
-
-            _objectsToSpin = objects.ToArray();
-            AlignItems();
-        }
-
-        private RectTransform[] CreateItemsSetCopy(IReadOnlyList<RectTransform> items)
-        {
-            var result = new RectTransform[items.Count];
-            for (int i = 0; i < items.Count; i++)
-            {
-                result[i] = Instantiate(items[i], _thisTransform);
-            }
-
-            return result;
-        }
-
-        private RectTransform[] CollectItems()
-        {
-            var objects = new RectTransform[_thisTransform.childCount];
-            {
-                int index = 0;
-                foreach (RectTransform child in _thisTransform)
-                {
-                    objects[index] = child;
-                    index++;
-                }
-            }
-            return objects;
-        }
-
         private void Update()
         {
             SpinUpdate();
         }
 
+        private void CalculateMainParameters()
+        {
+            _thisTransform = transform as RectTransform;
+            _itemLength = CalculateSingleItemLength();
+
+            void CalculateLapAndWholeLengths()
+            {
+                _lapLength = CalculateLapLength();
+                _wholePathLength = CalculateWholePathLength();
+            }
+
+            void CalculateBorderPoints()
+            {
+                var center = transform.position;
+
+                var wholePathHalfLength = _wholePathLength / 2;
+                var lapLengthHalfLength = _lapLength / 2;
+
+                _lapEndPoint = _lapStartPoint = center;
+
+                _wholePathStartPoint.x = center.x - _wholePathLength;
+                _wholePathEndPoint.x = center.x;
+
+                _lapStartPoint.x = center.x - _lapLength;
+                _lapEndPoint.x = center.x;
+            }
+
+            CalculateLapAndWholeLengths();
+            CalculateBorderPoints();
+
+            _itemsStep = CalculateWholePathPercentageFromWholePathPartLength(_itemLength);
+        }
 
         public void AlignItems()
         {
-            var originalPosition = center.position;
+            CalculateMainParameters();
 
-            foreach (RectTransform child in transform)
+            for (int i = 0; i < _thisTransform.childCount; i++)
             {
-                child.position = originalPosition;
-                var fullOffset = offset + itemSize.x;
-                originalPosition += new Vector3(movementDirection.x * fullOffset, movementDirection.y * fullOffset);
+                transform.GetChild(i).position = AdjustPositionWithAngle(_itemLength * i);
             }
+        }
+
+        private Vector2 AdjustPositionWithAngle(float distance)
+        {
+            return MoveOnDistanceAlongAngle(_lapEndPoint, distance, movementAngle);
+            ;
         }
 
 
         private float _previousFrameDistancePercentage;
         private float _currentFrameDistancePercentage;
         private float _passedTime;
+        private float _itemsStep;
+        private float _itemLength;
 
 
-        private Vector3 GetPathFragmentLength(float percentageInPreviousFrame, float percentageInCurrentFrame)
+        #region Path fallowing related calculation functions
+
+        private float CalculateWholePathPartFromWholePathPercentage(in float percentage)
         {
-            return GetPathPointFromPercentage(percentageInCurrentFrame) - GetPathPointFromPercentage(percentageInPreviousFrame);
+            return Mathf.LerpUnclamped(0, _wholePathLength, percentage);
+        }
 
-            Vector3 GetPathPointFromPercentage(float percentage)
+        private float CalculateLapPartFromWholePathPercentage(in float wholePathPercentage)
+        {
+            return Mathf.Repeat(CalculateWholePathPartFromWholePathPercentage(wholePathPercentage), _lapLength);
+        }
+
+        private float CalculateWholePathPercentageFromWholePathPartLength(in float wholePathPartLength)
+        {
+            return wholePathPartLength / _wholePathLength;
+        }
+
+        private float CalculateLapPercentageFromLapPartLength(in float lapPartLength)
+        {
+            return lapPartLength / _lapLength;
+        }
+
+        private float CalculateLapPercentageFromWholePathPercentage(in float wholePathPercentage)
+        {
+            return CalculateLapPercentageFromLapPartLength(CalculateLapPartFromWholePathPercentage(wholePathPercentage));
+        }
+
+        private Vector3 GetPositionOnLap(in float percentage)
+        {
+            return Vector3.Lerp(_lapStartPoint, _lapEndPoint, percentage);
+        }
+
+        private Vector3 GetPositionOnWholePath(in float percentage)
+        {
+            return Vector3.Lerp(_wholePathStartPoint, _wholePathEndPoint, percentage);
+        }
+
+        #endregion
+
+        private void AdjustMovingObjectsPositionOnPathFromPathPercentage(in float passedFragmentPercentage)
+        {
+            void ProgressMovementAlongPath(PathMovingObject movingObject, in float fragmentPercentage)
             {
-                return Vector3.Lerp(center.position, _targetPosition, percentage);
+                var progress = movingObject.PercentageOnPath + fragmentPercentage;
+
+                movingObject.SetPositionAndAdjustPathPercentage(AdjustPositionWithAngle(
+                    CalculateLapPartFromWholePathPercentage(progress)), progress);
+
+                if (!boundingCollider.enabled) return;
+
+                if (boundingCollider.OverlapPoint(movingObject.Position))
+                {
+                    movingObject.Activate();
+                }
+                else
+                {
+                    movingObject.Deactivate();
+                }
+            }
+
+            for (int i = 0; i < _pathMovingObjects.Length; i++)
+            {
+                ProgressMovementAlongPath(_pathMovingObjects[i], passedFragmentPercentage);
             }
         }
 
-
         private void SpinUpdate()
         {
-            _currentFrameDistancePercentage = Mathf.InverseLerp(0, spinTime, _passedTime);
-
             if (_previousFrameDistancePercentage >= 1f)
             {
                 Stop();
             }
 
-            var passedFragment = GetPathFragmentLength(_previousFrameDistancePercentage, _currentFrameDistancePercentage);
+            _currentFrameDistancePercentage = Mathf.InverseLerp(0, spinTime, _passedTime);
 
-            passedFragment.x *= -movementDirection.x;
-            passedFragment.y *= -movementDirection.y;
-            passedFragment.z *= -movementDirection.z;
-
-            for (int i = 0; i < _objectsToSpin.Length; i++)
-            {
-                _objectsToSpin[i].position += passedFragment;
-                _objectsToSpin[i].gameObject.SetActive(collider.bounds.Contains(_objectsToSpin[i].position));
-            }
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(_currentFrameDistancePercentage - _previousFrameDistancePercentage);
 
             _passedTime += Time.deltaTime * speedCurve.Evaluate(_currentFrameDistancePercentage);
             _previousFrameDistancePercentage = _currentFrameDistancePercentage;
+        }
+
+        private static Vector2 MoveOnDistanceAlongAngle(in Vector2 center, in float distance, in float angle)
+        {
+            var rad = angle * Mathf.Deg2Rad;
+            return new Vector2(center.x + Mathf.Cos(rad) * distance, center.y + Mathf.Sin(rad) * distance);
         }
     }
 }

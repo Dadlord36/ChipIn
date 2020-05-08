@@ -12,6 +12,7 @@ public class FpsLimiter : MonoBehaviour
 
     private void Start()
     {
-        ChangeFrameRate();
+        // ChangeFrameRate();
+        QualitySettings.vSyncCount = 1;
     }
 }
