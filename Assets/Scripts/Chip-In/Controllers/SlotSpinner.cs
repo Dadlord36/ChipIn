@@ -6,22 +6,27 @@ namespace Controllers
     public class PathMovingObject
     {
         private readonly Transform _movingObject;
-        private float _percentageOnPath;
 
-        public float PercentageOnPath => _percentageOnPath;
-        public Vector3 Position => _movingObject.position;
+        public float PercentageOnPath { get; private set; }
+
+        public Vector3 LocalPosition
+        {
+            get => _movingObject.localPosition;
+            private set => _movingObject.localPosition = value;
+        }
+
+        public Vector3 WorldPosition => _movingObject.position;
 
         public PathMovingObject(Transform movingObject, float initialRelativePathPercentage)
         {
             _movingObject = movingObject;
-            _percentageOnPath = initialRelativePathPercentage;
+            PercentageOnPath = initialRelativePathPercentage;
         }
-
 
         public void SetPositionAndAdjustPathPercentage(in Vector3 position, float pathPercentage)
         {
-            _movingObject.position = position;
-            _percentageOnPath = pathPercentage;
+            LocalPosition = position;
+            PercentageOnPath = pathPercentage;
         }
 
         public void Deactivate()
@@ -47,7 +52,6 @@ namespace Controllers
         [SerializeField] private uint controlItemIndex;
 
         [SerializeField] private AnimationCurve speedCurve;
-        [SerializeField] private Vector2 itemSize;
         [Range(0f, 360f)] [SerializeField] private float movementAngle;
 
         [SerializeField] private BoxCollider2D boundingCollider;
@@ -56,7 +60,6 @@ namespace Controllers
 
 
         private PathMovingObject[] _pathMovingObjects;
-        private RectTransform _thisTransform;
         private Vector3 _lapStartPoint, _lapEndPoint;
         private Vector3 _wholePathStartPoint, _wholePathEndPoint;
 
@@ -87,18 +90,16 @@ namespace Controllers
         public void Initialize()
         {
             CalculateMainParameters();
-            Debug.Assert(_thisTransform != null, nameof(_thisTransform) + " != null");
 
             PathMovingObject[] CreatePathMovingObjectsForChildren()
             {
-                var childCount = _thisTransform.childCount;
-                var pathMovingObjects = new PathMovingObject[childCount];
+                var pathMovingObjects = new PathMovingObject[ChildCount];
+                var thisTransform = transform;
 
-
-                for (int i = 0; i < _thisTransform.childCount; i++)
+                for (int i = 0; i < thisTransform.childCount; i++)
                 {
                     var progress = _itemsStep * i;
-                    pathMovingObjects[i] = new PathMovingObject(_thisTransform.GetChild(i), progress);
+                    pathMovingObjects[i] = new PathMovingObject(thisTransform.GetChild(i), progress);
                 }
 
                 return pathMovingObjects;
@@ -107,21 +108,15 @@ namespace Controllers
             _pathMovingObjects = CreatePathMovingObjectsForChildren();
         }
 
-        private float CalculateSingleItemLength()
-        {
-            return offset + itemSize.x;
-        }
-
         private float CalculateLapLength()
         {
-            return _thisTransform.childCount * CalculateSingleItemLength();
+            return ChildCount * offset;
         }
 
         private float CalculateWholePathLength()
         {
             return _itemLength * controlItemIndex + laps * CalculateLapLength() + _itemLength * (ChildCount - itemToFocusIndex);
         }
-
 
         private void Stop()
         {
@@ -137,8 +132,7 @@ namespace Controllers
 
         private void CalculateMainParameters()
         {
-            _thisTransform = transform as RectTransform;
-            _itemLength = CalculateSingleItemLength();
+            _itemLength = offset;
 
             void CalculateLapAndWholeLengths()
             {
@@ -148,10 +142,7 @@ namespace Controllers
 
             void CalculateBorderPoints()
             {
-                var center = transform.position;
-
-                var wholePathHalfLength = _wholePathLength / 2;
-                var lapLengthHalfLength = _lapLength / 2;
+                var center = Vector3.zero;
 
                 _lapEndPoint = _lapStartPoint = center;
 
@@ -171,17 +162,18 @@ namespace Controllers
         public void AlignItems()
         {
             CalculateMainParameters();
-
-            for (int i = 0; i < _thisTransform.childCount; i++)
+            for (int i = 0; i < ChildCount; i++)
             {
-                transform.GetChild(i).position = AdjustPositionWithAngle(_itemLength * i);
+                var position = AdjustPositionWithAngle(_itemLength * i);
+                var childRectTransform = transform.GetChild(i).transform as RectTransform;
+                childRectTransform.pivot = childRectTransform.anchorMin = childRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+                transform.GetChild(i).localPosition = position;
             }
         }
 
         private Vector2 AdjustPositionWithAngle(float distance)
         {
             return MoveOnDistanceAlongAngle(_lapEndPoint, distance, movementAngle);
-            ;
         }
 
 
@@ -242,7 +234,7 @@ namespace Controllers
 
                 if (!boundingCollider.enabled) return;
 
-                if (boundingCollider.OverlapPoint(movingObject.Position))
+                if (boundingCollider.OverlapPoint(movingObject.WorldPosition))
                 {
                     movingObject.Activate();
                 }
