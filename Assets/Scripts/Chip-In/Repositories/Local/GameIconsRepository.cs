@@ -17,13 +17,20 @@ namespace Repositories.Local
         void Restore();
     }
 
-    [CreateAssetMenu(fileName = nameof(GameIconsRepository), menuName = nameof(Repositories) + "/" + nameof(Local) + "/" +
-                                                                        nameof(GameIconsRepository), order = 0)]
+    [CreateAssetMenu(fileName = nameof(GameIconsRepository), menuName =
+        nameof(Repositories) + "/" + nameof(Local) + "/" +
+        nameof(GameIconsRepository), order = 0)]
     public sealed class GameIconsRepository : ScriptableObject, IRestorable
     {
+        #region Serialized fields
+
+        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+
+        #endregion
+
         private class BoardIconsSetsContainer
         {
-            private struct BoardIconsSet
+            internal readonly struct BoardIconsSet
             {
                 public readonly int GameId;
                 public readonly BoardIconData[] BoardIconsSetData;
@@ -37,6 +44,8 @@ namespace Repositories.Local
 
             private readonly List<BoardIconsSet> _boardIconsSets = new List<BoardIconsSet>();
 
+            public IReadOnlyList<BoardIconsSet> BoardIconsSets => _boardIconsSets;
+
             public void AddIconsSet(int gameId, BoardIconData[] boardIconsSetData)
             {
                 _boardIconsSets.Add(new BoardIconsSet(gameId, boardIconsSetData));
@@ -47,12 +56,22 @@ namespace Repositories.Local
 
             public BoardIconData[] GetIconsSet(int gameId) => FindBoardIconsSet(gameId).BoardIconsSetData;
 
+            public bool GameIconsExists(int gameId)
+            {
+                for (int i = 0; i < _boardIconsSets.Count; i++)
+                {
+                    if (_boardIconsSets[i].GameId == gameId)
+                        return true;
+                }
+
+                return false;
+            }
+
             public void Remove(int gameId)
             {
                 _boardIconsSets.RemoveAt(FindBoardIconsSetIndex(gameId));
             }
         }
-
 
         private const string Tag = nameof(GameIconsRepository);
 
@@ -65,7 +84,9 @@ namespace Repositories.Local
         private const string IconsDataHeaderFileName = "IconsHeaders";
         private const string GameIconsDirectoryName = "GameIcons";
 
-        private static string GameIconsDirectoryPath => Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
+        private static string GameIconsDirectoryPath =>
+            Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
+
         private static string GetGameIdDirectory(int gameId) => Path.Combine(GameIconsDirectoryPath, gameId.ToString());
 
         private static string CreateIconsDataFilePath(int gameId) => Path.Combine(new[]
@@ -86,6 +107,52 @@ namespace Repositories.Local
         public BoardIconData[] GetBoardIconsData(int gameId) => _boardIconsSetsContainer.GetIconsSet(gameId);
 
 
+        #region Unity Events implementation
+
+        private void OnEnable()
+        {
+            userGamesRemoteRepository.DataWasLoaded += UserGamesRemoteRepositoryOnDataWasLoaded;
+        }
+
+        private void OnDisable()
+        {
+            userGamesRemoteRepository.DataWasLoaded -= UserGamesRemoteRepositoryOnDataWasLoaded;
+        }
+
+        #endregion
+
+
+        private void UserGamesRemoteRepositoryOnDataWasLoaded()
+        {
+            RemoveUnneededIconsSets();
+        }
+
+        private void RemoveUnneededIconsSets()
+        {
+            var userGamesInRepository = userGamesRemoteRepository.ItemsData;
+            var userSavedGames = _boardIconsSetsContainer.BoardIconsSets;
+            for (int i = 0; i < userSavedGames.Count; i++)
+            {
+                if (!UserIsSubscribedForAGame(userSavedGames[i].GameId))
+                {
+                    RemoveGameIconsData(userSavedGames[i].GameId);
+                }
+            }
+
+            bool UserIsSubscribedForAGame(int gameId)
+            {
+                for (int i = 0; i < userGamesInRepository.Count; i++)
+                {
+                    if (userGamesInRepository[i].Id == gameId)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         public async Task StoreNewGameIconsSet(int gameId, IReadOnlyList<IndexedUrl> indexedUrls)
         {
             _iconsSetIsLoaded = false;
@@ -98,7 +165,8 @@ namespace Repositories.Local
         {
             try
             {
-                IReadOnlyList<byte[]> textures = await ImagesDownloadingUtility.DownloadMultipleDataArrayFromUrls(indexedUrls);
+                IReadOnlyList<byte[]> textures =
+                    await ImagesDownloadingUtility.DownloadMultipleDataArrayFromUrls(indexedUrls);
                 SaveIconsData(gameId, textures, indexedUrls);
                 FillBoardIconsData(gameId, SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,
                     rowsNumber, columnsNumber).ToArray());
@@ -173,7 +241,8 @@ namespace Repositories.Local
             }
 
 
-            public static ImagesStoringHeaderDataModel Create(int gameId, IReadOnlyList<IndexedUrl> indexedUrls, IReadOnlyList<byte[]> imagesBytes)
+            public static ImagesStoringHeaderDataModel Create(int gameId, IReadOnlyList<IndexedUrl> indexedUrls,
+                IReadOnlyList<byte[]> imagesBytes)
             {
                 var count = indexedUrls.Count;
                 Assert.IsTrue(count > 0);
@@ -183,7 +252,8 @@ namespace Repositories.Local
 
                 for (int i = 0; i < count; i++)
                 {
-                    imagesStoringHeaders[i] = ImageStoringHeader.Create(indexedUrls[i].Id, indexedUrls[i], imagesBytes[i].Length);
+                    imagesStoringHeaders[i] =
+                        ImageStoringHeader.Create(indexedUrls[i].Id, indexedUrls[i], imagesBytes[i].Length);
                 }
 
                 return new ImagesStoringHeaderDataModel(gameId, imagesStoringHeaders);
@@ -216,9 +286,11 @@ namespace Repositories.Local
         {
         }
 
-        private void SaveIconsData(int gameId, IReadOnlyList<byte[]> indexedTexturesBytesData, IReadOnlyList<IndexedUrl> indexedUrls)
+        private void SaveIconsData(int gameId, IReadOnlyList<byte[]> indexedTexturesBytesData,
+            IReadOnlyList<IndexedUrl> indexedUrls)
         {
-            var imagesStoringHeaderData = ImagesStoringHeaderDataModel.Create(gameId, indexedUrls, indexedTexturesBytesData);
+            var imagesStoringHeaderData =
+                ImagesStoringHeaderDataModel.Create(gameId, indexedUrls, indexedTexturesBytesData);
             var json = JsonConverterUtility.ConvertModelToJson(imagesStoringHeaderData);
 
             Directory.CreateDirectory(GetGameIdDirectory(gameId));
@@ -271,7 +343,8 @@ namespace Repositories.Local
             return FilesUtility.ReadFileBytesAsync(CreateIconsDataFilePath(gameId));
         }
 
-        private static List<byte[]> RestoreImagesBytesList(IReadOnlyList<ImageStoringHeader> imageStoringHeaders, byte[] packedImagesArray)
+        private static List<byte[]> RestoreImagesBytesList(IReadOnlyList<ImageStoringHeader> imageStoringHeaders,
+            byte[] packedImagesArray)
         {
             int fromIndex = 0, toIndex = -1;
             var listOfImagesRawData = new List<byte[]>(imageStoringHeaders.Count);
@@ -348,7 +421,8 @@ namespace Repositories.Local
 
         private static class SpritesAnimationResourcesCreator
         {
-            public static List<BoardIconData> CreateBoardIcons(IReadOnlyList<SimpleImageAnimator.SpritesSheet> spritesSheets)
+            public static List<BoardIconData> CreateBoardIcons(
+                IReadOnlyList<SimpleImageAnimator.SpritesSheet> spritesSheets)
             {
                 var boardIcons = new List<BoardIconData>(spritesSheets.Count);
                 for (var i = 0; i < spritesSheets.Count; i++)
@@ -363,7 +437,8 @@ namespace Repositories.Local
             public static List<BoardIconData> CreateBoardIcons(IReadOnlyList<byte[]> textures,
                 IReadOnlyList<IIdentifier> boardElementsIdentifiers, int rowsNumber, int columnsNumber)
             {
-                var indexedTextures = CreateSpritesSheets(textures, boardElementsIdentifiers, rowsNumber, columnsNumber);
+                var indexedTextures =
+                    CreateSpritesSheets(textures, boardElementsIdentifiers, rowsNumber, columnsNumber);
                 return CreateBoardIcons(indexedTextures);
             }
 
