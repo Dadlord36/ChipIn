@@ -7,6 +7,7 @@ using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Utilities;
 using ViewModels;
@@ -78,6 +79,7 @@ namespace Behaviours.Games
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private SlotsGameViewModel gameInterfaceViewModel;
+        [SerializeField] private AlertCardController alertCardController;
 
         #endregion
 
@@ -95,13 +97,13 @@ namespace Behaviours.Games
             set => GameInterface.RoundNumber = value;
         }
 
-        private void OnEnable()
+        public void Activate()
         {
             GetGameDataAndInitializeGame();
             SubscribeToGameViewEvents();
         }
 
-        private void OnDisable()
+        public void Deactivate()
         {
             CloseConnectionAndDisposeGameChannelSocket();
             UnsubscribeFromGameViewEvents();
@@ -132,8 +134,16 @@ namespace Behaviours.Games
         {
             try
             {
-                var matchData = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, selectedGameRepository.GameId);
+                var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository,
+                    selectedGameRepository.GameId);
 
+                if (!response.Success || !response.ResponseModelInterface.Success)
+                {
+                    alertCardController.ShowAlertWithText(response.Error);
+                    return;
+                }
+
+                var matchData = response.ResponseModelInterface;
                 var roundTime = matchData.MatchData.RoundEndsAt;
                 var roundNumber = matchData.MatchData.RoundNumber;
                 var timeForPassedRounds = (int) (roundNumber * roundTime);
@@ -265,14 +275,21 @@ namespace Behaviours.Games
 
         private async void MakeASpin(SpinBoardParameters spinBoardParameters)
         {
-            var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository, selectedGameRepository.GameId, spinBoardParameters);
+            var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository,
+                selectedGameRepository.GameId, spinBoardParameters);
             _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
-            UpdateSlotsIconsPositionsAndActivity();
+            UpdateSlotsIconsPositionsAndActivity(spinBoardParameters);
         }
 
         private void UpdateSlotsIconsPositionsAndActivity()
         {
-            GameInterface.SetSlotsIcons(_roundData.SlotsIconsData);
+            GameInterface.SetSpinTargetsAndStartSpinning(_roundData.SlotsIconsData, SpinBoardParameters.JustFrame);
+            PrintLog("Slots Icons was updated");
+        }
+
+        private void UpdateSlotsIconsPositionsAndActivity(in SpinBoardParameters spinBoardParameters)
+        {
+            GameInterface.SetSpinTargetsAndStartSpinning(_roundData.SlotsIconsData, spinBoardParameters);
             PrintLog("Slots Icons was updated");
         }
 

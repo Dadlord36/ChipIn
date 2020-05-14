@@ -30,7 +30,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-
+        
 
         [Binding]
         public async Task ShowInfo_OnButtonClick()
@@ -58,9 +58,8 @@ namespace ViewModels
             SwitchToView(nameof(ChallengeView));
         }
 
-        /*protected override void OnItemsListUpdated()
+        protected override void OnItemsListUpdated()
         {
-            
             var itemsList = userGamesRemoteRepository.ItemsData;
             //Set first game id as selected in list
             if (itemsList.Count > 0)
@@ -68,7 +67,7 @@ namespace ViewModels
                 SelectedGameId = itemsList[0].Id;
                 ItemIsSelected = true;
             }
-        }*/
+        }
 
         protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
         {

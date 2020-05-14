@@ -1,43 +1,84 @@
 ﻿using System.Collections.Generic;
+using Controllers.SlotsSpinningControllers;
 using DataModels.MatchModels;
+using HttpRequests.RequestsProcessors.GetRequests;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
-using Utilities;
-using ViewModels.UI.Elements.Icons;
-using Views.Interfaces;
 
 namespace Views
 {
-    public class SlotsView : UIBehaviour, ISlotsView
+    public class SlotsView : UIBehaviour
     {
         private const string Tag = nameof(SlotsView);
 
-        [SerializeField] private GameSlotIconView[] slotIconViews;
+        [SerializeField] private SlotSpinnerController[] extraSlotsSpinnerControllers;
+        [SerializeField] private SlotSpinnerController[] allSlotsSpinnerControllers;
+        [SerializeField] private SlotSpinnerController[] rowsSpinnerControllers;
+        [SerializeField] private SlotSpinnerController[] slotSpinnerControllers;
         [SerializeField] private float slotsSpritesAnimationSwitchingInterval = 0.1f;
+
+        private int _slotItemsCount;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            for (int i = 0; i < rowsSpinnerControllers.Length; i++)
+            {
+                rowsSpinnerControllers[i].InitializeSpinningElements();
+            }
+        }
 
         public void SetSlotsIcons(List<BoardIconData> boardIconsData)
         {
-            var length = boardIconsData.Count;
+            FillSlotsWithBoardIconsData(allSlotsSpinnerControllers, boardIconsData,
+                slotsSpritesAnimationSwitchingInterval);
+        }
 
-            if (length != slotIconViews.Length)
+        private static void FillSlotsWithBoardIconsData(IReadOnlyList<SlotSpinnerController> controllers,
+            List<BoardIconData> boardIconsData, float slotsSpritesAnimationSwitchingInterval)
+        {
+            for (int i = 0; i < controllers.Count; i++)
             {
-                LogUtility.PrintLogError(Tag, "There is not enough sprites in given array for this slots grid", this);
-                return;
+                controllers[i].PrepareItems(boardIconsData, slotsSpritesAnimationSwitchingInterval,
+                    true);
+            }
+        }
+
+        public void StartSpinning(in SpinBoardParameters spinBoardParameters)
+        {
+            if (spinBoardParameters.SpinBoard)
+            {
+                StarRowsSpinning();
             }
 
-            for (int i = 0; i < length; i++)
+            if (spinBoardParameters.SpinFrame)
             {
-                slotIconViews[i].InitializeAnimator(boardIconsData[i].AnimatedIconResource, slotsSpritesAnimationSwitchingInterval,
-                    true);
+                StartSlotsSpinning();
+            }
+        }
+
+        private void StartSlotsSpinning()
+        {
+            for (int i = 0; i < allSlotsSpinnerControllers.Length; i++)
+            {
+                allSlotsSpinnerControllers[i].StartElementsSpinning();
+            }
+        }
+
+        private void StarRowsSpinning()
+        {
+            for (int i = 0; i < rowsSpinnerControllers.Length; i++)
+            {
+                rowsSpinnerControllers[i].StartElementsSpinning();
             }
         }
 
         public void StartSlotsAnimation()
         {
-            for (int i = 0; i < slotIconViews.Length; i++)
+            for (int i = 0; i < allSlotsSpinnerControllers.Length; i++)
             {
-                slotIconViews[i].StartAnimating();
+                allSlotsSpinnerControllers[i].StartAnimating();
             }
         }
 
@@ -45,11 +86,44 @@ namespace Views
         {
             var length = iconsActivity.Count;
 
-            Assert.IsTrue(length == slotIconViews.Length);
+            Assert.IsTrue(length == slotSpinnerControllers.Length);
 
             for (int i = 0; i < length; i++)
             {
-                slotIconViews[i].ActivityState = iconsActivity[i].Active;
+                slotSpinnerControllers[i].SetActivityState(iconsActivity[i].Active);
+            }
+        }
+
+        public void SwitchSlotsToTargetIndexesInstantly(List<IIconIdentifier> targetIdentifiers)
+        {
+            Assert.IsTrue(targetIdentifiers.Count == slotSpinnerControllers.Length);
+
+            for (int i = 0; i < targetIdentifiers.Count; i++)
+            {
+                slotSpinnerControllers[i].SlideInstantlyToIndexPosition((uint) targetIdentifiers[i].IconId);
+            }
+
+            SetRandomSlotsTargets(extraSlotsSpinnerControllers, 1, targetIdentifiers.Count);
+        }
+
+        public void SetSpinTargets(List<IIconIdentifier> targetIdentifiers)
+        {
+            Assert.IsTrue(targetIdentifiers.Count == slotSpinnerControllers.Length);
+
+            for (int i = 0; i < targetIdentifiers.Count; i++)
+            {
+                slotSpinnerControllers[i].ItemToFocusOnIndexFromIconId = (uint) targetIdentifiers[i].IconId;
+            }
+
+            SetRandomSlotsTargets(extraSlotsSpinnerControllers, 1, targetIdentifiers.Count);
+        }
+
+        private static void SetRandomSlotsTargets(IReadOnlyList<SlotSpinnerController> spinnerControllers, int min,
+            int max)
+        {
+            for (int i = 0; i < spinnerControllers.Count; i++)
+            {
+                spinnerControllers[i].ItemToFocusOnIndex = (uint) Random.Range(min, max);
             }
         }
     }

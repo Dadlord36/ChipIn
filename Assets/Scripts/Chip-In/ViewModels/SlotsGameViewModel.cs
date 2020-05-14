@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Behaviours.Games;
 using Common.Interfaces;
 using DataModels.MatchModels;
+using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Remote;
@@ -20,10 +22,12 @@ namespace ViewModels
         event Action SpinBoardRequested;
         void StartTimer(float timeInterval);
         void RefillIconsSet();
-        void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData);
         void AllowInteractivity();
         void OnMatchEnds();
         int RoundNumber { get; set; }
+
+        void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] roundDataSlotsIconsData,
+            in SpinBoardParameters spinBoardParameters);
     }
 
     [Binding]
@@ -43,16 +47,17 @@ namespace ViewModels
         [SerializeField] private Timer timer;
         [SerializeField] private GameIconsRepository gameIconsRepository;
 
-        /// <summary>
+        /*/// <summary>
         /// Number of rows and columns on witch all spites-sheets will be slit, forming arrays of Sprites 
         /// </summary>
         [SerializeField, Tooltip("X - rows, Y - columns")]
-        private Vector2Int rowsColumns = new Vector2Int(5, 5);
+        private Vector2Int rowsColumns = new Vector2Int(5, 5);*/
 
         #endregion
 
         #region Private Properties
 
+        private SlotsGameBehaviour _slotsGameBehaviour;
         private SlotsGameView GameView => (SlotsGameView) View;
 
         #endregion
@@ -80,6 +85,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
+
 
         [Binding]
         public bool CanInteract
@@ -124,9 +130,28 @@ namespace ViewModels
 
         #endregion
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _slotsGameBehaviour = GetComponent<SlotsGameBehaviour>();
+        }
+
         public void Initialize()
         {
             timer.Initialize();
+            GameView.PrepareSlots();
+        }
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            _slotsGameBehaviour.Activate();
+        }
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            _slotsGameBehaviour.Deactivate();
         }
 
         private void OnInteraction()
@@ -151,12 +176,22 @@ namespace ViewModels
             _boardIconsHolder.Refill(gameIconsRepository.GetBoardIconsData(selectedGameRepository.GameId));
         }
 
-        public void SetSlotsIcons(ISlotIconBaseData[] slotsIconsData)
+        public void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] slotsIconsData,
+            in SpinBoardParameters spinBoardParameters)
         {
-            var boardIcons = _boardIconsHolder.GetBoardIconsDataWithIDs(slotsIconsData);
+            
+            if (spinBoardParameters.SpinFrame)
+            {
+                GameView.SetSlotsSpinTarget(new List<IIconIdentifier>(slotsIconsData));
+            }
+            else
+            {
+                GameView.SwitchSlotsToTargetIndexesInstantly(new List<IIconIdentifier>(slotsIconsData));
+            }
             UpdateSlotsIconsFramesActivity(slotsIconsData);
-            GameView.SetSlotsIcons(boardIcons);
+            
             GameView.StartSlotsAnimation();
+            GameView.StartSpinning(spinBoardParameters);
         }
 
         public void AllowInteractivity()

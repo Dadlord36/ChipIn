@@ -7,17 +7,29 @@ namespace ViewModels
         protected abstract void ClearAllItems();
         protected abstract void FillContainerWithDataFromRepository();
 
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            UpdateItemContainer();
+        }
+
         public void SubscribeOnRepositoryItemsCollectionChangesEvent(INotifyCollectionChanged collectionChanged)
         {
-            collectionChanged.CollectionChanged += UpdateChallengesView;
+            collectionChanged.CollectionChanged += OnRelatedCollectionChanged;
         }
 
         public void UnsubscribeOnRepositoryItemsCollectionChangesEvent(INotifyCollectionChanged collectionChanged)
         {
-            collectionChanged.CollectionChanged -= UpdateChallengesView;
+            collectionChanged.CollectionChanged -= OnRelatedCollectionChanged;
         }
 
-        private void UpdateChallengesView(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        private void OnRelatedCollectionChanged(object sender,
+            NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            UpdateItemContainer();
+        }
+
+        private void UpdateItemContainer()
         {
             ClearAllItems();
             FillContainerWithDataFromRepository();

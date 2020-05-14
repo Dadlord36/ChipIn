@@ -3,7 +3,6 @@ using Common;
 using ScriptableObjects.DataSets;
 using UnityEngine;
 using UnityEngine.UI;
-using Views.ViewElements;
 
 namespace Views.Bars.BarItems
 {

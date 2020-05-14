@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Common;
 using DataComponents;
-using DataModels;
 using UnityEngine;
+using Views.Bars.BarItems;
 using Views.InteractiveWindows;
 using Views.InteractiveWindows.Interfaces;
 using Views.ViewElements;
 using Views.ViewElements.Lists.ScrollableList;
-using WebOperationUtilities;
 
 namespace Views
 {
@@ -35,7 +33,7 @@ namespace Views
         }
 
         public string CurrentlySelectedOffersCategory => StringDataComponent.GetStringDataFromComponent(itemsSelector.SelectedItem);
-        public int? CurrentlySelectedOfferId => dropdownList.CurrentlySelectedOfferId;
+        public int? CurrentlySelectedOfferId => dropdownList.CurrentlySelectedRelatedId;
 
         public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
@@ -80,7 +78,7 @@ namespace Views
 
         private void OnNewOffersCategorySelected(Transform obj)
         {
-            OnNewCategorySelected(StringDataComponent.GetStringDataFromComponent(obj));
+            OnNewCategorySelected(obj.GetComponent<ITitled>().Title);
         }
 
         private void OnNewCategorySelected(string obj)

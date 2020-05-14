@@ -2,6 +2,7 @@
 using Common.Interfaces;
 using ScriptableObjects.DataSets;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 using Views.Bars.BarItems;
 using Views.ViewElements.Lists.ScrollableList;
 
@@ -65,6 +66,7 @@ namespace ViewModels.UI.Elements.ScrollBars
         public void Initialize()
         {
             scrollBarItemsContainer.GetComponent<ScrollItemsUpdater>().Initialize();
+            GetComponent<UI_InfiniteScroll>().Init();
         }
         
        

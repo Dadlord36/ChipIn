@@ -7,12 +7,10 @@ public class SlotsLauncherEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        
         if (GUILayout.Button("Start spinning"))
         {
-            ((SlotsLauncher)target)?.StartSpinning();
         }
-        
+
         base.OnInspectorGUI();
     }
 }

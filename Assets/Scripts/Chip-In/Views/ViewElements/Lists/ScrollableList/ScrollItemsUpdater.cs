@@ -50,11 +50,11 @@ namespace Views.ViewElements.Lists.ScrollableList
                     _contentItemsUpdaters[i].UpdateContentItem(item, pathPercentage);
                 }
 
-                for (int i = 0; i < _contentItemsCanvasReceivers.Length; i++)
+                /*for (int i = 0; i < _contentItemsCanvasReceivers.Length; i++)
                 {
                     if (item.TryGetComponent(out Canvas canvas))
                         _contentItemsCanvasReceivers[i].UpdateContentItemCanvas(item, canvas, pathPercentage);
-                }
+                }*/
             }
         }
 

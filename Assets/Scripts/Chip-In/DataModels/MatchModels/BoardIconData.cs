@@ -3,10 +3,10 @@ using DataModels.Interfaces;
 
 namespace DataModels.MatchModels
 {
-    public class BoardIconData
+    public class BoardIconData : IIdentifier
     {
         public readonly SimpleImageAnimator.SpritesAnimatorResource AnimatedIconResource;
-        public readonly int? Id;
+        public int? Id { get; set; }
 
         public BoardIconData(SimpleImageAnimator.SpritesAnimatorResource animatedIconResource, IIdentifier identifier)
         {

@@ -8,7 +8,9 @@ namespace Utilities
         {
             T GetOrAttachComponent(GameObject gameObject)
             {
-                return gameObject.TryGetComponent(out T component) ? component : gameObject.gameObject.AddComponent<T>();
+                return gameObject.TryGetComponent(out T component)
+                    ? component
+                    : gameObject.gameObject.AddComponent<T>();
             }
 
             var foundObject = rootTransform.Find(objectName);
@@ -24,12 +26,29 @@ namespace Utilities
             return foundObject.gameObject.AddComponent<T>();
         }
 
-        public static GameObject CreateAndAttachToParent(Transform parent,string objectName, Vector3 localPosition)
+        public static GameObject CreateAndAttachToParent(Transform parent, string objectName, Vector3 localPosition)
         {
             var newGameObject = new GameObject(objectName);
             newGameObject.transform.parent = parent;
             newGameObject.transform.localPosition = localPosition;
             return newGameObject;
+        }
+
+        public static void DestroyTransformAttachments(Transform slotSpinnerRootTransform)
+        {
+            var items = new GameObject[slotSpinnerRootTransform.childCount];
+
+            for (int i = 0; i < slotSpinnerRootTransform.childCount; i++)
+            {
+                items[i] = slotSpinnerRootTransform.GetChild(i).gameObject;
+            }
+
+            slotSpinnerRootTransform.DetachChildren();
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                Object.Destroy(items[i]);
+            }
         }
     }
 }

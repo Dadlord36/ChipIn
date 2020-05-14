@@ -18,7 +18,7 @@ namespace Views
         {
             foreach (Transform child in itemsContainer)
             {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
         }
         

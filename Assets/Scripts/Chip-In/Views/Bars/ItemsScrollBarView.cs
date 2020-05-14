@@ -20,11 +20,15 @@ namespace Views.Bars
         private bool _isInitialized;
         private ScrollBarItemWithTitleAndIconView[] _scrollBarItemViews;
 
+        protected override void Start()
+        {
+            base.Start();
+            Initialized();
+        }
+
         private void Initialized()
         {
-            if(_isInitialized) return;
-            
-            // InstantiateItems();
+            if (_isInitialized) return;
 
             infiniteScroll.Init();
             itemsUpdater.Initialize();
@@ -60,10 +64,8 @@ namespace Views.Bars
 
         private void OnNewItemSelected(string itemTitle)
         {
-            LogUtility.PrintLog(nameof(ScrollBarItemWithTitleAndIconView),$"{itemTitle} item selected");
+            LogUtility.PrintLog(nameof(ScrollBarItemWithTitleAndIconView), $"{itemTitle} item selected");
             NewItemSelected?.Invoke(itemTitle);
         }
-
- 
     }
 }

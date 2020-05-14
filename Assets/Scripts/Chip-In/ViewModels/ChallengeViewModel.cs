@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
@@ -18,6 +19,7 @@ namespace ViewModels
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
+        [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private Timer timer;
         private bool _canStartTheGame;
@@ -39,14 +41,17 @@ namespace ViewModels
         [Binding]
         public async Task Play_OnButtonClick()
         {
-            if (await CanGameStarts());
-            SwitchToSlotsGameView();
+            if (await CanGameStarts())
+                SwitchToSlotsGameView();
         }
 
         private async Task<bool> CanGameStarts()
         {
-            var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository, selectedGameRepository.GameId);
-            return response.Success;
+            var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository,
+                selectedGameRepository.GameId);
+            if (response.Success && response.ResponseModelInterface.Success) return true;
+            alertCardController.ShowAlertWithText(response.Error);
+            return false;
         }
 
         protected override void OnEnable()
@@ -103,7 +108,7 @@ namespace ViewModels
 
         protected override void ClearAllItems()
         {
-            ((ChallengeView) View).RemoveAllItems();
+            // ((ChallengeView) View).RemoveAllItems();
         }
 
         private void CheckIfGameCanBePlayed()

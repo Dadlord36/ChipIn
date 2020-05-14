@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &1926551499
+--- !u!114 &5125243875026746552
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,14 +9,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 2126665473544459957}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35a74490675945fc84c138e3f489eee5, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cd6c844b8424c3e937db538be4fb72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scrollBarItemsContainer: {fileID: 2126665473922078532}
   scrollBarElementsData: {fileID: 11400000, guid: 6cbd4d6d879b7b04789475f74dcd550e,
     type: 2}
-  itemsContainer: {fileID: 2126665473922078532}
-  infiniteScroll: {fileID: 2126665473544459954}
-  itemsUpdater: {fileID: 2126665473922078534}
+  prefab: {fileID: 1061168344071062502, guid: d715974ca966ec5479e2416b3b6d9ddb, type: 3}
+--- !u!114 &1354174176851768790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126665473922078539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bfce561f7d140dfb5b90c5b79cf8d70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollCenter: {fileID: 2126665475321659121}
+  tolerance: 2
 --- !u!1001 &6623776649841236196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -217,7 +230,7 @@ PrefabInstance:
     - target: {fileID: 5075292071680855636, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
         type: 3}
       propertyPath: m_RaycastTarget
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5075292071680855638, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
         type: 3}
@@ -247,17 +260,17 @@ PrefabInstance:
     - target: {fileID: 5075292072293355425, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
         type: 3}
       propertyPath: m_Spacing
-      value: 10
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 5075292072293355427, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5075292072293355428, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e, type: 3}
@@ -267,33 +280,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6623776649841236196}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2126665473544459954 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5075292071680855638, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
+--- !u!1 &2126665473922078539 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5075292072293355439, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
     type: 3}
   m_PrefabInstance: {fileID: 6623776649841236196}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126665473544459957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61fe0f6272fa94d4eb3dafc6aecd50ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2126665473922078532 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5075292072293355424, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
     type: 3}
   m_PrefabInstance: {fileID: 6623776649841236196}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2126665473922078534 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5075292072293355426, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
+--- !u!224 &2126665475321659121 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5075292071446849045, guid: f7f39fb9f6ef3c64cbe157fd98f15f8e,
     type: 3}
   m_PrefabInstance: {fileID: 6623776649841236196}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d0a741157174334a9b70e375f32e8c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

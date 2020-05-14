@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
+using DataModels.ResponsesModels;
 using GlobalVariables;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -42,13 +43,14 @@ namespace RequestsStaticProcessors
             }
         }
 
-        public static async Task<IShowMatchResponseModel> TryShowMatch(IRequestHeaders requestHeaders, int gameId)
+        public static async Task<BaseRequestProcessor<object, ShowMatchResponseModel, IShowMatchResponseModel>.HttpResponse> 
+            TryShowMatch(IRequestHeaders requestHeaders, int gameId)
         {
             try
             {
                 var response = await new ShowMatchGetProcessor(requestHeaders, gameId).SendRequest(
                         "Matches data was retrieved successfully");
-                return response.ResponseModelInterface;
+                return response;
             }
             catch (Exception e)
             {

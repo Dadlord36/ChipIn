@@ -1,12 +1,15 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Utilities;
+using Views.Bars.BarItems;
 using Views.ViewElements.Interfaces;
 
 namespace Views.ViewElements.Lists.ScrollableList
 {
     public sealed class ScrollableItemsSelector : UIBehaviour, IContentItemUpdater
     {
+        private const string Tag = nameof(ScrollableItemsSelector);
         public event Action<Transform> NewItemSelected;
 
         [SerializeField] private RectTransform scrollCenter;
@@ -22,6 +25,7 @@ namespace Views.ViewElements.Lists.ScrollableList
             {
                 if (ReferenceEquals(_selectedItem, value)) return;
                 _selectedItem = value;
+                LogUtility.PrintLog(Tag,$"Selected item name: {_selectedItem.GetComponent<ITitled>().Title}");
                 OnNewItemSelected(value);
             }
         }

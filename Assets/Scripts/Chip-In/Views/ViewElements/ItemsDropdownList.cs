@@ -26,7 +26,7 @@ namespace Views.ViewElements
             remove => dropdownController.ItemsListUpdated -= value;
         }
 
-        public int? CurrentlySelectedOfferId
+        public int? CurrentlySelectedRelatedId
         {
             get
             {
@@ -57,7 +57,7 @@ namespace Views.ViewElements
         private void OnRelatedItemSelected(int index)
         {
             _currentlySelectedDropdownItemNum = index;
-            RelatedItemSelected?.Invoke(index);
+            RelatedItemSelected?.Invoke((int) CurrentlySelectedRelatedId);
         }
 
         /// <summary>
