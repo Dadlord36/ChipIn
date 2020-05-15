@@ -32,6 +32,12 @@ namespace Controllers.SlotsSpinningControllers
             SetSlotSpinner();
         }
 
+        public void PrepareForSpinning()
+        {
+            SetSlotSpinner();
+            _slotSpinner.Initialize();
+        }
+
         private void SetSlotSpinner()
         {
             if (!TryGetComponent(out _slotSpinner))
@@ -61,22 +67,17 @@ namespace Controllers.SlotsSpinningControllers
             _slotSpinner.StartSpinning();
         }
 
-        public void InitializeSpinningElements()
-        {
-            SetSlotSpinner();
-            _slotSpinner.Initialize();
-        }
-
-        public void InitializeSpinningElements(int elementsNumber)
-        {
-            SetSlotSpinner();
-            _spinningElements = _slotSpinner.Initialize(slotPrefab, elementsNumber);
-        }
-
         public void PrepareItems(List<BoardIconData> animatedIconResource, float slotsSpritesAnimationSwitchingInterval,
             bool loopTheAnimation)
         {
-            InitializeSpinningElements(animatedIconResource.Count);
+            var elementsTransforms = _slotSpinner.Initialize(slotPrefab.transform, animatedIconResource.Count);
+            _spinningElements = new GameSlotIconView[elementsTransforms.Length];
+
+            for (var i = 0; i < elementsTransforms.Length; i++)
+            {
+                _spinningElements[i] = elementsTransforms[i].GetComponent<GameSlotIconView>();
+            }
+            
             CreateCorrespondingIndexesDictionary(animatedIconResource);
 
             for (int i = 0; i < _spinningElements.Length; i++)

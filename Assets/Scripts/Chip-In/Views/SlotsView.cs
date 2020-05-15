@@ -25,14 +25,15 @@ namespace Views
             base.OnEnable();
             for (int i = 0; i < rowsSpinnerControllers.Length; i++)
             {
-                rowsSpinnerControllers[i].InitializeSpinningElements();
+                rowsSpinnerControllers[i].PrepareForSpinning();
             }
         }
 
-        public void SetSlotsIcons(List<BoardIconData> boardIconsData)
+        public void InitializeSlotsIcons(List<BoardIconData> boardIconsData)
         {
             FillSlotsWithBoardIconsData(allSlotsSpinnerControllers, boardIconsData,
                 slotsSpritesAnimationSwitchingInterval);
+            StartSlotsAnimation();
         }
 
         private static void FillSlotsWithBoardIconsData(IReadOnlyList<SlotSpinnerController> controllers,

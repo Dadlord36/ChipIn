@@ -3,6 +3,7 @@ using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Local;
 using UnityEngine;
+using Utilities;
 
 namespace Views
 {
@@ -19,16 +20,22 @@ namespace Views
 
         public void PrepareSlots()
         {
-           var iconsData = gameIconsRepository.GetBoardIconsData(selectedGameRepository.GameId);
-           slotsView.SetSlotsIcons(new List<BoardIconData>(iconsData));
+            var gameId = selectedGameRepository.GameId;
+            if (!gameIconsRepository.GameIconsSetIsInStorage(gameId))
+            {
+                LogUtility.PrintLogError(nameof(SlotsGameView),
+                    $"There is no icons data for Game {gameId.ToString()}");
+            }
+
+            slotsView.InitializeSlotsIcons(new List<BoardIconData>(gameIconsRepository.GetBoardIconsData(gameId)));
         }
 
         public void StartSpinning(in SpinBoardParameters spinBoardParameters)
         {
             slotsView.StartSpinning(spinBoardParameters);
         }
-        
-        
+
+
         public void StartSlotsAnimation()
         {
             slotsView.StartSlotsAnimation();
@@ -38,7 +45,7 @@ namespace Views
         {
             slotsView.SwitchSlotsToTargetIndexesInstantly(boardIcons);
         }
-        
+
         public void SetSlotsSpinTarget(List<IIconIdentifier> boardIcons)
         {
             slotsView.SetSpinTargets(boardIcons);

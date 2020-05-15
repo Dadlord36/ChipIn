@@ -25,7 +25,7 @@ namespace ViewModels
         void AllowInteractivity();
         void OnMatchEnds();
         int RoundNumber { get; set; }
-
+        void SwitchIconsInSlots(ISlotIconBaseData[] roundDataSlotsIconsData);
         void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] roundDataSlotsIconsData,
             in SpinBoardParameters spinBoardParameters);
     }
@@ -65,7 +65,7 @@ namespace ViewModels
 
         #region Private Fields
 
-        private readonly BoardIconsSetHolder _boardIconsHolder;
+        // private readonly BoardIconsSetHolder _boardIconsHolder;
         private int _roundNumber;
         private bool _canInteract;
 
@@ -122,11 +122,7 @@ namespace ViewModels
 
 
         #region Constructor
-
-        public SlotsGameViewModel()
-        {
-            _boardIconsHolder = new BoardIconsSetHolder();
-        }
+        
 
         #endregion
 
@@ -139,7 +135,6 @@ namespace ViewModels
         public void Initialize()
         {
             timer.Initialize();
-            GameView.PrepareSlots();
         }
 
         protected override void OnBecomingActiveView()
@@ -151,6 +146,12 @@ namespace ViewModels
         protected override void OnBecomingInactiveView()
         {
             base.OnBecomingInactiveView();
+            _slotsGameBehaviour.Deactivate();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
             _slotsGameBehaviour.Deactivate();
         }
 
@@ -173,7 +174,12 @@ namespace ViewModels
 
         public void RefillIconsSet()
         {
-            _boardIconsHolder.Refill(gameIconsRepository.GetBoardIconsData(selectedGameRepository.GameId));
+            GameView.PrepareSlots();
+        }
+
+        public void SwitchIconsInSlots(ISlotIconBaseData[] roundDataSlotsIconsData)
+        {
+            GameView.SwitchSlotsToTargetIndexesInstantly(new List<IIconIdentifier>(roundDataSlotsIconsData));
         }
 
         public void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] slotsIconsData,

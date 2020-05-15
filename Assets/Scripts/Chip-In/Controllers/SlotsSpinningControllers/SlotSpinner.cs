@@ -1,9 +1,9 @@
-﻿using ScriptableObjects.Parameters;
+﻿using System.Collections.Generic;
+using ScriptableObjects.Parameters;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities;
-using ViewModels.UI.Elements.Icons;
 
 namespace Controllers.SlotsSpinningControllers
 {
@@ -88,40 +88,43 @@ namespace Controllers.SlotsSpinningControllers
         }
 
 
-        public GameSlotIconView[] Initialize(GameSlotIconView slotPrefab, int elementsNumber)
+        public Transform[] Initialize(Transform slotPrefab, int elementsNumber)
         {
             ClearItems();
-            var spinningElements = new GameSlotIconView [elementsNumber];
+            var children = new Transform [elementsNumber];
 
             for (int i = 0; i < elementsNumber; i++)
             {
-                spinningElements[i] = Instantiate(slotPrefab, RootTransform);
+                children[i] = Instantiate(slotPrefab, RootTransform);
             }
 
             Initialize();
-            return spinningElements;
+            return children;
         }
 
         public void Initialize()
         {
-            PathMovingObject[] CreatePathMovingObjectsForChildren()
+            var children = new Transform[ChildCount];
+
+            for (int i = 0; i < ChildCount; i++)
             {
-                var pathMovingObjects = new PathMovingObject[ChildCount];
-                var thisTransform = transform;
-
-                for (int i = 0; i < thisTransform.childCount; i++)
-                {
-                    var child = thisTransform.GetChild(i);
-
-                    pathMovingObjects[i] = new PathMovingObject(child, child.GetComponent<Image>());
-                }
-
-                return pathMovingObjects;
+                children[i] = RootTransform.GetChild(i);
             }
 
-            _pathMovingObjects = CreatePathMovingObjectsForChildren();
-
+            _pathMovingObjects = CreatePathMovingObjectsForChildren(children);
             RecalculateInitialPositionsForCurrentWholePath();
+        }
+
+        private PathMovingObject[] CreatePathMovingObjectsForChildren(IReadOnlyList<Transform> items)
+        {
+            var pathMovingObjects = new PathMovingObject[items.Count];
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                pathMovingObjects[i] = new PathMovingObject(items[i], items[i].GetComponent<Image>());
+            }
+
+            return pathMovingObjects;
         }
 
         private void RecalculateInitialPositionsForCurrentWholePath()

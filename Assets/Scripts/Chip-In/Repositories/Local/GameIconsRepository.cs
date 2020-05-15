@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CustomAnimators;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Utilities;
@@ -100,11 +101,26 @@ namespace Repositories.Local
         });
 
 
+#if UNITY_EDITOR
+        // Add a menu item named "Do Something" to MyMenu in the menu bar.
+        [MenuItem("ChipIn/DataControl/Clear Games Icons")]
+        private static void DoSomething()
+        {
+            if (Directory.Exists(GameIconsDirectoryPath))
+            {
+                Directory.Delete(GameIconsDirectoryPath, true);
+            }
+        }
+#endif
+        // private void Remove 
+
         private bool _iconsSetIsLoaded;
         public bool IconsSetIsLoaded => _iconsSetIsLoaded;
 
         private readonly BoardIconsSetsContainer _boardIconsSetsContainer = new BoardIconsSetsContainer();
         public BoardIconData[] GetBoardIconsData(int gameId) => _boardIconsSetsContainer.GetIconsSet(gameId);
+
+        public bool GameIconsSetIsInStorage(int gameId) => _boardIconsSetsContainer.GameIconsExists(gameId);
 
 
         #region Unity Events implementation
@@ -157,6 +173,7 @@ namespace Repositories.Local
         {
             _iconsSetIsLoaded = false;
             await DownloadBoardIconsSetFromUrls(gameId, indexedUrls);
+
             _iconsSetIsLoaded = true;
             OnIconsSetWasLoaded();
         }
@@ -167,6 +184,7 @@ namespace Repositories.Local
             {
                 IReadOnlyList<byte[]> textures =
                     await ImagesDownloadingUtility.DownloadMultipleDataArrayFromUrls(indexedUrls);
+                LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
                 SaveIconsData(gameId, textures, indexedUrls);
                 FillBoardIconsData(gameId, SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,
                     rowsNumber, columnsNumber).ToArray());
@@ -186,21 +204,7 @@ namespace Repositories.Local
 
         private static void RemoveDirectoryAndFilesInIt(string directory)
         {
-            var directoryInfo = new DirectoryInfo(directory);
-
-            var files = directoryInfo.GetFiles();
-            for (var index = 0; index < files.Length; index++)
-            {
-                files[index].Delete();
-            }
-
-            var dirs = directoryInfo.GetDirectories();
-            for (var index = 0; index < dirs.Length; index++)
-            {
-                dirs[index].Delete(true);
-            }
-
-            directoryInfo.Delete();
+            Directory.Delete(directory,true);
         }
 
         private void FillBoardIconsData(int gameId, BoardIconData[] boardIconData)
@@ -297,9 +301,10 @@ namespace Repositories.Local
 
             File.WriteAllText(CreateIconsDataHeaderFilePath(gameId), json);
             File.WriteAllBytes(CreateIconsDataFilePath(gameId), MergeIntoSingleArray(indexedTexturesBytesData));
+            LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully saved");
         }
 
-        private struct IconsSetRestoringData
+        private readonly struct IconsSetRestoringData
         {
             public readonly ImagesStoringHeaderDataModel StoringHeader;
             public readonly byte[] PackedIconsData;

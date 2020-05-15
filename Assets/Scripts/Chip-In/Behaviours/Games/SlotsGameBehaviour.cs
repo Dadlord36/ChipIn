@@ -280,10 +280,10 @@ namespace Behaviours.Games
             _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
             UpdateSlotsIconsPositionsAndActivity(spinBoardParameters);
         }
-
+        
         private void UpdateSlotsIconsPositionsAndActivity()
         {
-            GameInterface.SetSpinTargetsAndStartSpinning(_roundData.SlotsIconsData, SpinBoardParameters.JustFrame);
+            GameInterface.SwitchIconsInSlots(_roundData.SlotsIconsData);
             PrintLog("Slots Icons was updated");
         }
 
