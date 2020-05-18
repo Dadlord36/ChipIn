@@ -43,11 +43,6 @@ namespace DataModels.MatchModels
             return Array.ConvertAll(Elements, item => (ISlotIconBaseData) item);
         }
     }
-    
-    public interface IActive
-    {
-        [JsonProperty("active")] bool Active { get; set; }
-    }
 
     public interface IIconIdentifier
     {

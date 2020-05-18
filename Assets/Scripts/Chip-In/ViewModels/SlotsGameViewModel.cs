@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.Interfaces;
+using DataModels.Interfaces;
 using DataModels.MatchModels;
 using JetBrains.Annotations;
 using Repositories.Local;

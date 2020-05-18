@@ -45,7 +45,7 @@
             public const string PerPage = "per_page";
         }
 
-        public static class CommunityActions
+        public static class CommonActions
         {
             public const string Leave = "leave";
             public const string Join = "join";

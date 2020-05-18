@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CustomAnimators;
+using DataModels.Interfaces;
 using DataModels.MatchModels;
 using UnityEngine;
 using Views.Interfaces;
