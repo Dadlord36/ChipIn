@@ -180,6 +180,7 @@ namespace ViewModels
         public void SwitchIconsInSlots(ISlotIconBaseData[] roundDataSlotsIconsData)
         {
             GameView.SwitchSlotsToTargetIndexesInstantly(new List<IIconIdentifier>(roundDataSlotsIconsData));
+            UpdateSlotsIconsFramesActivity(roundDataSlotsIconsData);
         }
 
         public void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] slotsIconsData,
