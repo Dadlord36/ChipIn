@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using DataModels.Interfaces;
 using Newtonsoft.Json;
-using UnityEngine;
-using WebOperationUtilities;
+using UnityEngine.Assertions;
 
 namespace DataModels.MatchModels
 {
@@ -23,6 +22,7 @@ namespace DataModels.MatchModels
         public MatchBoardElementData[] Elements =>
             new[] {First, Second, Third, Fourth, Fifth, Sixth, Seventh, Eighth, Ninth};
 
+
         public SlotsBoardData(MatchBoardElementData first, MatchBoardElementData second, MatchBoardElementData third,
             MatchBoardElementData fourth, MatchBoardElementData fifth, MatchBoardElementData sixth,
             MatchBoardElementData seventh, MatchBoardElementData eighth, MatchBoardElementData ninth)
@@ -37,13 +37,75 @@ namespace DataModels.MatchModels
             Eighth = eighth;
             Ninth = ninth;
         }
-        
+
         public ISlotIconBaseData[] GetIconsData()
         {
             return Array.ConvertAll(Elements, item => (ISlotIconBaseData) item);
         }
+
+        public int[] GetIdenticalActiveSlotsIndexes()
+        {
+            var elements = Elements;
+            var activeElements = GetActiveElementsIndexes();
+
+            Assert.IsTrue(activeElements.Count>0);
+            
+            var indexesArraysList = new List<int[]>();
+
+            int[] CollectIndexesOfIdenticalItems(int controlIconId)
+            {
+                var indexes = new List<int>();
+                
+                for (int i = 0; i < activeElements.Count; i++)
+                {
+                    var activeElementId = activeElements[i];
+                    
+                    if (elements[activeElementId].IconId == controlIconId)
+                        indexes.Add(activeElementId);
+                }
+
+                return indexes.ToArray();
+            }
+
+            for (int i = 0; i < activeElements.Count; i++)
+            {
+                indexesArraysList.Add(CollectIndexesOfIdenticalItems(elements[activeElements[i]].IconId));
+            }
+
+            if (indexesArraysList.Count == 0)
+                return null;
+
+            int arrayToReturnIndex = 0;
+            int largestSetItemsNum = 0;
+
+            for (int i = 0; i < indexesArraysList.Count; i++)
+            {
+                var length = indexesArraysList[i].Length;
+                
+                if (length > largestSetItemsNum)
+                {
+                    largestSetItemsNum = length;
+                    arrayToReturnIndex = i;
+                }
+            }
+
+            return indexesArraysList[arrayToReturnIndex];
+        }
+
+        private List<int> GetActiveElementsIndexes()
+        {
+            var elements = Elements;
+            var indexes = new List<int>();
+            for (int i = 0; i < elements.Length; i++)
+            {
+                if (elements[i].Active)
+                    indexes.Add(i);
+            }
+
+            return indexes;
+        }
     }
-    
+
     public interface IActive
     {
         [JsonProperty("active")] bool Active { get; set; }

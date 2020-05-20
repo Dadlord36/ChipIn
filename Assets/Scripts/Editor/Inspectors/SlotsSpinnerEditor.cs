@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Inspectors
 {
-    [CustomEditor(typeof(SlotSpinnerController))]
+    [CustomEditor(typeof(SlotSpinningController))]
     public class SlotsSpinnerControllerEditor : Editor
     {
-        private SlotSpinnerController _slotSpinnerController;
+        private LineEngineController _lineEngineController;
 
 
         private void OnEnable()
         {
-            _slotSpinnerController = target as SlotSpinnerController;
+            _lineEngineController = target as LineEngineController;
         }
 
         private uint _selectedNumber;
@@ -21,20 +21,25 @@ namespace Inspectors
         {
             if (GUILayout.Button("Align Items"))
             {
-                _slotSpinnerController.AlignItems();
+                _lineEngineController.AlignItems();
             }
 
             _selectedNumber = (uint) EditorGUILayout.IntField((int) _selectedNumber);
 
             if (GUILayout.Button("Slide to selected index"))
             {
-                _slotSpinnerController.SlideInstantlyToIndexPosition(_selectedNumber);
+                _lineEngineController.SlideInstantlyToIndexPosition(_selectedNumber);
+            }
+            
+            if (GUILayout.Button("Slide to selected ICON index"))
+            {
+                _lineEngineController.SlideInstantlyToPositionByIconId(_selectedNumber);
             }
 
             if (GUILayout.Button("Start spinning"))
             {
                 if (!Application.isPlaying) return;
-                _slotSpinnerController.StartElementsSpinning();
+                _lineEngineController.StartMovement();
             }
 
             base.OnInspectorGUI();

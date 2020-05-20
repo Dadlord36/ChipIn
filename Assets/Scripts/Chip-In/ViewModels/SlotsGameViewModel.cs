@@ -7,8 +7,6 @@ using Common.Interfaces;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
-using Repositories.Local;
-using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
@@ -21,11 +19,14 @@ namespace ViewModels
         event Action SpinFrameRequested;
         event Action SpinBoardRequested;
         void StartTimer(float timeInterval);
-        void RefillIconsSet();
+        void RefillIconsSet(ISlotIconBaseData[] roundDataSlotsIconsData);
         void AllowInteractivity();
         void OnMatchEnds();
         int RoundNumber { get; set; }
+        void StopAnimatingSlots();
         void SwitchIconsInSlots(ISlotIconBaseData[] roundDataSlotsIconsData);
+        void AnimateSlotsById(int[] slotsIdentifiers);
+
         void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] roundDataSlotsIconsData,
             in SpinBoardParameters spinBoardParameters);
     }
@@ -42,10 +43,11 @@ namespace ViewModels
 
         #region Serialized Privat Fields
 
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        /*[SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private SelectedGameRepository selectedGameRepository;
+        [SerializeField] private GameIconsRepository gameIconsRepository;*/
+
         [SerializeField] private Timer timer;
-        [SerializeField] private GameIconsRepository gameIconsRepository;
 
         /*/// <summary>
         /// Number of rows and columns on witch all spites-sheets will be slit, forming arrays of Sprites 
@@ -121,11 +123,6 @@ namespace ViewModels
         #endregion
 
 
-        #region Constructor
-        
-
-        #endregion
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -160,11 +157,6 @@ namespace ViewModels
             CanInteract = false;
         }
 
-        private void UpdateSlotsIconsFramesActivity(IReadOnlyList<IActive> iconsActivity)
-        {
-            GameView.SetSlotsActivity(iconsActivity);
-            PrintLog("Slots Icons Activity State was updated");
-        }
 
         public void StartTimer(float timeInterval)
         {
@@ -172,21 +164,30 @@ namespace ViewModels
             timer.SetAndStartTimer(timeInterval);
         }
 
-        public void RefillIconsSet()
+        public void RefillIconsSet(ISlotIconBaseData[] roundDataSlotsIconsData)
         {
-            GameView.PrepareSlots();
+            GameView.RefillSlotsWithUniqueIcons(roundDataSlotsIconsData);
+        }
+
+        public void StopAnimatingSlots()
+        {
+            GameView.StopAnimatingElements();
+        }
+
+        public void AnimateSlotsById(int[] slotsIdentifiers)
+        {
+            GameView.SetSlotsToAnimateIndexes(slotsIdentifiers);
         }
 
         public void SwitchIconsInSlots(ISlotIconBaseData[] roundDataSlotsIconsData)
         {
             GameView.SwitchSlotsToTargetIndexesInstantly(new List<IIconIdentifier>(roundDataSlotsIconsData));
-            UpdateSlotsIconsFramesActivity(roundDataSlotsIconsData);
+            GameView.UpdateSlotsActivitiesInstantly(roundDataSlotsIconsData);
         }
-
+        
         public void SetSpinTargetsAndStartSpinning(ISlotIconBaseData[] slotsIconsData,
             in SpinBoardParameters spinBoardParameters)
         {
-            
             if (spinBoardParameters.SpinFrame)
             {
                 GameView.SetSlotsSpinTarget(new List<IIconIdentifier>(slotsIconsData));
@@ -195,9 +196,8 @@ namespace ViewModels
             {
                 GameView.SwitchSlotsToTargetIndexesInstantly(new List<IIconIdentifier>(slotsIconsData));
             }
-            UpdateSlotsIconsFramesActivity(slotsIconsData);
-            
-            GameView.StartSlotsAnimation();
+
+            GameView.UpdateSlotsActivitiesDelayed(slotsIconsData);
             GameView.StartSpinning(spinBoardParameters);
         }
 

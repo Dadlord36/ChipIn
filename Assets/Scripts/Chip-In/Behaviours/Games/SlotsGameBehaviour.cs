@@ -30,6 +30,7 @@ namespace Behaviours.Games
             private SlotsBoardData _slotsBoardData;
             public ISlotIconBaseData[] SlotsIconsData => _slotsBoardData.GetIconsData();
             public MatchUserDownloadingData[] UsersData { get; private set; }
+            public int[] IdenticalActiveElementsIndexes => _slotsBoardData.GetIdenticalActiveSlotsIndexes();
 
             public void SetSlotsBoardData(SlotsBoardData boardDataData)
             {
@@ -148,8 +149,6 @@ namespace Behaviours.Games
                 var roundNumber = matchData.MatchData.RoundNumber;
                 var timeForPassedRounds = (int) (roundNumber * roundTime);
 
-                GameInterface.RefillIconsSet();
-
                 var timeSpanFromGameStarted = DateTime.Now - selectedGameRepository.SelectedGameData.StartedAt;
                 var secondsSinsRoundHaveStarted = timeForPassedRounds - timeSpanFromGameStarted.Seconds;
 
@@ -166,6 +165,8 @@ namespace Behaviours.Games
 
         private void StartNewRound()
         {
+            GameInterface.RefillIconsSet(_roundData.SlotsIconsData);
+
             LogUtility.PrintLog(Tag, "Round has started");
             RoundNumber = _roundData.Number;
             UpdateSlotsIconsPositionsAndActivity();
@@ -280,22 +281,36 @@ namespace Behaviours.Games
             _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
             UpdateSlotsIconsPositionsAndActivity(spinBoardParameters);
         }
-        
+
+        private void AnimateMatchingSlots()
+        {
+            GameInterface.StopAnimatingSlots();
+
+            var identicalItemsIndexes = _roundData.IdenticalActiveElementsIndexes;
+            if (identicalItemsIndexes == null || identicalItemsIndexes.Length <= 1) return;
+            var matchingNumber = identicalItemsIndexes.Length;
+
+            GameInterface.AnimateSlotsById(identicalItemsIndexes);
+            PrintLog($"{matchingNumber.ToString()} items are matching!");
+        }
+
         private void UpdateSlotsIconsPositionsAndActivity()
         {
             GameInterface.SwitchIconsInSlots(_roundData.SlotsIconsData);
+            AnimateMatchingSlots();
             PrintLog("Slots Icons was updated");
         }
 
         private void UpdateSlotsIconsPositionsAndActivity(in SpinBoardParameters spinBoardParameters)
         {
             GameInterface.SetSpinTargetsAndStartSpinning(_roundData.SlotsIconsData, spinBoardParameters);
+            AnimateMatchingSlots();
             PrintLog("Slots Icons was updated");
         }
 
-        private static void PrintLog(string message, LogType logType = LogType.Log)
+        private static void PrintLog(string message)
         {
-            Debug.unityLogger.Log(logType, nameof(SlotsGameBehaviour), message);
+            LogUtility.PrintLog(Tag, message);
         }
     }
 }

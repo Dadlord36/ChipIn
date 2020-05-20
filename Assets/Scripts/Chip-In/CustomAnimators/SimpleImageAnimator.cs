@@ -60,16 +60,22 @@ namespace CustomAnimators
 
         public void Setup(SpritesAnimatorResource resource, float updateInterval, bool loopTheAnimation = false)
         {
-            StopAnimating();
+            enabled = false;
             _spritesAnimatorResource = resource;
             _spriteUpdateInterval = updateInterval;
             _playInLoop = loopTheAnimation;
             _playbackLength = (_spritesAnimatorResource.SpritesSequence.Count - 1) * _spriteUpdateInterval;
+            ResetIconToInitial();
+        }
+
+        private void ResetIconToInitial()
+        {
+            SetSpriteFromAnimationResourceByIndex(_spritesAnimatorResource.SpritesSequence.Count - 2);
         }
 
         public void Initialize()
         {
-            StopPlaying();
+            enabled = false;
         }
 
         public void StartAnimating()
@@ -91,15 +97,20 @@ namespace CustomAnimators
         private float _time;
 
 
-        private int SpriteIndex
+        public int SpriteIndex
         {
             get => _spriteIndex;
             set
             {
                 if (_spriteIndex == value) return;
                 _spriteIndex = value;
-                ImageSprite = _spritesAnimatorResource.SpritesSequence[_spriteIndex];
+                SetSpriteFromAnimationResourceByIndex(_spriteIndex);
             }
+        }
+
+        private void SetSpriteFromAnimationResourceByIndex(int index)
+        {
+            ImageSprite = _spritesAnimatorResource.SpritesSequence[index];
         }
 
         private void Update()
@@ -134,6 +145,7 @@ namespace CustomAnimators
         {
             enabled = false;
             ResetTrackingVariables();
+            ResetIconToInitial();
         }
     }
 }

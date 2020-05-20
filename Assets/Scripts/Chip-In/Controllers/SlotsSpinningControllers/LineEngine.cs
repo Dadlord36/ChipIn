@@ -1,18 +1,15 @@
 ﻿using System.Collections.Generic;
 using ScriptableObjects.Parameters;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Utilities;
 
 namespace Controllers.SlotsSpinningControllers
 {
-    public class SlotSpinner : UIBehaviour
+    public class LineEngine : MonoBehaviour
     {
         public class PathMovingObject
         {
             private readonly Transform _movingObject;
-            private readonly Image _image;
 
             public float PercentageOnPath { get; set; }
 
@@ -24,10 +21,9 @@ namespace Controllers.SlotsSpinningControllers
 
             public Vector3 WorldPosition => _movingObject.position;
 
-            public PathMovingObject(Transform movingObject, Image image)
+            public PathMovingObject(Transform movingObject)
             {
                 _movingObject = movingObject;
-                _image = image;
             }
 
             public void SetPositionAndAdjustPathPercentage(in Vector3 position, float pathPercentage)
@@ -36,24 +32,12 @@ namespace Controllers.SlotsSpinningControllers
                 PercentageOnPath = pathPercentage;
             }
 
-            public void Deactivate()
-            {
-                _image.enabled = false;
-            }
-
-            public void Activate()
-            {
-                _image.enabled = true;
-            }
-
             /*public void ResetPathPercentage()
             {
                 PercentageOnPath = InitialPercentageOnPath;
             }*/
         }
 
-
-        private BoxCollider2D _boundingCollider;
 
         private PathMovingObject[] _pathMovingObjects;
         private Vector3 _lapStartPoint, _lapEndPoint;
@@ -68,25 +52,11 @@ namespace Controllers.SlotsSpinningControllers
         public uint ItemToFocusOnIndex { get; set; }
         public SlotSpinnerProperties SlotSpinnerProperties { get; set; }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            _boundingCollider = GetComponent<BoxCollider2D>();
-        }
 
-
-        public void StartSpinning()
+        public void ResetParameters()
         {
-            ResetParameters();
-            enabled = true;
-        }
-
-        private void ResetParameters()
-        {
-            Stop();
             RecalculateInitialPositionsForCurrentWholePath();
         }
-
 
         public Transform[] Initialize(Transform slotPrefab, int elementsNumber)
         {
@@ -113,15 +83,16 @@ namespace Controllers.SlotsSpinningControllers
 
             _pathMovingObjects = CreatePathMovingObjectsForChildren(children);
             RecalculateInitialPositionsForCurrentWholePath();
+            AlignItems();
         }
 
-        private PathMovingObject[] CreatePathMovingObjectsForChildren(IReadOnlyList<Transform> items)
+        private static PathMovingObject[] CreatePathMovingObjectsForChildren(IReadOnlyList<Transform> items)
         {
             var pathMovingObjects = new PathMovingObject[items.Count];
 
             for (int i = 0; i < items.Count; i++)
             {
-                pathMovingObjects[i] = new PathMovingObject(items[i], items[i].GetComponent<Image>());
+                pathMovingObjects[i] = new PathMovingObject(items[i]);
             }
 
             return pathMovingObjects;
@@ -148,18 +119,6 @@ namespace Controllers.SlotsSpinningControllers
                    _itemLength * (ChildCount - ItemToFocusOnIndex);
         }
 
-
-        public void Stop()
-        {
-            enabled = false;
-            _previousFrameDistancePercentage = _currentFrameDistancePercentage = 0f;
-            _passedTime = 0f;
-        }
-
-        private void Update()
-        {
-            SpinUpdate();
-        }
 
         private void CalculateMainParameters()
         {
@@ -207,7 +166,7 @@ namespace Controllers.SlotsSpinningControllers
         {
             ItemToFocusOnIndex = index;
             RecalculateInitialPositionsForCurrentWholePath();
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f, true);
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f);
         }
 
 
@@ -215,11 +174,8 @@ namespace Controllers.SlotsSpinningControllers
         {
             return MoveOnDistanceAlongAngle(_lapEndPoint, distance, SlotSpinnerProperties.MovementAngle);
         }
+        
 
-
-        private float _previousFrameDistancePercentage;
-        private float _currentFrameDistancePercentage;
-        private float _passedTime;
         private float _itemsStep;
         private float _itemLength;
 
@@ -273,16 +229,6 @@ namespace Controllers.SlotsSpinningControllers
         {
             movingObject.SetPositionAndAdjustPathPercentage(AdjustPositionWithAngle(
                 CalculateLapPartFromWholePathPercentage(wholePathPercentage)), wholePathPercentage);
-
-            if (_boundingCollider == null || !_boundingCollider.enabled) return;
-            if (_boundingCollider.OverlapPoint(movingObject.WorldPosition))
-            {
-                movingObject.Activate();
-            }
-            else
-            {
-                movingObject.Deactivate();
-            }
         }
 
         private void MoveObjectPositionOnPathFromPathPercentage(in float passedFragmentPercentage)
@@ -293,8 +239,7 @@ namespace Controllers.SlotsSpinningControllers
             }
         }
 
-        private void AdjustMovingObjectsPositionOnPathFromPathPercentage(in float passedFragmentPercentage,
-            bool fromInitialPosition = false)
+        private void AdjustMovingObjectsPositionOnPathFromPathPercentage(in float passedFragmentPercentage)
         {
             for (int i = 0; i < _pathMovingObjects.Length; i++)
             {
@@ -302,20 +247,9 @@ namespace Controllers.SlotsSpinningControllers
             }
         }
 
-        private void SpinUpdate()
+        public void UpdateProgress(float pathDelta)
         {
-            if (_previousFrameDistancePercentage >= 1f)
-            {
-                Stop();
-            }
-
-            _currentFrameDistancePercentage = Mathf.InverseLerp(0, SlotSpinnerProperties.SpinTime, _passedTime);
-
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(
-                _currentFrameDistancePercentage - _previousFrameDistancePercentage);
-
-            _passedTime += Time.deltaTime * SlotSpinnerProperties.SpeedCurve.Evaluate(_currentFrameDistancePercentage);
-            _previousFrameDistancePercentage = _currentFrameDistancePercentage;
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(pathDelta);
         }
 
         private static Vector2 MoveOnDistanceAlongAngle(in Vector2 center, in float distance, in float angle)

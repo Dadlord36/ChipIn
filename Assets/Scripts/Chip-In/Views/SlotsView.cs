@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Common;
 using Controllers.SlotsSpinningControllers;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 namespace Views
 {
@@ -12,37 +15,91 @@ namespace Views
     {
         private const string Tag = nameof(SlotsView);
 
-        [SerializeField] private SlotSpinnerController[] extraSlotsSpinnerControllers;
-        [SerializeField] private SlotSpinnerController[] allSlotsSpinnerControllers;
-        [SerializeField] private SlotSpinnerController[] rowsSpinnerControllers;
-        [SerializeField] private SlotSpinnerController[] slotSpinnerControllers;
+        [SerializeField] private SlotSpinningController[] extraSlotsSpinnerControllers;
+        [SerializeField] private SlotSpinningController[] allSlotsSpinnerControllers;
+        [SerializeField] private LineEngineRowController[] rowsSpinnerControllers;
+        [SerializeField] private SlotSpinningController[] slotSpinnerControllers;
         [SerializeField] private float slotsSpritesAnimationSwitchingInterval = 0.1f;
 
-        private int _slotItemsCount;
+        private int _itemsCount;
+
+        private readonly WhenAllAction _whenAllRowsSpinningEndsAction = new WhenAllAction();
+        private readonly WhenAllAction _whenAllSlotsSpinningEndsAction = new WhenAllAction();
+
+        public event Action RowsSpinningEnds
+        {
+            add => _whenAllRowsSpinningEndsAction.WhenAllActionsHappened += value;
+            remove => _whenAllRowsSpinningEndsAction.WhenAllActionsHappened -= value;
+        }
+
+        public event Action SlotsSpinningEnds
+        {
+            add => _whenAllSlotsSpinningEndsAction.WhenAllActionsHappened += value;
+            remove => _whenAllSlotsSpinningEndsAction.WhenAllActionsHappened -= value;
+        }
 
         protected override void OnEnable()
         {
             base.OnEnable();
+            _whenAllRowsSpinningEndsAction.ResetCounter();
+            _whenAllSlotsSpinningEndsAction.ResetCounter();
+
+            SubscribeOnEvents();
             for (int i = 0; i < rowsSpinnerControllers.Length; i++)
             {
-                rowsSpinnerControllers[i].PrepareForSpinning();
+                rowsSpinnerControllers[i].Prepare(3);
             }
         }
 
-        public void InitializeSlotsIcons(List<BoardIconData> boardIconsData)
+        protected override void OnDisable()
         {
-            FillSlotsWithBoardIconsData(allSlotsSpinnerControllers, boardIconsData,
-                slotsSpritesAnimationSwitchingInterval);
-            StartSlotsAnimation();
+            base.OnDisable();
+            UnsubscribeFromEvents();
         }
 
-        private static void FillSlotsWithBoardIconsData(IReadOnlyList<SlotSpinnerController> controllers,
+        private void SubscribeOnEvents()
+        {
+            for (int i = 0; i < rowsSpinnerControllers.Length; i++)
+            {
+                rowsSpinnerControllers[i].MovementEnds += _whenAllRowsSpinningEndsAction.IterateActionCounter;
+            }
+
+            for (int i = 0; i < slotSpinnerControllers.Length; i++)
+            {
+                slotSpinnerControllers[i].MovementEnds += _whenAllSlotsSpinningEndsAction.IterateActionCounter;
+            }
+
+            RowsSpinningEnds += OnRowsSpinningEnds;
+            SlotsSpinningEnds += OnSlotsSpinningEnds;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            for (int i = 0; i < rowsSpinnerControllers.Length; i++)
+            {
+                rowsSpinnerControllers[i].MovementEnds -= _whenAllRowsSpinningEndsAction.IterateActionCounter;
+            }
+
+            for (int i = 0; i < slotSpinnerControllers.Length; i++)
+            {
+                slotSpinnerControllers[i].MovementEnds -= _whenAllSlotsSpinningEndsAction.IterateActionCounter;
+            }
+        }
+
+
+        public void InitializeSlotsIcons(List<BoardIconData> boardIconsData)
+        {
+            _itemsCount = boardIconsData.Count;
+            FillSlotsWithBoardIconsData(allSlotsSpinnerControllers, boardIconsData,
+                slotsSpritesAnimationSwitchingInterval);
+        }
+
+        private static void FillSlotsWithBoardIconsData(IReadOnlyList<SlotSpinningController> controllers,
             List<BoardIconData> boardIconsData, float slotsSpritesAnimationSwitchingInterval)
         {
             for (int i = 0; i < controllers.Count; i++)
             {
-                controllers[i].PrepareItems(boardIconsData, slotsSpritesAnimationSwitchingInterval,
-                    true);
+                controllers[i].PrepareItems(boardIconsData, slotsSpritesAnimationSwitchingInterval, true);
             }
         }
 
@@ -63,7 +120,7 @@ namespace Views
         {
             for (int i = 0; i < allSlotsSpinnerControllers.Length; i++)
             {
-                allSlotsSpinnerControllers[i].StartElementsSpinning();
+                allSlotsSpinnerControllers[i].StartMovement();
             }
         }
 
@@ -71,15 +128,29 @@ namespace Views
         {
             for (int i = 0; i < rowsSpinnerControllers.Length; i++)
             {
-                rowsSpinnerControllers[i].StartElementsSpinning();
+                rowsSpinnerControllers[i].StartMovement();
             }
         }
 
-        public void StartSlotsAnimation()
+        public void StopAnimatingElements()
         {
             for (int i = 0; i < allSlotsSpinnerControllers.Length; i++)
             {
-                allSlotsSpinnerControllers[i].StartAnimating();
+                allSlotsSpinnerControllers[i].StopAnimating();
+            }
+        }
+
+        public void StartCorrespondingSlotsAnimation(int[] slotsToAnimateIndexes)
+        {
+            StartSlotsAnimation(slotSpinnerControllers, slotsToAnimateIndexes);
+        }
+
+        private static void StartSlotsAnimation(SlotSpinningController[] animatedSlotsControllers,
+            int[] slotsToAnimateIndexes)
+        {
+            for (int i = 0; i < slotsToAnimateIndexes.Length; i++)
+            {
+                animatedSlotsControllers[slotsToAnimateIndexes[i]].StartAnimating();
             }
         }
 
@@ -104,7 +175,10 @@ namespace Views
                 slotSpinnerControllers[i].SlideInstantlyToIndexPosition((uint) targetIdentifiers[i].IconId);
             }
 
-            SetRandomSlotsTargets(extraSlotsSpinnerControllers, 1, targetIdentifiers.Count);
+            for (int i = 0; i < extraSlotsSpinnerControllers.Length; i++)
+            {
+                extraSlotsSpinnerControllers[i].SlideInstantlyToIndexPosition(GenerateRandomTargetIndex());
+            }
         }
 
         public void SetSpinTargets(List<IIconIdentifier> targetIdentifiers)
@@ -116,16 +190,36 @@ namespace Views
                 slotSpinnerControllers[i].ItemToFocusOnIndexFromIconId = (uint) targetIdentifiers[i].IconId;
             }
 
-            SetRandomSlotsTargets(extraSlotsSpinnerControllers, 1, targetIdentifiers.Count);
+            SetRandomSlotsTargets(extraSlotsSpinnerControllers);
         }
 
-        private static void SetRandomSlotsTargets(IReadOnlyList<SlotSpinnerController> spinnerControllers, int min,
-            int max)
+        private void SetRandomSlotsTargets(IReadOnlyList<LineEngineController> spinnerControllers)
         {
             for (int i = 0; i < spinnerControllers.Count; i++)
             {
-                spinnerControllers[i].ItemToFocusOnIndex = (uint) Random.Range(min, max);
+                spinnerControllers[i].ItemToFocusOnIndex = GenerateRandomTargetIndex();
             }
+        }
+
+        private uint GenerateRandomTargetIndex()
+        {
+            return (uint) Random.Range(1, _itemsCount);
+        }
+
+        public void ResetSlotsActivity()
+        {
+            for (int i = 0; i < slotSpinnerControllers.Length; i++)
+            {
+                slotSpinnerControllers[i].SetActivityState(true);
+            }
+        }
+
+        private void OnRowsSpinningEnds()
+        {
+        }
+
+        private void OnSlotsSpinningEnds()
+        {
         }
     }
 }
