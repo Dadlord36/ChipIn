@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DataModels.MatchModels;
 using Repositories.Local;
 using UnityEngine;
@@ -11,6 +10,7 @@ namespace ViewModels.Elements
     public class UsersScoreBarViewModel : MonoBehaviour
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private PlayerScoreViewModel[] playerScoreViewModels;
         [SerializeField] private UserAvatarIcon[] userAvatarIcons;
 
@@ -34,20 +34,25 @@ namespace ViewModels.Elements
             selectedGameRepository.UsersDataUpdated -= GameRepositoryOnUsersDataUpdated;
         }
 
-        private void GameRepositoryOnUsersDataUpdated(IReadOnlyList<MatchUserData> dataArray)
+        private void GameRepositoryOnUsersDataUpdated(IReadOnlyList<MatchUserDownloadingData> matchUserDownloadingData)
         {
-            UpdateUsersView(dataArray);
+            UpdateUsersView(matchUserDownloadingData);
         }
 
-        private void UpdateUsersView(IReadOnlyList<MatchUserData> dataArray)
+        private void UpdateUsersView(IReadOnlyList<MatchUserDownloadingData> dataArray)
         {
-            Assert.IsTrue(
-                dataArray.Count == playerScoreViewModels.Length && userAvatarIcons.Length == dataArray.Count);
+            Assert.IsTrue(dataArray.Count == playerScoreViewModels.Length && userAvatarIcons.Length == dataArray.Count);
 
             for (int i = 0; i < playerScoreViewModels.Length; i++)
             {
-                playerScoreViewModels[i].SetUserScore(dataArray[i]);
-                userAvatarIcons[i].SetAvatarSprite(dataArray[i]);
+                var url = dataArray[i].AvatarUrl;
+                playerScoreViewModels[i].SetUserScore(dataArray[i].Score);
+
+                if (string.IsNullOrEmpty(url)) continue;
+
+                downloadedSpritesRepository.TryToLoadSpriteAsync(
+                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(url,
+                        userAvatarIcons[i].SetAvatarSprite));
             }
         }
     }

@@ -1,16 +1,22 @@
-﻿using DataModels.MatchModels;
-using Repositories.Local;
+﻿using Repositories.Local;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace ViewModels.UI.Elements.Icons
 {
-    public class UserAvatarIcon : BaseIconView
+    public interface ISettableSprite
+    {
+        Sprite AvatarSprite { get; set; }
+        void SetAvatarSprite(Sprite sprite);
+    }
+    
+    public class UserAvatarIcon : BaseIconView, ISettableSprite
     {
         [SerializeField] private Image avatarEllipse;
         [SerializeField] private IconEllipsesRepository eliEllipsesRepository;
 
         public RectTransform AvatarRectTransform { get; private set; }
+        public IconEllipsesRepository UsedEllipsesRepository => eliEllipsesRepository;
 
         public Sprite AvatarSprite
         {
@@ -22,22 +28,26 @@ namespace ViewModels.UI.Elements.Icons
         {
             AvatarRectTransform = GetComponent<RectTransform>();
         }
-
-        public void SetIconEllipseSprite(IconEllipseType ellipseType)
+        
+        public void SetIconEllipseSpriteFromItsIndex(int index)
         {
-            var iconData = eliEllipsesRepository.GetEllipse(ellipseType);
-            SetIconEllipseSprite(iconData.sprite, iconData.scale);
+            SetIconEllipseSprite(eliEllipsesRepository[index]);
+        }
+
+        public void SetIconEllipseSprite(in string ellipseName)
+        {
+            SetIconEllipseSprite(eliEllipsesRepository.GetEllipse(ellipseName));
+        }
+        
+        public void SetIconEllipseSprite(in IconEllipseData ellipseData)
+        {
+            SetIconEllipseSprite(ellipseData.sprite, ellipseData.scale);
         }
 
         public void SetIconEllipseSprite(Sprite newEllipseSprite, float scale)
         {
             avatarEllipse.sprite = newEllipseSprite;
             SetImageScale(avatarEllipse, scale);
-        }
-
-        public void SetAvatarSprite(MatchUserData userData)
-        {
-            AvatarSprite = userData.AvatarSprite;
         }
 
         private static Vector3 CreateScaleVectorFromSingleValue(float singleScale)
@@ -53,6 +63,11 @@ namespace ViewModels.UI.Elements.Icons
         private static void SetImageScale(Graphic image, float singleScale)
         {
             image.rectTransform.localScale = CreateScaleVectorFromSingleValue(singleScale);
+        }
+
+        public void SetAvatarSprite(Sprite sprite)
+        {
+            AvatarSprite = sprite;
         }
     }
 }

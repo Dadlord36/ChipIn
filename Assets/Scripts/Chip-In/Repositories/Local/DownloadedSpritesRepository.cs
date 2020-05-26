@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Utilities;
+using ViewModels.UI.Elements.Icons;
 using WebOperationUtilities;
 
 namespace Repositories.Local
@@ -57,8 +59,16 @@ namespace Repositories.Local
 
             public SpriteDownloadingTaskParameters(string url, Action<Sprite> callback)
             {
+                Assert.IsFalse(string.IsNullOrEmpty(url));
                 Url = url;
                 Callback = callback;
+            }
+
+            public SpriteDownloadingTaskParameters(string url, ISettableSprite settableSpriteInterface)
+            {
+                Assert.IsFalse(string.IsNullOrEmpty(url));
+                Url = url;
+                Callback = settableSpriteInterface.SetAvatarSprite;
             }
         }
 

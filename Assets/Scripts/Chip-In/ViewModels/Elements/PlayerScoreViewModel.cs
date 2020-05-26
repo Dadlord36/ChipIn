@@ -1,5 +1,4 @@
-﻿using DataModels.MatchModels;
-using ViewModels.Basic;
+﻿using ViewModels.Basic;
 using Views.ViewElements;
 
 namespace ViewModels.Elements
@@ -11,9 +10,9 @@ namespace ViewModels.Elements
             set => ((PlayerScoreView) View).Score =value;
         }
 
-        public void SetUserScore(MatchUserData userData)
+        public void SetUserScore(uint score)
         {
-            ScoreNumber = userData.Score;
+            ScoreNumber = score;
         }
     }
 }

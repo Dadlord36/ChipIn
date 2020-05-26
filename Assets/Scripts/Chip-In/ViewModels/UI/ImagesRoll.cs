@@ -42,7 +42,9 @@ namespace ViewModels.UI
             Right
         }
 
-
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        [SerializeField] private IconEllipsesRepository ellipsesRepository;
+        
         [SerializeField] private GameObject userAvatarIconPrefab;
         [SerializeField] private ushort numberOfImages;
         [SerializeField] private ushort numberOfItemsInRow;
@@ -56,12 +58,12 @@ namespace ViewModels.UI
 
 #if UNITY_EDITOR
 
-        public void GenerateImages(IconEllipseType ellipsesType)
+        public void GenerateImages(string ellipsesName)
         {
             if (numberOfImages == 0 || numberOfItemsInRow == 0) return;
 
             RemoveChildrenImages();
-            CreateImages(ellipsesType);
+            CreateImages(ellipsesName);
             ReverseImagesPositionInHierarchy();
             ResetImagesPositions();
             ScaleImages();
@@ -70,22 +72,26 @@ namespace ViewModels.UI
 
 #endif
 
+        public string[] IconsEllipsesOptionsNames => ellipsesRepository.ElementsNames;
+
         public void SetMainAvatarIconSprite(Sprite sprite)
         {
             mainImage.AvatarSprite = sprite;
         }
 
-        public void SetOtherAvatarsIconSprites(IReadOnlyList<Sprite> avatarSprites)
+        public void SetOtherAvatarsIconSprites(IReadOnlyList<string> avatarSprites)
         {
             Assert.IsTrue(otherIcons.Length == avatarSprites.Count);
             for (int i = 0; i < otherIcons.Length; i++)
             {
-                otherIcons[i].AvatarSprite = avatarSprites[i];
+                downloadedSpritesRepository.TryToLoadSpriteAsync(
+                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(avatarSprites[i],
+                        otherIcons[i].SetAvatarSprite));
             }
         }
-        
+
 #if UNITY_EDITOR
-        public void CreateImages(IconEllipseType ellipsesType)
+        public void CreateImages(string ellipsesName)
         {
             imagesRows = new UserAvatarInRow[numberOfImages];
             var otherIconsList = new List<UserAvatarIcon>(numberOfImages - 1);
@@ -110,14 +116,13 @@ namespace ViewModels.UI
 
             UserAvatarIcon CreateImage(string objectName)
             {
-                
                 var prefabInstance = PrefabUtility.InstantiatePrefab(userAvatarIconPrefab, thisTransform) as GameObject;
                 Debug.Assert(prefabInstance != null, nameof(prefabInstance) + " != null");
-                
+
                 prefabInstance.name = objectName;
                 var avatarIcon = prefabInstance.GetComponent<UserAvatarIcon>();
                 avatarIcon.Initialize();
-                avatarIcon.SetIconEllipseSprite(ellipsesType);
+                avatarIcon.SetIconEllipseSprite(ellipsesName);
                 return avatarIcon;
             }
 

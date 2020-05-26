@@ -8,7 +8,7 @@ namespace ViewModels
 {
     public class WinnerViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private SelectedGameRepository slotsGameRepository;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
 
@@ -33,7 +33,12 @@ namespace ViewModels
         {
             base.OnEnable();
             var winnerView = (WinnerView) View;
-            winnerView.MainAvatarIconSprite = slotsGameRepository.GetWinnerUserData().AvatarSprite;
+            var iconUrl = slotsGameRepository.GetWinnerUserData().AvatarUrl;
+
+            downloadedSpritesRepository.TryToLoadSpriteAsync(
+                new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(iconUrl,
+                    winnerView.SetMainAvatarIconSprite));
+
             winnerView.UserNameFieldText = "Winner";
             winnerView.SetOtherAvatarsSprites(slotsGameRepository.UsersAvatarImagesSprites);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Repositories.Local;
 using TMPro;
 using UnityEngine;
 using ViewModels.UI;
@@ -15,12 +16,12 @@ namespace Views
             set => textField.text = value;
         }
 
-        public Sprite MainAvatarIconSprite
+        public void SetMainAvatarIconSprite(Sprite sprite)
         {
-            set => imagesRoll.SetMainAvatarIconSprite(value);
+            imagesRoll.SetMainAvatarIconSprite(sprite);
         }
 
-        public void SetOtherAvatarsSprites(IReadOnlyList<Sprite> avatarSprites)
+        public void SetOtherAvatarsSprites(IReadOnlyList<string> avatarSprites)
         {
             imagesRoll.SetOtherAvatarsIconSprites(avatarSprites);
         }
