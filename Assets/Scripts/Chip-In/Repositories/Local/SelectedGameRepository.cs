@@ -7,9 +7,7 @@ using DataModels;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Utilities;
-using WebOperationUtilities;
 
 namespace Repositories.Local
 {
@@ -18,13 +16,15 @@ namespace Repositories.Local
     public sealed class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
-        public event Action<IReadOnlyList<MatchUserData>> UsersDataUpdated;
+        public event Action<IReadOnlyList<MatchUserDownloadingData>> UsersDataUpdated;
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
-        private MatchUserData[] _matchUsersData;
-        
-        
-        public GameDataModel SelectedGameData => userGamesRemoteRepository.ItemsData.First(gameData => gameData.Id == GameId);
+        private MatchUserDownloadingData[] _matchUsersData;
+
+
+        public GameDataModel SelectedGameData =>
+            userGamesRemoteRepository.ItemsData.First(gameData => gameData.Id == GameId);
+
         public bool GameHasStarted => DateTime.UtcNow >= SelectedGameData.StartedAt;
         public TimeSpan TimeTillGameStarts => SelectedGameData.StartedAt - DateTime.UtcNow;
 
@@ -41,21 +41,21 @@ namespace Repositories.Local
 
         public int? WinnerId { get; set; }
 
-        public MatchUserData GetWinnerUserData()
+        public MatchUserDownloadingData GetWinnerUserData()
         {
-            return new List<MatchUserData>(_matchUsersData).Find(data => data.UserId == WinnerId);
+            return new List<MatchUserDownloadingData>(_matchUsersData).Find(data => data.UserId == WinnerId);
         }
 
-        public IReadOnlyList<Sprite> UsersAvatarImagesSprites
+        public IReadOnlyList<string> UsersAvatarImagesSprites
         {
             get
             {
-                List<Sprite> sprites = new List<Sprite>(_matchUsersData.Length);
+                var sprites = new List<string>(_matchUsersData.Length);
 
                 for (int i = 0; i < _matchUsersData.Length; i++)
                 {
                     if (_matchUsersData[i].UserId != WinnerId)
-                        sprites.Add(_matchUsersData[i].AvatarSprite);
+                        sprites.Add(_matchUsersData[i].AvatarUrl);
                 }
 
                 return sprites;
@@ -68,30 +68,16 @@ namespace Repositories.Local
         {
             InitializeUsersData(roundData.UsersData);
             WinnerId = roundData.WinnerId;
-            AssignAvatarsSpritesToUsersData(await LoadUsersSprites(roundData.UsersData));
             OnUsersDataUpdated(_matchUsersData);
         }
 
-        private void AssignAvatarsSpritesToUsersData(IReadOnlyList<Sprite> sprites)
-        {
-            for (int i = 0; i < _matchUsersData.Length; i++)
-            {
-                _matchUsersData[i].AvatarSprite = sprites[i];
-            }
-        }
 
         private void InitializeUsersData(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
         {
-            var length = usersLoadedData.Count;
-            _matchUsersData = new MatchUserData[length];
-
-            for (int i = 0; i < length; i++)
-            {
-                _matchUsersData[i] = new MatchUserData(usersLoadedData[i]);
-            }
+            _matchUsersData = usersLoadedData as MatchUserDownloadingData[];
         }
 
-        private async Task<Sprite[]> LoadUsersSprites(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
+        /*private async Task<Sprite[]> LoadUsersSprites(IReadOnlyList<MatchUserDownloadingData> usersLoadedData)
         {
             var length = usersLoadedData.Count;
             Assert.IsNotNull(usersLoadedData);
@@ -134,8 +120,9 @@ namespace Repositories.Local
 
             return spritesToReturn;
         }
+    */
 
-        private void OnUsersDataUpdated(MatchUserData[] data)
+        private void OnUsersDataUpdated(IReadOnlyList<MatchUserDownloadingData> data)
         {
             UsersDataUpdated?.Invoke(data);
         }
