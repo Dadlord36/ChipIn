@@ -1,0 +1,17 @@
+﻿using System.Net.Http;
+using DataModels.Common;
+using DataModels.HttpRequestsHeadersModels;
+using DataModels.ResponsesModels;
+using GlobalVariables;
+
+namespace HttpRequests.RequestsProcessors.GetRequests
+{
+    public class UsersListGetProcessor : RequestWithoutBodyProcessor<UsersListResponseDataModel, IUserListResponseModel>
+    {
+        public UsersListGetProcessor(IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData) : base(
+            ApiCategories.Users, HttpMethod.Get, requestHeaders, null,
+            paginatedRequestData.ConvertPaginationToNameValueCollection())
+        {
+        }
+    }
+}
