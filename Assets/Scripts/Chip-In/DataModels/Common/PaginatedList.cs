@@ -1,15 +1,19 @@
 ﻿using System.Collections.Generic;
-using Common;
-using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace DataModels.Common
 {
-    public class PaginatedList<T> : LiveData<T>
+    public class PaginatedList<T>
     {
-        private uint _initializedPages;
         private readonly uint _perPage;
         private uint _currentPage = 1;
+
+        private List<List<T>> _pagesData = new List<List<T>>();
+
+        /// <summary>
+        /// Dictionary, that accepts page number as key and returns pagesData list index as value.
+        /// </summary>
+        private Dictionary<uint, int> _pagesDataIndexes = new Dictionary<uint, int>();
 
         public PaginatedList()
         {
@@ -23,26 +27,28 @@ namespace DataModels.Common
 
         public uint TotalPages { get; }
 
-        public bool PageExists(uint pageNumber) => PageIsInitialized(pageNumber);
+        public bool PageExists(uint pageNumber) => PageIsExists(pageNumber);
 
         private int CalculateStartingElementForPage(uint atPageNumber) => (int) (atPageNumber * _perPage - _perPage);
-        private bool PageIsInitialized(uint pageNumber) => pageNumber <= _initializedPages;
+        private bool PageIsExists(uint pageNumber) => _pagesDataIndexes.ContainsKey(pageNumber);
 
         #region Input
 
-        public void FillPageWithItems(uint pageNumber, IReadOnlyList<T> items)
+        public void FillPageWithItems(uint pageNumber, List<T> items)
         {
             Assert.IsTrue(pageNumber > 0);
 
-            if (PageIsInitialized(pageNumber))
+            if (PageIsExists(pageNumber))
             {
-                FillInitializedPageWithItems(pageNumber, items);
+                SetItemsAtPage(pageNumber, items);
             }
             else
             {
-                InitializeNextPageAndFillWithItems(items);
+                AddPageWithItems(pageNumber, items);
             }
         }
+
+        public List<T> this[uint pageNumber] => GetItemsOfPage(pageNumber);
 
         #endregion
 
@@ -50,57 +56,50 @@ namespace DataModels.Common
 
         public bool TryGetCurrentPageItems(out List<T> items)
         {
-            return TryGetItemsPage(_currentPage, out items);
+            return TryGetPageItems(_currentPage, out items);
         }
 
         public bool TryGetNextPageItems(out List<T> items)
         {
-            if (!TryGetItemsPage(_currentPage + 1, out items)) return false;
+            if (!TryGetPageItems(_currentPage + 1, out items)) return false;
             _currentPage++;
             return true;
         }
 
         public bool TryGetPreviousPageItems(out List<T> items)
         {
-            if (!TryGetItemsPage(_currentPage - 1, out items)) return false;
+            if (!TryGetPageItems(_currentPage - 1, out items)) return false;
             _currentPage--;
             return true;
         }
 
         #endregion
 
-        private void InitializeNextPageAndFillWithItems(IReadOnlyList<T> items)
+        private void AddPageWithItems(uint pageNumber, List<T> items)
         {
-            Items.AddRange(items);
-            _initializedPages++;
+            _pagesData.Add(items);
+            _pagesDataIndexes.Add(pageNumber, _pagesData.Count - 1);
         }
 
-        private void FillInitializedPageWithItems(uint pageNumber, IReadOnlyList<T> items)
+        private List<T> GetItemsOfPage(uint pageNumber)
         {
-            var startingIndex = CalculateStartingElementForPage(pageNumber);
-            int index = 0;
-            for (int i = startingIndex; i < startingIndex + _perPage; i++)
-            {
-                Items.Insert(i, items[index]);
-                index++;
-            }
+            return _pagesData[_pagesDataIndexes[pageNumber]];
         }
 
-        private bool TryGetItemsPage(uint atPageNumber, out List<T> pageItems)
+        private void SetItemsAtPage(uint pageNumber, List<T> items)
+        {
+            _pagesData[_pagesDataIndexes[pageNumber]] = items;
+        }
+
+        private bool TryGetPageItems(uint atPageNumber, out List<T> pageItems)
         {
             pageItems = null;
-            if (!PageIsInitialized(atPageNumber)) return false;
-            var startingIndex = CalculateStartingElementForPage(atPageNumber);
-            var itemsShouldBe = atPageNumber * _perPage;
-            
-            int count = (int) _perPage;
-            if (itemsShouldBe > Items.Count)
-            {
-                count = (int) (_perPage-(itemsShouldBe-Items.Count));
-            }
+            if (!PageIsExists(atPageNumber)) return false;
 
-            pageItems = Items.GetRange(startingIndex, count);
+            pageItems = GetItemsOfPage(atPageNumber);
             return true;
         }
+
+
     }
 }
