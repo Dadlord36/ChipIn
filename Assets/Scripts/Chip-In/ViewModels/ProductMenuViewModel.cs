@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using Repositories;
 using Repositories.Local;
+using Repositories.Remote.Paginated;
 using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Basic;
@@ -41,12 +42,13 @@ namespace ViewModels
         protected override void UpdateItems()
         {
             base.UpdateItems();
-            if (!dataRepository.TryGetCurrentPageItems(out var items)) return;
+            
+            /*if (!dataRepository.TryGetCurrentPageItems(out var items)) return;
             for (int i = 0; i < items.Count; i++)
             {
                 spritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(
                     items[i].PosterUri, newItemsScrollView.AddElement));
-            }
+            }*/
         }
     }
 }

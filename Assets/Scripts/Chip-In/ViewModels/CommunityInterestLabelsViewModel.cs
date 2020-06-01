@@ -1,9 +1,7 @@
-﻿using System;
-using Repositories;
-using Repositories.Local;
+﻿using Repositories.Local;
+using Repositories.Remote.Paginated;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities;
 using ViewModels.Basic;
 using Views;
 
@@ -38,33 +36,34 @@ namespace ViewModels
         [Binding]
         public void NextPage_OnClick()
         {
-            if (communitiesDataRepository.TryGetNextListPage(out var items))
+            /*if (communitiesDataRepository.TryGetPageItems(out var items))
             {
                 RelatedView.UpdateGridItemsContent(items); 
             }
             else
             {
                 LogUtility.PrintLog(Tag,"There are no items to fill the grid");
-            }
+            }*/
         }
 
         protected override void UpdateItems()
         {
             base.UpdateItems();
             UpdateNewItemsList();
-            if (communitiesDataRepository.TryGetCurrentPageItems(out var items))
+            
+            /*if (communitiesDataRepository.TryGetCurrentPageItems(out var items))
             {
                 RelatedView.UpdateGridItemsContent(items); 
             }
             else
             {
                 LogUtility.PrintLog(Tag,"There are no items to fill the grid");
-            }
+            }*/
         }
 
         private async void UpdateNewItemsList()
         {
-            try
+            /*try
             {
                 var itemsData = communitiesDataRepository.ItemsData;
                 if (itemsData == null) return;
@@ -83,7 +82,7 @@ namespace ViewModels
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
     }
 }
