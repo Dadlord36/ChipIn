@@ -5,37 +5,37 @@ using Utilities;
 
 namespace Controllers.SlotsSpinningControllers
 {
-    public class LineEngine : MonoBehaviour
+    public interface IProgressiveMovement
     {
-        public class PathMovingObject
+        void ProgressMovementAlongPath(in float pathDelta);
+        SlotSpinnerProperties MovementParameters { get; set; }
+    }
+
+    public class LineEngine : MonoBehaviour, IProgressiveMovement
+    {
+        private class PathMovingObject
         {
             private readonly Transform _movingObject;
-
-            public float PercentageOnPath { get; set; }
+            public uint InitialNumberInOrder { get; }
 
             public Vector3 LocalPosition
             {
                 get => _movingObject.localPosition;
-                private set => _movingObject.localPosition = value;
+                set => _movingObject.localPosition = value;
             }
 
             public Vector3 WorldPosition => _movingObject.position;
 
-            public PathMovingObject(Transform movingObject)
+            public PathMovingObject(Transform movingObject, uint initialNumberInOrder)
             {
                 _movingObject = movingObject;
+                InitialNumberInOrder = initialNumberInOrder;
             }
 
-            public void SetPositionAndAdjustPathPercentage(in Vector3 position, float pathPercentage)
+            public void SetSiblingIndex(int i)
             {
-                LocalPosition = position;
-                PercentageOnPath = pathPercentage;
+                _movingObject.SetSiblingIndex(i);
             }
-
-            /*public void ResetPathPercentage()
-            {
-                PercentageOnPath = InitialPercentageOnPath;
-            }*/
         }
 
 
@@ -46,17 +46,30 @@ namespace Controllers.SlotsSpinningControllers
         private float _wholePathLength;
         private float _lapLength;
 
+        /// <summary>
+        /// Length of item in world space
+        /// </summary>
+        private float _itemLength;
+
+        /// <summary>
+        /// Length of item relative to whole path in percentage equivalent
+        /// </summary>
+        private float _itemsStep;
+
+        /// <summary>
+        /// Length of item relative lap in percentage equivalent
+        /// </summary>
+        private float _itemsLapStep;
+
         private int ChildCount => RootTransform.childCount;
         private Transform RootTransform => transform;
 
         public uint ItemToFocusOnIndex { get; set; }
-        public SlotSpinnerProperties SlotSpinnerProperties { get; set; }
+        /*public float CoveredPathPercentage { get; private set; }*/
 
+        public bool ShouldControlSiblingIndexes { get; set; } = false;
+        public SlotSpinnerProperties MovementParameters { get; set; }
 
-        public void ResetParameters()
-        {
-            RecalculateInitialPositionsForCurrentWholePath();
-        }
 
         public Transform[] Initialize(Transform slotPrefab, int elementsNumber)
         {
@@ -72,8 +85,11 @@ namespace Controllers.SlotsSpinningControllers
             return children;
         }
 
+        #region Public functions
+
         public void Initialize()
         {
+            CalculateMainParameters();
             var children = new Transform[ChildCount];
 
             for (int i = 0; i < ChildCount; i++)
@@ -82,47 +98,74 @@ namespace Controllers.SlotsSpinningControllers
             }
 
             _pathMovingObjects = CreatePathMovingObjectsForChildren(children);
-            RecalculateInitialPositionsForCurrentWholePath();
             AlignItems();
         }
+
+        public void AlignItems()
+        {
+            CalculateMainParameters();
+            for (int i = 0; i < ChildCount; i++)
+            {
+                var position = AdjustPositionFromGivenDistanceAndAngle(_itemLength * i);
+                var childRectTransform = transform.GetChild(i).transform as RectTransform;
+
+                /*Debug.Assert(childRectTransform != null, nameof(childRectTransform) + " != null");*/
+
+                childRectTransform.pivot = MovementParameters.AnchorPivot.pivot;
+                childRectTransform.anchorMin = MovementParameters.AnchorPivot.anchorMin;
+                childRectTransform.anchorMax = MovementParameters.AnchorPivot.anchorMax;
+                transform.GetChild(i).localPosition = position;
+            }
+        }
+
+        public void SlideInstantlyToIndexPosition(uint index)
+        {
+            ItemToFocusOnIndex = index;
+            CalculateMainParameters();
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f);
+        }
+
+        public void AdjustMovingObjectsPositionOnPathFromWholePathPart(in float pathPartLength)
+        {
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(
+                CalculateWholePathPercentageFromWholePathPartLength(pathPartLength)
+            );
+        }
+
+        public void ProgressMovementAlongPath(in float wholePathPercentage)
+        {
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(wholePathPercentage);
+        }
+
+        #endregion
 
         private static PathMovingObject[] CreatePathMovingObjectsForChildren(IReadOnlyList<Transform> items)
         {
             var pathMovingObjects = new PathMovingObject[items.Count];
 
-            for (int i = 0; i < items.Count; i++)
+            for (uint i = 0; i < items.Count; i++)
             {
-                pathMovingObjects[i] = new PathMovingObject(items[i]);
+                pathMovingObjects[i] = new PathMovingObject(items[(int) i], i);
             }
 
             return pathMovingObjects;
         }
 
-        private void RecalculateInitialPositionsForCurrentWholePath()
-        {
-            CalculateMainParameters();
-            for (int i = 0; i < _pathMovingObjects.Length; i++)
-            {
-                _pathMovingObjects[i].PercentageOnPath = _itemsStep * i;
-            }
-        }
-
         private float CalculateLapLength()
         {
-            return ChildCount * SlotSpinnerProperties.Offset;
+            return ChildCount * MovementParameters.Offset;
         }
 
         private float CalculateWholePathLength()
         {
-            return _itemLength * SlotSpinnerProperties.ControlItemIndex +
-                   SlotSpinnerProperties.Laps * CalculateLapLength() +
+            return _itemLength * MovementParameters.ControlItemIndex + MovementParameters.Laps * CalculateLapLength() +
                    _itemLength * (ChildCount - ItemToFocusOnIndex);
         }
 
 
         private void CalculateMainParameters()
         {
-            _itemLength = SlotSpinnerProperties.Offset;
+            _itemLength = MovementParameters.Offset;
 
             void CalculateLapAndWholeLengths()
             {
@@ -147,37 +190,13 @@ namespace Controllers.SlotsSpinningControllers
             CalculateBorderPoints();
 
             _itemsStep = CalculateWholePathPercentageFromWholePathPartLength(_itemLength);
+            _itemsLapStep = CalculateLapPartFromWholePathPercentage(_itemsStep);
         }
 
-        public void AlignItems()
+        private Vector2 AdjustPositionFromGivenDistanceAndAngle(float distance)
         {
-            CalculateMainParameters();
-            for (int i = 0; i < ChildCount; i++)
-            {
-                var position = AdjustPositionWithAngle(_itemLength * i);
-                var childRectTransform = transform.GetChild(i).transform as RectTransform;
-                childRectTransform.pivot = childRectTransform.anchorMin =
-                    childRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-                transform.GetChild(i).localPosition = position;
-            }
+            return MoveOnDistanceAlongAngle(_lapEndPoint, distance, MovementParameters.MovementAngle);
         }
-
-        public void SlideInstantlyToIndexPosition(uint index)
-        {
-            ItemToFocusOnIndex = index;
-            RecalculateInitialPositionsForCurrentWholePath();
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f);
-        }
-
-
-        private Vector2 AdjustPositionWithAngle(float distance)
-        {
-            return MoveOnDistanceAlongAngle(_lapEndPoint, distance, SlotSpinnerProperties.MovementAngle);
-        }
-        
-
-        private float _itemsStep;
-        private float _itemLength;
 
 
         #region Path fallowing related calculation functions
@@ -220,36 +239,42 @@ namespace Controllers.SlotsSpinningControllers
 
         #endregion
 
-        private void AdjustMovingObjectPosition(PathMovingObject movingObject, in float passedFragmentPercentage)
-        {
-            ProgressMovementAlongPath(movingObject, movingObject.PercentageOnPath + passedFragmentPercentage);
-        }
 
-        private void ProgressMovementAlongPath(PathMovingObject movingObject, in float wholePathPercentage)
+        private void AdjustMovingObjectsPositionOnPathFromPathPercentage(float wholePathPercentage)
         {
-            movingObject.SetPositionAndAdjustPathPercentage(AdjustPositionWithAngle(
-                CalculateLapPartFromWholePathPercentage(wholePathPercentage)), wholePathPercentage);
-        }
-
-        private void MoveObjectPositionOnPathFromPathPercentage(in float passedFragmentPercentage)
-        {
-            for (int i = 0; i < _pathMovingObjects.Length; i++)
+            void ProgressMovementAlongPath(PathMovingObject movingObject)
             {
-                ProgressMovementAlongPath(_pathMovingObjects[i], passedFragmentPercentage);
+                var position = AdjustPositionFromGivenDistanceAndAngle(CalculateLapPartFromWholePathPercentage(
+                    Mathf.Abs(wholePathPercentage) + _itemsStep * movingObject.InitialNumberInOrder)
+                );
+                movingObject.LocalPosition = position;
             }
-        }
 
-        private void AdjustMovingObjectsPositionOnPathFromPathPercentage(in float passedFragmentPercentage)
-        {
-            for (int i = 0; i < _pathMovingObjects.Length; i++)
+            void ProgressMovementAndSiblingIndex(PathMovingObject movingObject)
             {
-                AdjustMovingObjectPosition(_pathMovingObjects[i], passedFragmentPercentage);
+                var pathPart = CalculateLapPartFromWholePathPercentage(
+                    Mathf.Abs(wholePathPercentage) + _itemsStep * movingObject.InitialNumberInOrder);
+                
+                movingObject.LocalPosition = AdjustPositionFromGivenDistanceAndAngle(pathPart);
+                movingObject.SetSiblingIndex(Mathf.FloorToInt(pathPart / _itemsLapStep));
             }
-        }
 
-        public void UpdateProgress(float pathDelta)
-        {
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(pathDelta);
+            if (ShouldControlSiblingIndexes)
+            {
+                for (int i = 0; i < _pathMovingObjects.Length; i++)
+                {
+                    ProgressMovementAndSiblingIndex(_pathMovingObjects[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _pathMovingObjects.Length; i++)
+                {
+                    ProgressMovementAlongPath(_pathMovingObjects[i]);
+                }
+            }
+
+            // CoveredPathPercentage = wholePathPercentage;
         }
 
         private static Vector2 MoveOnDistanceAlongAngle(in Vector2 center, in float distance, in float angle)

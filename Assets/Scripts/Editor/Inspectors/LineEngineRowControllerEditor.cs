@@ -4,7 +4,7 @@ using UnityEditor;
 namespace Inspectors
 {
     [CustomEditor(typeof(LineEngineRowController))]
-    public class LineEngineRowControllerEditor : SlotsSpinnerControllerEditor
+    public class LineEngineRowControllerEditor : SlotSpinningControllerEditor
     {
     }
 }

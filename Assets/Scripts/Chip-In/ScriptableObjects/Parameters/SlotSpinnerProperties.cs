@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ScriptableObjects.Parameters
 {
@@ -6,6 +7,23 @@ namespace ScriptableObjects.Parameters
         menuName = nameof(Parameters) + "/" + nameof(SlotSpinnerProperties), order = 0)]
     public class SlotSpinnerProperties : ScriptableObject
     {
+        [Serializable]
+        public struct AnchorPivotData
+        {
+            public Vector2 pivot;
+            public Vector2 anchorMin;
+            public Vector2 anchorMax;
+
+            public AnchorPivotData(in Vector2 pivot, in Vector2 anchorMin, in Vector2 anchorMax)
+            {
+                this.pivot = pivot;
+                this.anchorMin = anchorMin;
+                this.anchorMax = anchorMax;
+            }
+        }
+
+
+        [SerializeField] private AnchorPivotData anchorPivotData;
         [SerializeField] private float spinTime;
         [SerializeField] private float offset;
         [SerializeField] private uint laps = 1;
@@ -25,5 +43,7 @@ namespace ScriptableObjects.Parameters
         public AnimationCurve SpeedCurve => speedCurve;
 
         public float MovementAngle => movementAngle;
+
+        public AnchorPivotData AnchorPivot => anchorPivotData;
     }
 }

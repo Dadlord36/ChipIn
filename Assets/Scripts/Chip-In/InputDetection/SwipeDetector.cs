@@ -12,7 +12,7 @@ namespace InputDetection
         public event Action<SwipeData> Swiped;
 
         private Vector2 _touchDownPosition, _touchUpPosition;
-        private SwipeDetectorParameters _parameters;
+        private readonly SwipeDetectorParameters _parameters;
 
         public SwipeDetector(SwipeDetectorParameters parameters)
         {
@@ -22,9 +22,25 @@ namespace InputDetection
 #if UNITY_EDITOR
         public void Update()
         {
-            
+            if (Input.GetMouseButtonDown(0))
+            {
+                _touchUpPosition = _touchDownPosition = Input.mousePosition;
+            }
+
+            if (Input.GetMouseButton(0) && !_parameters.DetectSwipeOnlyAfterRelease)
+            {
+                _touchDownPosition = Input.mousePosition;
+                DetectSwipe();
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                _touchDownPosition = Input.mousePosition;
+                DetectSwipe();
+            }
         }
 #else
+
         public void Update()
         {
             var touches = Input.touches;
@@ -51,32 +67,38 @@ namespace InputDetection
 
         private void DetectSwipe()
         {
-            if (SwipeDistanceCheckMet())
-            {
-                if (IsVerticalSwipe())
-                {
-                    var direction = _touchDownPosition.y - _touchUpPosition.y > 0f ? MoveDirection.Up : MoveDirection.Down;
-                    SendSwipe(direction);
-                }
-                else
-                {
-                    var direction = _touchDownPosition.x - _touchUpPosition.x > 0f ? MoveDirection.Right : MoveDirection.Left;
-                    SendSwipe(direction);
-                }
+            if (!SwipeDistanceCheckMet()) return;
+            
+            MoveDirection direction;
+            var touchDelta = _touchDownPosition - _touchUpPosition;
 
-                _touchUpPosition = _touchDownPosition;
+            if (IsVerticalSwipe())
+            {
+                direction = touchDelta.y > 0f
+                    ? MoveDirection.Up
+                    : MoveDirection.Down;
             }
+            else
+            {
+                direction = touchDelta.x > 0f
+                    ? MoveDirection.Right
+                    : MoveDirection.Left;
+            }
+
+            SendSwipe(direction, touchDelta);
+            _touchUpPosition = _touchDownPosition;
         }
 
-        private void SendSwipe(MoveDirection direction)
+        private void SendSwipe(in MoveDirection direction, in Vector2 deltaPosition)
         {
             LogUtility.PrintLog(nameof(SwipeDetector), $"Swiped to the {direction.ToString()}");
-            OnSwiped(new SwipeData(direction));
+            OnSwiped(new SwipeData(direction, deltaPosition));
         }
 
         private bool SwipeDistanceCheckMet()
         {
-            return VerticalMovementDistance() > _parameters.MinDistanceForSwipe || HorizontalMovementDistance() > _parameters.MinDistanceForSwipe;
+            return VerticalMovementDistance() > _parameters.MinDistanceForSwipe ||
+                   HorizontalMovementDistance() > _parameters.MinDistanceForSwipe;
         }
 
         private bool IsVerticalSwipe()
@@ -89,12 +111,12 @@ namespace InputDetection
             return HorizontalMovementDistance() > VerticalMovementDistance();
         }
 
-        float VerticalMovementDistance()
+        private float VerticalMovementDistance()
         {
             return Mathf.Abs(_touchDownPosition.y - _touchUpPosition.y);
         }
 
-        float HorizontalMovementDistance()
+        private float HorizontalMovementDistance()
         {
             return Mathf.Abs(_touchDownPosition.x - _touchUpPosition.x);
         }
@@ -102,10 +124,12 @@ namespace InputDetection
         public struct SwipeData
         {
             public readonly MoveDirection Direction;
+            public Vector2 DeltaVector;
 
-            public SwipeData(MoveDirection direction)
+            public SwipeData(MoveDirection direction, Vector2 deltaVector)
             {
                 Direction = direction;
+                DeltaVector = deltaVector;
             }
         }
 

@@ -25,9 +25,7 @@ namespace Controllers.SlotsSpinningControllers
         #region Private fields
 
         private Dictionary<uint, uint> _correspondingIndexesDictionary;
-        private float _passedTime;
-        private float _previousFrameDistancePercentage;
-        private float _currentFrameDistancePercentage;
+        private readonly ProgressiveMovement _progressiveMovement = new ProgressiveMovement();
 
         #endregion
 
@@ -90,7 +88,7 @@ namespace Controllers.SlotsSpinningControllers
 
         public void StartMovement()
         {
-            ResetParameters();
+            _progressiveMovement.ResetParameters();
             enabled = true;
             OnMovementStarted();
         }
@@ -108,33 +106,23 @@ namespace Controllers.SlotsSpinningControllers
 
         #region Private functions
 
-        private void ResetParameters()
-        {
-            LineEngine.ResetParameters();
-            _passedTime = _previousFrameDistancePercentage = _currentFrameDistancePercentage = 0f;
-        }
-
         private void Update()
         {
-            if (_previousFrameDistancePercentage >= 1f)
-            {
-                Stop();
-                OnMovementEnds();
-            }
-
-            _currentFrameDistancePercentage = Mathf.InverseLerp(0, parameters.SpinTime, _passedTime);
-
-            LineEngine.UpdateProgress(_currentFrameDistancePercentage - _previousFrameDistancePercentage);
-
-            _passedTime += Time.deltaTime * parameters.SpeedCurve.Evaluate(_currentFrameDistancePercentage);
-            _previousFrameDistancePercentage = _currentFrameDistancePercentage;
+            _progressiveMovement.ProgressMovement();
         }
 
+        
         private void Stop()
         {
             enabled = false;
         }
 
+        private void OnProgressiveMovementStops()
+        {
+            Stop();
+            OnMovementEnds();
+        }
+        
         #endregion
 
         #region Protected functions
@@ -144,7 +132,7 @@ namespace Controllers.SlotsSpinningControllers
             _correspondingIndexesDictionary = new Dictionary<uint, uint>(boardIconData.Count);
             for (int i = 0; i < boardIconData.Count; i++)
             {
-                _correspondingIndexesDictionary.Add((uint) boardIconData[i].Id, (uint) i+1);
+                _correspondingIndexesDictionary.Add(key: (uint) boardIconData[i].Id, value: (uint) i + 1);
             }
         }
 
@@ -152,7 +140,7 @@ namespace Controllers.SlotsSpinningControllers
         {
             if (!TryGetComponent(out LineEngine))
                 LineEngine = transform.GetChild(0).GetComponent<LineEngine>();
-            LineEngine.SlotSpinnerProperties = parameters;
+            _progressiveMovement.Initialize(LineEngine,parameters,OnProgressiveMovementStops);
         }
 
         #endregion
