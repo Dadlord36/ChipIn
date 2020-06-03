@@ -10,11 +10,10 @@ using UnityEngine;
 
 namespace DataModels
 {
-    public interface IUserMainData
+    public interface IUserMainData: INamed
     {
         [JsonProperty("role")] string Role { get; set; }
         [JsonProperty("email")] string Email { get; set; }
-        [JsonProperty("name")] string Name { get; set; }
         [JsonProperty("gender")] string Gender { get; set; }
         [JsonProperty("tokens_balance")] int TokensBalance { get; set; }
     }
@@ -56,10 +55,8 @@ namespace DataModels
         void Set(IUserProfileDataWebModel source);
     }
 
-    public interface IDataLifeCycleModel
+    public interface IDataLifeCycleModel : ICreatedAtTime
     {
-        [JsonProperty("created_at")] DateTime CreatedAt { get; set; }
-
         [JsonProperty("updated_at")] DateTime UpdatedAt { get; set; }
     }
 

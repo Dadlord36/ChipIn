@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Behaviours.Games;
 using Common.Interfaces;
+using DataModels.Interfaces;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;

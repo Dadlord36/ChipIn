@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public CommunityJoinPostProcessor(IRequestHeaders requestHeaders, int communityId) :
             base(ApiCategories.Communities, HttpMethod.Post, requestHeaders,
-                new[] {communityId.ToString(), MainNames.CommunityActions.Join})
+                new[] {communityId.ToString(), MainNames.CommonActions.Join})
         {
         }
     }

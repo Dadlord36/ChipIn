@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public CommunityLeaveDeleteProcessor(IRequestHeaders requestHeaders, int communityId) :
             base(ApiCategories.Communities, HttpMethod.Post, requestHeaders,
-                new[] {communityId.ToString(), MainNames.CommunityActions.Leave})
+                new[] {communityId.ToString(), MainNames.CommonActions.Leave})
         {
         }
     }

@@ -10,7 +10,7 @@ namespace DataModels
     {
         private string _title;
         private string _description;
-        private int _quantity;
+        private uint _quantity;
         private int _tokensAmount;
         private FilePath _posterFilePath;
 
@@ -21,7 +21,6 @@ namespace DataModels
             {
                 if (value == _title) return;
                 _title = value;
-                OnPropertyChanged();
                 OnPropertyChanged();
             }
         }
@@ -34,18 +33,16 @@ namespace DataModels
                 if (value == _description) return;
                 _description = value;
                 OnPropertyChanged();
-                OnPropertyChanged();
             }
         }
 
-        public int Quantity
+        public uint Quantity
         {
             get => _quantity;
             set
             {
                 if (value == _quantity) return;
                 _quantity = value;
-                OnPropertyChanged();
                 OnPropertyChanged();
             }
         }
@@ -69,7 +66,6 @@ namespace DataModels
                 if (value == _tokensAmount) return;
                 _tokensAmount = value;
                 OnPropertyChanged();
-                OnPropertyChanged();
             }
         }
 
@@ -80,7 +76,5 @@ namespace DataModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-    
     }
 }

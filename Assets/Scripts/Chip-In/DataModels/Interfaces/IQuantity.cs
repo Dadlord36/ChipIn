@@ -4,6 +4,6 @@ namespace DataModels.Interfaces
 {
     public interface IQuantity
     {
-        [JsonProperty("quantity")] int Quantity { get; set; }
+        [JsonProperty("quantity")] uint Quantity { get; set; }
     }
 }
