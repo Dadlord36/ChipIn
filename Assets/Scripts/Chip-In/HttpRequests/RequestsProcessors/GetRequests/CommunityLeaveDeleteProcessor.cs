@@ -12,7 +12,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public CommunityLeaveDeleteProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             int communityId) : base(out cancellationTokenSource, ApiCategories.Communities, HttpMethod.Post, requestHeaders,
-            new[] {communityId.ToString(), MainNames.CommunityActions.Leave})
+            new[] {communityId.ToString(), MainNames.CommonActions.Leave})
         {
         }
     }

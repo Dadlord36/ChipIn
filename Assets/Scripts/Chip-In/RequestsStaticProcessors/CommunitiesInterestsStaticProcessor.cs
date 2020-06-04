@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DataModels;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
@@ -14,48 +15,49 @@ namespace RequestsStaticProcessors
 {
     public static class CommunitiesInterestsStaticProcessor
     {
-        public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel,
-                ICommunityInterestsResponseModel>.HttpResponse>
-            GetCommunityOwnersInterests(IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData)
+        public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel, ICommunityInterestsResponseModel>.HttpResponse>
+            GetCommunityOwnersInterests(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
         {
-            return new CommunityOwnersInterestsPaginatedGetProcessor(requestHeaders, paginatedRequestData)
+            return new CommunityOwnersInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
                 .SendRequest("Community owners interests list was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel,
-            ICommunityInterestsResponseModel>.HttpResponse> GetCommunityClientsInterests(IRequestHeaders requestHeaders,
-            int communityId, PaginatedRequestData paginatedRequestData)
+        public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel, ICommunityInterestsResponseModel>.HttpResponse>
+            GetCommunityClientsInterests(out CancellationTokenSource cancellationTokenSource,
+                IRequestHeaders requestHeaders, int communityId, PaginatedRequestData paginatedRequestData)
         {
-            return new CommunityClientsInterestsPaginatedGetProcessor(requestHeaders, communityId, paginatedRequestData)
+            return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, paginatedRequestData)
                 .SendRequest("Community clients interests list was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, CommunityInterestDataModel,
-            ICommunityInterestModel>.HttpResponse> CreateAnInterest(IRequestHeaders requestHeaders,
-            ICommunityCreateInterestModel requestBody, int communityId)
+        public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, CommunityInterestDataModel, ICommunityInterestModel>.HttpResponse>
+            CreateAnInterest(out CancellationTokenSource cancellationTokenSource,
+                IRequestHeaders requestHeaders, ICommunityCreateInterestModel requestBody, int communityId)
         {
-            return new CreateACommunityInterestPostProcessor(requestHeaders, requestBody, communityId).SendRequest(
+            return new CreateACommunityInterestPostProcessor(out cancellationTokenSource, requestHeaders, requestBody, communityId).SendRequest(
                 "Community interest was created successfully");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            DeleteCommunityInterest(IRequestHeaders requestHeaders, int communityId, int interestId)
+            DeleteCommunityInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId,
+                int interestId)
         {
-            return new DestroyCommunityInterestDeleteProcessor(requestHeaders, communityId, interestId).SendRequest(
+            return new DestroyCommunityInterestDeleteProcessor(out cancellationTokenSource, requestHeaders, communityId, interestId).SendRequest(
                 $"Community {communityId.ToString()} interest {interestId.ToString()} was removed successfully");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            JoinToInterest(IRequestHeaders requestHeaders, int interestId)
+            JoinToInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
         {
-            return new JoinInInterestPostRequestProcessor(requestHeaders, interestId).SendRequest(
+            return new JoinInInterestPostRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
                 $"Successfully joining the interest by index: {interestId.ToString()}");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            LeaveAnInterest(IRequestHeaders requestHeaders, int interestId)
+            LeaveAnInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
         {
-            return new LeaveAnInterestDeleteRequestProcessor(requestHeaders, interestId).SendRequest(
+            return new LeaveAnInterestDeleteRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
                 $"Successfully leaved the interest by index: {interestId.ToString()}");
         }
     }
