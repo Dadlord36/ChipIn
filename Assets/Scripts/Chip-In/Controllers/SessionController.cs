@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -26,7 +27,7 @@ namespace Controllers
         }
 
         private const string Tag = nameof(SessionController);
-        
+
         [SerializeField] private RemoteRepositoriesController repositoriesController;
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -36,9 +37,17 @@ namespace Controllers
 
         public event Action<SessionMode> SwitchingToMode;
 
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+        private ref CancellationTokenSource TasksCancellationTokenSource => ref _asyncOperationCancellationController.TasksCancellationTokenSource;
+
+        private void OnDisable()
+        {
+            _asyncOperationCancellationController.CancelOngoingTask();
+        }
+
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
-            var response = await SessionStaticProcessor.TryLogin(userLoginRequestModel);
+            var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel);
 
             if (response.ResponseModelInterface == null)
             {
@@ -136,7 +145,8 @@ namespace Controllers
 
         public async Task<bool> TryRegisterAndLoginAsGuest()
         {
-            var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest();
+            var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource);
+            
             var result = authorisationModel;
             if (!result.Success)
             {

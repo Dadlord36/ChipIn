@@ -23,7 +23,9 @@ namespace Repositories.Remote
         {
             try
             {
-                var result = await UserProductsStaticRequestsProcessor.GetUserProducts(authorisationDataRepository);
+                var result = await UserProductsStaticRequestsProcessor.GetUserProducts(out TasksCancellationTokenSource,
+                    authorisationDataRepository);
+                
                 if (!result.Success)
                 {
                     LogUtility.PrintLogError(Tag, "User Products was not loaded");

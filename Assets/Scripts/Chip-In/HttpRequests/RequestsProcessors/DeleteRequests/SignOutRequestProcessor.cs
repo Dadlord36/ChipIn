@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -29,11 +30,13 @@ namespace HttpRequests.RequestsProcessors.DeleteRequests
         public IList<string> Errors { get; set; }
     }
 
-    public class SignOutRequestProcessor : BaseRequestProcessor<IBaseDeviceData, SignOutResponseModel, ISignOutResponseModel>
+    public class
+        SignOutRequestProcessor : BaseRequestProcessor<IBaseDeviceData, SignOutResponseModel, ISignOutResponseModel>
     {
-        public SignOutRequestProcessor(IRequestHeaders requestHeaders,
+        public SignOutRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             IBaseDeviceData requestBodyModel) :
-            base(ApiCategories.SingOut, HttpMethod.Delete, requestHeaders, requestBodyModel)
+            base(out cancellationTokenSource, ApiCategories.SingOut, HttpMethod.Delete, requestHeaders,
+                requestBodyModel)
         {
         }
     }

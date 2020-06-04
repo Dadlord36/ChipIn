@@ -8,7 +8,7 @@ using Utilities;
 
 namespace Behaviours.Games
 {
-    public sealed class CoinsGame : MonoBehaviour, IGame
+    public sealed class CoinsGame : AsyncOperationsMonoBehaviour, IGame
     {
         private const string Tag = nameof(CoinsGame);
         
@@ -16,6 +16,7 @@ namespace Behaviours.Games
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private int coinsToPick;
 
+        
         public event Action GameComplete;
         private int _coinsAmount, _coinsPicked;
         private bool _isInitialized;
@@ -26,18 +27,20 @@ namespace Behaviours.Games
         {
             Assert.IsNotNull(coinsAmountRepository);
         }
-
-        private void UpdateCoinsRepository()
-        {
-            coinsAmountRepository.UpdateRepositoryData();
-        }
-
+        
         private void OnEnable()
         {
             InitializeCoinsGame();
             _coinsPicked = 0;
         }
 
+
+
+        private void UpdateCoinsRepository()
+        {
+            coinsAmountRepository.UpdateRepositoryData();
+        }
+        
         private void InitializeCoinsGame()
         {
             if (_isInitialized) return;
@@ -70,7 +73,7 @@ namespace Behaviours.Games
                     try
                     {
                         _coinsPicked++;
-                        var result = await CoinsMiniGameStaticProcessor.TossACoin(authorisationDataRepository);
+                        var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource,authorisationDataRepository);
 
                         if (!result.Success)
                         {

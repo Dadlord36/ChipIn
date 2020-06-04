@@ -12,7 +12,7 @@ namespace ViewModels
     [Binding]
     public class ProductMenuViewModel : BaseMenuViewModel<ProductMenuView>
     {
-        [SerializeField] private CommunitiesBaseDataPaginatedListRepository dataRepository;
+        [SerializeField] private CommunitiesDataPaginatedListRepository dataRepository;
         [SerializeField] private DownloadedSpritesRepository spritesRepository;
 
         protected override void OnBecomingActiveView()

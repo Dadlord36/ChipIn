@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using DataModels;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -12,19 +13,20 @@ namespace HttpRequests.RequestsProcessors.PostRequests
         [JsonProperty("user")] UserProfileDataWebModel UserData { get; set; }
         [JsonProperty("auth")] AuthorisationModel AuthorisationData { get; set; }
     }
-    
+
     public sealed class RegistrationResponseDataModel : IRegistrationResponseDataModel
     {
         public bool Success { get; set; }
         public UserProfileDataWebModel UserData { get; set; }
         public AuthorisationModel AuthorisationData { get; set; }
     }
-    
+
     public sealed class RegistrationRequestProcessor : BaseRequestProcessor<RegistrationRequestModel,
         RegistrationResponseDataModel, IRegistrationResponseDataModel>
     {
-        public RegistrationRequestProcessor(RegistrationRequestModel requestBodyModel) : base(
-            ApiCategories.SignUp, HttpMethod.Post, null, requestBodyModel)
+        public RegistrationRequestProcessor(out CancellationTokenSource cancellationTokenSource,
+            RegistrationRequestModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.SignUp, HttpMethod.Post, null,
+            requestBodyModel)
         {
         }
     }
@@ -33,8 +35,9 @@ namespace HttpRequests.RequestsProcessors.PostRequests
         SimpleRegistrationRequestProcessor : BaseRequestProcessor<SimpleRegistrationRequestModel,
             UserProfileDataWebModel, IUserProfileDataWebModel>
     {
-        public SimpleRegistrationRequestProcessor(SimpleRegistrationRequestModel requestBodyModel) : base(
-            ApiCategories.SignUp, HttpMethod.Post, null, requestBodyModel)
+        public SimpleRegistrationRequestProcessor(out CancellationTokenSource cancellationTokenSource,
+            SimpleRegistrationRequestModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.SignUp, HttpMethod.Post,
+            null, requestBodyModel)
         {
         }
     }

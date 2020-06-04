@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.RequestsModels;
@@ -10,33 +11,20 @@ namespace RequestsStaticProcessors
 {
     public static class RegistrationStaticProcessor
     {
-        public static async Task<BaseRequestProcessor<RegistrationRequestModel, RegistrationResponseDataModel, IRegistrationResponseDataModel>.HttpResponse> TryRegisterUserFull(
-            RegistrationRequestModel registrationRequestModel)
+        public static Task<BaseRequestProcessor<RegistrationRequestModel, RegistrationResponseDataModel, IRegistrationResponseDataModel
+        >.HttpResponse> TryRegisterUserFull(
+            out CancellationTokenSource cancellationTokenSource, RegistrationRequestModel registrationRequestModel)
         {
-            try
-            {
-                return await new RegistrationRequestProcessor(registrationRequestModel).SendRequest(
-                    "User have been registered successfully!");
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return new RegistrationRequestProcessor(out cancellationTokenSource, registrationRequestModel).SendRequest(
+                "User have been registered successfully!");
         }
 
-        public static async Task<bool> TryRegisterUserSimple(SimpleRegistrationRequestModel registrationRequestModel)
+        public static
+            Task<BaseRequestProcessor<SimpleRegistrationRequestModel, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
+            TryRegisterUserSimple(out CancellationTokenSource cancellationTokenSource, SimpleRegistrationRequestModel registrationRequestModel)
         {
-            try
-            {
-                var response = await new SimpleRegistrationRequestProcessor(registrationRequestModel).SendRequest("User have been registered successfully!");
-                return response.ResponseModelInterface != null;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return new SimpleRegistrationRequestProcessor(out cancellationTokenSource, registrationRequestModel).SendRequest(
+                "User have been registered successfully!");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
@@ -11,6 +12,7 @@ using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
 using GlobalVariables;
 using HttpRequests;
+using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
 using Utilities;
 
@@ -20,48 +22,34 @@ namespace RequestsStaticProcessors
     {
         private const string Tag = nameof(OffersStaticRequestProcessor);
 
-        public static async Task<LiveData<ChallengingOfferWithIdentifierModel>> TryGetListOfOffers(IRequestHeaders requestHeaders)
+        public static Task<BaseRequestProcessor<object, OffersResponseModel, IOffersResponseModel>.HttpResponse> TryGetListOfOffers(
+            out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
-            try
-            {
-                var response = await new OffersGetProcessor(requestHeaders).SendRequest("Offers was retrieved successfully");
-
-                LiveData<ChallengingOfferWithIdentifierModel> Create(IOffersResponseModel offersResponseModel)
-                {
-                    return new LiveData<ChallengingOfferWithIdentifierModel>(offersResponseModel.Offers);
-                }
-
-                return Create(response.ResponseModelInterface);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return new OffersGetProcessor(out cancellationTokenSource, requestHeaders)
+                .SendRequest("Offers was retrieved successfully");
         }
 
-        public static async Task<IOfferDetailsResponseModel> TryGetOfferDetails(DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
+        public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
+            TryGetOfferDetails(out CancellationTokenSource cancellationTokenSource,
+                DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
         {
-            try
-            {
-                var response = await new DetailedOfferGetProcessor(parameters).SendRequest("Offer details was retrieved successfully");
-                return response.ResponseModelInterface;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return new DetailedOfferGetProcessor(out cancellationTokenSource, parameters).SendRequest(
+                "Offer details was retrieved successfully");
         }
 
-        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(IRequestHeaders requestHeaders, 
-            IOfferCreationRequestModel requestModel)
+        public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(CancellationTokenSource cancellationTokenSource,
+            IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
         {
-            var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterImageFilePath) ;
+            var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterImageFilePath);
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
 
-            var form = new MultipartFormDataContent {{new ByteArrayContent(imageAsBytesArray), "offer[poster]",
-                Path.GetFileName(requestModel.PosterImageFilePath)}};
+            var form = new MultipartFormDataContent
+            {
+                {
+                    new ByteArrayContent(imageAsBytesArray), "offer[poster]",
+                    Path.GetFileName(requestModel.PosterImageFilePath)
+                }
+            };
 
             foreach (var element in elements)
             {
@@ -73,8 +61,8 @@ namespace RequestsStaticProcessors
             LogUtility.PrintLog(Tag, formAsString);
 
 
-            using (var response = await ApiHelper.MakeAsyncMultiPartRequest(HttpMethod.Post, ApiCategories.Offers, form,
-                requestHeaders.GetRequestHeaders()))
+            using (var response = await await ApiHelper.MakeAsyncMultiPartRequest(cancellationTokenSource.Token, HttpMethod.Post,
+                ApiCategories.Offers, form, requestHeaders.GetRequestHeaders()))
             {
                 LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
                 LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");
@@ -84,7 +72,8 @@ namespace RequestsStaticProcessors
                     LogUtility.PrintLog(Tag, responseAsString);
 
 
-                    return JsonConverterUtility.ConvertJsonString<ChallengingOfferWithIdentifierModel>(responseAsString);
+                    return JsonConverterUtility
+                        .ConvertJsonString<ChallengingOfferWithIdentifierModel>(responseAsString);
                 }
                 else
                 {
@@ -97,9 +86,10 @@ namespace RequestsStaticProcessors
             return null;
         }
 
-        public static Task<IOfferDetailsResponseModel> GetOfferDetails(IRequestHeaders requestHeaders, int? offerId)
+        public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
+            GetOfferDetails(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int? offerId)
         {
-            return TryGetOfferDetails(new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
+            return TryGetOfferDetails(out cancellationTokenSource, new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
         }
     }
 }

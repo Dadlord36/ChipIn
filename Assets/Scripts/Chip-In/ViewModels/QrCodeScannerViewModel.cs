@@ -80,7 +80,7 @@ namespace ViewModels
         {
             try
             {
-                await UserProductsStaticRequestsProcessor.ActivateProduct(authorisationDataRepository,
+                await UserProductsStaticRequestsProcessor.ActivateProduct(out TasksCancellationTokenSource, authorisationDataRepository,
                     new ProductQrCode(decodedText));
             }
             catch (Exception e)

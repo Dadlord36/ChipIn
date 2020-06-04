@@ -2,12 +2,12 @@
 using ActionsTranslators;
 using Common.Structures;
 using Common.Timers;
-using Controllers;
 using DataModels;
 using GlobalVariables;
 using PermissionsGainers;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects;
 using UnityEngine;
 using Utilities;
 
@@ -15,7 +15,7 @@ namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(GeoLocationRepository), menuName = nameof(Repositories) + "/" + nameof(Local) +
                                                                           "/" + nameof(GeoLocationRepository), order = 0)]
-    public sealed class GeoLocationRepository : ScriptableObject, IUpdatable
+    public sealed class GeoLocationRepository : AsyncOperationsScriptableObject, IUpdatable
     {
         #region Private classes
 
@@ -40,6 +40,8 @@ namespace Repositories.Local
         private readonly TimerController _timerController = new TimerController();
         private bool _shouldUpdateTimer;
         private readonly UserGeoLocationDataModel _userGeoLocationData = new UserGeoLocationDataModel();
+
+
 
         private static LocationInfo LastLocationData => Input.location.lastData;
         private static bool UseOfDeviceLocationServiceIsAllowed => Input.location.isEnabledByUser;
@@ -98,8 +100,9 @@ namespace Repositories.Local
             userProfileRemoteRepository.DataWasLoaded += OnUserProfileDataWasLoaded;
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             _timerController.Elapsed -= OnTimerElapsed;
             sessionStateRepository.SigningOut -= DisableLocationService;
             userProfileRemoteRepository.DataWasLoaded -= OnUserProfileDataWasLoaded;
@@ -194,8 +197,8 @@ namespace Repositories.Local
         {
             try
             {
-                var result = await UserProfileDataStaticRequestsProcessor.UpdateUserPosition(authorisationDataRepository,
-                    _userGeoLocationData);
+                var result = await UserProfileDataStaticRequestsProcessor.UpdateUserPosition(out TasksCancellationTokenSource,
+                    authorisationDataRepository, _userGeoLocationData);
 
                 if (result.Success)
                     LogUtility.PrintLog(Tag, $"New  geolocation {_userGeoLocationData.UserLocation} was saved to server");

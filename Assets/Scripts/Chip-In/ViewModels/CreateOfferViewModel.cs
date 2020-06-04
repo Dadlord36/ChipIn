@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.Interfaces;
@@ -33,8 +34,9 @@ namespace ViewModels
         [SerializeField] private BaseTextValidationWithAlert validityDateInputFieldTextValidationWithAlert;
         [SerializeField] private BaseTextValidationWithAlert descriptionInputFieldTextValidationWithAlert;
         [SerializeField] private BaseTextValidationWithAlert priceInputFieldTextValidationWithAlert;
-         
+
         [SerializeField] private AlertCardController _alertCardController;
+
         #endregion
 
 
@@ -261,10 +263,14 @@ namespace ViewModels
 
         private void VerifyEnteredData()
         {
-            CanCreateOffer = startDateTimeInputFieldTextValidationWithAlert.IsValid && validityDateInputFieldTextValidationWithAlert.IsValid
-                                                                                    && descriptionInputFieldTextValidationWithAlert.IsValid 
-                                                                                    && Quantity > 0 
-                                                                                    && priceInputFieldTextValidationWithAlert.IsValid;
+            CanCreateOffer =
+                startDateTimeInputFieldTextValidationWithAlert.IsValid && validityDateInputFieldTextValidationWithAlert
+                                                                           .IsValid
+                                                                       && descriptionInputFieldTextValidationWithAlert
+                                                                           .IsValid
+                                                                       && Quantity > 0
+                                                                       && priceInputFieldTextValidationWithAlert
+                                                                           .IsValid;
         }
 
         private DateTime _startingDate;
@@ -298,11 +304,14 @@ namespace ViewModels
             VerifyEnteredData();
         }
 
+        private readonly CancellationTokenSource _offerRequestCancellationTokenSource = new CancellationTokenSource();
+
         private async Task SendCreateOfferRequest()
         {
             try
             {
-                await OffersStaticRequestProcessor.TryCreateAnOffer(userAuthorisationDataRepository, _offerDataModel);
+                TasksCancellationTokenSource = new CancellationTokenSource();
+                await OffersStaticRequestProcessor.TryCreateAnOffer(TasksCancellationTokenSource, userAuthorisationDataRepository, _offerDataModel);
                 _alertCardController.ShowAlertWithText("Offer was created");
             }
             catch (Exception e)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Threading;
 using DataModels.HttpRequestsHeadersModels;
 
 namespace HttpRequests.RequestsProcessors
@@ -10,18 +11,17 @@ namespace HttpRequests.RequestsProcessors
         where TResponseModel : class, TResponseModelInterface
         where TResponseModelInterface : class
     {
-        protected RequestWithoutBodyProcessor(string requestSuffix, HttpMethod requestMethod,
-            IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters) :
-            base(new BaseRequestProcessorParameters(requestSuffix, requestMethod,
+        protected RequestWithoutBodyProcessor(out CancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters) :
+            base(out cancellationTokenSource, new BaseRequestProcessorParameters(requestSuffix, requestMethod,
                 requestHeaders, null, requestParameters))
         {
         }
 
-        protected RequestWithoutBodyProcessor(string requestSuffix, HttpMethod requestMethod,
-            IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters,
-            NameValueCollection queryStringParameters) : base(new BaseRequestProcessorParameters(
-            requestSuffix, requestMethod, requestHeaders, null, requestParameters, queryStringParameters)
-        )
+        protected RequestWithoutBodyProcessor(out CancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters,
+            NameValueCollection queryStringParameters) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
+            requestSuffix, requestMethod, requestHeaders, null, requestParameters, queryStringParameters))
         {
         }
     }

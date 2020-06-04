@@ -65,10 +65,20 @@ namespace ViewModels
         [Binding]
         public async Task ConfirmItemSelection()
         {
-            OfferIsSelected = SelectedOfferId != int.MinValue;
-            var responseModel = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository, SelectedOfferId);
-            var offer = responseModel.Offer;
-            await InfoPanelView.FillWithData(ViewAsProductGalleryView, offer, offer, offer, offer);
+            try
+            {
+                OfferIsSelected = SelectedOfferId != int.MinValue;
+                var response = await OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, authorisationDataRepository,
+                    SelectedOfferId);
+
+                var offer = response.ResponseModelInterface.Offer;
+                await InfoPanelView.FillWithData(ViewAsProductGalleryView, offer, offer, offer, offer);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         [Binding]
@@ -87,16 +97,26 @@ namespace ViewModels
         [Binding]
         public async Task SubscribeToSelectedOfferGame()
         {
-            var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(authorisationDataRepository, SelectedOfferId);
-            var gameId = offerDetails.Offer.GameData.Id;
-            var response = await UserGamesStaticProcessor.TryJoinAGame(authorisationDataRepository, gameId);
-            if (response.Success)
+            try
             {
-                await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons);
+                var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, authorisationDataRepository,
+                    SelectedOfferId);
+
+                var gameId = offerDetails.ResponseModelInterface.Offer.GameData.Id;
+                var response = await UserGamesStaticProcessor.TryJoinAGame(out TasksCancellationTokenSource, authorisationDataRepository, gameId);
+                if (response.Success)
+                {
+                    await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons);
+                }
+                else
+                {
+                    alertCardController.ShowAlertWithText(response.Error);
+                }
             }
-            else
+            catch (Exception e)
             {
-                alertCardController.ShowAlertWithText(response.Error);
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 

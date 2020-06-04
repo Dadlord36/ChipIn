@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -16,8 +17,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     public sealed class CommunityDetailsGetProcessor : RequestWithoutBodyProcessor<CommunityItemResponseDataModel,
         ICommunityItemResponseModel>
     {
-        public CommunityDetailsGetProcessor(IRequestHeaders requestHeaders, int communityId) :
-            base(ApiCategories.Communities, HttpMethod.Get, requestHeaders, new []{communityId.ToString()})
+        public CommunityDetailsGetProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            int communityId) : base(out cancellationTokenSource, ApiCategories.Communities, HttpMethod.Get, requestHeaders,
+            new[] {communityId.ToString()})
         {
         }
     }

@@ -4,6 +4,7 @@ using Controllers;
 using GlobalVariables;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects;
 using UnityEngine;
 using Utilities;
 using ViewModels.SwitchingControllers;
@@ -18,11 +19,12 @@ namespace Repositories.Local
 
     [CreateAssetMenu(fileName = nameof(SessionStateRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SessionStateRepository), order = 0)]
-    public sealed class SessionStateRepository : ScriptableObject, ILoginState
+    public sealed class SessionStateRepository : AsyncOperationsScriptableObject, ILoginState
     {
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private CachingController cachingController;
+        
         
         public event Action SigningOut;
         public event Action SignedIn;
@@ -40,7 +42,7 @@ namespace Repositories.Local
 
         public async Task SignOut()
         {
-            await SessionStaticProcessor.TryLogOut(authorisationDataRepository,DeviceUtility.BaseDeviceData);
+            await SessionStaticProcessor.TryLogOut(out TasksCancellationTokenSource,authorisationDataRepository,DeviceUtility.BaseDeviceData);
             cachingController.ClearCache();
             viewsSwitchingController.RequestSwitchToView("",nameof(LoginView));
             OnSigningOut();

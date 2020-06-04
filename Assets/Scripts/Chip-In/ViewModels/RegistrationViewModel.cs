@@ -132,7 +132,7 @@ namespace ViewModels
 
         private async Task Register()
         {
-            var result = await RegistrationStaticProcessor.TryRegisterUserFull(_registrationRequestModel);
+            var result = await RegistrationStaticProcessor.TryRegisterUserFull(out TasksCancellationTokenSource, _registrationRequestModel);
             // If registration was successful 
             if (result.Success)
             {

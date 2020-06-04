@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -12,23 +13,23 @@ namespace RequestsStaticProcessors
     public static class UserProductsStaticRequestsProcessor
     {
         public static Task<BaseRequestProcessor<object, UserProductsResponseDataModel, IUserProductsResponseModel>.HttpResponse>
-            GetUserProducts(IRequestHeaders requestHeaders)
+            GetUserProducts(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
-            return new UserProductsGetRequestProcessor(requestHeaders).SendRequest(
+            return new UserProductsGetRequestProcessor(out cancellationTokenSource, requestHeaders).SendRequest(
                 "User products was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<IQrData, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            ActivateProduct(IRequestHeaders requestHeaders, IQrData requestBodyModel)
+        public static Task<BaseRequestProcessor<IQrData, SuccessConfirmationModel, ISuccess>.HttpResponse> ActivateProduct(
+            out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IQrData requestBodyModel)
         {
-            return new ActivateProductRequestProcessor(requestHeaders, requestBodyModel).SendRequest(
+            return new ActivateProductRequestProcessor(out cancellationTokenSource, requestHeaders, requestBodyModel).SendRequest(
                 $"Product {requestBodyModel.QrData} was activated");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            DeleteUserProduct(IRequestHeaders requestHeaders, int productId)
+            DeleteUserProduct(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int productId)
         {
-            return new DeleteProductRequestProcessor(requestHeaders, productId).SendRequest(
+            return new DeleteProductRequestProcessor(out cancellationTokenSource, requestHeaders, productId).SendRequest(
                 $"Product with id: {productId.ToString()} was successfully deleted");
         }
     }

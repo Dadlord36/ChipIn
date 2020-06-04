@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
-using Repositories;
 using Repositories.Interfaces;
 using Repositories.Remote;
 using RequestsStaticProcessors;
@@ -28,9 +28,16 @@ namespace ScriptableObjects.DataSynchronizers
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private UserProfileDataWebModel userProfileData;
 
+        protected CancellationTokenSource TasksCancellationTokenSource;
+
         private IUserProfileDataWebModel UserProfile => userProfileData;
         private IRequestHeaders RequestHeaders => authorisationDataRepository;
 
+
+        protected void CancelOngoingTask()
+        {
+            TasksCancellationTokenSource.Cancel();
+        }
 
         public void Set(IUserProfileDataWebModel source)
         {
@@ -134,14 +141,14 @@ namespace ScriptableObjects.DataSynchronizers
 
         public async Task LoadDataFromServer()
         {
-            var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(RequestHeaders);
+            var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders);
             UserProfile.Set(response.ResponseModelInterface);
             ConfirmDataLoading();
         }
 
         public async Task SaveDataToServer()
         {
-            await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(RequestHeaders, UserProfile);
+            await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile);
             ConfirmDataSaving();
         }
 
