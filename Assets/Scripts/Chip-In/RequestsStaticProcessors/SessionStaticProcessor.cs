@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.RequestsModels;
@@ -7,7 +7,6 @@ using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.DeleteRequests;
 using HttpRequests.RequestsProcessors.PostRequests;
 using Newtonsoft.Json;
-using UnityEngine;
 using Utilities;
 
 namespace RequestsStaticProcessors
@@ -16,38 +15,17 @@ namespace RequestsStaticProcessors
     {
         private const string Tag = nameof(SessionStaticProcessor);
 
-        public static async Task<BaseRequestProcessor<IUserLoginRequestModel, LoginResponseModel, ILoginResponseModel>.
-                HttpResponse>
-            TryLogin(IUserLoginRequestModel userLoginRequestModel)
+        public static Task<BaseRequestProcessor<IUserLoginRequestModel, LoginResponseModel, ILoginResponseModel>.HttpResponse>
+            TryLogin(out CancellationTokenSource cancellationTokenSource, IUserLoginRequestModel userLoginRequestModel)
         {
-            try
-            {
-                LogUtility.PrintLog(Tag, $"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
-                return await new LoginRequestProcessor(userLoginRequestModel).SendRequest("User was LoggedIn");
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            LogUtility.PrintLog(Tag, $"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
+            return new LoginRequestProcessor(out cancellationTokenSource, userLoginRequestModel).SendRequest("User was LoggedIn");
         }
 
-        public static async Task TryLogOut(IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
+        public static Task<BaseRequestProcessor<IBaseDeviceData, SignOutResponseModel, ISignOutResponseModel>.HttpResponse> TryLogOut(
+            out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
         {
-            try
-            {
-                var response = await new SignOutRequestProcessor(requestHeaders, deviceData).SendRequest("User");
-                LogUtility.PrintLog(Tag, $"SignOut success message: {response.ResponseModelInterface.Success.ToString()}");
-                if (!response.ResponseModelInterface.Success)
-                {
-                    LogUtility.PrintLog(Tag, $"Error message: {response.ResponseModelInterface.Errors[0]}");
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return new SignOutRequestProcessor(out cancellationTokenSource, requestHeaders, deviceData).SendRequest("User");
         }
     }
 }

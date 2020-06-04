@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
@@ -14,16 +15,17 @@ namespace HttpRequests.RequestsProcessors.GetRequests
             public readonly IRequestHeaders RequestHeaders;
             public readonly int? OfferId;
 
-            public DetailedOfferGetProcessorParameters(IRequestHeaders requestHeaders, int? offerId) 
+            public DetailedOfferGetProcessorParameters(IRequestHeaders requestHeaders, int? offerId)
             {
                 RequestHeaders = requestHeaders;
                 OfferId = offerId;
             }
         }
 
-        public DetailedOfferGetProcessor(DetailedOfferGetProcessorParameters parameters) : base(
-            new BaseRequestProcessorParameters(ApiCategories.Offers,
-                HttpMethod.Get, parameters.RequestHeaders, null, new[] {parameters.OfferId.ToString()}))
+        public DetailedOfferGetProcessor(out CancellationTokenSource cancellationTokenSource,
+            DetailedOfferGetProcessorParameters parameters) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
+            ApiCategories.Offers, HttpMethod.Get, parameters.RequestHeaders, null,
+            new[] {parameters.OfferId.ToString()}))
         {
         }
     }

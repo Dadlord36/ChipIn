@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels.HttpRequestsHeadersModels;
 using Newtonsoft.Json;
@@ -17,6 +18,9 @@ namespace HttpRequests.RequestsProcessors
         where TRequestBodyModelInterface : class
         where TResponseModelInterface : class
     {
+        private readonly CancellationTokenSource _requestCancellationTokenSource = new CancellationTokenSource();
+        private CancellationToken RequestCancellationToken => _requestCancellationTokenSource.Token;
+
         protected struct BaseRequestProcessorParameters
         {
             public readonly string RequestSuffix;
@@ -56,16 +60,19 @@ namespace HttpRequests.RequestsProcessors
         private readonly BaseRequestProcessorParameters _requestProcessorParameters;
         protected bool SendBodyAsQueryStringFormat;
 
-        protected BaseRequestProcessor(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
-            TRequestBodyModelInterface requestBodyModel)
+        protected BaseRequestProcessor(out CancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
         {
             _requestProcessorParameters = new BaseRequestProcessorParameters(requestSuffix, requestMethod,
                 requestHeaders, requestBodyModel, null, null);
+            cancellationTokenSource = _requestCancellationTokenSource;
         }
 
-        protected BaseRequestProcessor(BaseRequestProcessorParameters requestProcessorParameters)
+        protected BaseRequestProcessor(out CancellationTokenSource cancellationTokenSource,
+            BaseRequestProcessorParameters requestProcessorParameters)
         {
             _requestProcessorParameters = requestProcessorParameters;
+            cancellationTokenSource = _requestCancellationTokenSource;
         }
 
         private static string FormUrlParametersString(IReadOnlyList<string> parameters)
@@ -83,11 +90,10 @@ namespace HttpRequests.RequestsProcessors
             return stringBuilder.ToString();
         }
 
-        private async Task<HttpResponseMessage> SendRequestToWebServer(
-            TRequestBodyModelInterface requestBodyModel = null,
-            IRequestHeaders requestHeaders = null)
+        private Task<HttpResponseMessage> SendRequestToWebServer(CancellationToken cancellationToken,
+            TRequestBodyModelInterface requestBodyModel = null, IRequestHeaders requestHeaders = null)
         {
-            return await ApiHelper.MakeAsyncRequest(_requestProcessorParameters.RequestMethod,
+            return ApiHelper.MakeAsyncRequest(cancellationToken, _requestProcessorParameters.RequestMethod,
                 _requestProcessorParameters.RequestSuffix,
                 FormUrlParametersString(_requestProcessorParameters.RequestParameters),
                 _requestProcessorParameters.QueryStringParameters,
@@ -124,11 +130,11 @@ namespace HttpRequests.RequestsProcessors
             public string Error;
             public bool Success { get; set; }
         }
-        
+
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
-            using (var responseMessage = await SendRequestToWebServer(_requestProcessorParameters.RequestBodyModel,
-                _requestProcessorParameters.RequestHeaders))
+            using (var responseMessage = await SendRequestToWebServer(RequestCancellationToken,
+                _requestProcessorParameters.RequestBodyModel, _requestProcessorParameters.RequestHeaders))
             {
                 if (responseMessage == null)
                 {
@@ -136,10 +142,12 @@ namespace HttpRequests.RequestsProcessors
                     return default;
                 }
 
-                var requestResponse = await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode);
+                var requestResponse = await ProcessResponse(responseMessage.Content,
+                    responseMessage.IsSuccessStatusCode, responseMessage.StatusCode);
                 var httpResponse = new HttpResponse
                 {
-                    ResponseModelInterface = requestResponse, Headers = responseMessage.Headers, ResponsePhrase = responseMessage.ReasonPhrase,
+                    ResponseModelInterface = requestResponse, Headers = responseMessage.Headers,
+                    ResponsePhrase = responseMessage.ReasonPhrase,
                     Success = responseMessage.IsSuccessStatusCode
                 };
 
@@ -189,17 +197,20 @@ namespace HttpRequests.RequestsProcessors
 
         private static string CollectErrors(string contentAsString)
         {
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiDeepStructuredErrors>(contentAsString, out var deepStructuredErrors))
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiDeepStructuredErrors>(contentAsString,
+                out var deepStructuredErrors))
             {
                 return BuildErrorStringFromDeepStructuredErrors(deepStructuredErrors.ErrorData);
             }
 
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiSimpleErrors>(contentAsString, out var simpleErrorsData))
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiSimpleErrors>(contentAsString,
+                out var simpleErrorsData))
             {
                 return BuildErrorString(simpleErrorsData.ErrorsArray);
             }
 
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiStructuredErrors>(contentAsString, out var structuredErrorsData))
+            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiStructuredErrors>(contentAsString,
+                out var structuredErrorsData))
             {
                 return BuildErrorStringFromStructuredErrors(structuredErrorsData.ErrorData);
             }

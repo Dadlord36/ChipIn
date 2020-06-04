@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Common;
 using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors;
+using Repositories.Interfaces;
 using Repositories.Remote;
 using UnityEngine;
 using Utilities;
 
 namespace Repositories
 {
-    public abstract class BasePaginatedItemsListRepository<TDataType, TRequestResponseDataModel,
-        TRequestResponseModelInterface> : RemoteRepositoryBase
+    public abstract class PaginatedItemsListRepository<TDataType, TRequestResponseDataModel,
+        TRequestResponseModelInterface> : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
         where TRequestResponseDataModel : class, TRequestResponseModelInterface
         where TRequestResponseModelInterface : class
         where TDataType : class
@@ -23,31 +25,22 @@ namespace Repositories
 
         [NonSerialized] private PaginatedList<TDataType> _paginatedData = new PaginatedList<TDataType>();
 
-        /*private uint CurrentPage { get; set; } = 1;*/
-
         protected abstract string Tag { get; }
 
-        private short _pagesProgress;
+        private List<CancellationTokenSource> GoingTasksCancellationTokenSources { get; set; }
+
+        #region IPaginatedItemsListInfo Implementation
+
+        public bool IsBusy { get; private set; }
         public int ItemsPerPage => itemsPerPage;
         public int TotalPages { get; private set; }
         public uint TotalItemsNumber { get; private set; }
         public uint LastPageItemsNumber { get; private set; }
 
+        #endregion
+
+
         #region Public Methods
-
-        /*public bool TryGetNextListPage(out List<TDataType> items)
-        {
-            if (_paginatedData.TryGetNextPageItems(out items))
-            {
-                return true;
-            }
-            else
-            {
-                LoadPageItems();
-                return _paginatedData.TryGetNextPageItems(out items);
-            }
-        }*/
-
 
         public async Task<IReadOnlyList<TDataType>> TryGetPageItems(uint pageNumber)
         {
@@ -57,6 +50,16 @@ namespace Repositories
             }
 
             return _paginatedData[pageNumber];
+        }
+
+        public void CancelAllTasks()
+        {
+            foreach (var tokenSource in GoingTasksCancellationTokenSources)
+            {
+                tokenSource.Cancel();
+            }
+
+            GoingTasksCancellationTokenSources.Clear();
         }
 
         public async Task<List<TDataType>> TryGetItemsRange(uint startIndex, uint length)
@@ -89,13 +92,6 @@ namespace Repositories
             return ArrayUtility.GetRemainArrayItemsStartingWithIndex(pagesData, startingIndex, length);
         }
 
-        public Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse
-            >
-            TryLoadItemsPages(uint pageNumber)
-        {
-            return CreateLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage));
-        }
-
         public async Task<TDataType> TryGetItemWithIndex(uint i)
         {
             var pageNumber = CalculatePageNumberForGivenIndex(i);
@@ -112,11 +108,7 @@ namespace Repositories
 
             return itemNumber < page.Count ? page[itemNumber] : null;
         }
-        
-        private int CalculatePageItemIndexFromQueueIndex(uint pageNumber, uint queueIndex)
-        {
-            return (int) (queueIndex - (pageNumber - 1) * itemsPerPage);
-        }
+
 
         public override async Task LoadDataFromServer()
         {
@@ -124,7 +116,7 @@ namespace Repositories
             {
                 const int initialPage = 1;
                 var firstPageResponse =
-                    await CreateLoadPaginatedItemsTask(new PaginatedRequestData(initialPage, itemsPerPage));
+                    await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(initialPage, itemsPerPage));
 
                 bool CheckIfRequestIsSuccessful(
                     BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse
@@ -147,9 +139,8 @@ namespace Repositories
                 Debug.Assert(paginatedResponseInterface != null, nameof(paginatedResponseInterface) + " != null");
                 TotalPages = paginatedResponseInterface.Paginated.Total;
 
-
                 var lastPageResponse =
-                    await CreateLoadPaginatedItemsTask(new PaginatedRequestData(TotalPages, itemsPerPage));
+                    await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(TotalPages, itemsPerPage));
 
                 if (!CheckIfRequestIsSuccessful(lastPageResponse))
                 {
@@ -165,7 +156,8 @@ namespace Repositories
                 TotalItemsNumber = (uint) ((TotalPages - 1) * itemsPerPage + latsPageItems.Count);
                 LastPageItemsNumber = (uint) latsPageItems.Count;
 
-                _paginatedData.FillPageWithItems(initialPage, GetItemsFromResponseModelInterface(responseModelInterface));
+                _paginatedData.FillPageWithItems(initialPage,
+                    GetItemsFromResponseModelInterface(responseModelInterface));
 
 
                 if (TotalPages - 1 < 1) return;
@@ -177,14 +169,14 @@ namespace Repositories
                     pagesToLoad[i] = initialPage + i + 1;
                 }
 
-                var responses = await Task.WhenAll(LoadItemsPages(pagesToLoad));
+                var responses = await CreateLoadItemsPagesTask(pagesToLoad);
 
                 for (int i = 0; i < responses.Length; i++)
                 {
                     var pageNumber = (uint) ((IPaginatedResponse) responses[i].ResponseModelInterface).Paginated.Page;
                     var items = GetItemsFromResponseModelInterface(responses[i].ResponseModelInterface);
 
-                    _paginatedData.FillPageWithItems(pageNumber,items);
+                    _paginatedData.FillPageWithItems(pageNumber, items);
                 }
 
                 ConfirmDataLoading();
@@ -198,24 +190,47 @@ namespace Repositories
 
         #endregion
 
+        private int CalculatePageItemIndexFromQueueIndex(uint pageNumber, uint queueIndex)
+        {
+            return (int) (queueIndex - (pageNumber - 1) * itemsPerPage);
+        }
+
         private void OnEnable()
         {
             _paginatedData = new PaginatedList<TDataType>(maxCachedPagesCount, itemsPerPage);
         }
 
-        #region Protected methods
+        private void OnDisable()
+        {
+        }
 
-        #endregion
 
         #region Private Methods
+
+        private Task _goingOnTask;
+
+        private void RegisterAsyncTaskExecution(Task task,
+            IEnumerable<CancellationTokenSource> cancellationTokenSources)
+        {
+            IsBusy = true;
+            GoingTasksCancellationTokenSources.AddRange(cancellationTokenSources);
+            _goingOnTask = task;
+            _goingOnTask.ContinueWith(delegate { IsBusy = false; });
+        }
+
+        private void RegisterAsyncTaskExecution(Task task, CancellationTokenSource cancellationTokenSource)
+        {
+            RegisterAsyncTaskExecution(task, new[] {cancellationTokenSource});
+        }
 
         private async Task LoadAndStorePageItems(uint pageNumber)
         {
             try
             {
-                var loadedItems = await CreateLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber,
+                var loadingTask = CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber,
                     itemsPerPage));
 
+                var loadedItems = await loadingTask;
                 var items = GetItemsFromResponseModelInterface(loadedItems.ResponseModelInterface);
 
                 if (!loadedItems.Success || items.Count == 0) return;
@@ -233,59 +248,49 @@ namespace Repositories
         {
             return (uint) (itemIndex / itemsPerPage) + 1;
         }
-        
+
         private uint CalculatePageNumberForGivenIndex(int itemIndex)
         {
-           return CalculatePageNumberForGivenIndex((uint)itemIndex);
-        }
-
-
-        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                HttpResponse>
-            LoadPageItems(uint pageNumber)
-        {
-            return CreateLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage));
+            return CalculatePageNumberForGivenIndex((uint) itemIndex);
         }
 
         protected abstract
             Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse>
-            CreateLoadPaginatedItemsTask(PaginatedRequestData paginatedRequestData);
-
+            CreateLoadPaginatedItemsTask(out CancellationTokenSource cancellationTokenSource,
+                PaginatedRequestData paginatedRequestData);
 
         protected abstract List<TDataType> GetItemsFromResponseModelInterface(
             TRequestResponseModelInterface responseModelInterface);
 
         private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                HttpResponse>[]
-            LoadItemsPages(IReadOnlyList<int> pagesNumbers)
+                HttpResponse>
+            CreateAndRegisterLoadPaginatedItemsTask(PaginatedRequestData paginatedRequestData)
+        {
+            var task = CreateLoadPaginatedItemsTask(out var cancellationTokenSource, paginatedRequestData);
+            RegisterAsyncTaskExecution(task, cancellationTokenSource);
+            return task;
+        }
+
+
+        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
+            HttpResponse[]> CreateLoadItemsPagesTask(IReadOnlyList<int> pagesNumbers)
         {
             var tasks =
                 new Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
                     HttpResponse>[pagesNumbers.Count];
 
+            var cancellationTokenSources = new List<CancellationTokenSource>(pagesNumbers.Count);
+
             for (int i = 0; i < pagesNumbers.Count; i++)
             {
-                tasks[i] = CreateLoadPaginatedItemsTask(new PaginatedRequestData(pagesNumbers[i], itemsPerPage));
+                tasks[i] = CreateLoadPaginatedItemsTask(out var cancellationTokenSource,
+                    new PaginatedRequestData(pagesNumbers[i], itemsPerPage));
+                cancellationTokenSources.Add(cancellationTokenSource);
             }
 
-            return tasks;
-        }
-
-        private void ResetPagesProgressCounter()
-        {
-            _pagesProgress = 0;
-        }
-
-        private void CheckIsReachProgressStep()
-        {
-            if (_pagesProgress == pagesPortion)
-            {
-                ResetPagesProgressCounter();
-            }
-            else if (_pagesProgress == -pagesPortion)
-            {
-                ResetPagesProgressCounter();
-            }
+            var finalTask = Task.WhenAll(tasks);
+            RegisterAsyncTaskExecution(finalTask, cancellationTokenSources);
+            return finalTask;
         }
 
         #endregion

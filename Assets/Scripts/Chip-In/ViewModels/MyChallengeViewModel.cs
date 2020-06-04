@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
+using DataModels.ResponsesModels;
+using HttpRequests.RequestsProcessors;
 using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -30,7 +32,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
 
         [Binding]
         public async Task ShowInfo_OnButtonClick()
@@ -77,9 +79,17 @@ namespace ViewModels
 
         protected override async Task FillInfoCardWithRelatedData(int selectedId)
         {
-            var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
-            var offer = responseModel.Offer;
-            await InfoPanelView.FillWithData(RelatedView, offer, offer, offer, offer);
+            try
+            {
+                var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
+                var offer = responseModel.ResponseModelInterface.Offer;
+                await InfoPanelView.FillWithData(RelatedView, offer, offer, offer, offer);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private Task LoadGamesList()
@@ -103,24 +113,32 @@ namespace ViewModels
 
         protected override async Task FillDropdownList()
         {
-            var itemsList = userGamesRemoteRepository.ItemsData;
-
-            var tasks = new List<Task<IOfferDetailsResponseModel>>(itemsList.Count);
-
-            for (int i = 0; i < itemsList.Count; i++)
+            try
             {
-                tasks.Add(userGamesRemoteRepository.GetOfferDataForGivenGameId(itemsList[i].Id));
+                var itemsList = userGamesRemoteRepository.ItemsData;
+
+                var tasks = new List<Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>>(itemsList.Count);
+
+                for (int i = 0; i < itemsList.Count; i++)
+                {
+                    tasks.Add(userGamesRemoteRepository.GetOfferDataForGivenGameId(itemsList[i].Id));
+                }
+
+                var correspondingOffers = await Task.WhenAll(tasks);
+                var itemsNamesDictionary = new Dictionary<int?, string>(itemsList.Count);
+
+                for (int i = 0; i < itemsList.Count; i++)
+                {
+                    itemsNamesDictionary.Add(itemsList[i].Id, correspondingOffers[i].ResponseModelInterface.Offer.Title);
+                }
+
+                FillDropdownList(itemsNamesDictionary);
             }
-
-            var correspondingOffers = await Task.WhenAll(tasks);
-
-            var itemsNamesDictionary = new Dictionary<int?, string>(itemsList.Count);
-            for (int i = 0; i < itemsList.Count; i++)
+            catch (Exception e)
             {
-                itemsNamesDictionary.Add(itemsList[i].Id, correspondingOffers[i].Offer.Title);
+                LogUtility.PrintLogException(e);
+                throw;
             }
-
-            FillDropdownList(itemsNamesDictionary);
         }
     }
 }

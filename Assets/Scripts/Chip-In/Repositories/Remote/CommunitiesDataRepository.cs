@@ -18,7 +18,8 @@ namespace Repositories.Remote
         {
             try
             {
-                var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(authorisationDataRepository);
+                var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(out TasksCancellationTokenSource,
+                        authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
                 ItemsLiveData = new LiveData<CommunityBasicDataModel>(responseInterface.Communities);
                 ConfirmDataLoading();

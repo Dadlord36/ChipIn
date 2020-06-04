@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.Interfaces;
+using DataModels.ResponsesModels;
+using HttpRequests.RequestsProcessors;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -14,12 +16,14 @@ namespace Repositories.Local
     public class UserGamesRemoteRepository : BaseNotPaginatedListRepository<GameDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
-
+        
         public override async Task LoadDataFromServer()
         {
             ItemsLiveData.Clear();
-            ItemsLiveData.AddRange(await UserGamesStaticProcessor.GetUserGames(userAuthorisationDataRepository));
+            var result = await UserGamesStaticProcessor.GetUserGames(out TasksCancellationTokenSource, userAuthorisationDataRepository);
+            ItemsLiveData.AddRange(result.ResponseModelInterface.Games);
         }
+
 
         public GameDataModel GetGameDataByGameId(int gameId)
         {
@@ -38,10 +42,10 @@ namespace Repositories.Local
             throw new NotImplementedException();
         }
 
-        public Task<IOfferDetailsResponseModel> GetOfferDataForGivenGameId(int selectedGameId)
+        public Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse> GetOfferDataForGivenGameId(int selectedGameId)
         {
             var offerId = GetCorrespondingToTheGameIdOfferId(selectedGameId);
-            return OffersStaticRequestProcessor.GetOfferDetails(userAuthorisationDataRepository, offerId);
+            return OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, userAuthorisationDataRepository, offerId);
         }
     }
 }

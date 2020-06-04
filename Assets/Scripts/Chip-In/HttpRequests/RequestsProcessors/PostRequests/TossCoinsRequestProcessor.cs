@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using DataModels.HttpRequestsHeadersModels;
 using GlobalVariables;
 using Newtonsoft.Json;
@@ -26,8 +27,8 @@ namespace HttpRequests.RequestsProcessors.PostRequests
     public class TossCoinsRequestProcessor : RequestWithoutBodyProcessor<TossCoinsResponseDataModel,
         ITossCoinsResultModel>
     {
-        public TossCoinsRequestProcessor(IRequestHeaders requestHeaders) : base(ApiCategories.Coins,
-            HttpMethod.Post, requestHeaders, new []{"toss"})
+        public TossCoinsRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
+            out cancellationTokenSource, ApiCategories.Coins, HttpMethod.Post, requestHeaders, new[] {"toss"})
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -10,13 +11,13 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class UserProfileDataPutProcessor : BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel,
         IUserProfileDataWebModel>
     {
-        public UserProfileDataPutProcessor(IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyModel) :
-            base(ApiCategories.Profile, HttpMethod.Put, requestHeaders, requestBodyModel)
+        public UserProfileDataPutProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            IUserProfileDataWebModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Put,
+            requestHeaders, requestBodyModel)
         {
         }
     }
-    
-    
+
 
     public interface IUserProfilePasswordChangeModel
     {
@@ -53,18 +54,18 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class UserProfilePasswordChangePutProcessor : BaseRequestProcessor<IUserProfilePasswordChangeModel,
         UserProfileResponseModel, IUserProfileResponseModel>
     {
-        public UserProfilePasswordChangePutProcessor(IRequestHeaders requestHeaders,
-            IUserProfilePasswordChangeModel requestBodyModel) : base(ApiCategories.Profile,
-            HttpMethod.Put, requestHeaders, requestBodyModel)
+        public UserProfilePasswordChangePutProcessor(out CancellationTokenSource cancellationTokenSource,
+            IRequestHeaders requestHeaders, IUserProfilePasswordChangeModel requestBodyModel) : base(out cancellationTokenSource,
+            ApiCategories.Profile, HttpMethod.Put, requestHeaders, requestBodyModel)
         {
         }
     }
-    
+
     public class UserProfilePasswordChangeDummyPutProcessor : BaseRequestProcessor<IUserName,
         UserProfileResponseModel, IUserProfileResponseModel>
     {
-        public UserProfilePasswordChangeDummyPutProcessor(IRequestHeaders requestHeaders,
-            IUserName requestBodyModel) : base(ApiCategories.Profile,
+        public UserProfilePasswordChangeDummyPutProcessor(out CancellationTokenSource cancellationTokenSource,
+            IRequestHeaders requestHeaders, IUserName requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile,
             HttpMethod.Put, requestHeaders, requestBodyModel)
         {
         }

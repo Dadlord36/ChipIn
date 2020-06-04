@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine.Assertions;
 using Utilities;
@@ -56,9 +57,10 @@ namespace HttpRequests
             }
         }
 
-        public static async Task<HttpResponseMessage> MakeAsyncRequest(HttpMethod methodType, string requestSuffix,
-            string requestParameters, NameValueCollection queryStringParams, List<KeyValuePair<string, string>>
-                requestHeaders, object requestBody, bool sendBodyAsQueryStringFormat)
+        public static Task<HttpResponseMessage> MakeAsyncRequest(CancellationToken cancellationToken,
+            HttpMethod methodType, string requestSuffix, string requestParameters,
+            NameValueCollection queryStringParams, List<KeyValuePair<string, string>> requestHeaders,
+            object requestBody, bool sendBodyAsQueryStringFormat)
         {
             var requestUri = FormRequestUri(requestSuffix, requestParameters, queryStringParams);
             LogUtility.PrintLog(Tag, $"Request uri: {requestUri}");
@@ -93,13 +95,13 @@ namespace HttpRequests
                 }
 
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMediaTypeHeader));
-                return await _apiClient.SendAsync(requestMessage);
+                return _apiClient.SendAsync(requestMessage, cancellationToken);
             }
         }
 
-        public static async Task<HttpResponseMessage> MakeAsyncMultiPartRequest(HttpMethod methodType,
-            string requestSuffix, MultipartFormDataContent formDataContent, List<KeyValuePair<string, string>>
-                requestHeaders)
+        public static async Task<Task<HttpResponseMessage>> MakeAsyncMultiPartRequest(
+            CancellationToken cancellationToken, HttpMethod methodType, string requestSuffix,
+            MultipartFormDataContent formDataContent, List<KeyValuePair<string, string>> requestHeaders)
         {
             Assert.IsFalse(requestHeaders == null && formDataContent == null);
 
@@ -110,7 +112,7 @@ namespace HttpRequests
                 AddHeaders(requestMessage, requestHeaders);
                 requestMessage.Content = formDataContent;
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
-                return await _apiClient.SendAsync(requestMessage);
+                return _apiClient.SendAsync(requestMessage, cancellationToken);
             }
         }
 

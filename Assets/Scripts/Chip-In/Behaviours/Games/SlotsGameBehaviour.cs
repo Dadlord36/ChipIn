@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Controllers;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -15,7 +17,7 @@ using WebSockets;
 
 namespace Behaviours.Games
 {
-    public class SlotsGameBehaviour : MonoBehaviour
+    public class SlotsGameBehaviour : AsyncOperationsMonoBehaviour
     {
         private const string Tag = nameof(SlotsGameBehaviour);
 
@@ -81,7 +83,7 @@ namespace Behaviours.Games
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private SlotsGameViewModel gameInterfaceViewModel;
         [SerializeField] private AlertCardController alertCardController;
-
+        
         #endregion
 
         private ISlotsGame GameInterface => gameInterfaceViewModel;
@@ -135,7 +137,7 @@ namespace Behaviours.Games
         {
             try
             {
-                var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository,
+                var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource, authorisationDataRepository,
                     selectedGameRepository.GameId);
 
                 if (!response.Success || !response.ResponseModelInterface.Success)
@@ -276,10 +278,20 @@ namespace Behaviours.Games
 
         private async void MakeASpin(SpinBoardParameters spinBoardParameters)
         {
-            var scoreUpdateResponse = await UserGamesStaticProcessor.TryMakeAMove(authorisationDataRepository,
-                selectedGameRepository.GameId, spinBoardParameters);
-            _roundData.SetSlotsBoardData(scoreUpdateResponse.BoardData);
-            UpdateSlotsIconsPositionsAndActivity(spinBoardParameters);
+            try
+            {
+                var result = await UserGamesStaticProcessor.TryMakeAMove(out TasksCancellationTokenSource, authorisationDataRepository,
+                    selectedGameRepository.GameId, spinBoardParameters);
+
+                _roundData.SetSlotsBoardData(result.ResponseModelInterface.BoardData);
+
+                UpdateSlotsIconsPositionsAndActivity(spinBoardParameters);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void AnimateMatchingSlots()

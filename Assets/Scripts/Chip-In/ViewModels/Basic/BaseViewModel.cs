@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
 using UnityEngine.Assertions;
 using Views;
 
@@ -11,7 +12,13 @@ namespace ViewModels.Basic
     {
         [SerializeField] private BaseView view;
 
+        protected CancellationTokenSource TasksCancellationTokenSource;
         public BaseView View => view;
+
+        protected void CancelOngoingTask()
+        {
+            TasksCancellationTokenSource.Cancel();
+        }
 
 #if UNITY_EDITOR
         private void OnValidate()

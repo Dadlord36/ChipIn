@@ -12,7 +12,7 @@ namespace ViewModels
     {
         private const string Tag = nameof(CommunityInterestLabelsViewModel);
         
-        [SerializeField] private CommunitiesBaseDataPaginatedListRepository communitiesDataRepository;
+        [SerializeField] private CommunitiesDataPaginatedListRepository communitiesDataRepository;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
 

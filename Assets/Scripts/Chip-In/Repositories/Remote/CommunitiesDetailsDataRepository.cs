@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
-using DataModels.Common;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -24,7 +23,8 @@ namespace Repositories.Remote
         {
             try
             {
-                var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(authorisationDataRepository);
+                var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(out TasksCancellationTokenSource,
+                    authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
                 var items = await LoadCommunitiesDetailsData(responseInterface.Communities);
                 ItemsLiveData = new LiveData<CommunityDetailsDataModel>(items);
@@ -42,13 +42,12 @@ namespace Repositories.Remote
         {
             var count = communitiesBasicData.Count;
 
-            var tasks = new Task<BaseRequestProcessor<object, CommunityItemResponseDataModel,
-                ICommunityItemResponseModel>.HttpResponse>[count];
+            var tasks = new Task<BaseRequestProcessor<object, CommunityItemResponseDataModel, ICommunityItemResponseModel>.HttpResponse>[count];
 
             for (int i = 0; i < count; i++)
             {
                 var id = (int) communitiesBasicData[i].Id;
-                tasks[i] = CommunitiesStaticRequestsProcessor.GetCommunityDetails(authorisationDataRepository, id);
+                tasks[i] = CommunitiesStaticRequestsProcessor.GetCommunityDetails(out TasksCancellationTokenSource, authorisationDataRepository, id);
             }
 
 

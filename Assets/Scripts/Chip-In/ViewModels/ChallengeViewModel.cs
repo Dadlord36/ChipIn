@@ -47,7 +47,7 @@ namespace ViewModels
 
         private async Task<bool> CanGameStarts()
         {
-            var response = await UserGamesStaticProcessor.TryShowMatch(authorisationDataRepository,
+            var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource,authorisationDataRepository,
                 selectedGameRepository.GameId);
             if (response.Success && response.ResponseModelInterface.Success) return true;
             alertCardController.ShowAlertWithText(response.Error);

@@ -98,12 +98,15 @@ namespace ViewModels.Elements
         {
             try
             {
-                return await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(authorisationDataRepository,
+                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out TasksCancellationTokenSource,
+                    authorisationDataRepository,
                     new UserProfilePasswordChangingModel
                     {
                         Password = this.Password, PasswordConfirmation = PasswordRepeat,
                         CurrentPassword = this.CurrentPassword
                     });
+
+                return response.ResponseModelInterface != null && response.ResponseModelInterface.Success;
             }
             catch (Exception e)
             {

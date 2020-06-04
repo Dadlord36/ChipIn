@@ -1,5 +1,4 @@
 ﻿using System;
-using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -13,6 +12,7 @@ namespace ViewModels
         private const string Tag = nameof(MarketplaceViewModel);
 
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+
         /*[SerializeField] private Vector2[] positions;
         [SerializeField] private float max = 10f;*/
         private MarketView ThisView => View as MarketView;
@@ -53,7 +53,8 @@ namespace ViewModels
         {
             try
             {
-                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(authorisationDataRepository);
+                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(out TasksCancellationTokenSource,
+                    authorisationDataRepository);
                 if (!response.Success) return;
 
                 var responseModel = response.ResponseModelInterface;

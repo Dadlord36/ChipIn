@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
+using System.Threading;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -29,7 +30,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class UserGamesGetProcessor : RequestWithoutBodyProcessor<UserGamesResponseModel, IUserGamesResponseModel>
     {
-        public UserGamesGetProcessor(IRequestHeaders requestHeaders) : base(ApiCategories.UserGames, HttpMethod.Get,
+        public UserGamesGetProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
+            out cancellationTokenSource, ApiCategories.UserGames, HttpMethod.Get,
             requestHeaders, null)
         {
         }
@@ -64,8 +66,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class JoinGamePostProcessor : RequestWithoutBodyProcessor<JoinGameResponseDataModel, IJoinGameResponseModel>
     {
-        public JoinGamePostProcessor(IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters) :
-            base(ApiCategories.Games, HttpMethod.Post, requestHeaders, requestParameters)
+        public JoinGamePostProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            IReadOnlyList<string> requestParameters) : base(out cancellationTokenSource, ApiCategories.Games, HttpMethod.Post,
+            requestHeaders, requestParameters)
         {
         }
     }
@@ -74,8 +77,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         MakeAMovePostProcessor : RequestWithoutBodyProcessor<UpdateUserScoreResponseModel, IUpdateUserScoreResponseModel
         >
     {
-        public MakeAMovePostProcessor(IRequestHeaders requestHeaders, int gameId, SpinBoardParameters spinBoardParameters)
-            : base(ApiCategories.Games, HttpMethod.Post, requestHeaders, new[]
+        public MakeAMovePostProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int gameId,
+            SpinBoardParameters spinBoardParameters) : base(out cancellationTokenSource, ApiCategories.Games, HttpMethod.Post,
+            requestHeaders, new[]
             {
                 gameId.ToString(), GameRequestParameters.Match, GameRequestParameters.Move
             }, FormNameValueCollectionForQueryStringParameters(spinBoardParameters))
@@ -85,9 +89,11 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         private static NameValueCollection FormNameValueCollectionForQueryStringParameters(
             SpinBoardParameters spinBoardParameters)
         {
-            var collection = new NameValueCollection(2) 
-                {{GameRequestParameters.SpinFrame, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinFrame)}, 
-                    {GameRequestParameters.SpinIcons, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinBoard)}};
+            var collection = new NameValueCollection(2)
+            {
+                {GameRequestParameters.SpinFrame, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinFrame)},
+                {GameRequestParameters.SpinIcons, GameRequestParameters.ConvertBoolToStringText(spinBoardParameters.SpinBoard)}
+            };
             return collection;
         }
     }
