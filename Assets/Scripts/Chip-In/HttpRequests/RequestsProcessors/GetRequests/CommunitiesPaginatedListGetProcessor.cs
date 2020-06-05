@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading;
+using Common;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -12,11 +13,10 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         CommunitiesBasicDataRequestResponse,
         ICommunitiesBasicDataRequestResponse>
     {
-        public CommunitiesPaginatedListGetProcessor(out CancellationTokenSource cancellationTokenSource,
-            IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData) :
-            base(out cancellationTokenSource, new BaseRequestProcessorParameters(ApiCategories.Communities,
-                HttpMethod.Get, requestHeaders, null, null,
-                paginatedRequestData.ConvertPaginationToNameValueCollection()))
+        public CommunitiesPaginatedListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
+            ApiCategories.Communities, HttpMethod.Get, requestHeaders, null, null,
+            paginatedRequestData.ConvertPaginationToNameValueCollection()))
         {
         }
     }

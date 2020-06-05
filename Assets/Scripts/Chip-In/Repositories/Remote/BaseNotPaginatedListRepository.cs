@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Threading;
 using Common;
-using Controllers;
 
 namespace Repositories.Remote
 {
-    public abstract class BaseNotPaginatedListRepository<TDataType> : BseItemsListRemoteRepository<TDataType>, INotifyCollectionChanged
+    public abstract class BaseNotPaginatedListRepository<TDataType> : BaseItemsListRemoteRepository<TDataType>, INotifyCollectionChanged
     {
         [NonSerialized] protected LiveData<TDataType> ItemsLiveData = new LiveData<TDataType>();
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-        protected ref CancellationTokenSource TasksCancellationTokenSource => ref _asyncOperationCancellationController.TasksCancellationTokenSource;
 
         public override IReadOnlyList<TDataType> ItemsData => ItemsLiveData.DataList;
 
@@ -20,16 +15,6 @@ namespace Repositories.Remote
         {
             add => ItemsLiveData.CollectionChanged += value;
             remove => ItemsLiveData.CollectionChanged -= value;
-        }
-        
-        protected void CancelOngoingTask()
-        {
-            _asyncOperationCancellationController.CancelOngoingTask();
-        }
-
-        protected virtual void OnDisable()
-        {
-            CancelOngoingTask();
         }
     }
 }

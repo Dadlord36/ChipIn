@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net.Http;
-using System.Threading;
-using DataModels;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
-using DataModels.MatchModels;
 using DataModels.ResponsesModels;
 using GlobalVariables;
 using Newtonsoft.Json;
@@ -30,7 +28,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class UserGamesGetProcessor : RequestWithoutBodyProcessor<UserGamesResponseModel, IUserGamesResponseModel>
     {
-        public UserGamesGetProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
+        public UserGamesGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
             out cancellationTokenSource, ApiCategories.UserGames, HttpMethod.Get,
             requestHeaders, null)
         {
@@ -66,7 +64,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class JoinGamePostProcessor : RequestWithoutBodyProcessor<JoinGameResponseDataModel, IJoinGameResponseModel>
     {
-        public JoinGamePostProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public JoinGamePostProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             IReadOnlyList<string> requestParameters) : base(out cancellationTokenSource, ApiCategories.Games, HttpMethod.Post,
             requestHeaders, requestParameters)
         {
@@ -77,7 +75,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         MakeAMovePostProcessor : RequestWithoutBodyProcessor<UpdateUserScoreResponseModel, IUpdateUserScoreResponseModel
         >
     {
-        public MakeAMovePostProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int gameId,
+        public MakeAMovePostProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int gameId,
             SpinBoardParameters spinBoardParameters) : base(out cancellationTokenSource, ApiCategories.Games, HttpMethod.Post,
             requestHeaders, new[]
             {

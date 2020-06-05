@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
-using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.RequestsModels;
@@ -23,14 +21,14 @@ namespace RequestsStaticProcessors
         private const string Tag = nameof(OffersStaticRequestProcessor);
 
         public static Task<BaseRequestProcessor<object, OffersResponseModel, IOffersResponseModel>.HttpResponse> TryGetListOfOffers(
-            out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+            out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             return new OffersGetProcessor(out cancellationTokenSource, requestHeaders)
                 .SendRequest("Offers was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
-            TryGetOfferDetails(out CancellationTokenSource cancellationTokenSource,
+            TryGetOfferDetails(out DisposableCancellationTokenSource cancellationTokenSource,
                 DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters parameters)
         {
             return new DetailedOfferGetProcessor(out cancellationTokenSource, parameters).SendRequest(
@@ -87,7 +85,7 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
-            GetOfferDetails(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int? offerId)
+            GetOfferDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int? offerId)
         {
             return TryGetOfferDetails(out cancellationTokenSource, new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.Common;
 using DataModels.ResponsesModels;
@@ -26,7 +26,7 @@ namespace Repositories.Remote.Paginated
         }
 
         protected override Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
-            CreateLoadPaginatedItemsTask(out CancellationTokenSource cancellationTokenSource,
+            CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource,
                 PaginatedRequestData paginatedRequestData)
         {
             return UsersRequestsStaticProcessor.GetUsersList(out cancellationTokenSource, authorisationDataRepository,

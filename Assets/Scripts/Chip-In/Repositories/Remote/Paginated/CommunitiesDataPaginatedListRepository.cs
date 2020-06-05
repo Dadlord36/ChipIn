@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.Common;
 using DataModels.Interfaces;
@@ -21,7 +21,7 @@ namespace Repositories.Remote.Paginated
         protected override string Tag => nameof(CommunitiesDataPaginatedListRepository);
 
         protected override Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
-            CreateLoadPaginatedItemsTask(out CancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
+            CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
             return CommunitiesStaticRequestsProcessor.GetPaginatedCommunitiesList(out cancellationTokenSource, authorisationDataRepository,
                 paginatedRequestData);

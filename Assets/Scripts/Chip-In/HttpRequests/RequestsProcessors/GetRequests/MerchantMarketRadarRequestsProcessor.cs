@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using GlobalVariables;
 using Newtonsoft.Json;
@@ -26,9 +26,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class MerchantMarketRadarRequestsProcessor : BaseRequestProcessor<object, RadarDataModel, IRadarModel>
     {
-        public MerchantMarketRadarRequestsProcessor(out CancellationTokenSource cancellationTokenSource,
-            IRequestHeaders requestHeaders) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
-            ApiCategories.Profile, HttpMethod.Get, requestHeaders, null, new[] {ApiCategories.Radar}))
+        public MerchantMarketRadarRequestsProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) :
+            base(out cancellationTokenSource,
+                new BaseRequestProcessorParameters(ApiCategories.Profile, HttpMethod.Get, requestHeaders, null, new[] {ApiCategories.Radar}))
         {
         }
     }

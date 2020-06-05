@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -24,9 +24,8 @@ namespace HttpRequests.RequestsProcessors.PostRequests
     public sealed class RegistrationRequestProcessor : BaseRequestProcessor<RegistrationRequestModel,
         RegistrationResponseDataModel, IRegistrationResponseDataModel>
     {
-        public RegistrationRequestProcessor(out CancellationTokenSource cancellationTokenSource,
-            RegistrationRequestModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.SignUp, HttpMethod.Post, null,
-            requestBodyModel)
+        public RegistrationRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, RegistrationRequestModel requestBodyModel)
+            : base(out cancellationTokenSource, ApiCategories.SignUp, HttpMethod.Post, null, requestBodyModel)
         {
         }
     }
@@ -35,7 +34,7 @@ namespace HttpRequests.RequestsProcessors.PostRequests
         SimpleRegistrationRequestProcessor : BaseRequestProcessor<SimpleRegistrationRequestModel,
             UserProfileDataWebModel, IUserProfileDataWebModel>
     {
-        public SimpleRegistrationRequestProcessor(out CancellationTokenSource cancellationTokenSource,
+        public SimpleRegistrationRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             SimpleRegistrationRequestModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.SignUp, HttpMethod.Post,
             null, requestBodyModel)
         {

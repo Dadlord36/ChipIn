@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
@@ -16,7 +16,7 @@ namespace RequestsStaticProcessors
     public static class CommunitiesInterestsStaticProcessor
     {
         public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel, ICommunityInterestsResponseModel>.HttpResponse>
-            GetCommunityOwnersInterests(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            GetCommunityOwnersInterests(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
                 PaginatedRequestData paginatedRequestData)
         {
             return new CommunityOwnersInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
@@ -24,7 +24,7 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, CommunityInterestsResponseDataModel, ICommunityInterestsResponseModel>.HttpResponse>
-            GetCommunityClientsInterests(out CancellationTokenSource cancellationTokenSource,
+            GetCommunityClientsInterests(out DisposableCancellationTokenSource cancellationTokenSource,
                 IRequestHeaders requestHeaders, int communityId, PaginatedRequestData paginatedRequestData)
         {
             return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, paginatedRequestData)
@@ -32,7 +32,7 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, CommunityInterestDataModel, ICommunityInterestModel>.HttpResponse>
-            CreateAnInterest(out CancellationTokenSource cancellationTokenSource,
+            CreateAnInterest(out DisposableCancellationTokenSource cancellationTokenSource,
                 IRequestHeaders requestHeaders, ICommunityCreateInterestModel requestBody, int communityId)
         {
             return new CreateACommunityInterestPostProcessor(out cancellationTokenSource, requestHeaders, requestBody, communityId).SendRequest(
@@ -40,7 +40,7 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            DeleteCommunityInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId,
+            DeleteCommunityInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId,
                 int interestId)
         {
             return new DestroyCommunityInterestDeleteProcessor(out cancellationTokenSource, requestHeaders, communityId, interestId).SendRequest(
@@ -48,14 +48,14 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            JoinToInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
+            JoinToInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
         {
             return new JoinInInterestPostRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
                 $"Successfully joining the interest by index: {interestId.ToString()}");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            LeaveAnInterest(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
+            LeaveAnInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
         {
             return new LeaveAnInterestDeleteRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
                 $"Successfully leaved the interest by index: {interestId.ToString()}");

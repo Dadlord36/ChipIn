@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
@@ -21,7 +21,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class ActivateProductRequestProcessor : BaseRequestProcessor<IQrData, SuccessConfirmationModel,
         ISuccess>
     {
-        public ActivateProductRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public ActivateProductRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             IQrData requestBodyModel) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
             ApiCategories.UserProducts, HttpMethod.Post, requestHeaders, requestBodyModel, new[] {"activate"}))
         {
@@ -30,7 +30,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
 
     public class DeleteProductRequestProcessor : RequestWithoutBodyProcessor<SuccessConfirmationModel, ISuccess>
     {
-        public DeleteProductRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public DeleteProductRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             int productId) : base(out cancellationTokenSource, ApiCategories.UserProducts, HttpMethod.Delete, requestHeaders,
             new[] {productId.ToString()})
         {

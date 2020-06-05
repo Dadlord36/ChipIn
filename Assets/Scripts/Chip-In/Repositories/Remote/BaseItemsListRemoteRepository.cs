@@ -2,7 +2,7 @@
 
 namespace Repositories.Remote
 {
-    public abstract class BseItemsListRemoteRepository<TDataType> : RemoteRepositoryBase
+    public abstract class BaseItemsListRemoteRepository<TDataType> : RemoteRepositoryBase
     {
         public abstract IReadOnlyList<TDataType> ItemsData { get; }
 

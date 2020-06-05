@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Common;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -12,7 +12,7 @@ namespace RequestsStaticProcessors
     {
         public static
             Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
-            GetUsersList(out CancellationTokenSource cancellationTokensSource, IRequestHeaders requestHeaders,
+            GetUsersList(out DisposableCancellationTokenSource cancellationTokensSource, IRequestHeaders requestHeaders,
                 PaginatedRequestData paginatedRequestData)
         {
             return new UsersListGetProcessor(out cancellationTokensSource, requestHeaders, paginatedRequestData).SendRequest(

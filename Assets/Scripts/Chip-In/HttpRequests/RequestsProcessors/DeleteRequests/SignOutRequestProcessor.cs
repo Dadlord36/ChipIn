@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -33,10 +33,9 @@ namespace HttpRequests.RequestsProcessors.DeleteRequests
     public class
         SignOutRequestProcessor : BaseRequestProcessor<IBaseDeviceData, SignOutResponseModel, ISignOutResponseModel>
     {
-        public SignOutRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-            IBaseDeviceData requestBodyModel) :
-            base(out cancellationTokenSource, ApiCategories.SingOut, HttpMethod.Delete, requestHeaders,
-                requestBodyModel)
+        public SignOutRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            IBaseDeviceData requestBodyModel) : base(out cancellationTokenSource, ApiCategories.SingOut, HttpMethod.Delete, requestHeaders,
+            requestBodyModel)
         {
         }
     }

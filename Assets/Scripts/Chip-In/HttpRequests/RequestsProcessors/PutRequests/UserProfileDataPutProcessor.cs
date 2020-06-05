@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class UserProfileDataPutProcessor : BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel,
         IUserProfileDataWebModel>
     {
-        public UserProfileDataPutProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public UserProfileDataPutProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             IUserProfileDataWebModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Put,
             requestHeaders, requestBodyModel)
         {
@@ -54,7 +54,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class UserProfilePasswordChangePutProcessor : BaseRequestProcessor<IUserProfilePasswordChangeModel,
         UserProfileResponseModel, IUserProfileResponseModel>
     {
-        public UserProfilePasswordChangePutProcessor(out CancellationTokenSource cancellationTokenSource,
+        public UserProfilePasswordChangePutProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             IRequestHeaders requestHeaders, IUserProfilePasswordChangeModel requestBodyModel) : base(out cancellationTokenSource,
             ApiCategories.Profile, HttpMethod.Put, requestHeaders, requestBodyModel)
         {
@@ -64,7 +64,7 @@ namespace HttpRequests.RequestsProcessors.PutRequests
     public class UserProfilePasswordChangeDummyPutProcessor : BaseRequestProcessor<IUserName,
         UserProfileResponseModel, IUserProfileResponseModel>
     {
-        public UserProfilePasswordChangeDummyPutProcessor(out CancellationTokenSource cancellationTokenSource,
+        public UserProfilePasswordChangeDummyPutProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             IRequestHeaders requestHeaders, IUserName requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile,
             HttpMethod.Put, requestHeaders, requestBodyModel)
         {

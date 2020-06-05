@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using Common.Structures;
 using Controllers;
 using DataModels;
@@ -28,7 +28,7 @@ namespace ScriptableObjects.DataSynchronizers
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private UserProfileDataWebModel userProfileData;
 
-        protected CancellationTokenSource TasksCancellationTokenSource;
+        protected DisposableCancellationTokenSource TasksCancellationTokenSource;
 
         private IUserProfileDataWebModel UserProfile => userProfileData;
         private IRequestHeaders RequestHeaders => authorisationDataRepository;

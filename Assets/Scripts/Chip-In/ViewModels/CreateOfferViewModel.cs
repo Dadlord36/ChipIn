@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.Interfaces;
 using DataModels.RequestsModels;
@@ -304,13 +304,11 @@ namespace ViewModels
             VerifyEnteredData();
         }
 
-        private readonly CancellationTokenSource _offerRequestCancellationTokenSource = new CancellationTokenSource();
-
         private async Task SendCreateOfferRequest()
         {
             try
             {
-                TasksCancellationTokenSource = new CancellationTokenSource();
+                TasksCancellationTokenSource = new DisposableCancellationTokenSource();
                 await OffersStaticRequestProcessor.TryCreateAnOffer(TasksCancellationTokenSource, userAuthorisationDataRepository, _offerDataModel);
                 _alertCardController.ShowAlertWithText("Offer was created");
             }

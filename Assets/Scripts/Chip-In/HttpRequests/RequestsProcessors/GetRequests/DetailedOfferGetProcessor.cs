@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
@@ -22,10 +22,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
             }
         }
 
-        public DetailedOfferGetProcessor(out CancellationTokenSource cancellationTokenSource,
+        public DetailedOfferGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             DetailedOfferGetProcessorParameters parameters) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
-            ApiCategories.Offers, HttpMethod.Get, parameters.RequestHeaders, null,
-            new[] {parameters.OfferId.ToString()}))
+            ApiCategories.Offers, HttpMethod.Get, parameters.RequestHeaders, null, new[] {parameters.OfferId.ToString()}))
         {
         }
     }

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Repositories.Interfaces;
-using UnityEngine;
+using ScriptableObjects;
 
 namespace Repositories.Remote
 {
-    public abstract class RemoteRepositoryBase : ScriptableObject, IDataSynchronization
+    public abstract class RemoteRepositoryBase : AsyncOperationsScriptableObject, IDataSynchronization
     {
         #region EventsDeclaration
         public event Action DataWasLoaded;

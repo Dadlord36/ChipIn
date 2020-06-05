@@ -1,16 +1,29 @@
-﻿using System.Threading;
+﻿using Common;
 
 namespace Controllers
 {
     public class AsyncOperationCancellationController
     {
-        private CancellationTokenSource _cancellationTokenSource;
-        public ref CancellationTokenSource TasksCancellationTokenSource => ref _cancellationTokenSource;
+        private DisposableCancellationTokenSource _cancellationTokenSource;
+        public ref DisposableCancellationTokenSource TasksCancellationTokenSource => ref _cancellationTokenSource;
+
 
         public void CancelOngoingTask()
         {
-            if (_cancellationTokenSource != null)
-                TasksCancellationTokenSource.Cancel();
+            if (TasksCancellationTokenSource == null || TasksCancellationTokenSource.IsDisposed) return;
+            TasksCancellationTokenSource.Token.Register(DisposeTokenSource);
+            TasksCancellationTokenSource.Cancel();
+        }
+
+        ~AsyncOperationCancellationController()
+        {
+            DisposeTokenSource();
+        }
+
+        private void DisposeTokenSource()
+        {
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
         }
     }
 }

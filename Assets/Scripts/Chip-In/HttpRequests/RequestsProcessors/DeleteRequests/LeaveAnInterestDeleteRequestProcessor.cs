@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using GlobalVariables;
@@ -9,7 +9,7 @@ namespace HttpRequests.RequestsProcessors.DeleteRequests
 {
     public class LeaveAnInterestDeleteRequestProcessor : RequestWithoutBodyProcessor<SuccessConfirmationModel, ISuccess>
     {
-        public LeaveAnInterestDeleteRequestProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public LeaveAnInterestDeleteRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             int interestId) : base(out cancellationTokenSource, ApiCategories.Subcategories.Interests, HttpMethod.Delete, requestHeaders,
             new[] {interestId.ToString(), MainNames.CommonActions.Leave})
         {

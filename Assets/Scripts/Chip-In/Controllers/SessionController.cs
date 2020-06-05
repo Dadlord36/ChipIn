@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using DataModels.RequestsModels;
 using GlobalVariables;
@@ -7,6 +6,7 @@ using Repositories;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Utilities;
@@ -17,7 +17,7 @@ namespace Controllers
 {
     [CreateAssetMenu(fileName = nameof(SessionController),
         menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
-    public sealed class SessionController : ScriptableObject
+    public sealed class SessionController : AsyncOperationsScriptableObject
     {
         public enum SessionMode
         {
@@ -36,14 +36,6 @@ namespace Controllers
         [SerializeField] private SessionStateRepository sessionStateRepository;
 
         public event Action<SessionMode> SwitchingToMode;
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-        private ref CancellationTokenSource TasksCancellationTokenSource => ref _asyncOperationCancellationController.TasksCancellationTokenSource;
-
-        private void OnDisable()
-        {
-            _asyncOperationCancellationController.CancelOngoingTask();
-        }
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {

@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -16,7 +16,7 @@ namespace RequestsStaticProcessors
         private const string Tag = nameof(UserProfileDataStaticRequestsProcessor);
 
         public static Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.HttpResponse>
-            GetUserProfileData(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+            GetUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             LogUtility.PrintLog(Tag, $"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");
 
@@ -26,7 +26,7 @@ namespace RequestsStaticProcessors
 
         public static
             Task<BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
-            TryUpdateUserProfileData(out CancellationTokenSource cancellationTokenSource,
+            TryUpdateUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource,
                 IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyProvider)
         {
             LogUtility.PrintLog(Tag, $"RequestHeaders: {requestHeaders.GetRequestHeadersAsString()}");
@@ -36,8 +36,7 @@ namespace RequestsStaticProcessors
         }
 
         public static
-            Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.
-                HttpResponse> TryChangeUserProfilePassword(out CancellationTokenSource cancellationTokenSource,
+            Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse> TryChangeUserProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource,
                 IRequestHeaders requestHeaders, IUserProfilePasswordChangeModel requestBodyModel)
         {
             return new UserProfilePasswordChangePutProcessor(out cancellationTokenSource, requestHeaders, requestBodyModel)
@@ -45,7 +44,7 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<IUserGeoLocation, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
-            UpdateUserPosition(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            UpdateUserPosition(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
                 IUserGeoLocation userGeoLocation)
         {
             return new UserGeoLocationDataPutProcessor(out cancellationTokenSource, requestHeaders, userGeoLocation).SendRequest(

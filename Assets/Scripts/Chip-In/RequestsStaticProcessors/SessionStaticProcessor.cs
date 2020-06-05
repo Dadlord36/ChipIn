@@ -1,5 +1,5 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
@@ -16,14 +16,14 @@ namespace RequestsStaticProcessors
         private const string Tag = nameof(SessionStaticProcessor);
 
         public static Task<BaseRequestProcessor<IUserLoginRequestModel, LoginResponseModel, ILoginResponseModel>.HttpResponse>
-            TryLogin(out CancellationTokenSource cancellationTokenSource, IUserLoginRequestModel userLoginRequestModel)
+            TryLogin(out DisposableCancellationTokenSource cancellationTokenSource, IUserLoginRequestModel userLoginRequestModel)
         {
             LogUtility.PrintLog(Tag, $"Login request model: {JsonConvert.SerializeObject(userLoginRequestModel)}");
             return new LoginRequestProcessor(out cancellationTokenSource, userLoginRequestModel).SendRequest("User was LoggedIn");
         }
 
         public static Task<BaseRequestProcessor<IBaseDeviceData, SignOutResponseModel, ISignOutResponseModel>.HttpResponse> TryLogOut(
-            out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
+            out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IBaseDeviceData deviceData)
         {
             return new SignOutRequestProcessor(out cancellationTokenSource, requestHeaders, deviceData).SendRequest("User");
         }

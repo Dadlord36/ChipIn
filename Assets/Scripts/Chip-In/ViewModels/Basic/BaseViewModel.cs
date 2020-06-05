@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using Common;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Views;
@@ -12,7 +12,7 @@ namespace ViewModels.Basic
     {
         [SerializeField] private BaseView view;
 
-        protected CancellationTokenSource TasksCancellationTokenSource;
+        protected DisposableCancellationTokenSource TasksCancellationTokenSource;
         public BaseView View => view;
 
         protected void CancelOngoingTask()

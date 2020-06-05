@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Common;
 using DataModels.HttpRequestsHeadersModels;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
@@ -18,7 +19,7 @@ namespace HttpRequests.RequestsProcessors
         where TRequestBodyModelInterface : class
         where TResponseModelInterface : class
     {
-        private readonly CancellationTokenSource _requestCancellationTokenSource = new CancellationTokenSource();
+        private readonly DisposableCancellationTokenSource _requestCancellationTokenSource = new DisposableCancellationTokenSource();
         private CancellationToken RequestCancellationToken => _requestCancellationTokenSource.Token;
 
         protected struct BaseRequestProcessorParameters
@@ -30,9 +31,8 @@ namespace HttpRequests.RequestsProcessors
             public readonly IRequestHeaders RequestHeaders;
             public readonly TRequestBodyModelInterface RequestBodyModel;
 
-            public BaseRequestProcessorParameters(string requestSuffix,
-                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel,
-                IReadOnlyList<string> requestParameters, NameValueCollection queryStringParameters)
+            public BaseRequestProcessorParameters(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
+                TRequestBodyModelInterface requestBodyModel, IReadOnlyList<string> requestParameters, NameValueCollection queryStringParameters)
             {
                 RequestSuffix = requestSuffix;
                 RequestParameters = requestParameters;
@@ -42,9 +42,8 @@ namespace HttpRequests.RequestsProcessors
                 RequestBodyModel = requestBodyModel;
             }
 
-            public BaseRequestProcessorParameters(string requestSuffix,
-                HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel,
-                IReadOnlyList<string> requestParameters)
+            public BaseRequestProcessorParameters(string requestSuffix, HttpMethod requestMethod, IRequestHeaders requestHeaders,
+                TRequestBodyModelInterface requestBodyModel, IReadOnlyList<string> requestParameters)
             {
                 RequestSuffix = requestSuffix;
                 RequestParameters = requestParameters;
@@ -60,7 +59,7 @@ namespace HttpRequests.RequestsProcessors
         private readonly BaseRequestProcessorParameters _requestProcessorParameters;
         protected bool SendBodyAsQueryStringFormat;
 
-        protected BaseRequestProcessor(out CancellationTokenSource cancellationTokenSource, string requestSuffix,
+        protected BaseRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
             HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel)
         {
             _requestProcessorParameters = new BaseRequestProcessorParameters(requestSuffix, requestMethod,
@@ -68,11 +67,16 @@ namespace HttpRequests.RequestsProcessors
             cancellationTokenSource = _requestCancellationTokenSource;
         }
 
-        protected BaseRequestProcessor(out CancellationTokenSource cancellationTokenSource,
+        protected BaseRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             BaseRequestProcessorParameters requestProcessorParameters)
         {
             _requestProcessorParameters = requestProcessorParameters;
             cancellationTokenSource = _requestCancellationTokenSource;
+        }
+
+        ~BaseRequestProcessor()
+        {
+            _requestCancellationTokenSource.Dispose();
         }
 
         private static string FormUrlParametersString(IReadOnlyList<string> parameters)

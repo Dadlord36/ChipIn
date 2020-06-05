@@ -11,12 +11,12 @@ namespace Behaviours.Games
     public sealed class CoinsGame : AsyncOperationsMonoBehaviour, IGame
     {
         private const string Tag = nameof(CoinsGame);
-        
+
         [SerializeField] private UserCoinsAmountRepository coinsAmountRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private int coinsToPick;
 
-        
+
         public event Action GameComplete;
         private int _coinsAmount, _coinsPicked;
         private bool _isInitialized;
@@ -27,7 +27,7 @@ namespace Behaviours.Games
         {
             Assert.IsNotNull(coinsAmountRepository);
         }
-        
+
         private void OnEnable()
         {
             InitializeCoinsGame();
@@ -35,12 +35,11 @@ namespace Behaviours.Games
         }
 
 
-
         private void UpdateCoinsRepository()
         {
             coinsAmountRepository.UpdateRepositoryData();
         }
-        
+
         private void InitializeCoinsGame()
         {
             if (_isInitialized) return;
@@ -73,7 +72,7 @@ namespace Behaviours.Games
                     try
                     {
                         _coinsPicked++;
-                        var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource,authorisationDataRepository);
+                        var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource, authorisationDataRepository);
 
                         if (!result.Success)
                         {

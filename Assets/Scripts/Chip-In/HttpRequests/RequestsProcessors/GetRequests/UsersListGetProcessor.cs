@@ -1,5 +1,5 @@
 ﻿using System.Net.Http;
-using System.Threading;
+using Common;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
@@ -9,7 +9,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public class UsersListGetProcessor : RequestWithoutBodyProcessor<UsersListResponseDataModel, IUserListResponseModel>
     {
-        public UsersListGetProcessor(out CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public UsersListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, ApiCategories.Users, HttpMethod.Get,
             requestHeaders, null, paginatedRequestData.ConvertPaginationToNameValueCollection())
         {
