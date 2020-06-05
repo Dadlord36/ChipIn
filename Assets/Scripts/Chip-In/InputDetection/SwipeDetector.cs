@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using ActionsTranslators;
 using ScriptableObjects.Parameters;
 using UnityEngine;
@@ -29,18 +29,17 @@ namespace InputDetection
 
             if (Input.GetMouseButton(0) && !_parameters.DetectSwipeOnlyAfterRelease)
             {
-                _touchDownPosition = Input.mousePosition;
+                _touchUpPosition = Input.mousePosition;
                 DetectSwipe();
             }
 
             if (Input.GetMouseButtonUp(0))
             {
-                _touchDownPosition = Input.mousePosition;
+                _touchUpPosition = Input.mousePosition;
                 DetectSwipe();
             }
         }
 #else
-
         public void Update()
         {
             var touches = Input.touches;
@@ -53,13 +52,13 @@ namespace InputDetection
 
             if (!_parameters.DetectSwipeOnlyAfterRelease && touches[0].phase == TouchPhase.Moved)
             {
-                _touchDownPosition = touches[0].position;
+                _touchUpPosition = touches[0].position;
                 DetectSwipe();
             }
 
             if (touches[0].phase == TouchPhase.Ended)
             {
-                _touchDownPosition = touches[0].position;
+                _touchUpPosition = touches[0].position;
                 DetectSwipe();
             }
         }
@@ -68,31 +67,31 @@ namespace InputDetection
         private void DetectSwipe()
         {
             if (!SwipeDistanceCheckMet()) return;
-            
+
             MoveDirection direction;
             var touchDelta = _touchDownPosition - _touchUpPosition;
 
             if (IsVerticalSwipe())
             {
                 direction = touchDelta.y > 0f
-                    ? MoveDirection.Up
-                    : MoveDirection.Down;
+                    ? MoveDirection.Down
+                    : MoveDirection.Up;
             }
             else
             {
                 direction = touchDelta.x > 0f
-                    ? MoveDirection.Right
-                    : MoveDirection.Left;
+                    ? MoveDirection.Left
+                    : MoveDirection.Right;
             }
 
-            SendSwipe(direction, touchDelta);
+            SendSwipe(direction, _touchDownPosition, _touchUpPosition, touchDelta);
             _touchUpPosition = _touchDownPosition;
         }
 
-        private void SendSwipe(in MoveDirection direction, in Vector2 deltaPosition)
+        private void SendSwipe(in MoveDirection direction, in Vector2 touchDownPosition, in Vector2 touchUpPosition, in Vector2 deltaPosition)
         {
             LogUtility.PrintLog(nameof(SwipeDetector), $"Swiped to the {direction.ToString()}");
-            OnSwiped(new SwipeData(direction, deltaPosition));
+            OnSwiped(new SwipeData(direction, deltaPosition, touchDownPosition, touchUpPosition));
         }
 
         private bool SwipeDistanceCheckMet()
@@ -124,12 +123,15 @@ namespace InputDetection
         public struct SwipeData
         {
             public readonly MoveDirection Direction;
+            public readonly Vector2 TouchDownPoint, TouchUpPoint;
             public Vector2 DeltaVector;
 
-            public SwipeData(MoveDirection direction, Vector2 deltaVector)
+            public SwipeData(MoveDirection direction, Vector2 deltaVector, Vector2 touchDownPoint, Vector2 touchUpPoint)
             {
                 Direction = direction;
                 DeltaVector = deltaVector;
+                TouchDownPoint = touchDownPoint;
+                TouchUpPoint = touchUpPoint;
             }
         }
 
