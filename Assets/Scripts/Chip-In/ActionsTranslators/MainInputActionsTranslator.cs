@@ -1,15 +1,10 @@
-﻿using System;
+using System;
 using InputDetection;
 using ScriptableObjects.Parameters;
 using UnityEngine;
 
 namespace ActionsTranslators
 {
-    public interface IUpdatable
-    {
-        void Update();
-    }
-
     [CreateAssetMenu(fileName = nameof(MainInputActionsTranslator), menuName = nameof(ActionsTranslators) + "/" + nameof(MainInputActionsTranslator),
         order = 0)]
     public sealed class MainInputActionsTranslator : ScriptableObject, IUpdatable
