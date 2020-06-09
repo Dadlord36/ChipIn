@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using System.Threading.Tasks;
+using Common;
 using Common.Interfaces;
 using Controllers;
 using UnityEngine;
@@ -12,9 +13,10 @@ namespace ScriptableObjects
         protected ref DisposableCancellationTokenSource TasksCancellationTokenSource =>
             ref _asyncOperationCancellationController.TasksCancellationTokenSource;
 
-        void IApplicationClosingEventReceiver.OnApplicationClosing()
+        Task IApplicationClosingEventReceiver.OnApplicationClosing()
         {
             CancelOngoingTask();
+            return Task.CompletedTask;
         }
 
         protected virtual void CancelOngoingTask()

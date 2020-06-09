@@ -1,4 +1,6 @@
-﻿using ActionsTranslators;
+﻿using System;
+using System.Threading.Tasks;
+using ActionsTranslators;
 using Controllers;
 using HttpRequests;
 using Notifications;
@@ -19,26 +21,53 @@ public class GameManager : MonoBehaviour
 
     // Start is called before the first frame update
 
-    private void Start()
+    private async void Start()
     {
-        Initialize();
+        try
+        {
+            await Initialize();
+        }
+        catch (Exception e)
+        {
+            LogUtility.PrintLogException(e);
+            throw;
+        }
+
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
         FireBaseNotificationsController.Initialize();
     }
 
-    private void Initialize()
+    private async Task Initialize()
     {
         InitializeSystems();
-        InitializeControllers();
+
+        try
+        {
+            await InitializeControllers();
+        }
+        catch (Exception e)
+        {
+            LogUtility.PrintLogException(e);
+            throw;
+        }
+
         LogUtility.PrintLog(Tag, ScreenUtility.GetScreenSize().ToString());
         FireBaseNotificationsController.Dispose();
     }
 
-    private void InitializeControllers()
+    private async Task InitializeControllers()
     {
         sessionController.ProcessAppLaunching();
-        restorationController.InvokeInterfaceMainFunction();
+        try
+        {
+            await restorationController.InvokeInterfaceMainFunction();
+        }
+        catch (Exception e)
+        {
+            LogUtility.PrintLogException(e);
+            throw;
+        }
     }
 
     private void InitializeSystems()
@@ -47,10 +76,18 @@ public class GameManager : MonoBehaviour
         ApiHelper.InitializeClient();
     }
 
-    private void OnApplicationQuit()
+    private async void OnApplicationQuit()
     {
         ApiHelper.Close();
-        applicationClosingEventTranslator.InvokeInterfaceMainFunction();
+        try
+        {
+            await applicationClosingEventTranslator.InvokeInterfaceMainFunction();
+        }
+        catch (Exception e)
+        {
+            LogUtility.PrintLogException(e);
+            throw;
+        }
     }
 
     private void Update()

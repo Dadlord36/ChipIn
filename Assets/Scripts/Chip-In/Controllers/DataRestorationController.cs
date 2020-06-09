@@ -1,4 +1,5 @@
-﻿using Repositories.Local;
+﻿using System.Threading.Tasks;
+using Repositories.Local;
 using UnityEngine;
 
 namespace Controllers
@@ -7,9 +8,9 @@ namespace Controllers
         order = 0)]
     public class DataRestorationController : BatchedInterfaceInvoker<IRestorable>
     {
-        protected override void InvokeInterfaceMainFunction(IRestorable objectInterface)
+        protected override Task InvokeInterfaceMainFunction(IRestorable objectInterface)
         {
-            objectInterface.Restore();
+           return objectInterface.Restore();
         }
     }
 }

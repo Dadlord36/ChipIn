@@ -1,7 +1,9 @@
-﻿namespace Common.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Common.Interfaces
 {
     public interface IApplicationClosingEventReceiver
     {
-        void OnApplicationClosing();
+        Task OnApplicationClosing();
     }
 }

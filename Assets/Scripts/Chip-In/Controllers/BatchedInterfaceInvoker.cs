@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Controllers
 {
@@ -6,15 +8,19 @@ namespace Controllers
     {
         [SerializeField] private Object[] restorableRepositories;
 
-        public void InvokeInterfaceMainFunction()
+        public Task InvokeInterfaceMainFunction()
         {
+            var tasks = new List<Task>(restorableRepositories.Length);
             for (int i = 0; i < restorableRepositories.Length; i++)
             {
                 if (restorableRepositories[i] is TInterface correspondingInterface)
-                    InvokeInterfaceMainFunction(correspondingInterface);
+                {
+                    tasks.Add(InvokeInterfaceMainFunction(correspondingInterface));
+                }
             }
+            return Task.WhenAll(tasks); 
         }
 
-        protected abstract void InvokeInterfaceMainFunction(TInterface objectInterface);
+        protected abstract Task InvokeInterfaceMainFunction(TInterface objectInterface);
     }
 }
