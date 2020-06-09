@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8501222279002862288}
   - component: {fileID: 8501222279002862301}
-  - component: {fileID: 7229843290359963162}
   m_Layer: 5
   m_Name: Coin
   m_TagString: Untagged
@@ -51,28 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1db7a864bb564c529b822be69c1af1a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graphic: {fileID: 8501222279830715758}
   valueMultiplierTextField: {fileID: 8501222279115635480}
-  minValue: 1
-  maxValue: 3
---- !u!95 &7229843290359963162
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8501222279002862289}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ffce80f3477b12b469010b30784fca95, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  fadingTimeMilliseconds: 1000
 --- !u!1 &8501222279115635482
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,13 +113,15 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: x0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -288,6 +270,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
