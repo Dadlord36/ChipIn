@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -8,6 +9,7 @@ using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
 using Views.ViewElements;
 
@@ -41,16 +43,32 @@ namespace ViewModels
         [Binding]
         public async Task Play_OnButtonClick()
         {
-            if (await CanGameStarts())
-                SwitchToSlotsGameView();
+            try
+            {
+                if (await CanGameStarts())
+                    SwitchToSlotsGameView();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);;
+                throw;
+            }
         }
 
         private async Task<bool> CanGameStarts()
         {
-            var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource,authorisationDataRepository,
-                selectedGameRepository.GameId);
-            if (response.Success && response.ResponseModelInterface.Success) return true;
-            alertCardController.ShowAlertWithText(response.Error);
+            try
+            {
+                var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource,authorisationDataRepository,
+                    selectedGameRepository.GameId);
+                if (response.Success && response.ResponseModelInterface.Success) return true;
+                alertCardController.ShowAlertWithText(response.Error);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             return false;
         }
 

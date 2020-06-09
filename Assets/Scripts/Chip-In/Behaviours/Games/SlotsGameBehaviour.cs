@@ -124,12 +124,20 @@ namespace Behaviours.Games
             GameInterface.SpinFrameRequested -= SpinFrame;
         }
 
-        private async void GetGameDataAndInitializeGame()
+        private async Task GetGameDataAndInitializeGame()
         {
             GameInterface.Initialize();
-            await InitializeMatch();
-            await UpdateGameRepositoryUsersData();
-            await StartGameSocketChannel();
+            try
+            {
+                await InitializeMatch();
+                await UpdateGameRepositoryUsersData();
+                await StartGameSocketChannel();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             StartNewRound();
         }
 
@@ -200,7 +208,15 @@ namespace Behaviours.Games
 
         private async Task UpdateGameRepositoryUsersData()
         {
-            await selectedGameRepository.SaveGameSateData(_roundData);
+            try
+            {
+                await selectedGameRepository.SaveGameSateData(_roundData);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void CloseConnectionAndDisposeGameChannelSocket()
@@ -215,7 +231,15 @@ namespace Behaviours.Games
         private async Task StartGameSocketChannel()
         {
             CloseConnectionAndDisposeGameChannelSocket();
-            await EstablishSocketConnection();
+            try
+            {
+                await EstablishSocketConnection();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             SubscribeToGameSocketEvents();
         }
 
@@ -276,7 +300,7 @@ namespace Behaviours.Games
         #endregion
 
 
-        private async void MakeASpin(SpinBoardParameters spinBoardParameters)
+        private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
         {
             try
             {

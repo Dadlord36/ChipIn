@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UpdatableGroupController mainUpdatableGroupController;
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
     [SerializeField] private DataRestorationController restorationController;
+    [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
 
 
     // Start is called before the first frame update
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
     private void InitializeControllers()
     {
         sessionController.ProcessAppLaunching();
-        restorationController.Restore();
+        restorationController.InvokeInterfaceMainFunction();
     }
 
     private void InitializeSystems()
@@ -48,7 +49,8 @@ public class GameManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        ApiHelper.Dispose();
+        ApiHelper.Close();
+        applicationClosingEventTranslator.InvokeInterfaceMainFunction();
     }
 
     private void Update()

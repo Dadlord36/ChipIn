@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Controllers;
 using DataModels;
 using Repositories.Remote.Paginated;
@@ -18,8 +19,8 @@ namespace ViewModels
 
         [SerializeField] private CommunitiesDataPaginatedListRepository communitiesDataRepository;
         private PaginatedDataExplorer<CommunityBasicDataModel> _paginatedDataExplorer;
-        
-        
+
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -35,21 +36,28 @@ namespace ViewModels
             communitiesDataRepository.DataWasLoaded -= UpdateItems;
         }
 
-        private  void Start()
+        private async void Start()
         {
-            TryToFillWithCurrentPageItems();
+            try
+            {
+                await TryToFillWithCurrentPageItems();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
         }
 
         private void SubscribeOnEvents()
         {
-            RelatedView.SwipedLeft += TryToSwitchToNextPage;
-            RelatedView.SwipedRight += TryToSwitchToPreviousPage ;
+            RelatedView.SwipedLeft += OnSwipedToLeft;
+            RelatedView.SwipedRight += OnSwipedToRight;
         }
 
         private void UnsubscribeFromEvents()
         {
-            RelatedView.SwipedLeft -= TryToSwitchToNextPage ;
-            RelatedView.SwipedRight -= TryToSwitchToPreviousPage;
+            RelatedView.SwipedLeft -= OnSwipedToLeft;
+            RelatedView.SwipedRight -= OnSwipedToRight;
         }
 
         [Binding]
@@ -57,7 +65,34 @@ namespace ViewModels
         {
         }
 
-        private async void TryToFillWithCurrentPageItems()
+        private async void OnSwipedToLeft()
+        {
+            try
+            {
+                await TryToSwitchToNextPage();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+        
+        private async void OnSwipedToRight()
+        {
+            try
+            {
+                await TryToSwitchToPreviousPage();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+        
+        
+        private async Task TryToFillWithCurrentPageItems()
         {
             try
             {
@@ -70,7 +105,7 @@ namespace ViewModels
             }
         }
 
-        private async void TryToSwitchToNextPage()
+        private async Task TryToSwitchToNextPage()
         {
             try
             {
@@ -83,7 +118,7 @@ namespace ViewModels
             }
         }
 
-        private async void TryToSwitchToPreviousPage()
+        private async Task TryToSwitchToPreviousPage()
         {
             try
             {

@@ -41,7 +41,7 @@ namespace ViewModels
         {
             mainInputActionsTranslator.EscapeButtonPressed -= OnEscapeButtonPressed;
         }
-        
+
         private void SubscribeToMainInputEventsTranslation()
         {
             mainInputActionsTranslator.EscapeButtonPressed += OnEscapeButtonPressed;
@@ -124,12 +124,20 @@ namespace ViewModels
         }
 
         [Binding]
-        public void LoginButton_Click()
+        public async void LoginButton_Click()
         {
-            ProcessLogin();
+            try
+            {
+                await ProcessLogin();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private async void ProcessLogin()
+        private async Task ProcessLogin()
         {
             IsPendingLogin = true;
             try

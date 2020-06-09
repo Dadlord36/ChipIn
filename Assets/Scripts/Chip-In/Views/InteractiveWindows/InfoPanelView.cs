@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels.Interfaces;
+using HttpRequests;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utilities;
 using Views.Bars.BarItems;
 using Views.InteractiveWindows.Interfaces;
 using WebOperationUtilities;
@@ -90,8 +93,17 @@ namespace Views.InteractiveWindows
         public static async Task FillWithData(IInfoPanelView infoPanelView, IPosterImageUri posterUri, IDescription description,
             ITitled titled, ICategory category)
         {
-            var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility.TryDownloadImageAsync(posterUri.PosterUri));
-            infoPanelView.FillCardWithData(new InfoPanelData(label, description, titled, category));
+            try
+            {
+                var label = SpritesUtility.CreateSpriteWithDefaultParameters(
+                    await ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, posterUri.PosterUri));
+                infoPanelView.FillCardWithData(new InfoPanelData(label, description, titled, category));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

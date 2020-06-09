@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using HttpRequests;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Utilities;
@@ -30,7 +31,7 @@ namespace Repositories.Local
 
             public Task InvokeDownloading()
             {
-                var loadedTexture = ImagesDownloadingUtility.TryDownloadImageAsync(Url);
+                var loadedTexture = ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, Url);
                 return loadedTexture.ContinueWith(delegate(Task<Texture2D> task)
                 {
                     LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(task.Result);
@@ -87,7 +88,7 @@ namespace Repositories.Local
             return handleSprite != null;
         }
 
-        public async void TryToLoadSpriteAsync(SpriteDownloadingTaskParameters parameters)
+        public async Task TryToLoadSpriteAsync(SpriteDownloadingTaskParameters parameters)
         {
             try
             {

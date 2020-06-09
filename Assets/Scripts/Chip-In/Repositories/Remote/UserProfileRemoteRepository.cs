@@ -156,22 +156,30 @@ namespace Repositories.Remote
             PropertyChanged -= InvokeSaveDataToServer;
         }
 
-        private void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private async void InvokeSaveDataToServer(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (IsAllowedToSaveToServer)
-                SaveDataToServer();
+            if (!IsAllowedToSaveToServer) return;
+            try
+            {
+                await SaveDataToServer();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private async Task LoadAvatarImageFromServerAsync()
         {
-            if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
-            {
-                LogUtility.PrintLog(Tag, "There is not URL to load user profile avatar image from", this);
-                return;
-            }
-
             try
             {
+                if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
+                {
+                    LogUtility.PrintLog(Tag, "There is not URL to load user profile avatar image from", this);
+                    return;
+                }
+
                 await downloadedSpritesRepository.CreateLoadSpriteTask(
                     new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(UserProfileDataRemote.AvatarImageUrl,
                         delegate(Sprite sprite) { AvatarImage = sprite.texture; }));
@@ -201,14 +209,30 @@ namespace Repositories.Remote
         public override async Task LoadDataFromServer()
         {
             _isLoadingData = true;
-            await UserProfileDataSynchronization.LoadDataFromServer();
-            await LoadAvatarImageFromServerAsync();
+            try
+            {
+                await UserProfileDataSynchronization.LoadDataFromServer();
+                await LoadAvatarImageFromServerAsync();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             ConfirmDataLoading();
         }
 
         public override async Task SaveDataToServer()
         {
-            await UserProfileDataSynchronization.SaveDataToServer();
+            try
+            {
+                await UserProfileDataSynchronization.SaveDataToServer();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             ConfirmDataSaved();
         }
 

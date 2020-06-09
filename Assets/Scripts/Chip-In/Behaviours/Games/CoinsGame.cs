@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Behaviours.Games.Interfaces;
 using Repositories.Remote;
 using RequestsStaticProcessors;
@@ -16,10 +17,10 @@ namespace Behaviours.Games
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private int coinsToPick;
 
-
         public event Action GameComplete;
-        private int _coinsAmount, _coinsPicked;
+        private int _coinsPicked;
         private bool _isInitialized;
+        private uint _coinsAmount;
 
         private Coin[] _coins;
 
@@ -28,24 +29,40 @@ namespace Behaviours.Games
             Assert.IsNotNull(coinsAmountRepository);
         }
 
-        private void OnEnable()
+        private async void OnEnable()
         {
-            InitializeCoinsGame();
-            _coinsPicked = 0;
+            try
+            {
+                await InitializeCoinsGame();
+                _coinsPicked = 0;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
-
 
         private void UpdateCoinsRepository()
         {
             coinsAmountRepository.UpdateRepositoryData();
         }
 
-        private void InitializeCoinsGame()
+        private async Task InitializeCoinsGame()
         {
             if (_isInitialized) return;
             _isInitialized = true;
 
             _coins = FindObjectsOfType<Coin>();
+            try
+            {
+                await TossACoin();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
 
             for (var i = 0; i < _coins.Length; i++)
             {
@@ -67,29 +84,35 @@ namespace Behaviours.Games
 
             void SubscribeToCollectable(ICollectable collectable)
             {
-                collectable.WasCollected += async delegate(IInteractiveUintValue value)
+                collectable.WasCollected += delegate(IInteractiveUintValue value)
                 {
-                    try
-                    {
-                        _coinsPicked++;
-                        var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource, authorisationDataRepository);
-
-                        if (!result.Success)
-                        {
-                            LogUtility.PrintLog(Tag, "Failed to toss a coin");
-                            return;
-                        }
-
-                        var responseInterface = result.ResponseModelInterface;
-                        value.SetValue(responseInterface.CoinsTossingResultData.NewCoins);
-                        UpdateCoinsRepository();
-                    }
-                    catch (Exception e)
-                    {
-                        LogUtility.PrintLogException(e);
-                        throw;
-                    }
+                    _coinsPicked++;
+                    value.SetValue(_coinsAmount);
                 };
+            }
+        }
+
+        private async Task TossACoin()
+        {
+            try
+            {
+                var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource, authorisationDataRepository)
+                    .ConfigureAwait(false);
+
+                if (!result.Success)
+                {
+                    LogUtility.PrintLog(Tag, "Failed to toss a coin");
+                    return;
+                }
+
+                var responseInterface = result.ResponseModelInterface;
+                _coinsAmount = responseInterface.CoinsTossingResultData.NewCoins;
+
+                UpdateCoinsRepository();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
             }
         }
 

@@ -100,13 +100,13 @@ namespace ViewModels
             try
             {
                 var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, authorisationDataRepository,
-                    SelectedOfferId);
+                    SelectedOfferId).ConfigureAwait(false);
 
                 var gameId = offerDetails.ResponseModelInterface.Offer.GameData.Id;
                 var response = await UserGamesStaticProcessor.TryJoinAGame(out TasksCancellationTokenSource, authorisationDataRepository, gameId);
                 if (response.Success)
                 {
-                    await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons);
+                    await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons).ConfigureAwait(false);
                 }
                 else
                 {
@@ -172,10 +172,18 @@ namespace ViewModels
             ViewAsProductGalleryView.FillDropdownList(items);
         }
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            offersRemoteRepository.LoadDataFromServer();
+            try
+            {
+                await offersRemoteRepository.LoadDataFromServer();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         [Binding]

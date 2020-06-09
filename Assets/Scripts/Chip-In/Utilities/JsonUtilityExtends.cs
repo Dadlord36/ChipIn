@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -7,10 +8,19 @@ namespace Utilities
     public static class JsonConverterUtility
     {
         private const string Tag = nameof(JsonConverterUtility);
+
         public static async Task<T> ConvertHttpContentAsync<T>(HttpContent content)
         {
-            var contentAsString = await content.ReadAsStringAsync();
-            return ConvertJsonString<T>(contentAsString);
+            try
+            {
+                var contentAsString = await content.ReadAsStringAsync().ConfigureAwait(false);
+                return ConvertJsonString<T>(contentAsString);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         public static T ConvertJsonString<T>(string contentAsString)
@@ -48,7 +58,7 @@ namespace Utilities
                 {
                     success = false;
                     args.ErrorContext.Handled = true;
-                    LogUtility.PrintLog(Tag,args.ErrorContext.Error.Message);
+                    LogUtility.PrintLog(Tag, args.ErrorContext.Error.Message);
                 },
                 MissingMemberHandling = MissingMemberHandling.Ignore
             };

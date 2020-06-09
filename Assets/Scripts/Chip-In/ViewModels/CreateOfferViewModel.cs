@@ -240,7 +240,15 @@ namespace ViewModels
         [Binding]
         public async void CreateOffer_OnClick()
         {
-            await SendCreateOfferRequest();
+            try
+            {
+                await SendCreateOfferRequest();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         [Binding]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Http;
@@ -98,29 +99,36 @@ namespace HttpRequests.RequestsProcessors
             TRequestBodyModelInterface requestBodyModel = null, IRequestHeaders requestHeaders = null)
         {
             return ApiHelper.MakeAsyncRequest(cancellationToken, _requestProcessorParameters.RequestMethod,
-                _requestProcessorParameters.RequestSuffix,
-                FormUrlParametersString(_requestProcessorParameters.RequestParameters),
-                _requestProcessorParameters.QueryStringParameters,
-                requestHeaders?.GetRequestHeaders(), requestBodyModel, SendBodyAsQueryStringFormat);
+                _requestProcessorParameters.RequestSuffix, FormUrlParametersString(_requestProcessorParameters.RequestParameters),
+                _requestProcessorParameters.QueryStringParameters, requestHeaders?.GetRequestHeaders(), requestBodyModel,
+                SendBodyAsQueryStringFormat);
         }
 
         private static async Task<TResponseModel> ProcessResponse(HttpContent responseContent,
             bool isSuccessStatusCode, HttpStatusCode responseMessageStatusCode)
         {
-            var responseAsString = await responseContent.ReadAsStringAsync();
-            LogUtility.PrintLog(Tag, $"Response content: {responseAsString}");
+            try
+            {
+                var responseAsString = await responseContent.ReadAsStringAsync().ConfigureAwait(false);
+                LogUtility.PrintLog(Tag, $"Response content: {responseAsString}");
 
-            if (isSuccessStatusCode)
-            {
-                return JsonConverterUtility.ConvertJsonString<TResponseModel>(responseAsString);
+                if (isSuccessStatusCode)
+                {
+                    return JsonConverterUtility.ConvertJsonString<TResponseModel>(responseAsString);
+                }
+                else
+                {
+                    var errorMessageBuilder = new StringBuilder();
+                    errorMessageBuilder.Append(responseAsString);
+                    errorMessageBuilder.Append("\r\n");
+                    errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
+                    LogUtility.PrintLog(Tag, errorMessageBuilder.ToString());
+                }
             }
-            else
+            catch (Exception e)
             {
-                var errorMessageBuilder = new StringBuilder();
-                errorMessageBuilder.Append(responseAsString);
-                errorMessageBuilder.Append("\r\n");
-                errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
-                LogUtility.PrintLog(Tag, errorMessageBuilder.ToString());
+                LogUtility.PrintLogException(e);
+                throw;
             }
 
             return default;
@@ -137,38 +145,47 @@ namespace HttpRequests.RequestsProcessors
 
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
         {
-            using (var responseMessage = await SendRequestToWebServer(RequestCancellationToken,
-                _requestProcessorParameters.RequestBodyModel, _requestProcessorParameters.RequestHeaders))
+            try
             {
-                if (responseMessage == null)
+                using (var responseMessage = await SendRequestToWebServer(RequestCancellationToken, _requestProcessorParameters.RequestBodyModel,
+                    _requestProcessorParameters.RequestHeaders).ConfigureAwait(false))
                 {
-                    LogUtility.PrintLogError(Tag, "Response message is null");
-                    return default;
+                    if (responseMessage == null)
+                    {
+                        LogUtility.PrintLogError(Tag, "Response message is null");
+                        return default;
+                    }
+
+                    var requestResponse =
+                        await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode)
+                            .ConfigureAwait(false);
+                    var httpResponse = new HttpResponse
+                    {
+                        ResponseModelInterface = requestResponse, Headers = responseMessage.Headers,
+                        ResponsePhrase = responseMessage.ReasonPhrase,
+                        Success = responseMessage.IsSuccessStatusCode
+                    };
+
+                    if (responseMessage.IsSuccessStatusCode)
+                    {
+                        LogUtility.PrintLog(Tag, successfulResponseMassage);
+                    }
+                    else
+                    {
+                        var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        httpResponse.Error = CollectErrors(contentAsString);
+
+                        LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}");
+                        LogUtility.PrintLog(Tag, $"Content string: {contentAsString}");
+                    }
+
+                    return httpResponse;
                 }
-
-                var requestResponse = await ProcessResponse(responseMessage.Content,
-                    responseMessage.IsSuccessStatusCode, responseMessage.StatusCode);
-                var httpResponse = new HttpResponse
-                {
-                    ResponseModelInterface = requestResponse, Headers = responseMessage.Headers,
-                    ResponsePhrase = responseMessage.ReasonPhrase,
-                    Success = responseMessage.IsSuccessStatusCode
-                };
-
-                if (responseMessage.IsSuccessStatusCode)
-                {
-                    LogUtility.PrintLog(Tag, successfulResponseMassage);
-                }
-                else
-                {
-                    var contentAsString = await responseMessage.Content.ReadAsStringAsync();
-                    httpResponse.Error = CollectErrors(contentAsString);
-
-                    LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}");
-                    LogUtility.PrintLog(Tag, $"Content string: {contentAsString}");
-                }
-
-                return httpResponse;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 

@@ -86,7 +86,7 @@ namespace ViewModels
         }
         
 
-        protected override async void LoadDataAndFillTheList()
+        protected override async Task LoadDataAndFillTheList()
         {
             try
             {

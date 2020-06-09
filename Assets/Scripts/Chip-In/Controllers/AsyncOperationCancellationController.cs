@@ -11,8 +11,8 @@ namespace Controllers
         public void CancelOngoingTask()
         {
             if (TasksCancellationTokenSource == null || TasksCancellationTokenSource.IsDisposed) return;
-            TasksCancellationTokenSource.Token.Register(DisposeTokenSource);
             TasksCancellationTokenSource.Cancel();
+            _cancellationTokenSource = null;
         }
 
         ~AsyncOperationCancellationController()
@@ -23,7 +23,6 @@ namespace Controllers
         private void DisposeTokenSource()
         {
             _cancellationTokenSource?.Dispose();
-            _cancellationTokenSource = null;
         }
     }
 }

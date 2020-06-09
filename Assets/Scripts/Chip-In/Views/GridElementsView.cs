@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataModels;
 using DataModels.Interfaces;
 using Repositories.Local;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Utilities;
 
 namespace Views
 {
@@ -49,14 +52,21 @@ namespace Views
             }
         }
 
-        public void FillOneItemWithData(IIndexedNamedPosterUrl gridItemData)
+        public async Task FillOneItemWithData(IIndexedNamedPosterUrl gridItemData)
         {
             Assert.IsTrue(_lastFilledGridItemIndex < items.Count);
             items[_lastFilledGridItemIndex].SetItemText(gridItemData);
 
-            downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.
-                SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
-            
+            try
+            {
+                await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+
             _lastFilledGridItemIndex++;
         }
 

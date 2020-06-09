@@ -77,8 +77,16 @@ namespace ViewModels.Elements
         [Binding]
         public async void Confirm_OnClick()
         {
-            if (await TryChangePassword())
-                HideView();
+            try
+            {
+                if (await TryChangePassword())
+                    HideView();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             ClearFields();
         }
 

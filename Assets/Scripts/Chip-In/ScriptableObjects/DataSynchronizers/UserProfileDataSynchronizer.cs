@@ -10,6 +10,7 @@ using Repositories.Interfaces;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
+using Utilities;
 
 namespace ScriptableObjects.DataSynchronizers
 {
@@ -141,14 +142,32 @@ namespace ScriptableObjects.DataSynchronizers
 
         public async Task LoadDataFromServer()
         {
-            var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders);
-            UserProfile.Set(response.ResponseModelInterface);
+            try
+            {
+                var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders)
+                    .ConfigureAwait(false);
+                UserProfile.Set(response.ResponseModelInterface);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             ConfirmDataLoading();
         }
 
         public async Task SaveDataToServer()
         {
-            await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile);
+            try
+            {
+                await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             ConfirmDataSaving();
         }
 

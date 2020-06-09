@@ -7,5 +7,6 @@ namespace Repositories.Remote
         public abstract IReadOnlyList<TDataType> ItemsData { get; }
 
         public  TDataType this[int index] => ItemsData[index];
+        
     }
 }

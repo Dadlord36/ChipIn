@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels;
 using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
+using Utilities;
 using ViewModels.Cards;
 using Views;
 
@@ -16,10 +18,18 @@ namespace ViewModels
         private EngageView RelativeView => View as EngageView;
 
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            RefillInterestsList();
+            try
+            {
+                await RefillInterestsList();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         protected override void OnBecomingInactiveView()
@@ -27,7 +37,7 @@ namespace ViewModels
             base.OnBecomingInactiveView();
         }
 
-        private async void RefillInterestsList()
+        private async Task RefillInterestsList()
         {
             RelativeView.ClearScrollList();
             var itemsData = communitiesDetailsDataRepository.ItemsData;
@@ -38,17 +48,25 @@ namespace ViewModels
                 tasks[i] = CreateAndAddEngageCardToScrollList(itemsData[i]);
             }
 
-            var engageCards = await Task.WhenAll(tasks);
-
-            for (int i = 0; i < engageCards.Length; i++)
+            try
             {
-                engageCards[i].CardWasSelected += OnNewCommunityInterestCardSelected;
+                var engageCards = await Task.WhenAll(tasks);
+
+                for (int i = 0; i < engageCards.Length; i++)
+                {
+                    engageCards[i].CardWasSelected += OnNewCommunityInterestCardSelected;
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 
-        private async Task<EngageCardViewModel> CreateAndAddEngageCardToScrollList(ICommunityDetailsDataModel interestGridData)
+        private Task<EngageCardViewModel> CreateAndAddEngageCardToScrollList(ICommunityDetailsDataModel interestGridData)
         {
-            return await RelativeView.AddCardToScrollList(interestGridData);
+            return RelativeView.AddCardToScrollList(interestGridData);
         }
 
         private void OnNewCommunityInterestCardSelected(EngageCardDataModel engageCardDataModel)

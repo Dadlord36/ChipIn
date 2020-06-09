@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Controllers;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -12,7 +14,7 @@ namespace ViewModels
     public sealed class WelcomeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private SessionController sessionController;
-        
+
         private bool _isPendingLogin;
 
         [Binding]
@@ -38,15 +40,22 @@ namespace ViewModels
         public async void LoginAsGuest()
         {
             IsPendingLogin = true;
-            
-            bool success = await sessionController.TryRegisterAndLoginAsGuest();
-                
-            IsPendingLogin = false;
 
-            if (success)
+            try
             {
-                SwitchToView(nameof(CoinsGameView));
+                bool success = await sessionController.TryRegisterAndLoginAsGuest();
+                if (success)
+                {
+                    SwitchToView(nameof(CoinsGameView));
+                }
             }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+
+            IsPendingLogin = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

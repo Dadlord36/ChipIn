@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using Behaviours.Games;
 using Common.Interfaces;
-using DataModels.Interfaces;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
@@ -161,7 +161,7 @@ namespace ViewModels
 
         public void StartTimer(float timeInterval)
         {
-            PrintLog($"Timer interval is: {timeInterval.ToString()}");
+            PrintLog($"Timer interval is: {timeInterval.ToString(CultureInfo.CurrentCulture)}");
             timer.SetAndStartTimer(timeInterval);
         }
 

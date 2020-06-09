@@ -39,34 +39,50 @@ namespace Controllers
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
-            var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel);
-
-            if (response.ResponseModelInterface == null)
+            try
             {
-                LogUtility.PrintLog(Tag, "SignIn response model is null");
-                alertCardController.ShowAlertWithText(response.Error);
-                return;
+                var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel).ConfigureAwait(false);
+
+                if (response.ResponseModelInterface == null)
+                {
+                    LogUtility.PrintLog(Tag, "SignIn response model is null");
+                    alertCardController.ShowAlertWithText(response.Error);
+                    return;
+                }
+
+                if (response.ResponseModelInterface.Success)
+                {
+                    repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
+                    SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
+                    SwitchToViewCorrespondingToUseRole();
+                    sessionStateRepository.ConfirmSingingIn();
+
+                }
+                else
+                {
+                    alertCardController.ShowAlertWithText(response.Error);
+                }
             }
-
-            if (response.ResponseModelInterface.Success)
+            catch (Exception e)
             {
-                repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
-
-                SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
-                SwitchToViewCorrespondingToUseRole();
-                sessionStateRepository.ConfirmSingingIn();
-            }
-            else
-            {
-                alertCardController.ShowAlertWithText(response.Error);
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 
-        public async void SignOut()
+        public async Task SignOut()
         {
-            if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
-                await sessionStateRepository.SignOut();
-            SwitchToLoginView();
+            try
+            {
+                if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
+                    await sessionStateRepository.SignOut();
+                SwitchToLoginView();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void SwitchToViewCorrespondingToUseRole()
@@ -137,19 +153,28 @@ namespace Controllers
 
         public async Task<bool> TryRegisterAndLoginAsGuest()
         {
-            var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource);
-            
-            var result = authorisationModel;
-            if (!result.Success)
+            try
             {
-                LogUtility.PrintLog(Tag, "Failed to register user as Guest");
-                alertCardController.ShowAlertWithText(result.Error);
-                return false;
-            }
+                var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource)
+                    .ConfigureAwait(false);
 
-            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(result.ResponseModelInterface.AuthorisationData);
-            SaveUserAuthentication(MainNames.UserRoles.Guest);
-            return true;
+                var result = authorisationModel;
+                if (!result.Success)
+                {
+                    LogUtility.PrintLog(Tag, "Failed to register user as Guest");
+                    alertCardController.ShowAlertWithText(result.Error);
+                    return false;
+                }
+
+                repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(result.ResponseModelInterface.AuthorisationData);
+                SaveUserAuthentication(MainNames.UserRoles.Guest);
+                return true;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void OnSwitchingToMode(SessionMode obj)

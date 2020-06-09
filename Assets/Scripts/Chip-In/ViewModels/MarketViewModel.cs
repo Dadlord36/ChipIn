@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -17,10 +18,18 @@ namespace ViewModels
         [SerializeField] private float max = 10f;*/
         private MarketView ThisView => View as MarketView;
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            TryUpdateRadarViewData();
+            try
+            {
+                await TryUpdateRadarViewData();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         protected override void OnBecomingInactiveView()
@@ -49,7 +58,7 @@ namespace ViewModels
             DebugPoints();
         }*/
 
-        private async void TryUpdateRadarViewData()
+        private async Task TryUpdateRadarViewData()
         {
             try
             {

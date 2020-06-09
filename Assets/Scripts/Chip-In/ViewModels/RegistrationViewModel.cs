@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DataModels;
 using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using JetBrains.Annotations;
@@ -107,7 +107,15 @@ namespace ViewModels
         public async void TryToRegister()
         {
             PendingRegister = true;
-            await Register();
+            try
+            {
+                await Register();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             PendingRegister = false;
         }
 
@@ -132,16 +140,24 @@ namespace ViewModels
 
         private async Task Register()
         {
-            var result = await RegistrationStaticProcessor.TryRegisterUserFull(out TasksCancellationTokenSource, _registrationRequestModel);
-            // If registration was successful 
-            if (result.Success)
+            try
             {
-                LogUtility.PrintLog(Tag, "User have been registered successfully!");
-                SwitchToCheckYourEmailView();
+                var result = await RegistrationStaticProcessor.TryRegisterUserFull(out TasksCancellationTokenSource, _registrationRequestModel);
+                // If registration was successful 
+                if (result.Success)
+                {
+                    LogUtility.PrintLog(Tag, "User have been registered successfully!");
+                    SwitchToCheckYourEmailView();
+                }
+                else
+                {
+                    alertCardController.ShowAlertWithText(result.Error);
+                }
             }
-            else
+            catch (Exception e)
             {
-                alertCardController.ShowAlertWithText(result.Error);
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 

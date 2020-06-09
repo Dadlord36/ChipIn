@@ -26,7 +26,7 @@ namespace Repositories.Remote
                 var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(out TasksCancellationTokenSource,
                     authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
-                var items = await LoadCommunitiesDetailsData(responseInterface.Communities);
+                var items = await LoadCommunitiesDetailsData(responseInterface.Communities).ConfigureAwait(false);
                 ItemsLiveData = new LiveData<CommunityDetailsDataModel>(items);
                 ConfirmDataLoading();
             }
@@ -34,11 +34,11 @@ namespace Repositories.Remote
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
+                throw;
             }
         }
 
-        private async Task<CommunityDetailsDataModel[]> LoadCommunitiesDetailsData(
-            IReadOnlyList<CommunityBasicDataModel> communitiesBasicData)
+        private async Task<CommunityDetailsDataModel[]> LoadCommunitiesDetailsData(IReadOnlyList<CommunityBasicDataModel> communitiesBasicData)
         {
             var count = communitiesBasicData.Count;
 
@@ -49,17 +49,24 @@ namespace Repositories.Remote
                 var id = (int) communitiesBasicData[i].Id;
                 tasks[i] = CommunitiesStaticRequestsProcessor.GetCommunityDetails(out TasksCancellationTokenSource, authorisationDataRepository, id);
             }
-
-
-            var result = await Task.WhenAll(tasks);
-            var dataModels = new CommunityDetailsDataModel[count];
-
-            for (var index = 0; index < result.Length; index++)
+            
+            try
             {
-                dataModels[index] = result[index].ResponseModelInterface.LabelDetailsDataModel;
-            }
+                var result = await Task.WhenAll(tasks).ConfigureAwait(false);
+                var dataModels = new CommunityDetailsDataModel[count];
 
-            return dataModels;
+                for (var index = 0; index < result.Length; index++)
+                {
+                    dataModels[index] = result[index].ResponseModelInterface.LabelDetailsDataModel;
+                }
+
+                return dataModels;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         public override async Task SaveDataToServer()

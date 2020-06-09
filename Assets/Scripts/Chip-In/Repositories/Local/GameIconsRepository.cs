@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CustomAnimators;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
+using HttpRequests;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -15,7 +16,7 @@ namespace Repositories.Local
 {
     public interface IRestorable
     {
-        void Restore();
+        Task Restore();
     }
 
     [CreateAssetMenu(fileName = nameof(GameIconsRepository), menuName =
@@ -172,7 +173,15 @@ namespace Repositories.Local
         public async Task StoreNewGameIconsSet(int gameId, IReadOnlyList<IndexedUrl> indexedUrls)
         {
             _iconsSetIsLoaded = false;
-            await DownloadBoardIconsSetFromUrls(gameId, indexedUrls);
+            try
+            {
+                await DownloadBoardIconsSetFromUrls(gameId, indexedUrls);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
 
             _iconsSetIsLoaded = true;
             OnIconsSetWasLoaded();
@@ -182,8 +191,8 @@ namespace Repositories.Local
         {
             try
             {
-                IReadOnlyList<byte[]> textures =
-                    await ImagesDownloadingUtility.DownloadMultipleDataArrayFromUrls(indexedUrls);
+                IReadOnlyList<byte[]> textures = await ImagesDownloadingUtility
+                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls).ConfigureAwait(false);
                 LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
                 SaveIconsData(gameId, textures, indexedUrls);
                 FillBoardIconsData(gameId, SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,
@@ -204,7 +213,7 @@ namespace Repositories.Local
 
         private static void RemoveDirectoryAndFilesInIt(string directory)
         {
-            Directory.Delete(directory,true);
+            Directory.Delete(directory, true);
         }
 
         private void FillBoardIconsData(int gameId, BoardIconData[] boardIconData)
@@ -321,7 +330,16 @@ namespace Repositories.Local
                 var packedIconsDataTask = LoadPackedIconsData(gameId);
 
                 var tasks = new List<Task> {storingHeadersTask, packedIconsDataTask};
-                await Task.WhenAll(tasks);
+                try
+                {
+                    await Task.WhenAll(tasks);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
+                    throw;
+                }
+
                 return new IconsSetRestoringData(storingHeadersTask.Result, packedIconsDataTask.Result);
             }
         }
@@ -339,8 +357,16 @@ namespace Repositories.Local
 
         private static async Task<ImagesStoringHeaderDataModel> LoadStoringHeaderData(int gameId)
         {
-            var headersAsString = await FilesUtility.ReadFileTextAsync(CreateIconsDataHeaderFilePath(gameId));
-            return JsonConverterUtility.ConvertJsonString<ImagesStoringHeaderDataModel>(headersAsString);
+            try
+            {
+                var headersAsString = await FilesUtility.ReadFileTextAsync(CreateIconsDataHeaderFilePath(gameId)).ConfigureAwait(false);
+                return JsonConverterUtility.ConvertJsonString<ImagesStoringHeaderDataModel>(headersAsString);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private static Task<byte[]> LoadPackedIconsData(int gameId)
@@ -402,7 +428,7 @@ namespace Repositories.Local
             return GamesIds;
         }
 
-        public async void Restore()
+        public async Task Restore()
         {
             if (!RestoringDataExists()) return;
             var savedGamesIds = GetGamesIdsFromGameSubdirectories();
@@ -414,11 +440,19 @@ namespace Repositories.Local
                 tasks.Add(IconsSetRestoringData.CreateAsync(savedGamesIds[i]));
             }
 
-            var iconsRestoringData = await Task.WhenAll(tasks);
-
-            for (int i = 0; i < length; i++)
+            try
             {
-                LoadIconsData(iconsRestoringData[i]);
+                var iconsRestoringData = await Task.WhenAll(tasks);
+
+                for (int i = 0; i < length; i++)
+                {
+                    LoadIconsData(iconsRestoringData[i]);
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
 
             LogUtility.PrintLog(Tag, "Icons data was restored from save file");

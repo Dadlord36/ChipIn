@@ -32,7 +32,7 @@ namespace RequestsStaticProcessors
             GetCommunityDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId)
         {
             return new CommunityDetailsGetProcessor(out cancellationTokenSource, requestHeaders, communityId).SendRequest(
-                "Community was retrieved");
+                "Community details data was retrieved");
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>

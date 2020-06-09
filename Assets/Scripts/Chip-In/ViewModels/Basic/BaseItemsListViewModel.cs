@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -29,11 +30,19 @@ namespace ViewModels.Basic
             }
         }
 
-        protected override void OnEnable()
+        protected override async void OnEnable()
         {
             base.OnEnable();
             SubscribeToViewEvents();
-            LoadDataAndFillTheList();
+
+            try
+            {
+                await LoadDataAndFillTheList();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            } 
         }
 
         protected override void OnDisable()
@@ -66,7 +75,7 @@ namespace ViewModels.Basic
             ItemIsSelected = true;
         }
 
-        protected abstract void LoadDataAndFillTheList();
+        protected abstract Task LoadDataAndFillTheList();
         protected abstract Task FillDropdownList();
 
         protected void FillDropdownList(Dictionary<int?, string> dictionary)

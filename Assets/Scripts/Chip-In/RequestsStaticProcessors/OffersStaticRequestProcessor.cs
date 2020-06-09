@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,31 +55,37 @@ namespace RequestsStaticProcessors
                 form.Add(new StringContent(element.Value), $"offer[{element.Key}]");
             }
 
-
-            var formAsString = await form.ReadAsStringAsync();
-            LogUtility.PrintLog(Tag, formAsString);
-
-
-            using (var response = await await ApiHelper.MakeAsyncMultiPartRequest(cancellationTokenSource.Token, HttpMethod.Post,
-                ApiCategories.Offers, form, requestHeaders.GetRequestHeaders()))
+            try
             {
-                LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
-                LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseAsString = await response.Content.ReadAsStringAsync();
-                    LogUtility.PrintLog(Tag, responseAsString);
+                var formAsString = await form.ReadAsStringAsync().ConfigureAwait(false);
+                LogUtility.PrintLog(Tag, formAsString);
 
+                var requestTask = await ApiHelper.MakeAsyncMultiPartRequest(cancellationTokenSource.Token, HttpMethod.Post,
+                    ApiCategories.Offers, form, requestHeaders.GetRequestHeaders()).ConfigureAwait(false);
 
-                    return JsonConverterUtility
-                        .ConvertJsonString<ChallengingOfferWithIdentifierModel>(responseAsString);
-                }
-                else
+                using (var response = await requestTask.ConfigureAwait(false))
                 {
-                    var asString = await response.Content.ReadAsStringAsync();
-                    LogUtility.PrintLogError(Tag, "Offer was not created");
-                    LogUtility.PrintLog(Tag, $"Response body: {asString}");
+                    LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
+                    LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        LogUtility.PrintLog(Tag, responseAsString);
+
+                        return JsonConverterUtility.ConvertJsonString<ChallengingOfferWithIdentifierModel>(responseAsString);
+                    }
+                    else
+                    {
+                        var asString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                        LogUtility.PrintLogError(Tag, "Offer was not created");
+                        LogUtility.PrintLog(Tag, $"Response body: {asString}");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
 
             return null;
@@ -87,7 +94,8 @@ namespace RequestsStaticProcessors
         public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
             GetOfferDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int? offerId)
         {
-            return TryGetOfferDetails(out cancellationTokenSource, new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
+            return TryGetOfferDetails(out cancellationTokenSource,
+                new DetailedOfferGetProcessor.DetailedOfferGetProcessorParameters(requestHeaders, offerId));
         }
     }
 }

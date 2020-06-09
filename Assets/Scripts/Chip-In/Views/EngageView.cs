@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DataModels;
+using HttpRequests;
 using UnityEngine;
+using Utilities;
 using ViewModels.Cards;
 using WebOperationUtilities;
 
@@ -21,13 +24,21 @@ namespace Views
 
         public async Task<EngageCardViewModel> AddCardToScrollList(ICommunityDetailsDataModel communityDetailsDataModel)
         {
-            var posterTexture = await ImagesDownloadingUtility.TryDownloadImageAsync(communityDetailsDataModel.PosterUri);
-            var engageCardView = Instantiate(prefab, scrollViewContainer);
-            
-            engageCardView.FillCardWithData(new EngageCardDataModel(communityDetailsDataModel,
-                SpritesUtility.CreateSpriteWithDefaultParameters(posterTexture)));
+            try
+            {
+                var posterTexture = await ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, communityDetailsDataModel.PosterUri);
+                var engageCardView = Instantiate(prefab, scrollViewContainer);
 
-            return engageCardView;
+                engageCardView.FillCardWithData(new EngageCardDataModel(communityDetailsDataModel,
+                    SpritesUtility.CreateSpriteWithDefaultParameters(posterTexture)));
+
+                return engageCardView;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

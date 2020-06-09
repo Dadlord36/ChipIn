@@ -16,24 +16,39 @@ namespace HttpRequests
     {
         private const string Tag = nameof(ApiHelper);
 
-        private static HttpClient _apiClient;
+        private static HttpClient _mainApiClient;
+        private static HttpClient _defaultClient;
+
         private const string JsonMediaTypeHeader = "application/json";
         private const string MultipartFormData = "multipart/form-data";
 
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
-//        private const string ApiUri = "https://reqres.in/", ApiVersion = "";
+
+        public static HttpClient DefaultClient => _defaultClient;
 
         public static void InitializeClient()
         {
-            if (_apiClient != null) return;
+            if (_defaultClient == null)
+            {
+                _defaultClient = new HttpClient();
+            }
 
-            _apiClient = new HttpClient {BaseAddress = new Uri(ApiUri + ApiVersion)};
-            _apiClient.DefaultRequestHeaders.Accept.Clear();
+            if (_mainApiClient != null) return;
+
+            _mainApiClient = new HttpClient {BaseAddress = new Uri(ApiUri + ApiVersion)};
+            _mainApiClient.DefaultRequestHeaders.Accept.Clear();
         }
 
-        public static void Dispose()
+
+        public static void Close()
         {
-            _apiClient.Dispose();
+            _mainApiClient.CancelPendingRequests();
+            _defaultClient.CancelPendingRequests();
+
+            _mainApiClient.Dispose();
+            _defaultClient.Dispose();
+            _mainApiClient = null;
+            _defaultClient = null;
         }
 
         private static string FormRequestUri(string requestSuffix, string requestParameters,
@@ -45,7 +60,7 @@ namespace HttpRequests
                 queryString = QueryHelpers.MakeAUriQueryString(queryStringParams);
             }
 
-            return $"{_apiClient.BaseAddress}{requestSuffix}{requestParameters}{queryString}";
+            return $"{_mainApiClient.BaseAddress}{requestSuffix}{requestParameters}{queryString}";
         }
 
         private static void AddHeaders(HttpRequestMessage requestMessage,
@@ -95,7 +110,7 @@ namespace HttpRequests
                 }
 
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(JsonMediaTypeHeader));
-                return _apiClient.SendAsync(requestMessage, cancellationToken);
+                return _mainApiClient.SendAsync(requestMessage, cancellationToken);
             }
         }
 
@@ -105,14 +120,22 @@ namespace HttpRequests
         {
             Assert.IsFalse(requestHeaders == null && formDataContent == null);
 
-            var asString = await formDataContent.ReadAsStringAsync();
-            LogUtility.PrintLog(Tag, $"MultipartFormDataContent: {asString}");
+            try
+            {
+                var asString = await formDataContent.ReadAsStringAsync().ConfigureAwait(false);
+                LogUtility.PrintLog(Tag, $"MultipartFormDataContent: {asString}");
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             using (var requestMessage = new HttpRequestMessage(methodType, FormRequestUri(requestSuffix, null, null)))
             {
                 AddHeaders(requestMessage, requestHeaders);
                 requestMessage.Content = formDataContent;
                 requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
-                return _apiClient.SendAsync(requestMessage, cancellationToken);
+                return _mainApiClient.SendAsync(requestMessage, cancellationToken);
             }
         }
 
@@ -122,6 +145,7 @@ namespace HttpRequests
 
             return CreateStringContent(contentAsString);
         }
+
 
         private static StringContent CreateStringContent(string content)
         {

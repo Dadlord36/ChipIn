@@ -70,13 +70,21 @@ namespace ViewModels
             qrCodeReader.StopWork();
         }
 
-        private void CodeReaderOnCodeFinished(string decodedText)
+        private async void CodeReaderOnCodeFinished(string decodedText)
         {
             Handheld.Vibrate();
-            ActivateProduct(decodedText);
+            try
+            {
+                await ActivateProduct(decodedText);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private async void ActivateProduct(string decodedText)
+        private async Task ActivateProduct(string decodedText)
         {
             try
             {

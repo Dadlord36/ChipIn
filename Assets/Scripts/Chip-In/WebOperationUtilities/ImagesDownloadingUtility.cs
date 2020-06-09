@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using UnityEngine;
-using UnityEngine.Networking;
 using Utilities;
 
 namespace WebOperationUtilities
@@ -14,7 +12,7 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
-        public static Task<Texture2D[]> TryDownloadImagesArray(string[] imagesUrls)
+        public static Task<Texture2D[]> TryDownloadImagesArray(HttpClient httpClient, string[] imagesUrls)
         {
             try
             {
@@ -22,7 +20,7 @@ namespace WebOperationUtilities
                 var tasks = new Task<Texture2D> [length];
                 for (var i = 0; i < length; i++)
                 {
-                    tasks[i] = TryDownloadImageAsync(imagesUrls[i]);
+                    tasks[i] = TryDownloadImageAsync(httpClient, imagesUrls[i]);
                 }
 
                 return Task.WhenAll(tasks);
@@ -34,31 +32,32 @@ namespace WebOperationUtilities
             }
         }
 
-        public static async Task<Texture2D> TryDownloadImageAsync(string url)
+        public static async Task<Texture2D> TryDownloadImageAsync(HttpClient httpClient, string url)
         {
             try
             {
+                Texture2D textureToReturn = null;
+
                 if (string.IsNullOrEmpty(url))
                 {
                     throw new Exception("Given url is null or empty");
                 }
 
-                using (var client = UnityWebRequestTexture.GetTexture(url))
+                await CreateLoadDataTask(httpClient, url).ContinueWith(async delegate(Task<byte[]> task)
                 {
-                    PrintLog("Image Loading started");
-                    var webRequest = client.SendWebRequest();
-
-                    while (!webRequest.isDone)
+                    try
                     {
-                        PrintLog($"ImageLoadingProgress: {webRequest.progress.ToString()}");
-                        await Task.Delay(100);
+                        textureToReturn = new Texture2D(0, 0);
+                        textureToReturn.LoadImage(await task);
+                        textureToReturn.Apply();
                     }
-
-                    PrintLog("Image Loaded");
-
-
-                    return DownloadHandlerTexture.GetContent(webRequest.webRequest);
-                }
+                    catch (Exception e)
+                    {
+                        LogUtility.PrintLogException(e);
+                        throw;
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext()).ConfigureAwait(false);
+                return textureToReturn;
             }
             catch (Exception e)
             {
@@ -67,28 +66,20 @@ namespace WebOperationUtilities
             }
         }
 
-        public static async Task<List<byte[]>> DownloadMultipleDataArrayFromUrls(IReadOnlyList<IUrl> imagesUrls)
+        public static Task<byte[]> CreateLoadDataTask(HttpClient httpClient, in string uri)
         {
-            try
-            {
-                var tasks = new List<Task<byte[]>>(imagesUrls.Count);
-                for (int i = 0; i < imagesUrls.Count; i++)
-                {
-                    using (var client = new WebClient())
-                    {
-                        tasks.Add(client.DownloadDataTaskAsync(imagesUrls[i].Url));
-                        client.DownloadProgressChanged += (sender, args) => LogUtility.PrintLog(Tag, $"{sender} progress: {args.ProgressPercentage.ToString()}");
-                    }
-                }
+            return httpClient.GetByteArrayAsync(uri);
+        }
 
-                var bytesArray = await Task.WhenAll(tasks);
-                return bytesArray.ToList();
-            }
-            catch (Exception e)
+        public static Task<byte[][]> CreateDownloadMultipleDataArrayFromUrlsTask(HttpClient httpClient, IReadOnlyList<IUrl> imagesUrls)
+        {
+            var tasks = new List<Task<byte[]>>(imagesUrls.Count);
+            foreach (var url in imagesUrls)
             {
-                LogUtility.PrintLogException(e);
-                throw;
+                tasks.Add(CreateLoadDataTask(httpClient, url.Url));
             }
+
+            return Task.WhenAll(tasks);
         }
 
         private static void PrintLog(string message)
@@ -99,27 +90,6 @@ namespace WebOperationUtilities
         private static void PrintException(Exception exception)
         {
             LogUtility.PrintLogException(exception);
-        }
-    }
-
-    public static class DataDownloadingUtility
-    {
-        private const string Tag = "DataDownloading";
-
-        public static Task<byte[]> DownloadRawImageData(string uri)
-        {
-            using (var myWebClient = new WebClient())
-            {
-                // Download home page data.
-                PrintLog($"Downloading {uri}");
-                // Download the Web resource and save it into a data buffer.
-                return myWebClient.DownloadDataTaskAsync(uri);
-            }
-        }
-
-        private static void PrintLog(string message)
-        {
-            LogUtility.PrintLog(Tag, message);
         }
     }
 }

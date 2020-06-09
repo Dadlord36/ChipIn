@@ -13,13 +13,7 @@ namespace ViewModels
         {
             Assert.IsNotNull(miniGame);
         }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            Destroy(miniGame.gameObject);
-        }
-
+        
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -28,9 +22,28 @@ namespace ViewModels
             game.GameComplete += SwitchToMarketplace;
         }
 
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            UnsubscribeFromEvents();
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            var game = miniGame as IGame;
+            Assert.IsNotNull(game);
+            game.GameComplete -= SwitchToMarketplace;
+        }
+        
+        private void DestroyMiniGame()
+        {
+            Destroy(miniGame.gameObject);
+        }
+        
         private void SwitchToMarketplace()
         {
             SwitchToView(nameof(MarketplaceView));
+            UnsubscribeFromEvents();
         }
     }
 }

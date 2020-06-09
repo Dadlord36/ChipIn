@@ -3,18 +3,13 @@ using UnityEngine;
 
 namespace Controllers
 {
-    [CreateAssetMenu(fileName = nameof(DataRestorationController), menuName = nameof(Controllers) + "/" + nameof(DataRestorationController), order = 0)]
-    public class DataRestorationController : ScriptableObject, IRestorable
+    [CreateAssetMenu(fileName = nameof(DataRestorationController), menuName = nameof(Controllers) + "/" + nameof(DataRestorationController),
+        order = 0)]
+    public class DataRestorationController : BatchedInterfaceInvoker<IRestorable>
     {
-        [SerializeField] private Object[] restorableRepositories;
-
-
-        public void Restore()
+        protected override void InvokeInterfaceMainFunction(IRestorable objectInterface)
         {
-            for (int i = 0; i < restorableRepositories.Length; i++)
-            {
-                (restorableRepositories[i] as IRestorable)?.Restore();
-            }
+            objectInterface.Restore();
         }
     }
 }

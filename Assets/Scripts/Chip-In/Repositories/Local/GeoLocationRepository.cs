@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ActionsTranslators;
 using Common.Structures;
 using Common.Timers;
@@ -40,7 +41,6 @@ namespace Repositories.Local
         private readonly TimerController _timerController = new TimerController();
         private bool _shouldUpdateTimer;
         private readonly UserGeoLocationDataModel _userGeoLocationData = new UserGeoLocationDataModel();
-
 
 
         private static LocationInfo LastLocationData => Input.location.lastData;
@@ -100,9 +100,8 @@ namespace Repositories.Local
             userProfileRemoteRepository.DataWasLoaded += OnUserProfileDataWasLoaded;
         }
 
-        protected override void OnDisable()
+        private void OnDisable()
         {
-            base.OnDisable();
             _timerController.Elapsed -= OnTimerElapsed;
             sessionStateRepository.SigningOut -= DisableLocationService;
             userProfileRemoteRepository.DataWasLoaded -= OnUserProfileDataWasLoaded;
@@ -169,9 +168,17 @@ namespace Repositories.Local
             AllowTimerUpdate();
         }
 
-        private void OnTimerElapsed()
+        private async void OnTimerElapsed()
         {
-            UpdateLocationData();
+            try
+            {
+                await UpdateLocationData();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
             RestartTimer();
         }
 
@@ -181,7 +188,7 @@ namespace Repositories.Local
                 _timerController.Update();
         }
 
-        private void UpdateLocationData()
+        private Task UpdateLocationData()
         {
             var lastLocationData = LastLocationData;
             _userGeoLocationData.UserLocation = new GeoLocation
@@ -190,10 +197,10 @@ namespace Repositories.Local
                 longitude = lastLocationData.longitude
             };
 
-            TryToSaveLocationToServer();
+            return TryToSaveLocationToServer();
         }
 
-        private async void TryToSaveLocationToServer()
+        private async Task TryToSaveLocationToServer()
         {
             try
             {
