@@ -64,11 +64,12 @@ namespace Repositories.Local
 
         public bool GameWasSelected { get; private set; }
 
-        public async Task SaveGameSateData(SlotsGameBehaviour.SlotGameRoundData roundData)
+        public Task SaveGameSateData(SlotsGameBehaviour.SlotGameRoundData roundData)
         {
             InitializeUsersData(roundData.UsersData);
             WinnerId = roundData.WinnerId;
             OnUsersDataUpdated(_matchUsersData);
+            return Task.CompletedTask;
         }
 
 

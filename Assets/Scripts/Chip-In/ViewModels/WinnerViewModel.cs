@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using ActionsTranslators;
 using Repositories.Local;
-using Repositories.Remote;
 using UnityEngine;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -30,18 +30,26 @@ namespace ViewModels
             SwitchToView(nameof(MyChallengeView));
         }
 
-        protected override void OnEnable()
+        protected override async void OnEnable()
         {
             base.OnEnable();
             var winnerView = (WinnerView) View;
             var iconUrl = slotsGameRepository.GetWinnerUserData().AvatarUrl;
 
-            downloadedSpritesRepository.TryToLoadSpriteAsync(
-                new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(iconUrl,
+            try
+            {
+                await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(iconUrl,
                     winnerView.SetMainAvatarIconSprite));
 
-            winnerView.UserNameFieldText = "Winner";
-            winnerView.SetOtherAvatarsSprites(slotsGameRepository.UsersAvatarImagesSprites);
+
+                winnerView.UserNameFieldText = "Winner";
+                await winnerView.SetOtherAvatarsSprites(slotsGameRepository.UsersAvatarImagesSprites);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

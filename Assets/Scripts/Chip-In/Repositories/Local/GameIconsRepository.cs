@@ -442,7 +442,7 @@ namespace Repositories.Local
 
             try
             {
-                var iconsRestoringData = await Task.WhenAll(tasks);
+                var iconsRestoringData = await Task.WhenAll(tasks).ConfigureAwait(false);
 
                 for (int i = 0; i < length; i++)
                 {

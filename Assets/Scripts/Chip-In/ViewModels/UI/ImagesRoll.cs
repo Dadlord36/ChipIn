@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Repositories.Local;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using Utilities;
 using ViewModels.UI.Elements.Icons;
 using Debug = System.Diagnostics.Debug;
 
@@ -44,7 +46,7 @@ namespace ViewModels.UI
 
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private IconEllipsesRepository ellipsesRepository;
-        
+
         [SerializeField] private GameObject userAvatarIconPrefab;
         [SerializeField] private ushort numberOfImages;
         [SerializeField] private ushort numberOfItemsInRow;
@@ -79,14 +81,22 @@ namespace ViewModels.UI
             mainImage.AvatarSprite = sprite;
         }
 
-        public void SetOtherAvatarsIconSprites(IReadOnlyList<string> avatarSprites)
+        public async Task SetOtherAvatarsIconSprites(IReadOnlyList<string> avatarSprites)
         {
             Assert.IsTrue(otherIcons.Length == avatarSprites.Count);
-            for (int i = 0; i < otherIcons.Length; i++)
+            try
             {
-                downloadedSpritesRepository.TryToLoadSpriteAsync(
-                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(avatarSprites[i],
-                        otherIcons[i].SetAvatarSprite));
+                for (int i = 0; i < otherIcons.Length; i++)
+                {
+                    await downloadedSpritesRepository.TryToLoadSpriteAsync(
+                        new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(avatarSprites[i],
+                            otherIcons[i].SetAvatarSprite));
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 

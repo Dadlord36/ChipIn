@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataModels.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,9 +20,9 @@ namespace Views
         {
         }
 
-        public void UpdateGridItemsContent(IReadOnlyList<IIndexedNamedPosterUrl> dataRepositoryItems)
+        public Task UpdateGridItemsContent(IReadOnlyList<IIndexedNamedPosterUrl> dataRepositoryItems)
         {
-            gridElementsViewModel.UpdateGridContent(dataRepositoryItems);
+           return gridElementsViewModel.UpdateGridContent(dataRepositoryItems);
         }
 
         protected override void OnSwiped(MoveDirection swipeDetector)

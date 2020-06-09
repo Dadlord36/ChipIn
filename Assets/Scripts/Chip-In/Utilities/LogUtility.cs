@@ -35,5 +35,10 @@ namespace Utilities
             Debug.unityLogger.LogException(exception, context);
 #endif
         }
+
+        public static void PrintDefaultOperationCancellationLog(in string tag)
+        {
+            PrintLog(tag,"Ongoing operation was cancelled");
+        }
     }
 }

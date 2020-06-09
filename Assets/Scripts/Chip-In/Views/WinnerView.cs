@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Repositories.Local;
 using TMPro;
 using UnityEngine;
@@ -21,9 +22,9 @@ namespace Views
             imagesRoll.SetMainAvatarIconSprite(sprite);
         }
 
-        public void SetOtherAvatarsSprites(IReadOnlyList<string> avatarSprites)
+        public Task SetOtherAvatarsSprites(IReadOnlyList<string> avatarSprites)
         {
-            imagesRoll.SetOtherAvatarsIconSprites(avatarSprites);
+            return imagesRoll.SetOtherAvatarsIconSprites(avatarSprites);
         }
     }
 }

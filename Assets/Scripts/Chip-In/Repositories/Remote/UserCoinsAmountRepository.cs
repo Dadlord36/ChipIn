@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Controllers;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -50,9 +51,9 @@ namespace Repositories.Remote
             CoinsAmount = (uint) TokensBalance;
         }
 
-        public void UpdateRepositoryData()
+        public Task UpdateRepositoryData()
         {
-            userProfileRemoteRepository.LoadDataFromServer();
+            return userProfileRemoteRepository.LoadDataFromServer();
         }
 
         public void Clear()

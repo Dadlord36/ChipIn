@@ -77,7 +77,7 @@ namespace ViewModels
                 throw;
             }
         }
-        
+
         private async void OnSwipedToRight()
         {
             try
@@ -90,13 +90,13 @@ namespace ViewModels
                 throw;
             }
         }
-        
-        
+
+
         private async Task TryToFillWithCurrentPageItems()
         {
             try
             {
-                FillGridViewWithItems(await _paginatedDataExplorer.TryToGetCurrentPageItems());
+                await FillGridViewWithItems(await _paginatedDataExplorer.TryToGetCurrentPageItems());
             }
             catch (Exception e)
             {
@@ -109,7 +109,7 @@ namespace ViewModels
         {
             try
             {
-                FillGridViewWithItems(await _paginatedDataExplorer.TryToGetNextPageItems());
+                await FillGridViewWithItems(await _paginatedDataExplorer.TryToGetNextPageItems());
             }
             catch (Exception e)
             {
@@ -122,7 +122,7 @@ namespace ViewModels
         {
             try
             {
-                FillGridViewWithItems(await _paginatedDataExplorer.TryToGetPreviousPageItems());
+                await FillGridViewWithItems(await _paginatedDataExplorer.TryToGetPreviousPageItems());
             }
             catch (Exception e)
             {
@@ -131,15 +131,11 @@ namespace ViewModels
             }
         }
 
-        private void FillGridViewWithItems(IReadOnlyList<CommunityBasicDataModel> communityBasicDataModels)
+        private Task FillGridViewWithItems(IReadOnlyList<CommunityBasicDataModel> communityBasicDataModels)
         {
-            if (communityBasicDataModels == null)
-            {
-                LogUtility.PrintLog(Tag, "There is no items left");
-                return;
-            }
-
-            RelatedView.UpdateGridItemsContent(communityBasicDataModels);
+            if (communityBasicDataModels != null) return RelatedView.UpdateGridItemsContent(communityBasicDataModels);
+            LogUtility.PrintLog(Tag, "There is no items left");
+            return Task.CompletedTask;
         }
     }
 }

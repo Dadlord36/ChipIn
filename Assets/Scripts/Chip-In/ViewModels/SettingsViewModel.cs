@@ -1,6 +1,9 @@
-﻿using Controllers;
+﻿using System;
+using System.Threading.Tasks;
+using Controllers;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views.Cards.Settings;
 using Views.ViewElements.ViewsPlacers;
 
@@ -26,9 +29,17 @@ namespace ViewModels
         }
         
         [Binding]
-        public void LogOut_OnClick()
+        public async void LogOut_OnClick()
         {
-            LogOut();
+            try
+            {
+                await LogOut();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         [Binding]
@@ -49,9 +60,9 @@ namespace ViewModels
             SwitchToView(nameof(MyInterestView));
         }
 
-        private void LogOut()
+        private Task LogOut()
         {
-            sessionController.SignOut();
+            return sessionController.SignOut();
         }
     }
 }

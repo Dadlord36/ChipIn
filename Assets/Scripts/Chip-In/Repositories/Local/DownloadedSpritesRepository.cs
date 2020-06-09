@@ -32,9 +32,10 @@ namespace Repositories.Local
             public Task InvokeDownloading()
             {
                 var loadedTexture = ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, Url);
-                return loadedTexture.ContinueWith(delegate(Task<Texture2D> task)
+                return loadedTexture.ContinueWith(async delegate(Task<Texture2D> task)
                 {
-                    LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(task.Result);
+                    var texture = await task;
+                    LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
                     IsLoaded = true;
                     OnLoaded(LoadedSprite);
                 }, TaskScheduler.FromCurrentSynchronizationContext());

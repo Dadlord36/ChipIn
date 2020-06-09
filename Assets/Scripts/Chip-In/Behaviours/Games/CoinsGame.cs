@@ -43,9 +43,9 @@ namespace Behaviours.Games
             }
         }
 
-        private void UpdateCoinsRepository()
+        private Task UpdateCoinsRepository()
         {
-            coinsAmountRepository.UpdateRepositoryData();
+            return coinsAmountRepository.UpdateRepositoryData();
         }
 
         private async Task InitializeCoinsGame()
@@ -108,7 +108,7 @@ namespace Behaviours.Games
                 var responseInterface = result.ResponseModelInterface;
                 _coinsAmount = responseInterface.CoinsTossingResultData.NewCoins;
 
-                UpdateCoinsRepository();
+                await UpdateCoinsRepository();
             }
             catch (Exception e)
             {

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataModels.MatchModels;
 using Repositories.Local;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Utilities;
 using ViewModels.UI.Elements.Icons;
 
 namespace ViewModels.Elements
@@ -34,12 +37,20 @@ namespace ViewModels.Elements
             selectedGameRepository.UsersDataUpdated -= GameRepositoryOnUsersDataUpdated;
         }
 
-        private void GameRepositoryOnUsersDataUpdated(IReadOnlyList<MatchUserDownloadingData> matchUserDownloadingData)
+        private async void GameRepositoryOnUsersDataUpdated(IReadOnlyList<MatchUserDownloadingData> matchUserDownloadingData)
         {
-            UpdateUsersView(matchUserDownloadingData);
+            try
+            {
+               await UpdateUsersView(matchUserDownloadingData);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private void UpdateUsersView(IReadOnlyList<MatchUserDownloadingData> dataArray)
+        private async Task UpdateUsersView(IReadOnlyList<MatchUserDownloadingData> dataArray)
         {
             Assert.IsTrue(dataArray.Count == playerScoreViewModels.Length && userAvatarIcons.Length == dataArray.Count);
 
@@ -50,9 +61,17 @@ namespace ViewModels.Elements
 
                 if (string.IsNullOrEmpty(url)) continue;
 
-                downloadedSpritesRepository.TryToLoadSpriteAsync(
-                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(url,
-                        userAvatarIcons[i].SetAvatarSprite));
+                try
+                {
+                    await downloadedSpritesRepository.TryToLoadSpriteAsync(
+                        new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(url,
+                            userAvatarIcons[i].SetAvatarSprite));
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
+                    throw;
+                }
             }
         }
     }
