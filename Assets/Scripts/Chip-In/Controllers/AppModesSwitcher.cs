@@ -14,9 +14,14 @@ namespace Controllers
         [SerializeField] private Object merchantAppBottomBarPrefab;
         [SerializeField] private Object guestBottomBarPrefab;
 
-        private void Start()
+        private void OnEnable()
         {
             sessionController.SwitchingToMode += SessionControllerOnSwitchingToMode;
+        }
+
+        private void OnDisable()
+        {
+            sessionController.SwitchingToMode -= SessionControllerOnSwitchingToMode;
         }
 
         private void SessionControllerOnSwitchingToMode(SessionController.SessionMode mode)
