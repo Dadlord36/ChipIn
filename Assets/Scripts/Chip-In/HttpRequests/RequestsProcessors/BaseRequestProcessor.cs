@@ -175,14 +175,14 @@ namespace HttpRequests.RequestsProcessors
                         var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                         httpResponse.Error = CollectErrors(contentAsString);
 
-                        LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}");
+                        LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}; Error massage: {httpResponse.Error}");
                         LogUtility.PrintLog(Tag, $"Content string: {contentAsString}");
                     }
 
                     return httpResponse;
                 }
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 LogUtility.PrintLog(Tag, "Ongoing request was cancelled");
                 throw;
