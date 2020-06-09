@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DataModels;
 using DataModels.Interfaces;
 using Repositories.Local;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Utilities;
 
 namespace Views
@@ -54,20 +52,22 @@ namespace Views
 
         public async Task FillOneItemWithData(IIndexedNamedPosterUrl gridItemData)
         {
-            Assert.IsTrue(_lastFilledGridItemIndex < items.Count);
-            items[_lastFilledGridItemIndex].SetItemText(gridItemData);
-
-            try
+            if (_lastFilledGridItemIndex < items.Count)
             {
-                await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
+                items[_lastFilledGridItemIndex].SetItemText(gridItemData);
+                
+                try
+                {
+                    await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
+                    throw;
+                }
+                
+                _lastFilledGridItemIndex++;
             }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-
-            _lastFilledGridItemIndex++;
         }
 
         public void ClearItems()
