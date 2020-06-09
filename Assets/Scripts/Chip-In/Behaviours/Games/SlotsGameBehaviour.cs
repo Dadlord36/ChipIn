@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Controllers;
 using DataModels.Interfaces;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -83,7 +81,7 @@ namespace Behaviours.Games
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private SlotsGameViewModel gameInterfaceViewModel;
         [SerializeField] private AlertCardController alertCardController;
-        
+
         #endregion
 
         private ISlotsGame GameInterface => gameInterfaceViewModel;
@@ -100,10 +98,18 @@ namespace Behaviours.Games
             set => GameInterface.RoundNumber = value;
         }
 
-        public void Activate()
+        public async Task Activate()
         {
-            GetGameDataAndInitializeGame();
-            SubscribeToGameViewEvents();
+            try
+            {
+                await GetGameDataAndInitializeGame();
+                SubscribeToGameViewEvents();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         public void Deactivate()
@@ -138,6 +144,7 @@ namespace Behaviours.Games
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             StartNewRound();
         }
 
@@ -240,6 +247,7 @@ namespace Behaviours.Games
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             SubscribeToGameSocketEvents();
         }
 
@@ -266,8 +274,7 @@ namespace Behaviours.Games
         {
             selectedGameRepository.UpdateUsersData(_roundData.UsersData);
         }
-
-
+        
         private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
         {
             UdataRoundData(matchStateData);
@@ -285,21 +292,32 @@ namespace Behaviours.Games
             _roundEnds = true;
         }
 
-        private void SpinFrame()
+        private async void SpinFrame()
         {
-            MakeASpin(SpinBoardParameters.JustFrame);
+            try
+            {
+                await MakeASpin(SpinBoardParameters.JustFrame);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private void SpinBoard()
+        private async void SpinBoard()
         {
-            MakeASpin(SpinBoardParameters.JustBoard);
+            try
+            {
+                await MakeASpin(SpinBoardParameters.JustBoard);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
-
-        #region Functions, dependent from RoundData
-
-        #endregion
-
-
+        
         private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
         {
             try

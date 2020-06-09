@@ -10,6 +10,7 @@ using HttpRequests.RequestsProcessors.GetRequests;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views;
 using Views.ViewElements;
 
@@ -135,10 +136,18 @@ namespace ViewModels
             timer.Initialize();
         }
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            _slotsGameBehaviour.Activate();
+            try
+            {
+                await _slotsGameBehaviour.Activate();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         protected override void OnBecomingInactiveView()
