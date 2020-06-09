@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Firebase.Extensions;
 using HttpRequests;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -32,13 +33,13 @@ namespace Repositories.Local
             public Task InvokeDownloading()
             {
                 var loadedTexture = ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, Url);
-                return loadedTexture.ContinueWith(async delegate(Task<Texture2D> task)
+                return loadedTexture.ContinueWithOnMainThread(async delegate(Task<Texture2D> task)
                 {
                     var texture = await task;
                     LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
                     IsLoaded = true;
                     OnLoaded(LoadedSprite);
-                }, TaskScheduler.FromCurrentSynchronizationContext());
+                });
             }
 
             public static Task DownloadFromUri(string url, Action<Sprite> onSpriteLoaded)
