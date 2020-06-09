@@ -182,6 +182,11 @@ namespace HttpRequests.RequestsProcessors
                     return httpResponse;
                 }
             }
+            catch (OperationCanceledException e)
+            {
+                LogUtility.PrintLog(Tag, "Ongoing request was cancelled");
+                throw;
+            }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);

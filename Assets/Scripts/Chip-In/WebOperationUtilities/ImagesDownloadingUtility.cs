@@ -51,6 +51,11 @@ namespace WebOperationUtilities
                         textureToReturn.LoadImage(await task);
                         textureToReturn.Apply();
                     }
+                    catch (OperationCanceledException)
+                    {
+                        LogUtility.PrintDefaultOperationCancellationLog(Tag);
+                        throw;
+                    }
                     catch (Exception e)
                     {
                         LogUtility.PrintLogException(e);
