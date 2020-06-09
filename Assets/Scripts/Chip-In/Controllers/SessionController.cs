@@ -41,7 +41,7 @@ namespace Controllers
         {
             try
             {
-                var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel).ConfigureAwait(false);
+                var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel);
 
                 if (response.ResponseModelInterface == null)
                 {
