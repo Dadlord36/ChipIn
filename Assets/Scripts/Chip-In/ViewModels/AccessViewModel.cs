@@ -81,6 +81,10 @@ namespace ViewModels
             get => MerchantProfileSettingsModelImplementation.BranchCode3;
             set => MerchantProfileSettingsModelImplementation.BranchCode3 = value;
         }
+        
+        public AccessViewModel() : base(nameof(AccessViewModel))
+        {
+        }
 
         public event PropertyChangedEventHandler PropertyChanged
         {

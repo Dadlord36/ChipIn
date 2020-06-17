@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Views
 {
-    public class CommunityInterestGridItemView : BaseView
+    public sealed class CommunityInterestGridItemView : BaseView
     {
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
@@ -22,6 +22,10 @@ namespace Views
         {
             get => textField.text;
             set => textField.text = value;
+        }
+
+        public CommunityInterestGridItemView() : base(nameof(CommunityInterestGridItemView))
+        {
         }
 
         public void SetImage(Sprite icon)

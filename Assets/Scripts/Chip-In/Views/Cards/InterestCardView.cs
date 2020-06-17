@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 using ViewModels.UI.Elements;
 using ViewModels.UI.Elements.Icons;
@@ -79,6 +79,10 @@ namespace Views.Cards
         {
             get => percentageView.Percentage;
             set => percentageView.Percentage = value;
+        }
+
+        public InterestCardView() : base(nameof(InterestCardView))
+        {
         }
 
         private string GetCorrespondingEndText(int days)

@@ -24,6 +24,10 @@ namespace Views
         public event Action<string> NewOfferTypeSelected;
 
 
+        public CreateOfferView() : base(nameof(CreateOfferView))
+        {
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();

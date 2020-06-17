@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Controllers;
 using UnityEngine;
@@ -46,6 +46,10 @@ namespace ViewModels
             set => AdminViewProperties.ReturnOnInvestments = value;
         }
 
+        public AdminViewModel() : base(nameof(AdminViewModel))
+        {
+        }
+        
         [Binding]
         public async void LogOut_OnClick()
         {

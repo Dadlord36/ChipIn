@@ -35,6 +35,11 @@ namespace Views
         public string CurrentlySelectedOffersCategory => StringDataComponent.GetStringDataFromComponent(itemsSelector.SelectedItem);
         public int? CurrentlySelectedOfferId => dropdownList.CurrentlySelectedRelatedId;
 
+
+        public ProductGalleryView() : base(nameof(ProductGalleryView))
+        {
+        }
+
         public void FillDropdownList(Dictionary<int?, string> itemsDictionary)
         {
             dropdownList.FillDropdownList(itemsDictionary);

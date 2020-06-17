@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using Repositories.Remote;
 using UnityEngine;
 using Views;
 using Views.ViewElements;
@@ -25,6 +24,9 @@ namespace ViewModels.Basic
             // UnsubscribeFromEvents();
         }
 
+        public BaseMenuViewModel(string tag) : base(tag)
+        {
+        }
 
         /*protected abstract void SubscribeOnEvents();
         /*{

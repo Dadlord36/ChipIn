@@ -12,8 +12,6 @@ namespace ViewModels
 {
     public class QrCodeScannerViewModel : ViewsSwitchingViewModel
     {
-        private const string Tag = nameof(QrCodeScannerViewModel);
-
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private Object qrPreviewPrefab;
         [SerializeField] private CodeReader qrCodeReader;
@@ -24,6 +22,10 @@ namespace ViewModels
 
         private GameObject _qrPreviewRoot;
 
+        public QrCodeScannerViewModel() : base(nameof(QrCodeScannerViewModel))
+        {
+        }
+        
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Views
 {
-    public class LoginView : BaseView
+    public sealed class LoginView : BaseView
     {
         [SerializeField] private TMP_InputField emailField;
         [SerializeField] private TMP_InputField passwordField;
@@ -14,6 +14,10 @@ namespace Views
         private bool _emailFieldIsSelected;
 
         private TMP_InputField _selectedInputField;
+
+        public LoginView() : base(nameof(LoginView))
+        {
+        }
 
         protected override void OnEnable()
         {

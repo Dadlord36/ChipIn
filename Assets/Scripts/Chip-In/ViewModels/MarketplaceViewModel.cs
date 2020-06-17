@@ -6,6 +6,10 @@ namespace ViewModels
     [Binding]
     public class MarketplaceViewModel : ViewsSwitchingViewModel
     {
+        public MarketplaceViewModel() : base(nameof(MarketplaceViewModel))
+        {
+        }
+        
         [Binding]
         public void SwitchToViewGamesView()
         {

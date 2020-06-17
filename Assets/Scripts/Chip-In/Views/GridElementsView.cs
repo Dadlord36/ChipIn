@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
@@ -14,14 +14,15 @@ namespace Views
         [SerializeField, HideInInspector] public int rowsAmount;
 #endif
 
-
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private CommunityInterestGridItemView itemPrefab;
         [SerializeField] private Sprite defaultSprite;
         [SerializeField, HideInInspector] private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
 
 
-        private int _lastFilledGridItemIndex;
+        public GridElementsView() : base(nameof(GridElementsView))
+        {
+        }
 
         public void AddEmptyItemsRow()
         {

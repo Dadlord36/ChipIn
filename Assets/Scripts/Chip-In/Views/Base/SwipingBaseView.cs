@@ -1,4 +1,4 @@
-﻿using TrackingNotifiers;
+using TrackingNotifiers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -11,9 +11,19 @@ namespace Views.Base
         [SerializeField] private SwipeInRectTracker swipeInRectTracker;
 
 
-        protected SwipingBaseView(string tag)
+        #region Untiy Events
+
+        public UnityEvent swipedRight;
+        public UnityEvent swipedLeft;
+        public UnityEvent swipedUp;
+        public UnityEvent swipedDown;
+        public SwipeDataUnityEvent swiped;
+
+        #endregion
+
+
+        public SwipingBaseView(string tag) : base(tag)
         {
-            Tag = tag;
         }
 
         protected override void OnEnable()

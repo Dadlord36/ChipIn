@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class FlashOfferView : BaseView
+    public sealed class FlashOfferView : BaseView
     {
-        
+        public FlashOfferView() : base(nameof(FlashOfferView))
+        {
+        }
     }
 }

@@ -11,6 +11,10 @@ namespace ViewModels
     {
         public event Action<uint> ConeButtonClicked;
 
+        public ChallengeCardViewModel() : base(nameof(ChallengeCardViewModel))
+        {
+        }
+        
         [Binding]
         public void CloneButton_Click()
         {

@@ -11,5 +11,9 @@ namespace ViewModels
         {
             SwitchToView(nameof(LoginView));
         }
+
+        public CheckEmailViewModel() : base(nameof(CheckEmailViewModel))
+        {
+        }
     }
 }

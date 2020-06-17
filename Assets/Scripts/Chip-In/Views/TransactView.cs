@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class TransactView : BaseView
+    public sealed class TransactView : BaseView
     {
-        
+        public TransactView() : base(nameof(TransactView))
+        {
+        }
     }
 }

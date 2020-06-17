@@ -193,6 +193,10 @@ namespace ViewModels
             }
         }
 
+        public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
+        {
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();

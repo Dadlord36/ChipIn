@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Repositories.Remote;
+﻿using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views.ViewElements;
@@ -11,6 +10,10 @@ namespace ViewModels
     {
         [SerializeField] private SettableIconView settableIconView;
         [SerializeField] private MerchantLibraryRepository merchantLibraryRepository;
+
+        public LibraryViewModel() : base(nameof(LibraryViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {

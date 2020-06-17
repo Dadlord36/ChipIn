@@ -54,10 +54,8 @@ namespace Views.ViewElements
     }
 
     [RequireComponent(typeof(UICircle))]
-    public class RadarView : BaseView
+    public sealed class RadarView : BaseView
     {
-        private const string Tag = "CommunitySpiritAnalyticView";
-
         #region Serialized Fields
 
         [SerializeField, HideInInspector] private List<UICircle> innerCircles;
@@ -96,6 +94,10 @@ namespace Views.ViewElements
             }
         }
 #endif*/
+
+        public RadarView() : base(nameof(RadarView))
+        {
+        }
 
         protected override void OnEnable()
         {

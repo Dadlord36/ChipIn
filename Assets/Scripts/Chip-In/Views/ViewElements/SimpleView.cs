@@ -1,7 +1,7 @@
 ﻿namespace Views.ViewElements
 {
-    public class SimpleView : BaseView
+    public sealed class SimpleView : BaseView
     {
-        
+        public SimpleView() : base(nameof(SimpleView)){}
     }
 }

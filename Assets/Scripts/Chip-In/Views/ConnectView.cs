@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class ConnectView : BaseView
+    public sealed class ConnectView : BaseView
     {
-        
+        public ConnectView() : base(nameof(ConnectView))
+        {
+        }
     }
 }

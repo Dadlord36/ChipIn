@@ -9,6 +9,11 @@ namespace Views.ViewElements.ViewsSwitching
     public abstract class ViewsSwitching : BaseView
     {
         protected Dictionary<string, IGroupAction> SelectionOptionsDictionary;
+
+        public ViewsSwitching() : base(nameof(ViewsSwitching))
+        {
+        }
+
         protected override void Awake()
         {
             base.Awake();

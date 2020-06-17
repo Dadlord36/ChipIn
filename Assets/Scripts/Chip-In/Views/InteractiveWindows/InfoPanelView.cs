@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using HttpRequests;
@@ -19,7 +19,7 @@ namespace Views.InteractiveWindows
         void HideInfoCard();
     }
 
-    public class InfoPanelView : BaseView, IInfoPanelData, IInfoPanelView
+    public sealed class InfoPanelView : BaseView, IInfoPanelData, IInfoPanelView
     {
         public class InfoPanelData : IInfoPanelData
         {
@@ -66,6 +66,10 @@ namespace Views.InteractiveWindows
         {
             get => itemDescriptionField.text;
             set => itemDescriptionField.text = value;
+        }
+
+        public InfoPanelView() : base(nameof(InfoPanelView))
+        {
         }
 
         public void FillCardWithData(IInfoPanelData data)

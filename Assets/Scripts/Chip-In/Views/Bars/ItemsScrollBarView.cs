@@ -20,6 +20,10 @@ namespace Views.Bars
         private bool _isInitialized;
         private ScrollBarItemWithTitleAndIconView[] _scrollBarItemViews;
 
+        public ItemsScrollBarView() : base(nameof(ItemsScrollBarView))
+        {
+        }
+
         protected override void Start()
         {
             base.Start();

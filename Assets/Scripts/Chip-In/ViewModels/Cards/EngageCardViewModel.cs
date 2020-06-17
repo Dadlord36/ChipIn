@@ -115,5 +115,8 @@ namespace ViewModels.Cards
 
         #endregion
 
+        public EngageCardViewModel() : base(nameof(EngageCardViewModel))
+        {
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 namespace Views.Cards
@@ -49,6 +49,10 @@ namespace Views.Cards
         {
             get => uint.Parse(returnOnInvestmentsTextField.text);
             set => returnOnInvestmentsTextField.text = value.ToString();
+        }
+
+        public AdminView() : base(nameof(AdminView))
+        {
         }
     }
 }

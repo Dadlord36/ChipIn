@@ -61,6 +61,10 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
+        
+        public ProductGalleryViewModel() : base(nameof(ProductGalleryViewModel))
+        {
+        }
 
         [Binding]
         public async Task ConfirmItemSelection()

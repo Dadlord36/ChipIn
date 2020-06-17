@@ -2,5 +2,8 @@
 {
     public class UserProfileView : BaseView
     {
+        public UserProfileView() : base(nameof(UserProfileView))
+        {
+        }
     }
 }

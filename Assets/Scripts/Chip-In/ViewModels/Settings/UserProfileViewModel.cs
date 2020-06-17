@@ -14,14 +14,14 @@ namespace ViewModels.Settings
     [Binding]
     public class UserProfileViewModel : BaseViewModel, INotifyPropertyChanged
     {
-        private const string Tag = nameof(UserProfileViewModel);
-
         [SerializeField] private UserProfileRemoteRepository repository;
         [SerializeField] private GeoLocationRepository geoLocationRepository;
 
         [SerializeField] private SimpleView passwordChangingView;
 
         private IUserProfileModel UserSettingsModel => repository;
+
+        #region UserProfileModel interface implementation
 
         [Binding]
         public GeoLocation UserLocation
@@ -119,6 +119,12 @@ namespace ViewModels.Settings
         {
             get => UserSettingsModel.ShowNotificationsState;
             set => UserSettingsModel.ShowNotificationsState = value;
+        }
+
+        #endregion
+
+        public UserProfileViewModel() : base(nameof(UserProfileViewModel))
+        {
         }
 
 

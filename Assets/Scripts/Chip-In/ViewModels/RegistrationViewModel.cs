@@ -102,6 +102,10 @@ namespace ViewModels
                 CheckIfCanRegister();
             }
         }
+        
+        public RegistrationViewModel() : base(nameof(RegistrationViewModel))
+        {
+        }
 
         [Binding]
         public async void TryToRegister()

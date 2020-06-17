@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using DataModels.MatchModels;
 using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Local;
@@ -9,7 +7,7 @@ using Utilities;
 
 namespace Views
 {
-    public class SlotsGameView : BaseView
+    public sealed class SlotsGameView : BaseView
     {
         private const string Tag = nameof(SlotsGameView);
 
@@ -18,6 +16,10 @@ namespace Views
         [SerializeField] private SelectedGameRepository selectedGameRepository;
 
         private bool _shouldInvokeAnimation;
+
+        public SlotsGameView() : base(nameof(SlotsGameView))
+        {
+        }
 
         protected override void OnEnable()
         {
@@ -125,7 +127,6 @@ namespace Views
 
             for (int i = 0; i < icons.Length; i++)
             {
-
                 foreach (var slotIconBaseData in uniqueIconsData)
                 {
                     if (slotIconBaseData.IconId == icons[i].Id)
@@ -134,7 +135,7 @@ namespace Views
                     }
                 }
             }
-            
+
 
             return outputArray;
         }

@@ -17,13 +17,15 @@ namespace ViewModels
     [Binding]
     public sealed class LoginViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        private const string Tag = nameof(LoginViewModel);
-
         [SerializeField] private LoginModelValidation loginModelValidation;
         [SerializeField] private SessionController sessionController;
         [SerializeField] private MainInputActionsTranslator mainInputActionsTranslator;
 
         private readonly UserLoginRequestModel _userLoginRequestModel = new UserLoginRequestModel();
+
+        public LoginViewModel() : base(nameof(LoginViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {

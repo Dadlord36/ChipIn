@@ -1,6 +1,9 @@
 ﻿namespace Views
 {
-    public class SettingsView : BaseView
+    public sealed class SettingsView : BaseView
     {
+        public SettingsView() : base(nameof(SettingsView))
+        {
+        }
     }
 }

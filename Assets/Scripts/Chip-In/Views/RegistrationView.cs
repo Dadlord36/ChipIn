@@ -1,6 +1,9 @@
 ﻿namespace Views
 {
-    public class RegistrationView : BaseView
+    public sealed class RegistrationView : BaseView
     {
+        public RegistrationView() : base(nameof(RegistrationView))
+        {
+        }
     }
 }

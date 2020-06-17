@@ -1,10 +1,13 @@
 ﻿using System.Collections.Specialized;
-using System.Threading.Tasks;
 
 namespace ViewModels
 {
     public abstract class BaseContainerItemsViewModel : ViewsSwitchingViewModel
     {
+        protected BaseContainerItemsViewModel() : base(nameof(BaseContainerItemsViewModel))
+        {
+        }
+
         protected abstract void ClearAllItems();
         protected abstract void FillContainerWithDataFromRepository();
 

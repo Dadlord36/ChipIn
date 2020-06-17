@@ -1,6 +1,9 @@
 ﻿namespace Views
 {
-    public class CheckEmailView : BaseView
+    public sealed class CheckEmailView : BaseView
     {
+        public CheckEmailView() : base(nameof(CheckEmailView))
+        {
+        }
     }
 }

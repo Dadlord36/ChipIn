@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Controllers;
@@ -65,17 +65,8 @@ namespace ViewModels
         {
         }
 
-        private async void OnSwipedToLeft()
+        public CommunityInterestLabelsViewModel() : base(nameof(CommunityInterestLabelsViewModel))
         {
-            try
-            {
-                await TryToSwitchToNextPage();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
         }
 
         private async void OnSwipedToRight()

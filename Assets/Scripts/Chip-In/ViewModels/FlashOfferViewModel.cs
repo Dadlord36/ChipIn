@@ -12,11 +12,13 @@ namespace ViewModels
     [Binding]
     public class FlashOfferViewModel : ViewsSwitchingViewModel, IFlashOfferModel, INotifyPropertyChanged
     {
-        private const string Tag = nameof(FlashOfferViewModel);
-        
         private readonly FlashOfferDataModel _flashOfferData = new FlashOfferDataModel();
 
         [SerializeField] private SettableIconView posterIconView;
+
+        public FlashOfferViewModel() : base(nameof(FlashOfferViewModel))
+        {
+        }
 
         protected override void OnEnable()
         {
@@ -75,7 +77,7 @@ namespace ViewModels
         {
             LogUtility.PrintLog(Tag, "Create was clicked");
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => _flashOfferData.PropertyChanged += value;

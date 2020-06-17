@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class CoinsGameView : BaseView
+    public sealed class CoinsGameView : BaseView
     {
-        
+        public CoinsGameView() : base(nameof(CoinsGameView))
+        {
+        }
     }
 }

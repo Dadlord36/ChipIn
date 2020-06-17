@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Repositories.Local;
+﻿using Repositories.Local;
 using UnityEngine;
 using Views;
 
@@ -9,6 +8,10 @@ namespace ViewModels
     {
         [SerializeField] private TitledItemsList itemsList;
         [SerializeField] private OfferCreationRepository offerCreationRepository;
+
+        public MerchantInterestViewModel() : base(nameof(MerchantInterestViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {

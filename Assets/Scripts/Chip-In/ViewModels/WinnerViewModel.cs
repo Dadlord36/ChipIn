@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using ActionsTranslators;
+using Controllers;
 using Repositories.Local;
 using UnityEngine;
 using Utilities;
@@ -12,6 +13,12 @@ namespace ViewModels
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private SelectedGameRepository slotsGameRepository;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+
+        private AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+
+        public WinnerViewModel() : base(nameof(WinnerViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {

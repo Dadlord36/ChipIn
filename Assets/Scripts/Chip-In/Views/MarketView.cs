@@ -4,9 +4,14 @@ using Views.ViewElements;
 
 namespace Views
 {
-    public class MarketView : BaseView
+    public sealed class MarketView : BaseView
     {
         [SerializeField] private RadarView radarView;
+
+        public MarketView() : base(nameof(MarketView))
+        {
+        }
+
         public void SetRadarData(RadarData radarData)
         {
             radarView.SetDataToVisualize(radarData);

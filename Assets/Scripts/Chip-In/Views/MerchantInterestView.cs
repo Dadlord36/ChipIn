@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class MerchantInterestView : BaseView
+    public sealed class MerchantInterestView : BaseView
     {
-        
+        public MerchantInterestView() : base(nameof(MerchantInterestView))
+        {
+        }
     }
 }

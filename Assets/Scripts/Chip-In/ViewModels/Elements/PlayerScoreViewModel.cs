@@ -7,7 +7,11 @@ namespace ViewModels.Elements
     {
         public uint ScoreNumber
         {
-            set => ((PlayerScoreView) View).Score =value;
+            set => ((PlayerScoreView) View).Score = value;
+        }
+
+        public PlayerScoreViewModel() : base(nameof(PlayerScoreViewModel))
+        {
         }
 
         public void SetUserScore(uint score)

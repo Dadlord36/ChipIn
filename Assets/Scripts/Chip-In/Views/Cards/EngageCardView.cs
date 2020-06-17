@@ -8,6 +8,10 @@ namespace Views.Cards
     {
         public event Action WasClicked;
 
+        public EngageCardView() : base(nameof(EngageCardView))
+        {
+        }
+
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
             OnWasClicked();

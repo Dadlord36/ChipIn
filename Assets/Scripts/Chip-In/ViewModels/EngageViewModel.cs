@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using DataModels;
 using Repositories.Local;
@@ -17,6 +17,9 @@ namespace ViewModels
 
         private EngageView RelativeView => View as EngageView;
 
+        public EngageViewModel() : base(nameof(EngageViewModel))
+        {
+        }
 
         protected override async void OnBecomingActiveView()
         {

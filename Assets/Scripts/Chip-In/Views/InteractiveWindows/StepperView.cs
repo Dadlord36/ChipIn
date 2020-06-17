@@ -19,6 +19,10 @@ namespace Views.InteractiveWindows
             }
         }
 
+        public StepperView() : base(nameof(StepperView))
+        {
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

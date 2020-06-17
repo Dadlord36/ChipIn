@@ -1,12 +1,11 @@
 ﻿using Repositories.Local;
-using Repositories.Remote;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Views.ViewElements
 {
-    public class ChallengeCardView : BaseView
+    public sealed class ChallengeCardView : BaseView
     {
         [SerializeField] private TMP_Text challengeTypeTextField;
         [SerializeField] private UserCoinsView userCoinsView;
@@ -22,6 +21,10 @@ namespace Views.ViewElements
         {
             get => icon.sprite;
             set => icon.sprite = value;
+        }
+
+        public ChallengeCardView() : base(nameof(ChallengeCardView))
+        {
         }
 
         public void SetupCardViewElements(in ChallengesCardsParametersRepository.ChallengeCardParameters parameters)

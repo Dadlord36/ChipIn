@@ -2,7 +2,10 @@
 
 namespace Views
 {
-    public class MyChallengeView : ItemsListBaseView
+    public sealed class MyChallengeView : ItemsListBaseView
     {
+        public MyChallengeView() : base(nameof(MyChallengeView))
+        {
+        }
     }
 }

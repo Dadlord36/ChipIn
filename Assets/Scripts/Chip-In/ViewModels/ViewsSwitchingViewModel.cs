@@ -7,8 +7,6 @@ namespace ViewModels
 {
     public abstract class ViewsSwitchingViewModel : BaseViewModel
     {
-        protected const string SwitchingViewTag = "ViewsSwitching";
-
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
 
         protected void SwitchToView(string toViewName, string fromView = null,
@@ -21,6 +19,10 @@ namespace ViewModels
         public void SwitchToView(string viewName)
         {
             SwitchToView(viewName,null);
+        }
+
+        public ViewsSwitchingViewModel(string tag) : base(tag)
+        {
         }
     }
 }

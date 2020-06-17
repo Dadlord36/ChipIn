@@ -73,6 +73,10 @@ namespace ViewModels.Elements
                 OnPropertyChanged();
             }
         }
+        
+        public PasswordChangingViewModel() : base(nameof(PasswordChangingViewModel))
+        {
+        }
 
         [Binding]
         public async void Confirm_OnClick()
@@ -139,5 +143,7 @@ namespace ViewModels.Elements
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
     }
 }

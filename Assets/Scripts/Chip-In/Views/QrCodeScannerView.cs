@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class QrCodeScannerView : BaseView
+    public sealed class QrCodeScannerView : BaseView
     {
-        
+        public QrCodeScannerView() : base(nameof(QrCodeScannerView))
+        {
+        }
     }
 }

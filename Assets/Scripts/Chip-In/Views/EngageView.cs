@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using DataModels;
 using HttpRequests;
@@ -9,10 +9,14 @@ using WebOperationUtilities;
 
 namespace Views
 {
-    public class EngageView : BaseView
+    public sealed class EngageView : BaseView
     {
         [SerializeField] private EngageCardViewModel prefab;
         [SerializeField] private Transform scrollViewContainer;
+
+        public EngageView() : base(nameof(EngageView))
+        {
+        }
 
         public void ClearScrollList()
         {
