@@ -14,15 +14,11 @@ namespace Controllers.SlotsSpinningControllers
     public class ScrollEngineController : MonoBehaviour
     {
         private const string Tag = nameof(ScrollEngineController);
-
         public FloatUnityEvent coveredPathPercentageValueChanged;
         public IntUnityEvent onItemsBeingSwiped;
-
-        [SerializeField] private MainInputActionsTranslator swipeDetector;
+        
         [SerializeField] private SliderDirection scrollDirection;
-        [SerializeField] private SlotSpinnerProperties properties;
-
-        // private readonly ProgressiveMovement _progressiveMovement = new ProgressiveMovement();
+        [SerializeField] private LineEngineProperties properties;
 
         private LineEngine _lineEngine;
 
@@ -34,6 +30,8 @@ namespace Controllers.SlotsSpinningControllers
 
         #region Properties
 
+        public Transform ItemsContainerRoot => _lineEngine.ContainerRoot;
+        
         public uint ItemsOnFullPath
         {
             get => _itemsOnFullPath;
@@ -95,24 +93,7 @@ namespace Controllers.SlotsSpinningControllers
         {
             Assert.IsTrue(TryGetComponent(out _lineEngine));
             _lineEngine.ShouldControlSiblingIndexes = true;
-            SubscribeToInputEvents();
         }
-
-        private void OnDisable()
-        {
-            UnsubscribeFromInputEvents();
-        }
-
-        private void SubscribeToInputEvents()
-        {
-            swipeDetector.Swiped += Scroll;
-        }
-
-        private void UnsubscribeFromInputEvents()
-        {
-            swipeDetector.Swiped -= Scroll;
-        }
-
 
         private void Start()
         {
@@ -121,21 +102,8 @@ namespace Controllers.SlotsSpinningControllers
             _wholeDistance = properties.Offset * _itemsOnFullPath;
         }
 
-        /*void OnStop()
+        public void Scroll(SwipeDetector.SwipeData swipeData)
         {
-            enabled = false;
-        }
-
-        void StartScrolling()
-        {
-            enabled = true;
-        }*/
-
-
-        private void Scroll(SwipeDetector.SwipeData swipeData)
-        {
-            // swipeData.DeltaVector *= -1;
-
             switch (scrollDirection)
             {
                 case SliderDirection.Horizontal:
@@ -165,18 +133,5 @@ namespace Controllers.SlotsSpinningControllers
         {
             onItemsBeingSwiped.Invoke(itemsAmount);
         }
-
-        /*private void Update()
-        {
-            _movementProgress += 0.01f;
-            _lineEngine.ProgressMovementAlongPath(_coveredDistancePercentage);
-            _coveredDistancePercentage ;
-        }*/
-
-
-        /*private void vod()
-        {
-            _lineEngine.ShiftItemsAlongPathForPercentageOfWholePath(0f);
-        }*/
     }
 }

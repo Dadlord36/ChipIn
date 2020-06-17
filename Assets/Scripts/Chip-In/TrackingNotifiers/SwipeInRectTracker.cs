@@ -2,14 +2,13 @@
 using ActionsTranslators;
 using InputDetection;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace TrackingNotifiers
 {
     [Serializable]
     public sealed class SwipeInRectTracker
     {
-        [HideInInspector] public event Action<MoveDirection> SwipedInRect;
+        [HideInInspector] public event Action<SwipeDetector.SwipeData> SwipedInRect;
 
         [SerializeField] private RectTransform controlRectTransform;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
@@ -33,11 +32,10 @@ namespace TrackingNotifiers
         private void InputActionsTranslatorOnSwiped(SwipeDetector.SwipeData swipeData)
         {
             if (!RectTransformUtility.RectangleContainsScreenPoint(controlRectTransform, swipeData.TouchDownPoint)) return;
-            OnSwipedInRect(swipeData.Direction);
-            Debug.Log("Swipe was in rect");
+            OnSwipedInRect(swipeData);
         }
 
-        private void OnSwipedInRect(MoveDirection moveDirection)
+        private void OnSwipedInRect(in SwipeDetector.SwipeData moveDirection)
         {
             SwipedInRect?.Invoke(moveDirection);
         }

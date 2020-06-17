@@ -1,11 +1,11 @@
 ﻿﻿using System;
-using ActionsTranslators;
-using ScriptableObjects.Parameters;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using Utilities;
+ using ActionsTranslators;
+ using ScriptableObjects.Parameters;
+ using UnityEngine;
+ using UnityEngine.EventSystems;
+ using Utilities;
 
-namespace InputDetection
+ namespace InputDetection
 {
     public sealed class SwipeDetector : IUpdatable
     {
@@ -20,6 +20,7 @@ namespace InputDetection
         }
 
 #if UNITY_EDITOR
+        private Vector2 _tempCursorPosition;
         public void Update()
         {
             if (Input.GetMouseButtonDown(0))
@@ -29,7 +30,9 @@ namespace InputDetection
 
             if (Input.GetMouseButton(0) && !_parameters.DetectSwipeOnlyAfterRelease)
             {
-                _touchUpPosition = Input.mousePosition;
+                _tempCursorPosition = Input.mousePosition;
+                if (Math.Abs(Math.Abs(Vector2.Distance(_tempCursorPosition, _touchUpPosition))) < 0.2f) return;
+                _touchUpPosition = _tempCursorPosition;
                 DetectSwipe();
             }
 
@@ -52,7 +55,9 @@ namespace InputDetection
 
             if (!_parameters.DetectSwipeOnlyAfterRelease && touches[0].phase == TouchPhase.Moved)
             {
-                _touchUpPosition = touches[0].position;
+                _tempCursorPosition = touches[0].position;
+                if (Math.Abs(Math.Abs(Vector2.Distance(_tempCursorPosition, _touchUpPosition))) < 0.1f) return;
+                _touchUpPosition = _tempCursorPosition;
                 DetectSwipe();
             }
 
@@ -85,7 +90,6 @@ namespace InputDetection
             }
 
             SendSwipe(direction, _touchDownPosition, _touchUpPosition, touchDelta);
-            _touchUpPosition = _touchDownPosition;
         }
 
         private void SendSwipe(in MoveDirection direction, in Vector2 touchDownPosition, in Vector2 touchUpPosition, in Vector2 deltaPosition)

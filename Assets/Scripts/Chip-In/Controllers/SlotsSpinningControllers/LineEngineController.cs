@@ -11,7 +11,7 @@ namespace Controllers.SlotsSpinningControllers
     {
         #region Private serialized field
 
-        [SerializeField] private SlotSpinnerProperties parameters;
+        [SerializeField] private LineEngineProperties parameters;
 
         #endregion
 

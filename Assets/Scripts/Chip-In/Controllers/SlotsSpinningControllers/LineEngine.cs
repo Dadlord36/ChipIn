@@ -8,7 +8,7 @@ namespace Controllers.SlotsSpinningControllers
     public interface IProgressiveMovement
     {
         void ProgressMovementAlongPath(in float pathDelta);
-        SlotSpinnerProperties MovementParameters { get; set; }
+        LineEngineProperties MovementParameters { get; set; }
     }
 
     public class LineEngine : MonoBehaviour, IProgressiveMovement
@@ -61,14 +61,14 @@ namespace Controllers.SlotsSpinningControllers
         /// </summary>
         private float _itemsLapStep;
 
-        private int ChildCount => RootTransform.childCount;
-        private Transform RootTransform => transform;
+        private int ChildCount => ContainerRoot.childCount;
+        public Transform ContainerRoot => transform;
 
         public uint ItemToFocusOnIndex { get; set; }
         /*public float CoveredPathPercentage { get; private set; }*/
 
         public bool ShouldControlSiblingIndexes { get; set; } = false;
-        public SlotSpinnerProperties MovementParameters { get; set; }
+        public LineEngineProperties MovementParameters { get; set; }
 
 
         public Transform[] Initialize(Transform slotPrefab, int elementsNumber)
@@ -78,7 +78,7 @@ namespace Controllers.SlotsSpinningControllers
 
             for (int i = 0; i < elementsNumber; i++)
             {
-                children[i] = Instantiate(slotPrefab, RootTransform);
+                children[i] = Instantiate(slotPrefab, ContainerRoot);
             }
 
             Initialize();
@@ -94,7 +94,7 @@ namespace Controllers.SlotsSpinningControllers
 
             for (int i = 0; i < ChildCount; i++)
             {
-                children[i] = RootTransform.GetChild(i);
+                children[i] = ContainerRoot.GetChild(i);
             }
 
             _pathMovingObjects = CreatePathMovingObjectsForChildren(children);
@@ -285,7 +285,7 @@ namespace Controllers.SlotsSpinningControllers
 
         private void ClearItems()
         {
-            GameObjectsUtility.DestroyTransformAttachments(RootTransform);
+            GameObjectsUtility.DestroyTransformAttachments(ContainerRoot);
         }
     }
 }

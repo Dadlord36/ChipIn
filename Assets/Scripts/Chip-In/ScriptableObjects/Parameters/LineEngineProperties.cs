@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace ScriptableObjects.Parameters
 {
-    [CreateAssetMenu(fileName = nameof(SlotSpinnerProperties),
-        menuName = nameof(Parameters) + "/" + nameof(SlotSpinnerProperties), order = 0)]
-    public class SlotSpinnerProperties : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(LineEngineProperties),
+        menuName = nameof(Parameters) + "/" + nameof(LineEngineProperties), order = 0)]
+    public class LineEngineProperties : ScriptableObject
     {
         [Serializable]
         public struct AnchorPivotData
