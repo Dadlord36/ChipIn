@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -191,8 +191,12 @@ namespace Repositories.Local
         {
             try
             {
-                IReadOnlyList<byte[]> textures = await ImagesDownloadingUtility
-                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls).ConfigureAwait(false);
+                var texturesLoadingResponseMassages = ImagesDownloadingUtility
+                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls, cancellationToken)
+                    .ConfigureAwait(false);
+
+               var textures =  await await await texturesLoadingResponseMassages;
+
                 LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
                 SaveIconsData(gameId, textures, indexedUrls);
                 FillBoardIconsData(gameId, SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,

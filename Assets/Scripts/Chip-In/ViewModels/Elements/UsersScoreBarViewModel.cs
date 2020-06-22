@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Controllers;
 using DataModels.MatchModels;
 using Repositories.Local;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace ViewModels.Elements
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private PlayerScoreViewModel[] playerScoreViewModels;
         [SerializeField] private UserAvatarIcon[] userAvatarIcons;
+
+        private AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
 
         private void OnEnable()
         {
@@ -41,7 +44,7 @@ namespace ViewModels.Elements
         {
             try
             {
-               await UpdateUsersView(matchUserDownloadingData);
+                await UpdateUsersView(matchUserDownloadingData);
             }
             catch (Exception e)
             {
@@ -53,7 +56,8 @@ namespace ViewModels.Elements
         private async Task UpdateUsersView(IReadOnlyList<MatchUserDownloadingData> dataArray)
         {
             Assert.IsTrue(dataArray.Count == playerScoreViewModels.Length && userAvatarIcons.Length == dataArray.Count);
-
+            _cancellationController.CancelOngoingTask();
+            
             for (int i = 0; i < playerScoreViewModels.Length; i++)
             {
                 var url = dataArray[i].AvatarUrl;
@@ -63,9 +67,8 @@ namespace ViewModels.Elements
 
                 try
                 {
-                    await downloadedSpritesRepository.TryToLoadSpriteAsync(
-                        new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(url,
-                            userAvatarIcons[i].SetAvatarSprite));
+                    userAvatarIcons[i].AvatarSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(url, _cancellationController
+                        .TasksCancellationTokenSource.Token);
                 }
                 catch (Exception e)
                 {

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ActionsTranslators;
 using Controllers;
 using Repositories.Local;
@@ -45,10 +45,9 @@ namespace ViewModels
 
             try
             {
-                await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(iconUrl,
-                    winnerView.SetMainAvatarIconSprite));
-
-
+                _asyncOperationCancellationController.CancelOngoingTask();
+                winnerView.SetMainAvatarIconSprite(await downloadedSpritesRepository.CreateLoadSpriteTask(iconUrl,
+                    _asyncOperationCancellationController.TasksCancellationTokenSource.Token));
                 winnerView.UserNameFieldText = "Winner";
                 await winnerView.SetOtherAvatarsSprites(slotsGameRepository.UsersAvatarImagesSprites);
             }

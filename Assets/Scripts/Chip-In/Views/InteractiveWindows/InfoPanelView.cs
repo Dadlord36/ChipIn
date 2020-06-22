@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using HttpRequests;
@@ -21,6 +22,8 @@ namespace Views.InteractiveWindows
 
     public sealed class InfoPanelView : BaseView, IInfoPanelData, IInfoPanelView
     {
+        private static CancellationTokenSource _cancellationTokenSource;
+
         public class InfoPanelData : IInfoPanelData
         {
             public InfoPanelData(Sprite itemLabel, IDescription description, ITitled titled, ICategory category)
@@ -94,13 +97,21 @@ namespace Views.InteractiveWindows
             gameObject.SetActive(false);
         }
 
+        private static void CancelFillingTask()
+        {
+            _cancellationTokenSource?.Cancel();
+        }
+
         public static async Task FillWithData(IInfoPanelView infoPanelView, IPosterImageUri posterUri, IDescription description,
             ITitled titled, ICategory category)
         {
             try
             {
-                var label = SpritesUtility.CreateSpriteWithDefaultParameters(
-                    await ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, posterUri.PosterUri));
+                CancelFillingTask();
+                _cancellationTokenSource = new CancellationTokenSource();
+                var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility
+                    .CreateDownloadImageTask(ApiHelper.DefaultClient, TaskScheduler.FromCurrentSynchronizationContext(),
+                        posterUri.PosterUri, _cancellationTokenSource.Token));
                 infoPanelView.FillCardWithData(new InfoPanelData(label, description, titled, category));
             }
             catch (Exception e)

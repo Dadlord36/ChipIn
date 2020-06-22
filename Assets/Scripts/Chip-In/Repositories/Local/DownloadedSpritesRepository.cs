@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using Firebase.Extensions;
 using HttpRequests;
 using UnityEngine;
-using UnityEngine.Assertions;
-using Utilities;
-using ViewModels.UI.Elements.Icons;
 using WebOperationUtilities;
 
 namespace Repositories.Local
@@ -15,72 +11,44 @@ namespace Repositories.Local
                                                                                 + nameof(DownloadedSpritesRepository), order = 0)]
     public sealed class DownloadedSpritesRepository : ScriptableObject
     {
+        private const string Tag = nameof(DownloadedSpritesRepository);
+
         private sealed class DownloadHandleSprite
         {
-            public event Action<Sprite> Loaded;
-
             public readonly string Url;
             public Sprite LoadedSprite { get; private set; }
 
-            public bool IsLoaded { get; private set; }
+            public bool IsLoaded => LoadedSprite;
 
-            public DownloadHandleSprite(string url, Action<Sprite> onSpriteLoaded)
+
+            public DownloadHandleSprite(string url)
             {
                 Url = url;
-                Loaded += onSpriteLoaded;
             }
 
-            public Task InvokeDownloading()
+            public Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskScheduler taskScheduler)
             {
-                var loadedTexture = ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, Url);
-                return loadedTexture.ContinueWithOnMainThread(async delegate(Task<Texture2D> task)
-                {
-                    var texture = await task;
-                    LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-                    IsLoaded = true;
-                    OnLoaded(LoadedSprite);
-                });
-            }
-
-            public static Task DownloadFromUri(string url, Action<Sprite> onSpriteLoaded)
-            {
-                var downloadHandle = new DownloadHandleSprite(url, onSpriteLoaded);
-                return downloadHandle.InvokeDownloading();
-            }
-
-            private void OnLoaded(Sprite obj)
-            {
-                Loaded?.Invoke(obj);
-                Loaded = null;
-            }
-        }
-
-        public readonly struct SpriteDownloadingTaskParameters
-        {
-            public readonly string Url;
-            public readonly Action<Sprite> Callback;
-
-            public SpriteDownloadingTaskParameters(string url, Action<Sprite> callback)
-            {
-                Assert.IsFalse(string.IsNullOrEmpty(url));
-                Url = url;
-                Callback = callback;
-            }
-
-            public SpriteDownloadingTaskParameters(string url, ISettableSprite settableSpriteInterface)
-            {
-                Assert.IsFalse(string.IsNullOrEmpty(url));
-                Url = url;
-                Callback = settableSpriteInterface.SetAvatarSprite;
+                return ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, taskScheduler, Url, cancellationToken)
+                    .ContinueWith(delegate(Task<Texture2D> task)
+                    {
+                        if (task.IsCanceled)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                        }
+                        var texture = task.Result;
+                        return LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
+                    }, cancellationToken, TaskContinuationOptions.None, taskScheduler);
             }
         }
 
         private readonly List<DownloadHandleSprite> _spritesDownloadHandles = new List<DownloadHandleSprite>();
 
+        private TaskScheduler MainThreadScheduler { get; set; }
 
         private void OnEnable()
         {
             _spritesDownloadHandles.Clear();
+            MainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
 
         private bool SpriteIsAlreadyLoaded(string url, out DownloadHandleSprite handleSprite)
@@ -90,57 +58,40 @@ namespace Repositories.Local
             return handleSprite != null;
         }
 
-        public async Task TryToLoadSpriteAsync(SpriteDownloadingTaskParameters parameters)
+        public Task CreateLoadSpritesTask(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)
         {
-            try
-            {
-                await CreateLoadSpriteTask(parameters);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return Task.WhenAll(CreateLoadSpritesTasks(parameters, cancellationToken));
         }
 
-        public async Task TryToLoadSpritesAsync(IReadOnlyList<SpriteDownloadingTaskParameters> parameters)
+        public Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken)
         {
-            try
+            if (SpriteIsAlreadyLoaded(url, out var downloadHandleSprite))
             {
-                await Task.WhenAll(CreateLoadSpritesTasks(parameters));
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        public Task CreateLoadSpriteTask(SpriteDownloadingTaskParameters parameters)
-        {
-            if (SpriteIsAlreadyLoaded(parameters.Url, out var downloadHandleSprite))
-            {
-                if (downloadHandleSprite.IsLoaded)
-                    parameters.Callback(downloadHandleSprite.LoadedSprite);
-                else
-                {
-                    downloadHandleSprite.Loaded += parameters.Callback;
-                }
-
-                return Task.CompletedTask;
+                return downloadHandleSprite.IsLoaded
+                    ? Task.FromResult(downloadHandleSprite.LoadedSprite)
+                    : downloadHandleSprite.InvokeDownloading(cancellationToken, MainThreadScheduler);
             }
 
-            var downloadHandle = new DownloadHandleSprite(parameters.Url, parameters.Callback);
+            var downloadHandle = new DownloadHandleSprite(url);
             _spritesDownloadHandles.Add(downloadHandle);
-            return downloadHandle.InvokeDownloading();
+            return downloadHandle.InvokeDownloading(cancellationToken, MainThreadScheduler);
         }
 
-        private Task[] CreateLoadSpritesTasks(IReadOnlyList<SpriteDownloadingTaskParameters> parameters)
+        public Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken)
+        {
+            return CreateLoadSpriteTask(url, cancellationToken).ContinueWith(async delegate(Task<Sprite> task)
+            {
+                var sprite = await task;
+                return sprite.texture;
+            }, cancellationToken, TaskContinuationOptions.None, MainThreadScheduler).Unwrap();
+        }
+
+        private Task[] CreateLoadSpritesTasks(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)
         {
             var tasks = new Task[parameters.Count];
             for (int i = 0; i < parameters.Count; i++)
             {
-                tasks[i] = CreateLoadSpriteTask(parameters[i]);
+                tasks[i] = CreateLoadSpriteTask(parameters[i], cancellationToken);
             }
 
             return tasks;

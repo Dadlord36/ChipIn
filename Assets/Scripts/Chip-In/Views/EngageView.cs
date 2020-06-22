@@ -26,17 +26,24 @@ namespace Views
             }
         }
 
-        public async Task<EngageCardViewModel> AddCardToScrollList(ICommunityDetailsDataModel communityDetailsDataModel)
+        public async Task<EngageCardViewModel> AddCardToScrollList(IMarketInterestDetailsDataModel marketInterestDetailsDataModel,
+            CancellationToken cancellationToken)
         {
             try
             {
-                var posterTexture = await ImagesDownloadingUtility.TryDownloadImageAsync(ApiHelper.DefaultClient, communityDetailsDataModel.PosterUri);
+                var posterTexture = await ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient,
+                    TaskScheduler.FromCurrentSynchronizationContext(), marketInterestDetailsDataModel.PosterUri, cancellationToken);
                 var engageCardView = Instantiate(prefab, scrollViewContainer);
 
-                engageCardView.FillCardWithData(new EngageCardDataModel(communityDetailsDataModel,
+                engageCardView.FillCardWithData(new EngageCardDataModel(marketInterestDetailsDataModel,
                     SpritesUtility.CreateSpriteWithDefaultParameters(posterTexture)));
 
                 return engageCardView;
+            }
+            catch (ImagesDownloadingUtility.DataDownloadingFailureException e)
+            {
+                LogUtility.PrintLog(Tag, e.Message);
+                return null;
             }
             catch (Exception e)
             {

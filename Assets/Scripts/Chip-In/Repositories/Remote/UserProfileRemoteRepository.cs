@@ -40,6 +40,8 @@ namespace Repositories.Remote
 
         private int _coinsGameResult;
 
+        private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
+
         public GeoLocation UserLocation
         {
             get => UserProfileDataRemote.UserLocation;
@@ -180,11 +182,13 @@ namespace Repositories.Remote
                     return;
                 }
 
-                await downloadedSpritesRepository.CreateLoadSpriteTask(
-                    new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(UserProfileDataRemote.AvatarImageUrl,
-                        delegate(Sprite sprite) { AvatarImage = sprite.texture; }));
+                _cancellationController.CancelOngoingTask();
+                var texture2D = await downloadedSpritesRepository.CreateLoadTexture2DTask(UserProfileDataRemote.AvatarImageUrl,
+                    _cancellationController.TasksCancellationTokenSource.Token);
+                AvatarImage = texture2D;
 
-                LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded", this);
+                LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
+                    this);
             }
             catch (Exception e)
             {
@@ -219,6 +223,7 @@ namespace Repositories.Remote
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             ConfirmDataLoading();
         }
 
@@ -233,6 +238,7 @@ namespace Repositories.Remote
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             ConfirmDataSaved();
         }
 
