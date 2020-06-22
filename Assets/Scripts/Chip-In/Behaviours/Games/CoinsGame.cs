@@ -52,8 +52,9 @@ namespace Behaviours.Games
         {
             if (_isInitialized) return;
             _isInitialized = true;
-
             _coins = FindObjectsOfType<Coin>();
+            
+            LockCoins();
             try
             {
                 await TossACoin();
@@ -63,7 +64,8 @@ namespace Behaviours.Games
                 LogUtility.PrintLogException(e);
                 throw;
             }
-
+            UnlockCoins();
+            
             for (var i = 0; i < _coins.Length; i++)
             {
                 if (_coins[i] is IFinishingAction finishingAction)
