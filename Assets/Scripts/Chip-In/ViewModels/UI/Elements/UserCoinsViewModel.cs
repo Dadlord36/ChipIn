@@ -21,5 +21,8 @@ namespace ViewModels.UI.Elements
         }
 
 
+        public UserCoinsViewModel() : base(nameof(UserCoinsViewModel))
+        {
+        }
     }
 }

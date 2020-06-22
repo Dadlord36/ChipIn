@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CustomAnimators;
 using DataModels.Interfaces;
@@ -86,6 +87,8 @@ namespace Repositories.Local
         private const string IconsDataHeaderFileName = "IconsHeaders";
         private const string GameIconsDirectoryName = "GameIcons";
 
+        private CancellationTokenSource _cancellationTokenSource;
+        
         private static string GameIconsDirectoryPath =>
             Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
 
@@ -175,7 +178,8 @@ namespace Repositories.Local
             _iconsSetIsLoaded = false;
             try
             {
-                await DownloadBoardIconsSetFromUrls(gameId, indexedUrls);
+                _cancellationTokenSource = new CancellationTokenSource();
+                await DownloadBoardIconsSetFromUrls(gameId, indexedUrls, _cancellationTokenSource.Token);
             }
             catch (Exception e)
             {
@@ -187,12 +191,16 @@ namespace Repositories.Local
             OnIconsSetWasLoaded();
         }
 
-        private async Task DownloadBoardIconsSetFromUrls(int gameId, IReadOnlyList<IndexedUrl> indexedUrls)
+        private async Task DownloadBoardIconsSetFromUrls(int gameId, IReadOnlyList<IndexedUrl> indexedUrls, CancellationToken cancellationToken)
         {
             try
             {
-                IReadOnlyList<byte[]> textures = await ImagesDownloadingUtility
-                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls).ConfigureAwait(false);
+                var texturesLoadingResponseMassages = ImagesDownloadingUtility
+                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls, cancellationToken)
+                    .ConfigureAwait(false);
+
+               var textures =  await await await texturesLoadingResponseMassages;
+
                 LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
                 SaveIconsData(gameId, textures, indexedUrls);
                 FillBoardIconsData(gameId, SpritesAnimationResourcesCreator.CreateBoardIcons(textures, indexedUrls,

@@ -1,10 +1,9 @@
-using DataModels.Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Views
 {
-    public class CreateCompanyAdView : BaseView
+    public sealed class CreateCompanyAdView : BaseView
     {
         [SerializeField] private Image logoIcon;
         [SerializeField] private Image companyPoster;
@@ -19,6 +18,10 @@ namespace Views
         {
             get => companyPoster.sprite;
             set => companyPoster.sprite = value;
+        }
+
+        public CreateCompanyAdView() : base(nameof(CreateCompanyAdView))
+        {
         }
     }
 }

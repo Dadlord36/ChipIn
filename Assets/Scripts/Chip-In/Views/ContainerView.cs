@@ -8,6 +8,10 @@ namespace Views
         [SerializeField] private Transform itemsContainer;
         [SerializeField] private T itemPrefab;
         
+        public ContainerView(string tag) : base(tag)
+        {
+        }
+        
         public T AddItem()
         {
             Assert.IsNotNull(itemsContainer);
@@ -21,6 +25,5 @@ namespace Views
                 Destroy(child.gameObject);
             }
         }
-        
     }
 }

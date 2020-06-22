@@ -32,7 +32,7 @@ namespace DataModels
         public bool ShowAlertsState { get; set; }
         public bool UserRadarState { get; set; }
         public bool ShowNotificationsState { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string Provider { get; set; }
     }

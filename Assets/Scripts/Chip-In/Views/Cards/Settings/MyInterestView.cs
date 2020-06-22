@@ -1,7 +1,9 @@
 ﻿namespace Views.Cards.Settings
 {
-    public class MyInterestView : BaseView
+    public sealed class MyInterestView : BaseView
     {
-        
+        public MyInterestView() : base(nameof(MyInterestView))
+        {
+        }
     }
 }

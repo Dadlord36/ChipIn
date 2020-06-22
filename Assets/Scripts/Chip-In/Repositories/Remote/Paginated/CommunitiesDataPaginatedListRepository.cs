@@ -13,9 +13,9 @@ using UnityEngine;
 namespace Repositories.Remote.Paginated
 {
     [CreateAssetMenu(
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + nameof(CommunitiesDataPaginatedListRepository),
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(Paginated) + "/" + nameof(CommunitiesDataPaginatedListRepository),
         fileName = "Create " + nameof(CommunitiesDataPaginatedListRepository), order = 0)]
-    public class CommunitiesDataPaginatedListRepository : PaginatedItemsListRepository<CommunityBasicDataModel,
+    public class CommunitiesDataPaginatedListRepository : PaginatedItemsListRepository<InterestBasicDataModel,
         CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
     {
         protected override string Tag => nameof(CommunitiesDataPaginatedListRepository);
@@ -27,13 +27,12 @@ namespace Repositories.Remote.Paginated
                 paginatedRequestData);
         }
 
-        protected override List<CommunityBasicDataModel> GetItemsFromResponseModelInterface(
-            ICommunitiesBasicDataRequestResponse responseModelInterface)
+        protected override List<InterestBasicDataModel> GetItemsFromResponseModelInterface(ICommunitiesBasicDataRequestResponse responseModelInterface)
         {
-            return new List<CommunityBasicDataModel>(responseModelInterface.Communities);
+            return new List<InterestBasicDataModel>(responseModelInterface.Communities);
         }
 
-        public override async Task SaveDataToServer()
+        public override Task SaveDataToServer()
         {
             throw new NotImplementedException();
         }

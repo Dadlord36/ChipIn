@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Controllers;
 using Repositories.Local;
 using UnityEditor;
 using UnityEngine;
@@ -57,6 +58,7 @@ namespace ViewModels.UI
         [SerializeField] private UserAvatarInRow[] imagesRows;
         [SerializeField] private UserAvatarIcon mainImage;
         [SerializeField] private UserAvatarIcon[] otherIcons;
+        private AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
 
 #if UNITY_EDITOR
 
@@ -86,11 +88,11 @@ namespace ViewModels.UI
             Assert.IsTrue(otherIcons.Length == avatarSprites.Count);
             try
             {
+                _cancellationController.CancelOngoingTask();
                 for (int i = 0; i < otherIcons.Length; i++)
                 {
-                    await downloadedSpritesRepository.TryToLoadSpriteAsync(
-                        new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(avatarSprites[i],
-                            otherIcons[i].SetAvatarSprite));
+                    otherIcons[i].AvatarSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(avatarSprites[i], 
+                        _cancellationController.TasksCancellationTokenSource.Token);
                 }
             }
             catch (Exception e)

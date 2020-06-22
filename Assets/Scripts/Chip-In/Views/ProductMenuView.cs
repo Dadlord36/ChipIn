@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class ProductMenuView : BaseView
+    public sealed class ProductMenuView : BaseView
     {
-        
+        public ProductMenuView() : base(nameof(ProductMenuView))
+        {
+        }
     }
 }

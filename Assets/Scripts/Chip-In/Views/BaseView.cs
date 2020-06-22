@@ -18,10 +18,16 @@ namespace Views
     [DisallowMultipleComponent]
     public abstract class BaseView : UIBehaviour
     {
+        protected readonly string Tag;
         public string ViewName => GetType().Name;
         public RectTransform ViewRootRectTransform => transform as RectTransform;
         private INotifySwitching _viewModelNotifier;
         private INotifyVisibilityChanged _viewModelVisibilityNotifier;
+
+        public BaseView(string tag)
+        {
+            Tag = tag;
+        }
 
         public void SetViewModelSwitchNotifier(INotifySwitching switchingNotifier)
         {

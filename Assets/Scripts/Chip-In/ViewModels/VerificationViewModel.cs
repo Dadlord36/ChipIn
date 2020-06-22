@@ -170,5 +170,9 @@ namespace ViewModels
             add => merchantVerificationRepository.PropertyChanged += value;
             remove => merchantVerificationRepository.PropertyChanged -= value;
         }
+        
+        public VerificationViewModel() : base(nameof(VerificationViewModel))
+        {
+        }
     }
 }

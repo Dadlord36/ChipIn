@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Common;
+﻿using Common;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Views;
@@ -11,9 +10,17 @@ namespace ViewModels.Basic
     /// </summary>
     public abstract class BaseViewModel : MonoBehaviour, INotifySwitching
     {
+        protected readonly string Tag;
+        
         [SerializeField] private BaseView view;
 
         protected DisposableCancellationTokenSource TasksCancellationTokenSource;
+
+        public BaseViewModel(string tag)
+        {
+            Tag = tag;
+        }
+
         public BaseView View => view;
 
         protected void CancelOngoingTask()

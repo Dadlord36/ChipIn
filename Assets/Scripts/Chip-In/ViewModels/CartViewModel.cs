@@ -31,10 +31,14 @@ namespace ViewModels
             }
         }
 
+        public CartViewModel() : base(nameof(CartViewModel))
+        {
+        }
+
         [Binding]
         public void SwitchInfoCanBeShown()
         {
-            if(!ItemIsSelected) return;
+            if (!ItemIsSelected) return;
             InfoCanBeShown = !InfoCanBeShown;
         }
 
@@ -84,7 +88,7 @@ namespace ViewModels
             base.OnSelectedItemIndexChanged(relatedItemIndex);
             userProductsRepository.CurrentlySelectedIndex = relatedItemIndex;
         }
-        
+
 
         protected override async Task LoadDataAndFillTheList()
         {

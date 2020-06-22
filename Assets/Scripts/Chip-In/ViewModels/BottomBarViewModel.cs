@@ -25,6 +25,10 @@ namespace ViewModels
 
         private string _currentViewName;
 
+        public BottomBarViewModel() : base(nameof(BottomBarViewModel))
+        {
+        }
+
         private void OnSwiped(SwipeDetector.SwipeData swipeData)
         {
             switch (swipeData.Direction)

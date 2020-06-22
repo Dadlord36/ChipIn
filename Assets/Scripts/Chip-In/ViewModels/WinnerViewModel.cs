@@ -1,5 +1,6 @@
 ﻿using System;
 using ActionsTranslators;
+using Controllers;
 using Repositories.Local;
 using UnityEngine;
 using Utilities;
@@ -12,6 +13,12 @@ namespace ViewModels
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private SelectedGameRepository slotsGameRepository;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+
+        private AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+
+        public WinnerViewModel() : base(nameof(WinnerViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {
@@ -38,10 +45,9 @@ namespace ViewModels
 
             try
             {
-                await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(iconUrl,
-                    winnerView.SetMainAvatarIconSprite));
-
-
+                _asyncOperationCancellationController.CancelOngoingTask();
+                winnerView.SetMainAvatarIconSprite(await downloadedSpritesRepository.CreateLoadSpriteTask(iconUrl,
+                    _asyncOperationCancellationController.TasksCancellationTokenSource.Token));
                 winnerView.UserNameFieldText = "Winner";
                 await winnerView.SetOtherAvatarsSprites(slotsGameRepository.UsersAvatarImagesSprites);
             }

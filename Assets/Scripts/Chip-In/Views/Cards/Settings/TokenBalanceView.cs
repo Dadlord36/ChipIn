@@ -1,7 +1,9 @@
 ﻿namespace Views.Cards.Settings
 {
-    public class TokenBalanceView : BaseView
+    public sealed class TokenBalanceView : BaseView
     {
-        
+        public TokenBalanceView() : base(nameof(TokenBalanceView))
+        {
+        }
     }
 }

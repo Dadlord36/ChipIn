@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class AccessView : BaseView
+    public sealed class AccessView : BaseView
     {
-        
+        public AccessView() : base(nameof(AccessView))
+        {
+        }
     }
 }

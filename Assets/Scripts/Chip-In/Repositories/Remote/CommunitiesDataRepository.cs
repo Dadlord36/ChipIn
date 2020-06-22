@@ -10,7 +10,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(CommunitiesDataRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunitiesDataRepository), order = 0)]
-    public sealed class CommunitiesDataRepository : BaseNotPaginatedListRepository<CommunityBasicDataModel>
+    public sealed class CommunitiesDataRepository : BaseNotPaginatedListRepository<InterestBasicDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
@@ -21,7 +21,7 @@ namespace Repositories.Remote
                 var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(out TasksCancellationTokenSource,
                         authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
-                ItemsLiveData = new LiveData<CommunityBasicDataModel>(responseInterface.Communities);
+                ItemsLiveData = new LiveData<InterestBasicDataModel>(responseInterface.Communities);
                 ConfirmDataLoading();
             }
 

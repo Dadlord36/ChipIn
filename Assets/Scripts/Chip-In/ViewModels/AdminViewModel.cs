@@ -15,11 +15,10 @@ namespace ViewModels
         
         private IAdminProperties AdminViewProperties => View as IAdminProperties;
         
-
-        public uint TokenBallance
+        public uint TokenBalance
         {
-            get => AdminViewProperties.TokenBallance;
-            set => AdminViewProperties.TokenBallance = value;
+            get => AdminViewProperties.TokenBalance;
+            set => AdminViewProperties.TokenBalance = value;
         }
 
         public uint AdSpendField
@@ -34,10 +33,10 @@ namespace ViewModels
             set => AdminViewProperties.SalesFromThisApp = value;
         }
 
-        public uint SalesCommisions
+        public uint SalesCommissions
         {
-            get => AdminViewProperties.SalesCommisions;
-            set => AdminViewProperties.SalesCommisions = value;
+            get => AdminViewProperties.SalesCommissions;
+            set => AdminViewProperties.SalesCommissions = value;
         }
 
         public uint ReturnOnInvestments
@@ -46,6 +45,10 @@ namespace ViewModels
             set => AdminViewProperties.ReturnOnInvestments = value;
         }
 
+        public AdminViewModel() : base(nameof(AdminViewModel))
+        {
+        }
+        
         [Binding]
         public async void LogOut_OnClick()
         {

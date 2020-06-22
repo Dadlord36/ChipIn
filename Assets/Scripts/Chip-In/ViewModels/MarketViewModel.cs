@@ -10,13 +10,15 @@ namespace ViewModels
 {
     public class MarketViewModel : ViewsSwitchingViewModel
     {
-        private const string Tag = nameof(MarketplaceViewModel);
-
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
         /*[SerializeField] private Vector2[] positions;
         [SerializeField] private float max = 10f;*/
         private MarketView ThisView => View as MarketView;
+
+        public MarketViewModel() : base(nameof(MarketViewModel))
+        {
+        }
 
         protected override async void OnBecomingActiveView()
         {

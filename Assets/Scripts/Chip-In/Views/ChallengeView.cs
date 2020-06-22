@@ -2,8 +2,10 @@
 
 namespace Views
 {
-    public class ChallengeView : ContainerView<ChallengeCardView>
+    public sealed class ChallengeView : ContainerView<ChallengeCardView>
     {
-        
+        public ChallengeView() : base(nameof(ChallengeView))
+        {
+        }
     }
 }

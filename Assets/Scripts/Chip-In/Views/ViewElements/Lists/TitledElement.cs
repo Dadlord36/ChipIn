@@ -14,12 +14,12 @@ namespace Views.ViewElements.Lists
     {
         [SerializeField] private TMP_Text titleTextField;
 
-        public event Action<string> WasSelected; 
+        public event Action<string> WasSelected;
         public event UnityAction GroupActionPerformed;
         [SerializeField] private Image background;
         [SerializeField] private ColorsPairParameter backgroundColoursPair;
-        
-        
+
+
         public Color BackgroundColor
         {
             get => background.color;
@@ -33,6 +33,10 @@ namespace Views.ViewElements.Lists
         }
 
         private Button RelatedButton => GetComponent<Button>();
+
+        public TitledElement() : base(nameof(TitledElement))
+        {
+        }
 
         protected override void OnEnable()
         {

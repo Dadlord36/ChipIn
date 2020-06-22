@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.Structures;
 using DataModels.Interfaces;
-using DataModels.RequestsModels;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -240,7 +239,6 @@ namespace DataModels
             get => avatarImage;
             set
             {
-                if (Equals(value, avatarImage)) return;
                 avatarImage = value;
                 OnPropertyChanged();
             }

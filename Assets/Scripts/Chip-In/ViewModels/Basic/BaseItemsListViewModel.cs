@@ -13,7 +13,6 @@ namespace ViewModels.Basic
     public abstract class BaseItemsListViewModel<TBaseView> : CorrespondingViewsSwitchingViewModel<TBaseView>, INotifyPropertyChanged
         where TBaseView : ItemsListBaseView
     {
-        private const string Tag = nameof(BaseItemsListViewModel<TBaseView>);
 
         private bool _itemIsSelected;
 
@@ -28,6 +27,10 @@ namespace ViewModels.Basic
                 LogUtility.PrintLog(Tag, $"ChallengeIsSelected: {_itemIsSelected.ToString()}");
                 OnPropertyChanged();
             }
+        }
+        
+        public BaseItemsListViewModel(string tag) : base(tag)
+        {
         }
 
         protected override async void OnEnable()

@@ -11,7 +11,7 @@ namespace Controllers.SlotsSpinningControllers
     {
         #region Private serialized field
 
-        [SerializeField] private SlotSpinnerProperties parameters;
+        [SerializeField] private LineEngineParameters parameters;
 
         #endregion
 
@@ -31,7 +31,7 @@ namespace Controllers.SlotsSpinningControllers
 
         #region Protected fields
 
-        protected LineEngine LineEngine;
+        protected LineEngineBehaviour LineEngineBehaviour;
         protected GameSlotIconView[] MovementElements;
 
         #endregion
@@ -40,14 +40,14 @@ namespace Controllers.SlotsSpinningControllers
 
         public uint ItemToFocusOnIndexFromIconId
         {
-            get => LineEngine.ItemToFocusOnIndex;
-            set => LineEngine.ItemToFocusOnIndex = _correspondingIndexesDictionary[value];
+            get => LineEngineBehaviour.IndexOfItemToFocusOn;
+            set => LineEngineBehaviour.IndexOfItemToFocusOn = _correspondingIndexesDictionary[value];
         }
 
         public uint ItemToFocusOnIndex
         {
-            get => LineEngine.ItemToFocusOnIndex;
-            set => LineEngine.ItemToFocusOnIndex = value;
+            get => LineEngineBehaviour.IndexOfItemToFocusOn;
+            set => LineEngineBehaviour.IndexOfItemToFocusOn = value;
         }
 
         #endregion
@@ -72,13 +72,13 @@ namespace Controllers.SlotsSpinningControllers
         public void AlignItems()
         {
             SetLineEngine();
-            LineEngine.AlignItems();
+            LineEngineBehaviour.AlignItems();
         }
 
         public void SlideInstantlyToIndexPosition(uint index)
         {
             SetLineEngine();
-            LineEngine.SlideInstantlyToIndexPosition(index);
+            LineEngineBehaviour.SlideInstantlyToIndexPosition(index);
         }
 
         public void SlideInstantlyToPositionByIconId(uint iconId)
@@ -138,9 +138,9 @@ namespace Controllers.SlotsSpinningControllers
 
         protected void SetLineEngine()
         {
-            if (!TryGetComponent(out LineEngine))
-                LineEngine = transform.GetChild(0).GetComponent<LineEngine>();
-            _progressiveMovement.Initialize(LineEngine,parameters,OnProgressiveMovementStops);
+            if (!TryGetComponent(out LineEngineBehaviour))
+                LineEngineBehaviour = transform.GetChild(0).GetComponent<LineEngineBehaviour>();
+            _progressiveMovement.Initialize(LineEngineBehaviour,parameters,OnProgressiveMovementStops);
         }
 
         #endregion

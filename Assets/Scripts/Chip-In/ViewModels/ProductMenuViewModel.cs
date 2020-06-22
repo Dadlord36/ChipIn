@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using DataModels;
-using Repositories;
-using Repositories.Local;
+﻿using Repositories.Local;
 using Repositories.Remote.Paginated;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -15,6 +12,10 @@ namespace ViewModels
     {
         [SerializeField] private CommunitiesDataPaginatedListRepository dataRepository;
         [SerializeField] private DownloadedSpritesRepository spritesRepository;
+
+        public ProductMenuViewModel() : base(nameof(ProductMenuViewModel))
+        {
+        }
 
         protected override void OnBecomingActiveView()
         {
@@ -38,12 +39,12 @@ namespace ViewModels
         public void Button_StartAnInterest_OnClick()
         {
         }
-        
+
 
         protected override void UpdateItems()
         {
             base.UpdateItems();
-            
+
             /*if (!dataRepository.TryGetCurrentPageItems(out var items)) return;
             for (int i = 0; i < items.Count; i++)
             {

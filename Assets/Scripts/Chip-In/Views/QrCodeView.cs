@@ -6,13 +6,17 @@ using WebOperationUtilities;
 
 namespace Views
 {
-    public class QrCodeView : BaseView
+    public sealed class QrCodeView : BaseView
     {
         [SerializeField] private Image qrImage;
         [SerializeField] private QrCodeEncodingParameters qrCodeParameters;
         [SerializeField] private UserProductsRepository userProductsRepository;
 
         [SerializeField] private CodeWriter codeWriter;
+
+        public QrCodeView() : base(nameof(QrCodeView))
+        {
+        }
 
         protected override void OnEnable()
         {

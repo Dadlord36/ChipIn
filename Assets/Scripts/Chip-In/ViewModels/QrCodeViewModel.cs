@@ -10,5 +10,9 @@ namespace ViewModels
         {
             ThisView.QrCode = qrCode;
         }
+
+        public QrCodeViewModel() : base(nameof(QrCodeViewModel))
+        {
+        }
     }
 }

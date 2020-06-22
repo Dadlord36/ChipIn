@@ -27,16 +27,16 @@ namespace DataModels
         {
         }
 
-        public EngageCardDataModel(ICommunityDetailsDataModel communityDetailsDataModel, Sprite icon)
+        public EngageCardDataModel(IMarketInterestDetailsDataModel marketInterestDetailsDataModel, Sprite icon)
         {
-            Age = communityDetailsDataModel.Age;
-            Size = communityDetailsDataModel.Size;
-            Description = communityDetailsDataModel.Description;
+            Age = marketInterestDetailsDataModel.Age;
+            Size = marketInterestDetailsDataModel.Size;
+            Description = marketInterestDetailsDataModel.Description;
             Icon = icon;
-            Id = communityDetailsDataModel.Id;
-            Name = communityDetailsDataModel.Name;
-            MaxCap = communityDetailsDataModel.MaxCap;
-            MinCap = communityDetailsDataModel.MinCap;
+            Id = marketInterestDetailsDataModel.Id;
+            Name = marketInterestDetailsDataModel.Name;
+            MaxCap = marketInterestDetailsDataModel.MaxCap;
+            MinCap = marketInterestDetailsDataModel.MinCap;
         }
 
         public void Set(IEngageModel model)

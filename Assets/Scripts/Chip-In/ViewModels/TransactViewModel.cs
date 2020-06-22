@@ -23,6 +23,10 @@ namespace ViewModels
             }
         }
 
+        public TransactViewModel() : base(nameof(TransactViewModel))
+        {
+        }
+
         [Binding]
         public void Redemption_OnClick()
         {

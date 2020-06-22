@@ -40,6 +40,10 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
+        
+        public CreateCompanyAdViewModel() : base(nameof(CreateCompanyAdViewModel))
+        {
+        }
 
         [Binding]
         public void ChoseLogoImage_OnClick()

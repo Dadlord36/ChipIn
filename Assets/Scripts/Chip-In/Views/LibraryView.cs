@@ -1,7 +1,9 @@
 ﻿namespace Views
 {
-    public class LibraryView : BaseView
+    public sealed class LibraryView : BaseView
     {
-        
+        public LibraryView() : base(nameof(LibraryView))
+        {
+        }
     }
 }

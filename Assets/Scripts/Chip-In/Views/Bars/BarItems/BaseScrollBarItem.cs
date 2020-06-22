@@ -36,5 +36,9 @@ namespace Views.Bars.BarItems
         {
             // OnNewItemSelected();
         }
+
+        public BaseScrollBarItem() : base(nameof(BaseScrollBarItem))
+        {
+        }
     }
 }

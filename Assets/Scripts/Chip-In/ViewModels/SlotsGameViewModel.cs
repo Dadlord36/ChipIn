@@ -124,7 +124,10 @@ namespace ViewModels
 
         #endregion
 
-
+        public SlotsGameViewModel() : base(nameof(SlotsGameViewModel))
+        {
+        }
+        
         protected override void OnEnable()
         {
             base.OnEnable();

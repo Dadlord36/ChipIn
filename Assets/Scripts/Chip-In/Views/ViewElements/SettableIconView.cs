@@ -36,6 +36,10 @@ namespace Views.ViewElements
             }
         }
 
+        public SettableIconView() : base(nameof(SettableIconView))
+        {
+        }
+
         [Binding]
         public void IconPlaceholder_OnClick()
         {

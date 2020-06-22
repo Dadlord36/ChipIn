@@ -9,14 +9,16 @@ namespace ViewModels
 {
     public class MerchantInterestDetailsViewModel : ViewsSwitchingViewModel
     {
-        private const string Tag = nameof(MerchantInterestViewModel);
-
         [SerializeField] private TitledItemsList itemsList;
         [SerializeField] private OfferCreationRepository offerCreationRepository;
         [SerializeField] private ScrollBarOfTitlesViewModel scrollBar;
 
 
         private string _currentCategory;
+
+        public MerchantInterestDetailsViewModel() : base(nameof(MerchantInterestDetailsViewModel))
+        {
+        }
 
         protected override void OnEnable()
         {
@@ -33,7 +35,7 @@ namespace ViewModels
         private void Start()
         {
             scrollBar.Initialize();
-           
+
 
             //Todo: remove next line
             itemsList.SubscribeOnElementsSelection(OnItemSelected);

@@ -2,7 +2,10 @@
 
 namespace Views
 {
-    public class CartView : ItemsListBaseView
+    public sealed class CartView : ItemsListBaseView
     {
+        public CartView() : base(nameof(CartView))
+        {
+        }
     }
 }

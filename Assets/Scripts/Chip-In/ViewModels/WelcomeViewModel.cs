@@ -35,6 +35,10 @@ namespace ViewModels
             SwitchToView(nameof(LoginView));
         }
 
+        public WelcomeViewModel() : base(nameof(WelcomeViewModel))
+        {
+        }
+
 
         [Binding]
         public async void LoginAsGuest()

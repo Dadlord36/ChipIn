@@ -8,12 +8,12 @@ namespace DataModels.Common
         private readonly uint _perPage;
         private uint _currentPage = 1;
 
-        private List<List<T>> _pagesData = new List<List<T>>();
+        private readonly List<List<T>> _pagesData = new List<List<T>>();
 
         /// <summary>
         /// Dictionary, that accepts page number as key and returns pagesData list index as value.
         /// </summary>
-        private Dictionary<uint, int> _pagesDataIndexes = new Dictionary<uint, int>();
+        private readonly Dictionary<uint, int> _pagesDataIndexes = new Dictionary<uint, int>();
 
         public PaginatedList()
         {

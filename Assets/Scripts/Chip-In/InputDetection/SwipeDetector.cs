@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using ActionsTranslators;
 using ScriptableObjects.Parameters;
 using UnityEngine;
@@ -7,11 +7,10 @@ using Utilities;
 
 namespace InputDetection
 {
-    public sealed class SwipeDetector : IUpdatable
+    public class SwipeDetector : IUpdatable
     {
         public event Action<SwipeData> Swiped;
 
-        private Vector2 _touchDownPosition, _touchUpPosition;
         private readonly SwipeDetectorParameters _parameters;
 
         public SwipeDetector(SwipeDetectorParameters parameters)
@@ -19,23 +18,46 @@ namespace InputDetection
             _parameters = parameters;
         }
 
+        private Vector2 TouchUpPosition { get; set; }
+
+        private Vector2 TouchDownPosition { get; set; }
+
+        private Vector2 TempCursorPosition { get; set; }
+
+        private Vector2 DeltaPosition { get; set; }
+
+        private bool CanSwipe()
+        {
+            return Math.Abs(Math.Abs(Vector2.Distance(TempCursorPosition, TouchUpPosition))) > _parameters.MinDistanceForSwipe;
+        }
+
+        private void RecalculateDeltaPosition()
+        {
+            DeltaPosition = TempCursorPosition - TouchUpPosition;
+        }
+
 #if UNITY_EDITOR
         public void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _touchUpPosition = _touchDownPosition = Input.mousePosition;
+                TouchUpPosition = TouchDownPosition = TempCursorPosition = Input.mousePosition;
             }
 
             if (Input.GetMouseButton(0) && !_parameters.DetectSwipeOnlyAfterRelease)
             {
-                _touchUpPosition = Input.mousePosition;
+                TempCursorPosition = Input.mousePosition;
+                if (!CanSwipe()) return;
+                RecalculateDeltaPosition();
+
+                TouchUpPosition = TempCursorPosition;
                 DetectSwipe();
             }
 
             if (Input.GetMouseButtonUp(0))
             {
-                _touchUpPosition = Input.mousePosition;
+                RecalculateDeltaPosition();
+                TouchUpPosition = Input.mousePosition;
                 DetectSwipe();
             }
         }
@@ -47,18 +69,20 @@ namespace InputDetection
 
             if (touches[0].phase == TouchPhase.Began)
             {
-                _touchDownPosition = _touchUpPosition = touches[0].position;
+                TouchDownPosition = TouchUpPosition = touches[0].position;
             }
 
             if (!_parameters.DetectSwipeOnlyAfterRelease && touches[0].phase == TouchPhase.Moved)
             {
-                _touchUpPosition = touches[0].position;
+                TempCursorPosition = touches[0].position;
+                 if (!CanSwipe()) return;
+                TouchUpPosition = TempCursorPosition;
                 DetectSwipe();
             }
 
             if (touches[0].phase == TouchPhase.Ended)
             {
-                _touchUpPosition = touches[0].position;
+                TouchUpPosition = touches[0].position;
                 DetectSwipe();
             }
         }
@@ -69,29 +93,28 @@ namespace InputDetection
             if (!SwipeDistanceCheckMet()) return;
 
             MoveDirection direction;
-            var touchDelta = _touchDownPosition - _touchUpPosition;
+
 
             if (IsVerticalSwipe())
             {
-                direction = touchDelta.y > 0f
+                direction = DeltaPosition.y > 0f
                     ? MoveDirection.Down
                     : MoveDirection.Up;
             }
             else
             {
-                direction = touchDelta.x > 0f
+                direction = DeltaPosition.x > 0f
                     ? MoveDirection.Left
                     : MoveDirection.Right;
             }
 
-            SendSwipe(direction, _touchDownPosition, _touchUpPosition, touchDelta);
-            _touchUpPosition = _touchDownPosition;
+            SendSwipe(direction, TouchDownPosition, TouchUpPosition, DeltaPosition);
         }
 
-        private void SendSwipe(in MoveDirection direction, in Vector2 touchDownPosition, in Vector2 touchUpPosition, in Vector2 deltaPosition)
+        private void SendSwipe(in MoveDirection direction, in Vector2 touchDownPosition, in Vector2 touchUpPosition, Vector2 deltaPosition)
         {
             LogUtility.PrintLog(nameof(SwipeDetector), $"Swiped to the {direction.ToString()}");
-            OnSwiped(new SwipeData(direction, deltaPosition, touchDownPosition, touchUpPosition));
+            OnSwiped(new SwipeData(direction, touchDownPosition, touchUpPosition, deltaPosition));
         }
 
         private bool SwipeDistanceCheckMet()
@@ -112,26 +135,26 @@ namespace InputDetection
 
         private float VerticalMovementDistance()
         {
-            return Mathf.Abs(_touchDownPosition.y - _touchUpPosition.y);
+            return Mathf.Abs(TouchDownPosition.y - TouchUpPosition.y);
         }
 
         private float HorizontalMovementDistance()
         {
-            return Mathf.Abs(_touchDownPosition.x - _touchUpPosition.x);
+            return Mathf.Abs(TouchDownPosition.x - TouchUpPosition.x);
         }
 
-        public struct SwipeData
+        public readonly struct SwipeData
         {
             public readonly MoveDirection Direction;
             public readonly Vector2 TouchDownPoint, TouchUpPoint;
-            public Vector2 DeltaVector;
+            public readonly Vector2 TouchDelta;
 
-            public SwipeData(MoveDirection direction, Vector2 deltaVector, Vector2 touchDownPoint, Vector2 touchUpPoint)
+            public SwipeData(MoveDirection direction, Vector2 touchDownPoint, Vector2 touchUpPoint, Vector2 deltaPosition)
             {
                 Direction = direction;
-                DeltaVector = deltaVector;
                 TouchDownPoint = touchDownPoint;
                 TouchUpPoint = touchUpPoint;
+                TouchDelta = deltaPosition;
             }
         }
 

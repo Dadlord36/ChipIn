@@ -7,10 +7,13 @@ namespace ViewModels
     [Binding]
     public class CommunityViewModel : ViewsSwitchingViewModel
     {
+        public CommunityViewModel() : base(nameof(CommunityViewModel))
+        {
+        }
+
         [Binding]
         public void SwitchToCommunityStatisticsView()
         {
-            
             PrintLog("Switching to CommunityStatisticsView");
         }
 
@@ -21,9 +24,9 @@ namespace ViewModels
             PrintLog("Switching to SwitchToCommunityInterestView");
         }
 
-        private static void PrintLog(string message)
+        private void PrintLog(string message)
         {
-            Debug.unityLogger.Log(LogType.Log, SwitchingViewTag, message);
+            Debug.unityLogger.Log(LogType.Log, Tag, message);
         }
     }
 }

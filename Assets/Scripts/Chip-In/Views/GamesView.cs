@@ -1,6 +1,9 @@
 ﻿namespace Views
 {
-    public class GamesView : ContainerView<SoloGameItemView>
+    public sealed class GamesView : ContainerView<SoloGameItemView>
     {
+        public GamesView() : base(nameof(GamesView))
+        {
+        }
     }
 }

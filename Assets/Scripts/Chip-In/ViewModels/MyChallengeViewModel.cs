@@ -34,6 +34,10 @@ namespace ViewModels
         }
 
 
+        public MyChallengeViewModel() : base(nameof(MyChallengeViewModel))
+        {
+        }
+
         [Binding]
         public async Task ShowInfo_OnButtonClick()
         {

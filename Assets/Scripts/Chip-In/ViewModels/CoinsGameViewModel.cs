@@ -9,11 +9,15 @@ namespace ViewModels
     {
         [SerializeField] private Component miniGame;
 
+        public CoinsGameViewModel() : base(nameof(CoinsGameViewModel))
+        {
+        }
+
         private void Awake()
         {
             Assert.IsNotNull(miniGame);
         }
-        
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -34,12 +38,12 @@ namespace ViewModels
             Assert.IsNotNull(game);
             game.GameComplete -= SwitchToMarketplace;
         }
-        
+
         private void DestroyMiniGame()
         {
             Destroy(miniGame.gameObject);
         }
-        
+
         private void SwitchToMarketplace()
         {
             SwitchToView(nameof(MarketplaceView));

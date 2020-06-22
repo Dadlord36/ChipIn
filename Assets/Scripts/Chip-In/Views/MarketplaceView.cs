@@ -1,6 +1,9 @@
 ﻿namespace Views
 {
-    public class MarketplaceView : BaseView
+    public sealed class MarketplaceView : BaseView
     {
+        public MarketplaceView() : base(nameof(MarketplaceView))
+        {
+        }
     }
 }

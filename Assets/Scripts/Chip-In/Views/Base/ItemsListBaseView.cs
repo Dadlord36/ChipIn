@@ -12,7 +12,7 @@ namespace Views.Base
     {
         [SerializeField] private ItemsDropdownList dropdownList;
         [SerializeField] private InfoPanelView offerInfoCard;
-        
+
         public event Action<int> RelatedItemSelected
         {
             add => dropdownList.RelatedItemSelected += value;
@@ -23,6 +23,10 @@ namespace Views.Base
         {
             add => dropdownList.ItemsListUpdated += value;
             remove => dropdownList.ItemsListUpdated -= value;
+        }
+
+        public ItemsListBaseView(string tag) : base(tag)
+        {
         }
 
         public void FillDropdownList(Dictionary<int?, string> itemsDictionary)

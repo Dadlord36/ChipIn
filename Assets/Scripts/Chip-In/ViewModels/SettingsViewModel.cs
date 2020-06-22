@@ -12,9 +12,13 @@ namespace ViewModels
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        
         [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
         [SerializeField] private SessionController sessionController;
+
+
+        public SettingsViewModel() : base(nameof(SettingsViewModel))
+        {
+        }
 
         protected override void OnBecomingInactiveView()
         {
@@ -24,10 +28,10 @@ namespace ViewModels
 
         private void Start()
         {
-            viewsPlacer.Initialize();    
+            viewsPlacer.Initialize();
             ShowMyProfile();
         }
-        
+
         [Binding]
         public async void LogOut_OnClick()
         {

@@ -23,6 +23,10 @@ namespace Views.Cards
             set => textBlock.text = value;
         }
 
+        public AlertsCardView() : base(nameof(AlertsCardView))
+        {
+        }
+
         protected override void Start()
         {
             base.Start();
