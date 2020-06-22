@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataModels.Interfaces;
 using InputDetection;
 using UnityEngine.Events;
 
@@ -26,7 +27,17 @@ namespace Common.UnityEvents
     }
 
     [Serializable]
+    public sealed class IntPointerUnityEvent : UnityEvent<int?>
+    {
+    }
+
+    [Serializable]
+    public sealed class IdentifierUnityEvent : UnityEvent<IIdentifier>
+    {
+    }
+
+    [Serializable]
     public sealed class SwipeDataUnityEvent : UnityEvent<SwipeDetector.SwipeData>
     {
-    } 
+    }
 }
