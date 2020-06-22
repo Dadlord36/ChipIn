@@ -18,9 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataRestorationController restorationController;
     [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
 
-
-    // Start is called before the first frame update
-
     private async void Start()
     {
         try

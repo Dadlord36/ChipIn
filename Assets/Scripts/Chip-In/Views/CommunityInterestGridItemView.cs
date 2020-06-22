@@ -1,14 +1,18 @@
-﻿using DataModels.Interfaces;
+﻿using System;
+using DataModels.Interfaces;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Views
 {
-    public sealed class CommunityInterestGridItemView : BaseView
+    public sealed class CommunityInterestGridItemView : BaseView, IPointerClickHandler
     {
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
+
+        public event Action<int?> ItemSelected;
 
         private int? _interestId;
 
@@ -44,12 +48,22 @@ namespace Views
             ItemName = gridItemData.Name;
             _interestId = gridItemData.Id;
         }
-        
+
         public void SetItemImageAndText(int id, string itemName, Sprite sprite)
         {
             ItemImageSprite = sprite;
             ItemName = itemName;
             _interestId = id;
+        }
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            OnItemSelected();
+        }
+
+        private void OnItemSelected()
+        {
+            ItemSelected?.Invoke(_interestId);
         }
     }
 }

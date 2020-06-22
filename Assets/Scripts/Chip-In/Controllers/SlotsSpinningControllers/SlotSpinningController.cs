@@ -28,7 +28,7 @@ namespace Controllers.SlotsSpinningControllers
         public void PrepareItems(List<BoardIconData> animatedIconResource, float slotsSpritesAnimationSwitchingInterval,
             bool loopTheAnimation)
         {
-            var elementsTransforms = LineEngine.Initialize(slotPrefab.transform, animatedIconResource.Count);
+            var elementsTransforms = LineEngineBehaviour.Initialize(slotPrefab.transform, (uint) animatedIconResource.Count);
             MovementElements = new GameSlotIconView[elementsTransforms.Length];
 
             for (var i = 0; i < elementsTransforms.Length; i++)

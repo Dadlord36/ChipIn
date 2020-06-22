@@ -1,24 +1,25 @@
 ﻿using Controllers.SlotsSpinningControllers;
+using Controllers.SlotsSpinningControllers.RecyclerView;
 using UnityEditor;
 using UnityEngine;
 
 namespace Inspectors
 {
-    [CustomEditor(typeof(ScrollEngineController))]
+    [CustomEditor(typeof(RecyclerView))]
     public class ScrollEngineControllerEditor : Editor
     {
-        private ScrollEngineController _scrollEngineController;
+        private RecyclerView _recyclerView;
 
         private void OnEnable()
         {
-            _scrollEngineController = target as ScrollEngineController;
+            _recyclerView = target as RecyclerView;
         }
 
         public override void OnInspectorGUI()
         {
             if(GUILayout.Button("Align items"))
             {
-                _scrollEngineController.AlignItems();
+                _recyclerView.AlignItems();
             }
             base.OnInspectorGUI();
         }

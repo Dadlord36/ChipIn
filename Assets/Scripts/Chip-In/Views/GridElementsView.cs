@@ -1,23 +1,32 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
+using Common.UnityEvents;
 using DataModels.Interfaces;
+using JetBrains.Annotations;
 using Repositories.Local;
 using UnityEngine;
+using UnityWeld.Binding;
 using Utilities;
 
 namespace Views
 {
-    public class GridElementsView : BaseView
+    [Binding]
+    public sealed class GridElementsView : BaseView, INotifyPropertyChanged
     {
 #if UNITY_EDITOR
         [SerializeField, HideInInspector] public int rowsAmount;
 #endif
-
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private CommunityInterestGridItemView itemPrefab;
         [SerializeField] private Sprite defaultSprite;
         [SerializeField, HideInInspector] private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
+        private int? _newSelectedItemCorrespondingIndex;
+
+        public IntPointerUnityEvent newItemWasSelected;
 
 
         public GridElementsView() : base(nameof(GridElementsView))
@@ -51,32 +60,35 @@ namespace Views
             }
         }
 
-        public async Task FillOneItemWithData(IIndexedNamedPosterUrl gridItemData)
+        public async Task FillOneItemWithData(int cellIndex, IIndexedNamedPosterUrl gridItemData, CancellationToken cancellationToken)
         {
-            if (_lastFilledGridItemIndex < items.Count)
+            if (cellIndex >= items.Count)
             {
-                items[_lastFilledGridItemIndex].SetItemText(gridItemData);
-                
-                try
-                {
-                    await downloadedSpritesRepository.TryToLoadSpriteAsync(new DownloadedSpritesRepository.SpriteDownloadingTaskParameters(gridItemData.PosterUri, items[_lastFilledGridItemIndex].SetImage));
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                    throw;
-                }
-                
-                _lastFilledGridItemIndex++;
+                return;
+            }
+
+            items[cellIndex].SetItemText(gridItemData);
+            try
+            {
+                items[cellIndex].SetImage(await downloadedSpritesRepository.CreateLoadSpriteTask(gridItemData.PosterUri, cancellationToken));
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintLog(nameof(GridElementsView), $"Image was not loaded {gridItemData.PosterUri}");
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 
         public void ClearItems()
         {
-            _lastFilledGridItemIndex = 0;
             foreach (var interestGridItemView in items)
             {
                 interestGridItemView.SetItemImageAndText(-1, "", defaultSprite);
+                interestGridItemView.ItemSelected += OnNewItemSelected;
             }
         }
 
@@ -99,6 +111,25 @@ namespace Views
                             Destroy(gO);
 #endif
             }
+        }
+
+        private void OnNewItemSelected(int? index)
+        {
+            System.Diagnostics.Debug.Assert(index != null, nameof(index) + " != null");
+            OnNewItemWasSelected(index);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnNewItemWasSelected(int? index)
+        {
+            newItemWasSelected?.Invoke(index);
         }
     }
 }

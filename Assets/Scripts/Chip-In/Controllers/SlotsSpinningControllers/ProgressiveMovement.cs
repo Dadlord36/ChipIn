@@ -10,12 +10,12 @@ namespace Controllers.SlotsSpinningControllers
         private float _currentFrameDistancePercentage;
 
         private IProgressiveMovement _progressiveMovementInterface;
-        private LineEngineProperties _parameters;
+        private LineEngineParameters _parameters;
 
         private Action _movementStops;
 
-        public void Initialize(IProgressiveMovement progressiveMovementInterface,
-            LineEngineProperties parameters, Action onMovementStopsAction)
+        public void Initialize(IProgressiveMovement progressiveMovementInterface, LineEngineParameters parameters,
+            Action onMovementStopsAction)
         {
             _progressiveMovementInterface = progressiveMovementInterface;
             _parameters = parameters;

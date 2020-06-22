@@ -1,51 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DataModels.Interfaces;
+using Controllers;
+using DataModels;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using ViewModels;
-using Views.Base;
+using Utilities;
 
 namespace Views
 {
-    public sealed class CommunityInterestLabelsView : SwipingBaseView
+    public sealed class CommunityInterestLabelsView : BaseView
     {
-        [SerializeField] private GridElementsViewModel gridElementsViewModel;
+        [SerializeField] private GridElementsView gridElementsView;
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
-        public event Action SwipedLeft;
-        public event Action SwipedRight;
-        
         public CommunityInterestLabelsView() : base(nameof(CommunityInterestLabelsView))
         {
         }
 
-        public Task UpdateGridItemsContent(IReadOnlyList<IIndexedNamedPosterUrl> dataRepositoryItems)
+        public async void FillInterestsGridWithItems(IReadOnlyList<InterestBasicDataModel> items)
         {
-           return gridElementsViewModel.UpdateGridContent(dataRepositoryItems);
-        }
+            _asyncOperationCancellationController.CancelOngoingTask();
 
-        protected override void OnSwiped(MoveDirection swipeDetector)
-        {
-            switch (swipeDetector)
+
+            gridElementsView.ClearItems();
+            var tasks = new List<Task>(items.Count);
+            try
             {
-                case MoveDirection.Left:
-                    OnSwipedLeft();
-                    break;
-                case MoveDirection.Right:
-                    OnSwipedRight();
-                    break;
+                for (var i = 0; i < items.Count; i++)
+                {
+                    tasks.Add(gridElementsView.FillOneItemWithData(i, items[i],
+                        _asyncOperationCancellationController.TasksCancellationTokenSource.Token));
+                }
+
+                await Task.WhenAll(tasks);
             }
-        }
-
-        private void OnSwipedLeft()
-        {
-            SwipedLeft?.Invoke();
-        }
-
-        private void OnSwipedRight()
-        {
-            SwipedRight?.Invoke();
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

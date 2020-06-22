@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 namespace DataModels.Common
 {
 
-    public interface IPagination
+    public interface IPaginationBase
     {
         [JsonProperty("page")]  int Page { get; set; }
         [JsonProperty("per_page")]  int PerPage { get; set; }
     }
     
-    public class PaginatedRequestData :  IPagination
+    public class PaginatedRequestData :  IPaginationBase
     {
         public int Page { get; set; }
         public int PerPage { get; set; }

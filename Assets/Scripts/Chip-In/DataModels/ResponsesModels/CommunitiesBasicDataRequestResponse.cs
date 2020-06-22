@@ -7,10 +7,10 @@ namespace DataModels.ResponsesModels
     {
         public bool Success { get; set; }
         public PaginatedResponseData Paginated { get; set; }
-        public CommunityBasicDataModel[] Communities { get; set; }
+        public InterestBasicDataModel[] Communities { get; set; }
 
         public CommunitiesBasicDataRequestResponse(bool success, PaginatedResponseData paginatedResponseData,
-            CommunityBasicDataModel[] communities)
+            InterestBasicDataModel[] communities)
         {
             Success = success;
             Paginated = paginatedResponseData;

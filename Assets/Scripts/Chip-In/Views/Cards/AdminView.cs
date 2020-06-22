@@ -1,30 +1,30 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Views.Cards
 {
     public interface IAdminProperties
     {
-        uint TokenBallance { get; set; }
+        uint TokenBalance { get; set; }
         uint AdSpendField { get; set; }
         uint SalesFromThisApp { get; set; }
-        uint SalesCommisions { get; set; }
+        uint SalesCommissions { get; set; }
         uint ReturnOnInvestments { get; set; }
     }
 
     public class AdminView : BaseView, IAdminProperties
     {
-        [SerializeField] private TMP_Text tokenBallanceTextField;
+        [SerializeField] private TMP_Text tokenBalanceTextField;
 
         [SerializeField] private TMP_Text adSpendField;
         [SerializeField] private TMP_Text salesFromThisAppTextField;
-        [SerializeField] private TMP_Text salesCommisionsTextField;
+        [SerializeField] private TMP_Text salesCommissionsTextField;
         [SerializeField] private TMP_Text returnOnInvestmentsTextField;
 
-        public uint TokenBallance
+        public uint TokenBalance
         {
-            get => uint.Parse(tokenBallanceTextField.text);
-            set => tokenBallanceTextField.text = value.ToString();
+            get => uint.Parse(tokenBalanceTextField.text);
+            set => tokenBalanceTextField.text = value.ToString();
         }
 
         public uint AdSpendField
@@ -39,10 +39,10 @@ namespace Views.Cards
             set => salesFromThisAppTextField.text = value.ToString();
         }
 
-        public uint SalesCommisions
+        public uint SalesCommissions
         {
-            get => uint.Parse(salesCommisionsTextField.text);
-            set => salesCommisionsTextField.text = value.ToString();
+            get => uint.Parse(salesCommissionsTextField.text);
+            set => salesCommissionsTextField.text = value.ToString();
         }
 
         public uint ReturnOnInvestments

@@ -5,6 +5,6 @@ namespace DataModels.Interfaces
 {
     public interface ICommunitiesBasicDataRequestResponse : ISuccess, IPaginatedResponse
     {
-        [JsonProperty("communities")] CommunityBasicDataModel[] Communities { get; set; }
+        [JsonProperty("communities")] InterestBasicDataModel[] Communities { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 {
     public interface ICommunityItemResponseModel : ISuccess
     {
-        [JsonProperty("community")] CommunityDetailsDataModel LabelDetailsDataModel { get; set; }
+        [JsonProperty("community")] MarketInterestDetailsDataModel LabelDetailsDataModel { get; set; }
     }
 
     public sealed class CommunityDetailsGetProcessor : RequestWithoutBodyProcessor<CommunityItemResponseDataModel,

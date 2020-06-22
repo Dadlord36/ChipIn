@@ -8,8 +8,7 @@ namespace TrackingNotifiers
     [Serializable]
     public sealed class SwipeInRectTracker
     {
-        [HideInInspector] public event Action<SwipeDetector.SwipeData> SwipedInRect;
-
+        public event Action<SwipeDetector.SwipeData> SwipedInRect;
         [SerializeField] private RectTransform controlRectTransform;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
 

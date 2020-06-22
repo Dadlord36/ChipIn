@@ -14,7 +14,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(CommunitiesDetailsDataRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunitiesDetailsDataRepository), order = 0)]
-    public sealed class CommunitiesDetailsDataRepository : BaseNotPaginatedListRepository<CommunityDetailsDataModel>
+    public sealed class CommunitiesDetailsDataRepository : BaseNotPaginatedListRepository<MarketInterestDetailsDataModel>
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
@@ -27,7 +27,7 @@ namespace Repositories.Remote
                     authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
                 var items = await LoadCommunitiesDetailsData(responseInterface.Communities).ConfigureAwait(false);
-                ItemsLiveData = new LiveData<CommunityDetailsDataModel>(items);
+                ItemsLiveData = new LiveData<MarketInterestDetailsDataModel>(items);
                 ConfirmDataLoading();
             }
 
@@ -38,7 +38,7 @@ namespace Repositories.Remote
             }
         }
 
-        private async Task<CommunityDetailsDataModel[]> LoadCommunitiesDetailsData(IReadOnlyList<CommunityBasicDataModel> communitiesBasicData)
+        private async Task<MarketInterestDetailsDataModel[]> LoadCommunitiesDetailsData(IReadOnlyList<InterestBasicDataModel> communitiesBasicData)
         {
             var count = communitiesBasicData.Count;
 
@@ -53,7 +53,7 @@ namespace Repositories.Remote
             try
             {
                 var result = await Task.WhenAll(tasks).ConfigureAwait(false);
-                var dataModels = new CommunityDetailsDataModel[count];
+                var dataModels = new MarketInterestDetailsDataModel[count];
 
                 for (var index = 0; index < result.Length; index++)
                 {

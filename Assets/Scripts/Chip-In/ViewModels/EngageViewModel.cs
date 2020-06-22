@@ -1,6 +1,8 @@
-using System;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using DataModels;
+using DataModels.Interfaces;
 using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
@@ -15,6 +17,7 @@ namespace ViewModels
         [SerializeField] private OfferCreationRepository offerCreationRepository;
         [SerializeField] private CommunitiesDetailsDataRepository communitiesDetailsDataRepository;
 
+        private CancellationTokenSource _cancellationTokenSource;    
         private EngageView RelativeView => View as EngageView;
 
         public EngageViewModel() : base(nameof(EngageViewModel))
@@ -67,9 +70,9 @@ namespace ViewModels
             }
         }
 
-        private Task<EngageCardViewModel> CreateAndAddEngageCardToScrollList(ICommunityDetailsDataModel interestGridData)
+        private Task<EngageCardViewModel> CreateAndAddEngageCardToScrollList(IMarketInterestDetailsDataModel interestGridData)
         {
-            return RelativeView.AddCardToScrollList(interestGridData);
+            return RelativeView.AddCardToScrollList(interestGridData, _cancellationTokenSource.Token);
         }
 
         private void OnNewCommunityInterestCardSelected(EngageCardDataModel engageCardDataModel)
