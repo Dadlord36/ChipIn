@@ -31,13 +31,9 @@ namespace Repositories.Local
                 return ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, taskScheduler, Url, cancellationToken)
                     .ContinueWith(delegate(Task<Texture2D> task)
                     {
-                        if (task.IsCanceled)
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                        }
                         var texture = task.Result;
                         return LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-                    }, cancellationToken, TaskContinuationOptions.None, taskScheduler);
+                    }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, taskScheduler);
             }
         }
 
@@ -83,7 +79,7 @@ namespace Repositories.Local
             {
                 var sprite = await task;
                 return sprite.texture;
-            }, cancellationToken, TaskContinuationOptions.None, MainThreadScheduler).Unwrap();
+            }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, MainThreadScheduler).Unwrap();
         }
 
         private Task[] CreateLoadSpritesTasks(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)

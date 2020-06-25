@@ -42,10 +42,10 @@ namespace Views
 
                 return engageCardView;
             }
-            catch (ImagesDownloadingUtility.DataDownloadingFailureException e)
+            catch (OperationCanceledException e)
             {
                 LogUtility.PrintLog(Tag, e.Message);
-                return null;
+                throw;
             }
             catch (Exception e)
             {
