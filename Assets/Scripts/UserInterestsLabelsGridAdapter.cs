@@ -38,10 +38,12 @@ using DataModels;
 using Repositories.Remote.Paginated;
 using UnityEngine;
 using Utilities;
+using Views;
 
 // You should modify the namespace to your own or - if you're sure there won't ever be conflicts - remove it altogether
 namespace Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids
 {
+
     // There is 1 important callback you need to implement, apart from Start(): UpdateCellViewsHolder()
     // See explanations below
     public class UserInterestsLabelsGridAdapter : GridAdapter<UserInterestsLabelsGridAdapter.UserInterestsLabelsGridParams,
@@ -60,6 +62,7 @@ namespace Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids
 
         public event Action StartedFetching;
         public event Action EndedFetching;
+        public event Action<int?> NewInterestSelected; 
 
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
@@ -125,6 +128,21 @@ namespace Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids
                 if (newPotentialNumberOfItems > Data.Count) // i.e. if we there's enough room for at least 1 more item
                     await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count));
             }
+        }
+
+        protected override CellGroupViewsHolder<UserInterestLabelGridItemViewsHolder> CreateViewsHolder(int itemIndex)
+        {
+            var viewsHolder = base.CreateViewsHolder(itemIndex);
+            foreach (var holder in viewsHolder.ContainingCellViewsHolders)
+            {
+                holder.root.GetComponent<UserInterestGridItemView>().ItemSelected += OnNewInterestSelected;
+            }
+            return viewsHolder;
+        }
+
+        private void OnNewInterestSelected(int? index)
+        {
+            NewInterestSelected?.Invoke(index);
         }
 
         // Setting _Fetching to true & starting to fetch 
