@@ -1,5 +1,7 @@
-﻿using Controllers;
+﻿using System;
+using Controllers;
 using UnityEngine;
+using Utilities;
 using Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids;
 
 namespace Views
@@ -13,11 +15,18 @@ namespace Views
         {
         }
 
-        protected override void Start()
+        protected override async void Start()
         {
             base.Start();
-            labelsGridAdapter.Initialize();
+            try
+            {
+                await labelsGridAdapter.Initialize();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
-        
     }
 }
