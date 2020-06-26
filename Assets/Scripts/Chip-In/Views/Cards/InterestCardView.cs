@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
@@ -107,15 +108,17 @@ namespace Views.Cards
             return days == 1 ? "Day" : "Days";
         }
 
-        public async void FillView(InterestPagePageDataModel pagePageDataModel, uint index)
+        public async Task FillView(InterestPagePageDataModel pagePageDataModel, uint index)
         {
+            _cancellationController.CancelOngoingTask();
+           
+            //TODO: Implement Support number
+            
             //TODO: remove temporary code   
             IndexInDataBaseText = index;
             
-            
-            
             //TODO: recalculate from UTC to LocalTime;
-            _cancellationController.CancelOngoingTask();
+            
             // AuthorName = dataModel.;
             DaysPassed = (DateTime.UtcNow - pagePageDataModel.StartedAt).Days;
             CardName = pagePageDataModel.Name;

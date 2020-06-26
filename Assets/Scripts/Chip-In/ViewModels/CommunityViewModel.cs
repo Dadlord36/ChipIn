@@ -20,7 +20,7 @@ namespace ViewModels
         [Binding]
         public void SwitchToCommunityInterestView()
         {
-            SwitchToView(nameof(CommunityInterestLabelsView));
+            SwitchToView(nameof(UserInterestsLabelsView));
             PrintLog("Switching to SwitchToCommunityInterestView");
         }
 

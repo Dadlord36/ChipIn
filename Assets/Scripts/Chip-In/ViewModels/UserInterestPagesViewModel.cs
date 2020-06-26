@@ -3,7 +3,10 @@ using Common.UnityEvents;
 using Controllers.PaginationControllers;
 using DataModels;
 using Repositories.Remote.Paginated;
+using UnityEngine;
 using ViewModels.Basic;
+using Views;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
@@ -20,9 +23,10 @@ namespace ViewModels
     {
     }
 
-    public class UserInterestPagesViewModel : BasicPaginatedListViewModel<CommunityInterestDataModelListUnityEvent, InterestPagePageDataModel,
-        UserInterestPagesPaginatedDataExplorer, UserInterestPagesPaginatedRepository>
+    public class UserInterestPagesViewModel : CorrespondingViewsSwitchingViewModel<UserInterestPagesView>
     {
+        [SerializeField] private UserInterestPagesListAdapter userInterestPagesListAdapter;
+        
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
@@ -37,19 +41,9 @@ namespace ViewModels
         {
             base.OnDisable();
             UnsubscribeFromEvents();
-        }
-
-        private void SubscribeOnEvents()
-        {
-            /*paginatedDataExplorer.NextPageItemsReceived += OnListedForward;
-            paginatedDataExplorer.PreviousPageItemsReceived += OnListedBackward;#1#
-        }
-
-        private void UnsubscribeFromEvents()
-        {
-            /*paginatedDataExplorer.NextPageItemsReceived -= OnListedForward;
-            paginatedDataExplorer.PreviousPageItemsReceived -= OnListedBackward;#1#
         }*/
+
+
  
     }
 }

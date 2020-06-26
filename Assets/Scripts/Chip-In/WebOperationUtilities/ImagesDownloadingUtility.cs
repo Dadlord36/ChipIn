@@ -25,13 +25,6 @@ namespace WebOperationUtilities
             return Task.WhenAll(tasks);
         }
 
-        public class DataDownloadingFailureException : Exception
-        {
-            public DataDownloadingFailureException() : base("Bytes downloading was probably cancelled and some socket related exception occur")
-            {
-            }
-        }
-
         public static Task<Texture2D> CreateDownloadImageTask(HttpClient httpClient, TaskScheduler mainThreadScheduler, string url,
             CancellationToken cancellationToken)
         {
@@ -43,36 +36,21 @@ namespace WebOperationUtilities
             return CreateLoadDataTask(httpClient, url, cancellationToken).ContinueWith(
                 delegate(Task<HttpResponseMessage> loadDataResponseTask)
                 {
-                    if (loadDataResponseTask.IsCanceled)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                    }
-                    if (loadDataResponseTask.IsFaulted)
-                    {
-                        throw new DataDownloadingFailureException();
-                    }
-
                     var resultMessage = loadDataResponseTask.Result;
                     var readBytesTask = resultMessage.Content.ReadAsByteArrayAsync();
 
                     return readBytesTask.ContinueWith(delegate(Task<byte[]> loadBytesTask)
                     {
-                        if (loadBytesTask.IsCanceled)
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                        }
-
                         var bytesArray = loadBytesTask.Result;
                         var textureToReturn = new Texture2D(0, 0);
                         textureToReturn.LoadImage(bytesArray);
                         textureToReturn.Apply();
                         return textureToReturn;
-                    }, cancellationToken, TaskContinuationOptions.None, mainThreadScheduler);
-                }, cancellationToken, TaskContinuationOptions.None, mainThreadScheduler).Unwrap();
+                    }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadScheduler);
+                }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadScheduler).Unwrap();
         }
         
-        private static Task<HttpResponseMessage> CreateLoadDataTask(HttpClient httpClient, in string uri,
-            in CancellationToken cancellationToken)
+        private static Task<HttpResponseMessage> CreateLoadDataTask(HttpClient httpClient, in string uri, in CancellationToken cancellationToken)
         {
             return httpClient.GetAsync(uri, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -97,7 +75,7 @@ namespace WebOperationUtilities
                 }
 
                 return Task.WhenAll(bytesTasks);
-            }, cancellationToken);
+            }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
             return loadIconsTasks;
         }
     }
