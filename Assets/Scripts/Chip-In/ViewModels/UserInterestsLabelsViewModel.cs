@@ -15,7 +15,7 @@ using Views;
 namespace ViewModels
 {
     [Serializable]
-    public class UserInterestLabelsPaginatedDataExplorer : PaginatedDataExplorer<CommunitiesDataPaginatedListRepository, InterestBasicDataModel>
+    public class UserInterestLabelsPaginatedDataExplorer : PaginatedDataExplorer<UserInterestsBasicDataPaginatedListRepository, InterestBasicDataModel>
     {
         public UserInterestLabelsPaginatedDataExplorer() : base(nameof(UserInterestLabelsPaginatedDataExplorer))
         {
@@ -28,8 +28,7 @@ namespace ViewModels
     }
 
     [Binding]
-    public sealed class CommunityInterestLabelsViewModel : BasicPaginatedListViewModel<CommunityBasicDataModelListUnityEvent, InterestBasicDataModel,
-        UserInterestLabelsPaginatedDataExplorer, CommunitiesDataPaginatedListRepository>, INotifyPropertyChanged
+    public sealed class UserInterestsLabelsViewModel : CorrespondingViewsSwitchingViewModel<UserInterestsLabelsView>, INotifyPropertyChanged
     {
         [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
         
@@ -44,7 +43,7 @@ namespace ViewModels
             SwitchToPagesView();
         }
         
-        public CommunityInterestLabelsViewModel() : base(nameof(CommunityInterestLabelsViewModel))
+        public UserInterestsLabelsViewModel() : base(nameof(UserInterestsLabelsViewModel))
         {
         }
 
@@ -52,7 +51,31 @@ namespace ViewModels
         {
             SwitchToView(nameof(UserInterestPagesView));
         }
-        
+
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            SubscribeOnViewEvents();
+        }
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            UnsubscribeFromViewEvents();
+        }
+
+        private void SubscribeOnViewEvents()
+        {
+            RelatedView.NewInterestSelected += SetNewSelectedInterest;
+        }
+
+        private void UnsubscribeFromViewEvents()
+        {
+            RelatedView.NewInterestSelected -= SetNewSelectedInterest;
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

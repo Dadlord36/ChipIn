@@ -13,12 +13,12 @@ using UnityEngine;
 namespace Repositories.Remote.Paginated
 {
     [CreateAssetMenu(
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(Paginated) + "/" + nameof(CommunitiesDataPaginatedListRepository),
-        fileName = "Create " + nameof(CommunitiesDataPaginatedListRepository), order = 0)]
-    public class CommunitiesDataPaginatedListRepository : PaginatedItemsListRepository<InterestBasicDataModel,
+        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(Paginated) + "/" + nameof(UserInterestsBasicDataPaginatedListRepository),
+        fileName = "Create " + nameof(UserInterestsBasicDataPaginatedListRepository), order = 0)]
+    public class UserInterestsBasicDataPaginatedListRepository : PaginatedItemsListRepository<InterestBasicDataModel,
         CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
     {
-        protected override string Tag => nameof(CommunitiesDataPaginatedListRepository);
+        protected override string Tag => nameof(UserInterestsBasicDataPaginatedListRepository);
 
         protected override Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)

@@ -30,8 +30,7 @@ namespace Controllers.SlotsSpinningControllers.RecyclerView
     {
         [SerializeField] private TView viewPrefab;
         [SerializeField] private TPaginatedRepository repository;
-
-        // private readonly Dictionary<uint, TView> _fillingViewsDictionary = new Dictionary<uint, TView>();
+        
         private Transform ItemsContainerRoot => transform;
         private TView ViewPrefab => viewPrefab;
         private int ChildCount => ItemsContainerRoot.childCount;

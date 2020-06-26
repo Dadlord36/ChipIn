@@ -3,7 +3,7 @@
 namespace DataModels
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class CommunityInterestLabelData
+    public class UserInterestLabelData
     {
         [JsonProperty("id")] public int Id;
         [JsonProperty("name")] public string Name;
