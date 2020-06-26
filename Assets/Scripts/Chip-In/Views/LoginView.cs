@@ -22,6 +22,7 @@ namespace Views
                 ClearInputField(passwordField);
                 passwordField.OnSelect(new PointerEventData(EventSystem.current));
             });
+            passwordField.onSelect.AddListener(delegate { passwordField.text = string.Empty; });
         }
 
         protected override void OnBeingSwitchedTo()
@@ -38,7 +39,7 @@ namespace Views
 
         private static void ClearInputField(TMP_InputField inputField)
         {
-            inputField.text = "";
+            inputField.text = string.Empty;
             inputField.caretPosition = 0;
         }
     }
