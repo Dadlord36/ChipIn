@@ -10,7 +10,7 @@ namespace ViewModels
     [Binding]
     public class ProductMenuViewModel : BaseMenuViewModel<ProductMenuView>
     {
-        [SerializeField] private CommunitiesDataPaginatedListRepository dataRepository;
+        [SerializeField] private UserInterestsBasicDataPaginatedListRepository dataRepository;
         [SerializeField] private DownloadedSpritesRepository spritesRepository;
 
         public ProductMenuViewModel() : base(nameof(ProductMenuViewModel))

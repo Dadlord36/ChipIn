@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Controllers;
+using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using DataModels.Interfaces;
+using Repositories.Local;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,14 +12,18 @@ using UnityEngine.UI;
 
 namespace Views
 {
-    public sealed class CommunityInterestGridItemView : BaseView, IPointerClickHandler
+    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler
     {
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
         public event Action<int?> ItemSelected;
 
         private int? _interestId;
+
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         private Sprite ItemImageSprite
         {
@@ -28,7 +37,7 @@ namespace Views
             set => textField.text = value;
         }
 
-        public CommunityInterestGridItemView() : base(nameof(CommunityInterestGridItemView))
+        public UserInterestGridItemView() : base(nameof(UserInterestGridItemView))
         {
         }
 
@@ -64,6 +73,17 @@ namespace Views
         private void OnItemSelected()
         {
             ItemSelected?.Invoke(_interestId);
+        }
+
+        public Task FillView(InterestBasicDataModel dataModel, uint dataBaseIndex)
+        {
+            _asyncOperationCancellationController.CancelOngoingTask();
+            ItemName = dataModel.Name;
+            _interestId = dataModel.Id;
+            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
+                .ContinueWith(delegate(Task<Sprite> task) { ItemImageSprite = task.Result; },
+                    _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, 
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
 }

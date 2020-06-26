@@ -9,6 +9,5 @@ namespace Repositories.Interfaces
         Task<IReadOnlyList<TDataType>> CreateGetPageItemsTask(uint pageNumber);
         Task<IReadOnlyList<TDataType>> CreateGetItemsRangeTask(uint startIndex, uint length);
         Task<TDataType> CreateGetItemWithIndexTask(uint itemIndex);
-        Task Load();
     }
 }

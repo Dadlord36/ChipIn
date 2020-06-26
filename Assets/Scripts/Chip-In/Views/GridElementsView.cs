@@ -21,9 +21,9 @@ namespace Views
         [SerializeField, HideInInspector] public int rowsAmount;
 #endif
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private CommunityInterestGridItemView itemPrefab;
+        [SerializeField] private UserInterestGridItemView itemPrefab;
         [SerializeField] private Sprite defaultSprite;
-        [SerializeField, HideInInspector] private List<CommunityInterestGridItemView> items = new List<CommunityInterestGridItemView>(0);
+        [SerializeField, HideInInspector] private List<UserInterestGridItemView> items = new List<UserInterestGridItemView>(0);
         private int? _newSelectedItemCorrespondingIndex;
 
         public IntPointerUnityEvent newItemWasSelected;
@@ -35,7 +35,7 @@ namespace Views
 
         public void AddEmptyItemsRow()
         {
-            var itemsRow = new CommunityInterestGridItemView[3];
+            var itemsRow = new UserInterestGridItemView[3];
 
             for (var i = 0; i < itemsRow.Length; i++)
             {
