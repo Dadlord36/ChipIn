@@ -1,6 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using Utilities;
 
 namespace Views
 {
@@ -13,16 +13,11 @@ namespace Views
         {
         }
 
-
         protected override void Start()
         {
             base.Start();
-            emailField.onSubmit.AddListener(delegate
-            {
-                ClearInputField(passwordField);
-                passwordField.OnSelect(new PointerEventData(EventSystem.current));
-            });
-            passwordField.onSelect.AddListener(delegate { passwordField.text = string.Empty; });
+            InputFieldsUtility.BindInputFieldSelectionOnSubmit(emailField,passwordField);
+            InputFieldsUtility.BindInputFieldClearingOnSelection(passwordField);
         }
 
         protected override void OnBeingSwitchedTo()
@@ -33,14 +28,8 @@ namespace Views
         
         private void ClearFields()
         {
-            ClearInputField(emailField);
-            ClearInputField(passwordField);
-        }
-
-        private static void ClearInputField(TMP_InputField inputField)
-        {
-            inputField.text = string.Empty;
-            inputField.caretPosition = 0;
+            InputFieldsUtility.ClearInputField(emailField);
+            InputFieldsUtility.ClearInputField(passwordField);
         }
     }
 }
