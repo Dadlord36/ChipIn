@@ -26,7 +26,6 @@
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,24 +37,25 @@ using DataModels;
 using Repositories.Remote.Paginated;
 using UnityEngine;
 using Utilities;
-using Views;
+using Views.ViewElements.ScrollViews.Adapters.Parameters;
+using Views.ViewElements.ScrollViews.Adapters.Parameters.Interfaces;
 
 // You should modify the namespace to your own or - if you're sure there won't ever be conflicts - remove it altogether
-namespace Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids
+namespace Views.ViewElements.ScrollViews.Adapters
 {
-
     // There is 1 important callback you need to implement, apart from Start(): UpdateCellViewsHolder()
     // See explanations below
     public class UserInterestsLabelsGridAdapter : GridAdapter<UserInterestsLabelsGridAdapter.UserInterestsLabelsGridParams,
         UserInterestLabelGridItemViewsHolder>
     {
+        
         [Serializable]
-        public class UserInterestsLabelsGridParams : GridParams
+        public class UserInterestsLabelsGridParams : GridParams,IRepositoryAdapterParameters
         {
-            [SerializeField] private int preFetchedItemsCount;
-            [NonSerialized] public bool FreezeContentEndEdgeOnCountChange;
-
-            public int PreFetchedItemsCount => preFetchedItemsCount;
+            public RepositoryAdapterParameters repositoryAdapterParameters;
+            
+            public int PreFetchedItemsCount => repositoryAdapterParameters.PreFetchedItemsCount;
+            public bool FreezeContentEndEdgeOnCountChange => repositoryAdapterParameters.FreezeContentEndEdgeOnCountChange;
         }
 
         [SerializeField] private UserInterestsBasicDataPaginatedListRepository userInterestsBasicDataPaginatedListRepository;
@@ -78,6 +78,7 @@ namespace Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids
         private void ResetStateVariables()
         {
             fetching = loadedAll = false;
+            _retrievingItemsStartingIndex = 0;
         }
 
         public Task Initialize()

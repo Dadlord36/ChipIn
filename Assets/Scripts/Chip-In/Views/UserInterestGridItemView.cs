@@ -75,14 +75,24 @@ namespace Views
             ItemSelected?.Invoke(_interestId);
         }
 
+        private string previouslyUsedIconUrl;
+
         public Task FillView(InterestBasicDataModel dataModel, uint dataBaseIndex)
         {
-            _asyncOperationCancellationController.CancelOngoingTask();
             ItemName = dataModel.Name;
             _interestId = dataModel.Id;
+
+            // if (previouslyUsedIconUrl == dataModel.PosterUri) return Task.CompletedTask;
+
+            _asyncOperationCancellationController.CancelOngoingTask();
+
             return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> task) { ItemImageSprite = task.Result; },
-                    _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, 
+                .ContinueWith(delegate(Task<Sprite> task)
+                    {
+                        ItemImageSprite = task.Result;
+                        previouslyUsedIconUrl = dataModel.PosterUri;
+                    },
+                    _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());
         }
     }

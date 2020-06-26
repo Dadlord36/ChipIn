@@ -51,7 +51,31 @@ namespace ViewModels
         {
             SwitchToView(nameof(UserInterestPagesView));
         }
-        
+
+
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            SubscribeOnViewEvents();
+        }
+
+        protected override void OnBecomingInactiveView()
+        {
+            base.OnBecomingInactiveView();
+            UnsubscribeFromViewEvents();
+        }
+
+        private void SubscribeOnViewEvents()
+        {
+            RelatedView.NewInterestSelected += SetNewSelectedInterest;
+        }
+
+        private void UnsubscribeFromViewEvents()
+        {
+            RelatedView.NewInterestSelected -= SetNewSelectedInterest;
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

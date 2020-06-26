@@ -1,32 +1,53 @@
 ﻿using System;
-using Controllers;
 using UnityEngine;
 using Utilities;
-using Your.Namespace.Here.UniqueStringHereToAvoidNamespaceConflicts.Grids;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace Views
 {
     public sealed class UserInterestsLabelsView : BaseView
     {
         [SerializeField] private UserInterestsLabelsGridAdapter labelsGridAdapter;
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
+        public event Action<int?> NewInterestSelected;
         public UserInterestsLabelsView() : base(nameof(UserInterestsLabelsView))
         {
         }
 
-        protected override async void Start()
+        protected override async void OnBeingSwitchedTo()
         {
-            base.Start();
+            base.OnBeingSwitchedTo();
             try
             {
                 await labelsGridAdapter.Initialize();
+                SubscribeOnEvents();
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+        
+        protected override void OnBeingSwitchedSwitchedFrom()
+        {
+            base.OnBeingSwitchedSwitchedFrom();
+            UnsubscribeFromEvents();
+        }
+        
+        private void SubscribeOnEvents()
+        {
+            labelsGridAdapter.NewInterestSelected += OnNewInterestSelected;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            labelsGridAdapter.NewInterestSelected -= OnNewInterestSelected;
+        }
+
+        private void OnNewInterestSelected(int? interestIndex)
+        {
+            NewInterestSelected?.Invoke(interestIndex);
         }
     }
 }
