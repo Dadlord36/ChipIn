@@ -88,7 +88,7 @@ namespace Repositories.Local
         private const string GameIconsDirectoryName = "GameIcons";
 
         private CancellationTokenSource _cancellationTokenSource;
-        
+
         private static string GameIconsDirectoryPath =>
             Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
 
@@ -196,10 +196,9 @@ namespace Repositories.Local
             try
             {
                 var texturesLoadingResponseMassages = ImagesDownloadingUtility
-                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls, cancellationToken)
-                    .ConfigureAwait(false);
-
-               var textures =  await await await texturesLoadingResponseMassages;
+                    .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls, cancellationToken);
+                
+                var textures = await texturesLoadingResponseMassages.ConfigureAwait(false);
 
                 LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
                 SaveIconsData(gameId, textures, indexedUrls);

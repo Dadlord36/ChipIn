@@ -55,7 +55,7 @@ namespace WebOperationUtilities
             return httpClient.GetAsync(uri, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
-        public static Task<Task<Task<byte[][]>>> CreateDownloadMultipleDataArrayFromUrlsTask(HttpClient httpClient, IReadOnlyList<IUrl>
+        public static Task<byte[][]> CreateDownloadMultipleDataArrayFromUrlsTask(HttpClient httpClient, IReadOnlyList<IUrl>
             imagesUrls, in CancellationToken cancellationToken)
         {
             var tasks = new List<Task<HttpResponseMessage>>(imagesUrls.Count);
@@ -64,19 +64,18 @@ namespace WebOperationUtilities
                 tasks.Add(CreateLoadDataTask(httpClient, url.Url, cancellationToken));
             }
 
-            var loadIconsTasks = Task.WhenAll(tasks).ContinueWith(async delegate(Task<HttpResponseMessage[]> task)
+            return Task.WhenAll(tasks).ContinueWith( delegate(Task<HttpResponseMessage[]> task)
             {
-                var texturesLoadingResponseMassages = await task.ConfigureAwait(false);
-                var bytesTasks = new List<Task<byte[]>>(texturesLoadingResponseMassages.Length);
+                var result = task.Result;
+                var bytesTasks = new List<Task<byte[]>>(result.Length);
 
-                for (int i = 0; i < texturesLoadingResponseMassages.Length; i++)
+                for (int i = 0; i < result.Length; i++)
                 {
-                    bytesTasks.Add(texturesLoadingResponseMassages[i].Content.ReadAsByteArrayAsync());
+                    bytesTasks.Add(result[i].Content.ReadAsByteArrayAsync());
                 }
 
                 return Task.WhenAll(bytesTasks);
-            }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext());
-            return loadIconsTasks;
+            }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext()).Unwrap();
         }
     }
 }
