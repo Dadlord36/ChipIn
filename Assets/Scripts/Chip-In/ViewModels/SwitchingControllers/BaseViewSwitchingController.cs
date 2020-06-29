@@ -20,6 +20,11 @@ namespace ViewModels.SwitchingControllers
             switchingHistoryController.InitializeViewSwitchingHistory();
         }
 
+        public void RemoveExistingViewInstance(in string viewName)
+        {
+            viewsSwitchingBindingObject.RemoveExistingViewInstance(viewName);
+        }
+
         private void AddToHistoryStack(string viewName)
         {
             switchingHistoryController.AddViewsSwitchingHistoryRecord(viewName);

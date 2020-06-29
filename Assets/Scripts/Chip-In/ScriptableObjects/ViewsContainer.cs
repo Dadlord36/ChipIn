@@ -11,14 +11,16 @@ namespace ScriptableObjects
         private class ContainerItem<T> where T : Object
         {
             protected readonly T Prefab;
-            [NonSerialized] private T _instance;
+            [NonSerialized] protected T Instance;
 
             protected ContainerItem(T prefab)
             {
                 Prefab = prefab;
             }
 
-            public T GetInstance => _instance == null ? _instance = Instantiate(Prefab) : _instance;
+            protected bool InstanceIsValid => Instance != null;
+            public T GetInstance => Instance == null ? Instance = Instantiate(Prefab) : Instance;
+            
         }
 
         [Serializable]
@@ -28,6 +30,13 @@ namespace ScriptableObjects
 
             public ViewModelContainerItem(BaseView prefab) : base(prefab)
             {
+            }
+            
+            public void RemoveInstance()
+            {
+                if (!InstanceIsValid) return;
+                Destroy(Instance.gameObject);
+                Instance = null;
             }
         }
         
@@ -60,6 +69,19 @@ namespace ScriptableObjects
                 if (_viewsContainer[i].ViewName == viewName)
                 {
                     return _viewsContainer[i].GetInstance;
+                }
+            }
+            throw new Exception($"There is no view with given ID: {viewName} in {name} views container");
+        }
+
+        public void RemoveExistingViewInstance(in string viewName)
+        {
+            for (var i = 0; i < _viewsContainer.Length; i++)
+            {
+                if (_viewsContainer[i].ViewName == viewName)
+                {
+                    _viewsContainer[i].RemoveInstance();
+                    return;
                 }
             }
             throw new Exception($"There is no view with given ID: {viewName} in {name} views container");

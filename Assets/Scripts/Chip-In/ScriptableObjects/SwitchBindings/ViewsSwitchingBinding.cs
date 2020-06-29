@@ -17,5 +17,10 @@ namespace ScriptableObjects.SwitchBindings
             ViewSwitchingRequested?.Invoke(new ViewsSwitchData(viewsContainer.GetViewByName(viewNameToSwitchTo),
                 viewAppearingSide));
         }
+        
+        public void RemoveExistingViewInstance(in string viewNameToSwitchTo)
+        {
+            viewsContainer.RemoveExistingViewInstance(viewNameToSwitchTo);
+        }
     }
 }
