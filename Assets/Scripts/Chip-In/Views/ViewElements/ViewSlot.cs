@@ -38,6 +38,8 @@ namespace Views.ViewElements
             get => GetComponent<Canvas>().sortingOrder;
         }
 
+        public CanvasGroup CanvasGroup => GetComponent<CanvasGroup>();
+
         public void ResetTransform()
         {
             ResetTransform(transform as RectTransform);

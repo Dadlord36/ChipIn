@@ -31,6 +31,6 @@ namespace Views.ViewElements.ViewsSwitching
             viewsSwitchingBinding.ViewSwitchingRequested -= SwitchTo;
         }
 
-        protected abstract void SwitchTo(ViewsSwitchData viewsSwitchData);
+        protected abstract void SwitchTo(BaseView baseView);
     }
 }

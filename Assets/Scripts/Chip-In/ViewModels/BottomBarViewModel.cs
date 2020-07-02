@@ -1,10 +1,7 @@
-﻿using ActionsTranslators;
-using InputDetection;
-using ScriptableObjects.Comparators;
+﻿using ScriptableObjects.Comparators;
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using ViewModels.UI.Elements.Buttons;
 using Views;
@@ -21,7 +18,11 @@ namespace ViewModels
     public class BottomBarViewModel : ViewsSwitchingViewModel, INotifyVisibilityChanged, INotifyViewSwitching
     {
         [SerializeField] private ViewsComparisonContainer associativeViewsContainer;
-        [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
+
+        private readonly ViewsSwitchingParameters _defaultViewsSwitchingParameters = new ViewsSwitchingParameters(
+            ViewAppearanceParameters.Idle(ViewAppearanceParameters.SwitchingViewPosition.Under),
+            ViewAppearanceParameters.JustFading(ViewAppearanceParameters.SwitchingViewPosition.Above)
+            );
 
         private string _currentViewName;
 
@@ -29,7 +30,7 @@ namespace ViewModels
         {
         }
 
-        private void OnSwiped(SwipeDetector.SwipeData swipeData)
+        /*private void OnSwiped(SwipeDetector.SwipeData swipeData)
         {
             switch (swipeData.Direction)
             {
@@ -40,7 +41,7 @@ namespace ViewModels
                     SwitchToRighterBarItem();
                     break;
             }
-        }
+        }*/
 
         private void SubscribeBarButtons()
         {
@@ -79,12 +80,12 @@ namespace ViewModels
 
         public void OnShowUp()
         {
-            inputActionsTranslator.Swiped += OnSwiped;
+            // inputActionsTranslator.Swiped += OnSwiped;
         }
 
         public void OnHideOut()
         {
-            inputActionsTranslator.Swiped -= OnSwiped;
+            // inputActionsTranslator.Swiped -= OnSwiped;
         }
 
 
@@ -128,7 +129,7 @@ namespace ViewModels
             SwitchToViewAndChooseAppearingSide(viewName);
         }*/
 
-        private void SwitchToLefterBarItem()
+        /*private void SwitchToLefterBarItem()
         {
             TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray.After);
         }
@@ -136,7 +137,7 @@ namespace ViewModels
         private void SwitchToRighterBarItem()
         {
             TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray.Before);
-        }
+        }*/
 
         private void TrySwitchToRelativeView(ViewsComparisonContainer.RelativePositionInArray relativePositionInArray)
         {
@@ -148,12 +149,7 @@ namespace ViewModels
 
         private void SwitchToViewAndChooseAppearingSide(string viewToSwitchToName)
         {
-            var relativePositionInArray = associativeViewsContainer.GetRelativePositionInContainer(_currentViewName, viewToSwitchToName);
-
-            SwitchToView(viewToSwitchToName, _currentViewName,
-                relativePositionInArray == ViewsComparisonContainer.RelativePositionInArray.Before
-                    ? ViewsSwitchData.AppearingSide.FromLeft
-                    : ViewsSwitchData.AppearingSide.FromRight);
+            SwitchToView(new ViewsPairInfo(_currentViewName,viewToSwitchToName), _defaultViewsSwitchingParameters);
         }
     }
 }

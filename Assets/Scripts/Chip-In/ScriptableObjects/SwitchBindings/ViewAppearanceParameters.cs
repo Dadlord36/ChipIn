@@ -1,13 +1,26 @@
 ﻿using UnityEngine.EventSystems;
+using Views;
 
 namespace ScriptableObjects.SwitchBindings
 {
+    public struct ViewsPair
+    {
+        public readonly BaseView ViewToSwitchTo;
+        public readonly BaseView ViewToSwitchFrom;
+
+        public ViewsPair(ViewsPairInfo pairInfo, ViewsContainer viewsContainer)
+        {
+            ViewToSwitchTo =  viewsContainer.GetViewByName(pairInfo.ViewToSwitchToName);
+            ViewToSwitchFrom =  viewsContainer.GetViewByName(pairInfo.ViewToSwitchFromName);
+        }
+    }
+
     public readonly struct ViewsSwitchingParameters
     {
         public readonly ViewAppearanceParameters PreviousViewAppearanceParameters;
         public readonly ViewAppearanceParameters NextViewAppearanceParameters;
 
-        public ViewsSwitchingParameters(ViewAppearanceParameters previousViewAppearanceParameters,
+        public ViewsSwitchingParameters( ViewAppearanceParameters previousViewAppearanceParameters,
             ViewAppearanceParameters nextViewAppearanceParameters)
         {
             PreviousViewAppearanceParameters = previousViewAppearanceParameters;
@@ -30,48 +43,31 @@ namespace ScriptableObjects.SwitchBindings
             Under
         }
 
-        public readonly string 
         public readonly Appearance AppearanceType;
-        public readonly SwitchingViewPosition ViewPosition;
+        public readonly SwitchingViewPosition SortingPosition;
         public readonly MoveDirection Direction;
+        public readonly float MaxPathPercentage;
         public readonly bool ShouldFade;
 
-        public bool IsIdle => !ShouldFade && AppearanceType == Appearance.Stays;
-
-
-        private ViewAppearanceParameters(Appearance appearanceType, bool shouldFade)
+        public static ViewAppearanceParameters JustFading(SwitchingViewPosition switchingViewPosition)
         {
-            AppearanceType = appearanceType;
-            ViewPosition = SwitchingViewPosition.Above;
-            ShouldFade = shouldFade;
-            Direction = MoveDirection.Down;
+           return new ViewAppearanceParameters(Appearance.Stays,true, switchingViewPosition, MoveDirection.Down);
+        } 
+        
+        public static ViewAppearanceParameters Idle(SwitchingViewPosition switchingViewPosition)
+        {
+            return new ViewAppearanceParameters(Appearance.Stays, false, switchingViewPosition, MoveDirection.Down);
         }
 
-        public ViewAppearanceParameters(Appearance appearanceType, bool shouldFade, SwitchingViewPosition viewPosition, MoveDirection direction)
+
+        public ViewAppearanceParameters(Appearance appearanceType, bool shouldFade, SwitchingViewPosition sortingPosition, MoveDirection direction,
+            float maxPathPercentage = 1f)
         {
             AppearanceType = appearanceType;
-            ViewPosition = viewPosition;
+            SortingPosition = sortingPosition;
             ShouldFade = shouldFade;
             Direction = direction;
-        }
-
-
-        public bool Equals(ViewAppearanceParameters other)
-        {
-            return AppearanceType == other.AppearanceType && ShouldFade == other.ShouldFade;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is ViewAppearanceParameters other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((int) AppearanceType * 397) ^ ShouldFade.GetHashCode();
-            }
+            MaxPathPercentage = maxPathPercentage;
         }
     }
 }

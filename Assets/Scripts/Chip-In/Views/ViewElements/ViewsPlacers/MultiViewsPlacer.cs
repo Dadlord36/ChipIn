@@ -30,6 +30,6 @@ namespace Views.ViewElements.ViewsPlacers
             viewsSwitchingBinding.ViewSwitchingRequested -= ReplaceCurrentViewWithGiven;
         }
 
-        protected abstract void ReplaceCurrentViewWithGiven(ViewsSwitchData viewsSwitchData);
+        protected abstract void ReplaceCurrentViewWithGiven(BaseView viewToSwitchTo);
     }
 }

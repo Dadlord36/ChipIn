@@ -7,10 +7,19 @@ namespace ViewModels.SwitchingControllers
         menuName = nameof(SwitchingControllers) + "/" + nameof(DualViewSwitchingController), order = 0)]
     public sealed class DualViewSwitchingController : BaseViewSwitchingController
     {
-
-        protected override void ProcessViewsSwitching(in string viewNameToSwitchTo, ViewsSwitchData.AppearingSide viewAppearingSide)
+        /*protected override void ProcessViewsSwitching(in string viewNameToSwitchTo)
         {
-            viewsSwitchingBindingObject.SwitchViews(viewNameToSwitchTo, viewAppearingSide);
+        }
+
+        protected override void ProcessViewsSwitching(in string viewNameToSwitchTo)
+        {
+            
+        }*/
+
+
+        protected override void ProcessViewsSwitching(in string fromViewName, in string toViewName)
+        {
+            viewsSwitchingBindingObject.SwitchViews(new ViewsPairInfo(fromViewName, toViewName));
         }
     }
 }

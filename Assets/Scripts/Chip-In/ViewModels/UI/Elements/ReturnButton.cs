@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
+﻿using ScriptableObjects.SwitchBindings;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Utilities;
@@ -12,6 +12,13 @@ namespace ViewModels.UI.Elements
         private const string Tag = nameof(ReturnButton);
         
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
+        [SerializeField] private ViewsSwitchingAnimationBinding viewsSwitchingAnimationBinding;
+        private readonly ViewsSwitchingParameters _defaultParameters = new ViewsSwitchingParameters(
+            new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveOut, false,
+               ViewAppearanceParameters.SwitchingViewPosition.Above, MoveDirection.Right),
+            new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveIn, false, 
+                ViewAppearanceParameters.SwitchingViewPosition.Under, MoveDirection.Left));
+
 
         protected override void OnEnable()
         {
@@ -47,6 +54,7 @@ namespace ViewModels.UI.Elements
         private void SwitchToPreviousView()
         {
             viewsSwitchingController.SwitchToPreviousView();
+            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultParameters);
         }
     }
 }

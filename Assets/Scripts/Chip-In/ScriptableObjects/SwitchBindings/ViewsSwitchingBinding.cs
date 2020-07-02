@@ -1,5 +1,4 @@
 ﻿using System;
-using ScriptableObjects.Interfaces;
 using UnityEngine;
 using Views;
 
@@ -8,19 +7,19 @@ namespace ScriptableObjects.SwitchBindings
     [CreateAssetMenu(fileName = nameof(ViewsSwitchingBinding),
         menuName = nameof(SwitchBindings) + "/" + nameof(ViewsSwitchingBinding),
         order = 0)]
-    public sealed class ViewsSwitchingBinding : BaseViewsSwitchingBinding, IViewsSwitchingBinding
+    public sealed class ViewsSwitchingBinding : ScriptableObject
     {
-        public event Action<ViewsSwitchData> ViewSwitchingRequested;
+        [SerializeField] private ViewsContainer viewsContainer;
+        public event Action<BaseView> ViewSwitchingRequested;
 
-        public void SwitchViews(in string viewNameToSwitchTo, ViewsSwitchData.AppearingSide viewAppearingSide)
+        public void SwitchViews(in ViewsPairInfo viewsPairInfo)
         {
-            ViewSwitchingRequested?.Invoke(new ViewsSwitchData(viewsContainer.GetViewByName(viewNameToSwitchTo),
-                viewAppearingSide));
+            ViewSwitchingRequested?.Invoke(viewsContainer.GetViewByName(viewsPairInfo.ViewToSwitchToName));
         }
-        
-        public void RemoveExistingViewInstance(in string viewNameToSwitchTo)
+
+        public void RemoveExistingViewInstance(in string viewName)
         {
-            viewsContainer.RemoveExistingViewInstance(viewNameToSwitchTo);
+            viewsContainer.RemoveExistingViewInstance(viewName);
         }
     }
 }

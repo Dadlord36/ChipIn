@@ -1,5 +1,4 @@
 ﻿using ScriptableObjects.Comparators;
-using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using Views.ViewElements.ViewsSwitching;
 
@@ -18,9 +17,9 @@ namespace Views.Bars
             _viewSwitchingListener = listener;
         }
 
-        protected override void SwitchTo(ViewsSwitchData viewsSwitchData)
+        protected override void SwitchTo(BaseView baseView)
         {
-            if (!associativeViewsContainer.ContainsView(viewsSwitchData.ViewToSwitchTo))
+            if (!associativeViewsContainer.ContainsView(baseView))
             {
                 if (shouldAutoControlVisibility)
                     Hide();
@@ -32,10 +31,10 @@ namespace Views.Bars
                 Show();
             }
 
-            _viewSwitchingListener?.OnViewSwitched(viewsSwitchData.ViewToSwitchTo.ViewName);
+            _viewSwitchingListener?.OnViewSwitched(baseView.ViewName);
 
             if (highlightCorrespondingButtonOnViewSwitching)
-                SelectionOptionsDictionary[viewsSwitchData.ViewToSwitchTo.ViewName]
+                SelectionOptionsDictionary[baseView.ViewName]
                     .PerformGroupAction();
         }
     }

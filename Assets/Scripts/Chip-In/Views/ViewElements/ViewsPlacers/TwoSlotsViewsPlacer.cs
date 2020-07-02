@@ -1,20 +1,11 @@
-﻿using System;
-using Common.Interfaces;
-using ScriptableObjects.SwitchBindings;
+﻿using Common.Interfaces;
 using UnityEngine;
-using UnityEngine.Events;
 using Utilities;
 
 namespace Views.ViewElements.ViewsPlacers
 {
     public class TwoSlotsViewsPlacer : MultiViewsPlacer, IInitialize
     {
-        [Serializable]
-        public class ViewsSwitchingEvent : UnityEvent<ViewsSwitchData.AppearingSide>
-        {
-        }
-
-        public ViewsSwitchingEvent viewsBeingReplaced;
         [SerializeField] private bool stretchSlotsToScreenSize;
         [SerializeField] private bool overrideSortingOrderInSlots;
         [SerializeField] private int lowestSortingOrderSortingOrder = 0;
@@ -22,7 +13,7 @@ namespace Views.ViewElements.ViewsPlacers
         private ViewSlot _previousSlot, _nextSlot;
 
         private const string SwitchingFromViewContainerName = "SwitchingFromViewContainer",
-            SwitchingToViewContainerName = "SwitchingToViewContainer";
+                             SwitchingToViewContainerName = "SwitchingToViewContainer";
 
         public void Initialize()
         {
@@ -59,10 +50,9 @@ namespace Views.ViewElements.ViewsPlacers
             }
         }
 
-        protected override void ReplaceCurrentViewWithGiven(ViewsSwitchData viewsSwitchData)
+        protected override void ReplaceCurrentViewWithGiven(BaseView viewToSwitchTo)
         {
-            PlaceView(viewsSwitchData.ViewToSwitchTo);
-            viewsBeingReplaced?.Invoke(viewsSwitchData.ScrollSide);
+            PlaceView(viewToSwitchTo);
         }
 
         private void PlaceView(BaseView view)
@@ -99,7 +89,5 @@ namespace Views.ViewElements.ViewsPlacers
                 ReleaseSingleSlot(slots[i]);
             }
         }
-
-
     }
 }

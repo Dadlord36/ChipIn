@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Controllers;
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -14,6 +15,7 @@ namespace ViewModels
     public sealed class WelcomeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private SessionController sessionController;
+        TMP_Text text;
 
         private bool _isPendingLogin;
 
@@ -60,6 +62,12 @@ namespace ViewModels
             }
 
             IsPendingLogin = false;
+        }
+
+        [Binding]
+        public void SignUpButton_OnClick()
+        {
+            SwitchToView(nameof(RegistrationView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

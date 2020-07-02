@@ -139,12 +139,41 @@ namespace ViewModels
             }
         }
 
+        [Binding]
+        public async void ProceedAsGuestsButton_OnClicked()
+        {
+            try
+            {
+                await ProcessLoginAsGuest();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+        
         private async Task ProcessLogin()
         {
             IsPendingLogin = true;
             try
             {
                 await sessionController.TryToSignIn(_userLoginRequestModel);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+
+            IsPendingLogin = false;
+        }
+
+        private async Task ProcessLoginAsGuest()
+        {
+            IsPendingLogin = true;
+            try
+            {
+                await sessionController.SignInAsGuest(_userLoginRequestModel);
             }
             catch (Exception e)
             {

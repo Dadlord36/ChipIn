@@ -1,32 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using ActionsTranslators;
+using Common;
 using Common.Interfaces;
 
 namespace CustomAnimators
 {
-    public class ProgressiveOperationsController : IUpdatableProgress
+    public sealed class ProgressiveOperationsController : IUpdatableProgress
     {
         public event Action ProgressReachesEnd;
 
-        private IUpdatable ongoingUpdatableOperation;
-        private bool _shouldUpdate = true;
+        private readonly OperationsCompletionTracker _operationsCompletionTracker;
+        private bool _shouldUpdate;
 
-        private IUpdatable OngoingUpdatableOperation
+        private List<IUpdatable> OngoingUpdatableOperation { get; } = new List<IUpdatable>();
+
+        public ProgressiveOperationsController()
         {
-            get => ongoingUpdatableOperation;
-            set => ongoingUpdatableOperation = value;
+            _operationsCompletionTracker = new OperationsCompletionTracker();
+            _operationsCompletionTracker.WhenAllIsDone += OnProgressReachesEnd;
         }
 
-        public void StartAnimation(IUpdatableProgress progressiveOperation)
+        public void AddProgressiveOperation(IUpdatableProgress progressiveOperation)
         {
-            ongoingUpdatableOperation = progressiveOperation;
+            OngoingUpdatableOperation.Add(progressiveOperation);
             InitializeProgressiveOperation(progressiveOperation);
+            _shouldUpdate = true;
         }
 
         public void Update()
         {
-            if(!_shouldUpdate) return;
-            OngoingUpdatableOperation.Update();
+            if (!_shouldUpdate) return;
+            foreach (var updatable in OngoingUpdatableOperation)
+            {
+                updatable.Update();
+            }
         }
 
         private void InitializeProgressiveOperation(INotifyProgressReachesEnd updatableProgress)
@@ -35,17 +43,22 @@ namespace CustomAnimators
             {
                 updatableProgress.ProgressReachesEnd -= ProcessReachingEnd;
                 _shouldUpdate = false;
-                OnProgressReachesEnd();
+                _operationsCompletionTracker.ConfirmActionCompletion();
             }
 
             updatableProgress.ProgressReachesEnd += ProcessReachingEnd;
-            _shouldUpdate = true;
+            _operationsCompletionTracker.AddToCounter();
         }
 
+        public void Clear()
+        {
+            OngoingUpdatableOperation.Clear();
+        }
 
-        protected virtual void OnProgressReachesEnd()
+        private void OnProgressReachesEnd()
         {
             ProgressReachesEnd?.Invoke();
+            ProgressReachesEnd = null;
         }
     }
 }

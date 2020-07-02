@@ -5,14 +5,14 @@ using ViewModels.UI;
 
 namespace Views.ViewElements.ViewsSwitching
 {
-    [RequireComponent(typeof(ScrollViewController))]
+    [RequireComponent(typeof(ViewsSwitchingAnimationController))]
     public class ViewsAnimatedSwitcher : UIBehaviour
     {
-        private ScrollViewController _scrollViewController;
+        private ViewsSwitchingAnimationController viewsSwitchingAnimationController;
 
         protected override void OnEnable()
         {
-            Assert.IsTrue(TryGetComponent(out _scrollViewController));
+            Assert.IsTrue(TryGetComponent(out viewsSwitchingAnimationController));
         }
 
         private void HideView(BaseView view)

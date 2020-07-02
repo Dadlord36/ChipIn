@@ -60,14 +60,14 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: challenge
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -216,6 +216,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -361,6 +363,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.9647059, g: 0.9647059, b: 0.9647059, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -434,6 +437,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -508,14 +512,14 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: consider
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -664,6 +668,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -691,6 +696,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 4438691417400829327}
   viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
     type: 2}
   selectedGameRepository: {fileID: 11400000, guid: f80b32620d448c84c868a95a4817a033,
     type: 2}
@@ -774,6 +781,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -920,6 +928,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1059,6 +1068,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1628,8 +1638,18 @@ PrefabInstance:
         type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
         type: 2}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 3006472626321672978, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_IsActive
@@ -1799,6 +1819,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiddlePanel
       objectReference: {fileID: 0}
+    - target: {fileID: 1359706742633195218, guid: 17d026f574dd81340b0d097f4e0aa715,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
+        type: 2}
+    - target: {fileID: 1359706742633195218, guid: 17d026f574dd81340b0d097f4e0aa715,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     - target: {fileID: 3316781098737219522, guid: 17d026f574dd81340b0d097f4e0aa715,
         type: 3}
       propertyPath: m_LocalPosition.x
