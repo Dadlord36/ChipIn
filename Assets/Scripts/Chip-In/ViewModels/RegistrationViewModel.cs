@@ -18,8 +18,6 @@ namespace ViewModels
     public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IBasicLoginModel,
         INotifyPropertyChanged
     {
-        private const string Tag = nameof(RegistrationViewModel);
-
         private readonly RegistrationRequestModel
             _registrationRequestModel = new RegistrationRequestModel();
 

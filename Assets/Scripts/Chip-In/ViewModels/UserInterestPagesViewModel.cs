@@ -3,10 +3,8 @@ using Common.UnityEvents;
 using Controllers.PaginationControllers;
 using DataModels;
 using Repositories.Remote.Paginated;
-using UnityEngine;
 using ViewModels.Basic;
 using Views;
-using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
@@ -25,12 +23,10 @@ namespace ViewModels
 
     public class UserInterestPagesViewModel : CorrespondingViewsSwitchingViewModel<UserInterestPagesView>
     {
-        [SerializeField] private UserInterestPagesListAdapter userInterestPagesListAdapter;
-        
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
-        
+
         /*protected override void OnEnable()
         {
             base.OnEnable();

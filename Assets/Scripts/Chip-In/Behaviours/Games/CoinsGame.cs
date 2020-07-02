@@ -98,8 +98,7 @@ namespace Behaviours.Games
         {
             try
             {
-                var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource, authorisationDataRepository)
-                    .ConfigureAwait(false);
+                var result = await CoinsMiniGameStaticProcessor.TossACoin(out TasksCancellationTokenSource, authorisationDataRepository);
 
                 if (!result.Success)
                 {

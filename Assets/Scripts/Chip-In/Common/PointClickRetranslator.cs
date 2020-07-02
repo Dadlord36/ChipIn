@@ -6,8 +6,8 @@ namespace Common
     public sealed class PointClickRetranslator : UIBehaviour, IPointerClickHandler
     {
         public UnityEvent pointerClicked;
-        
-        public void OnPointerClick(PointerEventData eventData)
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
             OnPointerClicked();
         }
