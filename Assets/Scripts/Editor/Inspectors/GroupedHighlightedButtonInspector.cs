@@ -13,9 +13,6 @@ namespace Inspectors
         private SerializedProperty _shouldStayHighlighted;
         private SerializedProperty _buttonText;
 
-        private SerializedProperty _normalFont;
-        private SerializedProperty _highlightedFont;
-
         private SerializedProperty _normalTextColor;
         private SerializedProperty _highlightedTextColor;
 
@@ -27,8 +24,6 @@ namespace Inspectors
 
             _shouldStayHighlighted = serializedObject.FindProperty(groupedHighlightedButton.ShouldStayHighlightedName);
             _buttonText = serializedObject.FindProperty(groupedHighlightedButton.TextFieldName);
-            _normalFont = serializedObject.FindProperty(groupedHighlightedButton.NormalFontFieldName);
-            _highlightedFont = serializedObject.FindProperty(groupedHighlightedButton.HighlightedFontFieldName);
             _normalTextColor = serializedObject.FindProperty(groupedHighlightedButton.NormalTextColorFieldName);
             _highlightedTextColor =
                 serializedObject.FindProperty(groupedHighlightedButton.HighlightedTextColorFieldName);
@@ -41,10 +36,6 @@ namespace Inspectors
 
             _buttonText.objectReferenceValue =
                 EditorGUILayout.ObjectField(_buttonText.objectReferenceValue, typeof(TMP_Text), true);
-            _normalFont.objectReferenceValue =
-                EditorGUILayout.ObjectField(_normalFont.objectReferenceValue, typeof(TMP_FontAsset), true);
-            _highlightedFont.objectReferenceValue = EditorGUILayout.ObjectField(_highlightedFont.objectReferenceValue,
-                typeof(TMP_FontAsset), true);
 
             _normalTextColor.objectReferenceValue = EditorGUILayout.ObjectField(_normalTextColor.objectReferenceValue,
                 typeof(ColorParameter), false);

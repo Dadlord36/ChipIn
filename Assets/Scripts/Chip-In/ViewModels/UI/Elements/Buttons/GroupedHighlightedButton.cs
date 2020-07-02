@@ -17,23 +17,19 @@ namespace ViewModels.UI.Elements.Buttons
             remove => onClick.RemoveListener(value);
         }
 
-        [SerializeField,HideInInspector] private bool shouldStayHighlighted;
-        [SerializeField,HideInInspector] private TMP_Text text;
-        [SerializeField,HideInInspector] private TMP_FontAsset normalFont, highlightedFont;
-        [SerializeField,HideInInspector] private ColorParameter normalTextColor, highlightedTextColor;
+        [SerializeField, HideInInspector] private bool shouldStayHighlighted;
+        [SerializeField, HideInInspector] private TMP_Text text;
+        [SerializeField, HideInInspector] private ColorParameter normalTextColor, highlightedTextColor;
 
 #if UNITY_EDITOR
         public string ShouldStayHighlightedName => nameof(shouldStayHighlighted);
         public string TextFieldName => nameof(text);
-        public string NormalFontFieldName => nameof(normalFont);
-        public string HighlightedFontFieldName => nameof(highlightedFont);
         public string NormalTextColorFieldName => nameof(normalTextColor);
         public string HighlightedTextColorFieldName => nameof(highlightedTextColor);
 #endif
 
-        private void SetTextFontAsset(TMP_FontAsset newFontAsset, ColorParameter textColor)
+        private void SetTextColor(ColorParameter textColor)
         {
-            text.font = newFontAsset;
             text.color = textColor.value;
         }
 
@@ -54,12 +50,12 @@ namespace ViewModels.UI.Elements.Buttons
 
         public void OnOtherOnePerformGroupAction()
         {
-            SetTextFontAsset(normalFont, normalTextColor);
+            SetTextColor(normalTextColor);
         }
 
         private void SwitchToHighlightedStyle()
         {
-            SetTextFontAsset(highlightedFont, highlightedTextColor);
+            SetTextColor(highlightedTextColor);
         }
 
         public void PerformGroupAction()
