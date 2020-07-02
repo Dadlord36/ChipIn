@@ -56,7 +56,6 @@ namespace Controllers
                     SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
                     SwitchToViewCorrespondingToUseRole();
                     sessionStateRepository.ConfirmSingingIn();
-
                 }
                 else
                 {
@@ -76,6 +75,7 @@ namespace Controllers
             {
                 if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
                     await sessionStateRepository.SignOut();
+                DestroyView(nameof(CoinsGameView));
                 SwitchToLoginView();
             }
             catch (Exception e)
@@ -83,6 +83,11 @@ namespace Controllers
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        private void DestroyView(string coinsGameViewName)
+        {
+            viewsSwitchingController.RemoveExistingViewInstance(coinsGameViewName);
         }
 
         private void SwitchToViewCorrespondingToUseRole()
@@ -155,10 +160,8 @@ namespace Controllers
         {
             try
             {
-                var authorisationModel = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource)
-                    .ConfigureAwait(false);
-
-                var result = authorisationModel;
+                var result = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource);
+                
                 if (!result.Success)
                 {
                     LogUtility.PrintLog(Tag, "Failed to register user as Guest");
@@ -180,6 +183,11 @@ namespace Controllers
         private void OnSwitchingToMode(SessionMode obj)
         {
             SwitchingToMode?.Invoke(obj);
+        }
+
+        public async Task SignInAsGuest(UserLoginRequestModel userLoginRequestModel)
+        {
+            throw new NotImplementedException();
         }
     }
 }

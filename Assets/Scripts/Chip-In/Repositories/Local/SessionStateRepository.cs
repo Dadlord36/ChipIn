@@ -44,18 +44,17 @@ namespace Repositories.Local
         {
             try
             {
-                await SessionStaticProcessor.TryLogOut(out TasksCancellationTokenSource, authorisationDataRepository, DeviceUtility.BaseDeviceData)
-                    .ConfigureAwait(false);
+                await SessionStaticProcessor.TryLogOut(out TasksCancellationTokenSource, authorisationDataRepository, DeviceUtility.BaseDeviceData);
+                
+                cachingController.ClearCache();
+                viewsSwitchingController.RequestSwitchToView("", nameof(LoginView));
+                OnSigningOut();
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-
-            cachingController.ClearCache();
-            viewsSwitchingController.RequestSwitchToView("", nameof(LoginView));
-            OnSigningOut();
         }
 
         public void ConfirmSingingIn()
