@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Repositories.Remote;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -16,6 +17,7 @@ namespace ViewModels
     {
         [SerializeField] private UserProductsRepository userProductsRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private InfoCardController infoCardController;
 
         private bool _infoCanBeShown;
 
@@ -74,7 +76,7 @@ namespace ViewModels
             try
             {
                 var selectedItemData = userProductsRepository[selectedId];
-                await InfoPanelView.FillWithData(RelatedView, selectedItemData, selectedItemData, selectedItemData, null);
+                await infoCardController.ShowCard(selectedItemData, selectedItemData, selectedItemData, null);
             }
             catch (Exception e)
             {

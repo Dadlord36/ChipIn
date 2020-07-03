@@ -31,7 +31,7 @@ namespace Views.Cards
         {
             base.Start();
 
-            alertCardController.SetAlertCardViewToControl(this);
+            alertCardController.SetCardViewToControl(this);
             StopAnimating();
         }
 

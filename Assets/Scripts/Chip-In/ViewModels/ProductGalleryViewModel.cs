@@ -19,11 +19,11 @@ namespace ViewModels
     [Binding]
     public sealed class ProductGalleryViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        private const string Tag = nameof(ProductGalleryViewModel);
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region SerielizedFields
 
+        [SerializeField] private InfoCardController infoCardController;
         [SerializeField] private OffersRemoteRepository offersRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
@@ -76,7 +76,7 @@ namespace ViewModels
                     SelectedOfferId);
 
                 var offer = response.ResponseModelInterface.Offer;
-                await InfoPanelView.FillWithData(ViewAsProductGalleryView, offer, offer, offer, offer);
+                await infoCardController.ShowCard(offer, offer, offer, offer);
             }
             catch (Exception e)
             {

@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using HttpRequests;
+using ScriptableObjects.CardsControllers;
+using ScriptableObjects.SwitchBindings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,6 +48,7 @@ namespace Views.InteractiveWindows
         [SerializeField] private TMP_Text itemTypeField;
         [SerializeField] private TMP_Text itemDescriptionField;
 
+        [SerializeField] private InfoCardController infoCardController;
 
         public Sprite ItemLabel
         {
@@ -75,6 +78,12 @@ namespace Views.InteractiveWindows
         {
         }
 
+        protected override void Awake()
+        {
+            base.Awake();
+            infoCardController.SetCardViewToControl(this);
+        }
+
         public void FillCardWithData(IInfoPanelData data)
         {
             if (data.ItemLabel != null)
@@ -102,8 +111,7 @@ namespace Views.InteractiveWindows
             _cancellationTokenSource?.Cancel();
         }
 
-        public static async Task FillWithData(IInfoPanelView infoPanelView, IPosterImageUri posterUri, IDescription description,
-            ITitled titled, ICategory category)
+        public async Task FillCardWithData(IPosterImageUri posterUri, IDescription description, ITitled titled, ICategory category)
         {
             try
             {
@@ -112,7 +120,7 @@ namespace Views.InteractiveWindows
                 var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility
                     .CreateDownloadImageTask(ApiHelper.DefaultClient, TaskScheduler.FromCurrentSynchronizationContext(),
                         posterUri.PosterUri, _cancellationTokenSource.Token));
-                infoPanelView.FillCardWithData(new InfoPanelData(label, description, titled, category));
+                FillCardWithData(new InfoPanelData(label, description, titled, category));
             }
             catch (Exception e)
             {

@@ -5,6 +5,7 @@ using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using Repositories.Local;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -19,6 +20,7 @@ namespace ViewModels
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+        [SerializeField] private InfoCardController infoCardController;
 
 
         private int SelectedGameId
@@ -87,7 +89,7 @@ namespace ViewModels
             {
                 var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
                 var offer = responseModel.ResponseModelInterface.Offer;
-                await InfoPanelView.FillWithData(RelatedView, offer, offer, offer, offer);
+                await infoCardController.ShowCard(offer, offer, offer, offer);
             }
             catch (Exception e)
             {

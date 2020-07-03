@@ -17,13 +17,19 @@ namespace ScriptableObjects.SwitchBindings
 
     public readonly struct ViewsSwitchingParameters
     {
-        public readonly ViewAppearanceParameters PreviousViewAppearanceParameters;
+        public readonly ViewAppearanceParameters? PreviousViewAppearanceParameters;
         public readonly ViewAppearanceParameters NextViewAppearanceParameters;
 
         public ViewsSwitchingParameters( ViewAppearanceParameters previousViewAppearanceParameters,
             ViewAppearanceParameters nextViewAppearanceParameters)
         {
             PreviousViewAppearanceParameters = previousViewAppearanceParameters;
+            NextViewAppearanceParameters = nextViewAppearanceParameters;
+        }
+
+        public ViewsSwitchingParameters(ViewAppearanceParameters nextViewAppearanceParameters)
+        {
+            PreviousViewAppearanceParameters = null;
             NextViewAppearanceParameters = nextViewAppearanceParameters;
         }
     }
