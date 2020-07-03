@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Common;
 using DataComponents;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Views.Bars.BarItems;
 using Views.InteractiveWindows;
@@ -11,14 +12,14 @@ using Views.ViewElements.Lists.ScrollableList;
 
 namespace Views
 {
-    public sealed class ProductGalleryView : BaseView, IDropdownList, IRelatedItemsSelection, IInfoPanelView
+    public sealed class ProductGalleryView : BaseView, IDropdownList, IRelatedItemsSelection
     {
         public event Action<string> NewCategorySelected;
 
         [SerializeField] private ItemsDropdownList dropdownList;
         [SerializeField] private ScrollableItemsSelector itemsSelector;
         [SerializeField] private GameObject scrollableMenu;
-        [SerializeField] private InfoPanelView offerInfoCard;
+        [SerializeField] private InfoCardController infoCardController;
 
         public event Action<int> RelatedItemSelected
         {
@@ -90,21 +91,16 @@ namespace Views
         {
             NewCategorySelected?.Invoke(obj);
         }
-
-
-        public void FillCardWithData(IInfoPanelData data)
+        
+        
+        public void HideInfoCard()
         {
-            offerInfoCard.FillCardWithData(data);
+            infoCardController.HideCard();
         }
 
         public void ShowInfoCard()
         {
-            offerInfoCard.ShowInfoCard();
-        }
-
-        public void HideInfoCard()
-        {
-            offerInfoCard.HideInfoCard();
+            infoCardController.ShowCard();
         }
     }
 }

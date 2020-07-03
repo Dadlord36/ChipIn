@@ -5,7 +5,6 @@ using CustomAnimators;
 using CustomAnimators.GeneratedAnimationActions;
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using Utilities;
 using Views.ViewElements;
@@ -36,7 +35,10 @@ namespace ViewModels.UI
         {
             ClearProgressiveOperationsController();
             _progressiveOperationsCompletionTracker.ResetCounter();
-            SetupPreviousViewSlotAnimation(viewsSwitchingParameters.PreviousViewAppearanceParameters);
+            
+            if (viewsSwitchingParameters.PreviousViewAppearanceParameters != null)
+                SetupPreviousViewSlotAnimation(viewsSwitchingParameters.PreviousViewAppearanceParameters);
+            
             SetupNextViewAnimation(viewsSwitchingParameters.NextViewAppearanceParameters);
             StartUpdating();
         }
@@ -75,9 +77,10 @@ namespace ViewModels.UI
             _progressiveOperationsCompletionTracker.AddToCounter();
         }
 
-        private void SetupPreviousViewSlotAnimation(in ViewAppearanceParameters previousViewAppearanceParameters)
+        private void SetupPreviousViewSlotAnimation(ViewAppearanceParameters? previousViewAppearanceParameters)
         {
-            SetupViewSlotAnimation(previousViewSlot, _mainProgressiveOperationsController, previousViewAppearanceParameters);
+            SetupViewSlotAnimation(previousViewSlot, _mainProgressiveOperationsController,
+                (ViewAppearanceParameters) previousViewAppearanceParameters);
         }
 
         private void SetupNextViewAnimation(in ViewAppearanceParameters nextViewAppearanceParameters)
@@ -118,9 +121,6 @@ namespace ViewModels.UI
         {
             base.Awake();
             StopUpdating();
-            Assert.IsNotNull(previousViewSlot);
-            Assert.IsNotNull(nextViewSlot);
-
             SetMovementDistanceAndDestinations();
 
             viewsSwitchingAnimationBinding.ViewsSwitchingAnimationRequested += StartAnimation;
@@ -140,8 +140,9 @@ namespace ViewModels.UI
 
         private void SetMovementDistanceAndDestinations()
         {
-            _centerDestinationPoint = Vector2.zero;
-            _movementDistance = ((RectTransform) transform).rect.width;
+            var rectTransform = transform;
+            _centerDestinationPoint = ((RectTransform) rectTransform).anchoredPosition;
+            _movementDistance = ((RectTransform) rectTransform).rect.width;
         }
 
         private void StartUpdating()
