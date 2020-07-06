@@ -59,8 +59,8 @@ namespace ViewModels
         {
             try
             {
-                var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource,authorisationDataRepository,
-                    selectedGameRepository.GameId);
+                var response = await UserGamesStaticProcessor.TryShowMatch(out OperationCancellationController.TasksCancellationTokenSource,
+                    authorisationDataRepository, selectedGameRepository.GameId);
                 if (response.Success && response.ResponseModelInterface.Success) return true;
                 alertCardController.ShowAlertWithText(response.Error);
             }

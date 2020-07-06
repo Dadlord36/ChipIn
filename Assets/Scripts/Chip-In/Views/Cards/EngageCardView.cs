@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine.EventSystems;
 
-
 namespace Views.Cards
 {
     public sealed class EngageCardView : BaseView, IPointerClickHandler
@@ -21,5 +20,6 @@ namespace Views.Cards
         {
             WasClicked?.Invoke();
         }
+        
     }
 }

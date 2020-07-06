@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using DataModels;
-using DataModels.Interfaces;
 using Repositories.Local;
-using Repositories.Remote;
 using UnityEngine;
 using Utilities;
-using ViewModels.Cards;
 using Views;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
     public class EngageViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private OfferCreationRepository offerCreationRepository;
-        [SerializeField] private CommunitiesDetailsDataRepository communitiesDetailsDataRepository;
-
-        private CancellationTokenSource _cancellationTokenSource;    
-        private EngageView RelativeView => View as EngageView;
+        [SerializeField] private MerchantInterestListAdapter merchantInterestListAdapter;
 
         public EngageViewModel() : base(nameof(EngageViewModel))
         {
@@ -29,50 +22,13 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await RefillInterestsList();
+                await merchantInterestListAdapter.Initialize();
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-        }
-
-        private async Task RefillInterestsList()
-        {
-            RelativeView.ClearScrollList();
-            var itemsData = communitiesDetailsDataRepository.ItemsData;
-            var tasks = new Task<EngageCardViewModel>[itemsData.Count];
-
-            for (int i = 0; i < itemsData.Count; i++)
-            {
-                tasks[i] = CreateAndAddEngageCardToScrollList(itemsData[i]);
-            }
-
-            try
-            {
-                var engageCards = await Task.WhenAll(tasks);
-
-                for (int i = 0; i < engageCards.Length; i++)
-                {
-                    engageCards[i].CardWasSelected += OnNewCommunityInterestCardSelected;
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        private Task<EngageCardViewModel> CreateAndAddEngageCardToScrollList(IMarketInterestDetailsDataModel interestGridData)
-        {
-            return RelativeView.AddCardToScrollList(interestGridData, _cancellationTokenSource.Token);
         }
 
         private void OnNewCommunityInterestCardSelected(EngageCardDataModel engageCardDataModel)

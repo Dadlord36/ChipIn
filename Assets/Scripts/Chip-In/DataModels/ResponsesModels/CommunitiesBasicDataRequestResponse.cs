@@ -8,13 +8,5 @@ namespace DataModels.ResponsesModels
         public bool Success { get; set; }
         public PaginatedResponseData Paginated { get; set; }
         public InterestBasicDataModel[] Communities { get; set; }
-
-        public CommunitiesBasicDataRequestResponse(bool success, PaginatedResponseData paginatedResponseData,
-            InterestBasicDataModel[] communities)
-        {
-            Success = success;
-            Paginated = paginatedResponseData;
-            Communities = communities;
-        }
     }
 }

@@ -1,16 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
+using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Basic;
 using Views.Cards;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IEngageModel, INotifyPropertyChanged
+    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IEngageModel,
+        IFillingView<MarketInterestDetailsDataModel>, INotifyPropertyChanged
     {
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         public event Action<EngageCardDataModel> CardWasSelected;
         private readonly EngageCardDataModel _cardData = new EngageCardDataModel();
 
@@ -32,11 +38,6 @@ namespace ViewModels.Cards
             OnCardWasSelected(_cardData);
         }
 
-        public void FillCardWithData(EngageCardDataModel cardData)
-        {
-            _cardData.Set(cardData);
-        }
-        
         public event PropertyChangedEventHandler PropertyChanged
         {
             add => _cardData.PropertyChanged += value;
@@ -48,7 +49,7 @@ namespace ViewModels.Cards
             CardWasSelected?.Invoke(obj);
         }
 
-        #region IEngageModel implementation 
+        #region IEngageModel implementation
 
         [Binding]
         public uint Size
@@ -105,7 +106,7 @@ namespace ViewModels.Cards
             get => _cardData.Icon;
             set => _cardData.Icon = value;
         }
-        
+
         [Binding]
         public string Spirit
         {
@@ -117,6 +118,20 @@ namespace ViewModels.Cards
 
         public EngageCardViewModel() : base(nameof(EngageCardViewModel))
         {
+        }
+
+        public Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
+        {
+            OperationCancellationController.CancelOngoingTask();
+            Age = dataModel.Age;
+            Description = dataModel.Description;
+            Size = dataModel.Size;
+            Spirit = dataModel.Spirit;
+            MaxCap = dataModel.MaxCap;
+            MinCap = dataModel.MinCap;
+            Id = dataModel.Id;
+            Name = dataModel.Name;
+            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken);
         }
     }
 }

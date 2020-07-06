@@ -12,7 +12,7 @@ using ViewModels.UI.Elements.Icons;
 
 namespace Views.Cards
 {
-    public class InterestCardView : BaseView, IFillingView<InterestPagePageDataModel>
+    public class InterestCardView : BaseView, IFillingView<UserInterestPageDataModel>
     {
         [SerializeField] private UserAvatarIcon avatarIcon;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
@@ -108,7 +108,7 @@ namespace Views.Cards
             return days == 1 ? "Day" : "Days";
         }
 
-        public async Task FillView(InterestPagePageDataModel pagePageDataModel, uint index)
+        public async Task FillView(UserInterestPageDataModel pageDataModel, uint index)
         {
             _cancellationController.CancelOngoingTask();
            
@@ -120,17 +120,17 @@ namespace Views.Cards
             //TODO: recalculate from UTC to LocalTime;
             
             // AuthorName = dataModel.;
-            DaysPassed = (DateTime.UtcNow - pagePageDataModel.StartedAt).Days;
-            CardName = pagePageDataModel.Name;
-            CardDescription = pagePageDataModel.Message;
+            DaysPassed = (DateTime.UtcNow - pageDataModel.StartedAt).Days;
+            CardName = pageDataModel.Name;
+            CardDescription = pageDataModel.Message;
             // CongratulationsNumber = dataModel.;
-            JoiningInNumber = (int) pagePageDataModel.JoinedCount;
-            HoursLeftNumber = (pagePageDataModel.EndsAtTime - DateTime.UtcNow).Hours;
-            UsersNumber = (int) pagePageDataModel.UsersCount;
+            JoiningInNumber = (int) pageDataModel.JoinedCount;
+            HoursLeftNumber = (pageDataModel.EndsAtTime - DateTime.UtcNow).Hours;
+            UsersNumber = (int) pageDataModel.UsersCount;
             // Percentage = dataModel.;
             try
             {
-                CardIcon = await downloadedSpritesRepository.CreateLoadSpriteTask(pagePageDataModel.PosterUri,
+                CardIcon = await downloadedSpritesRepository.CreateLoadSpriteTask(pageDataModel.PosterUri,
                     _cancellationController.CancellationToken);
             }
             catch (OperationCanceledException)

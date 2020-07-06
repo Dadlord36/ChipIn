@@ -1,4 +1,5 @@
 ﻿using Common;
+using Controllers;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Views;
@@ -14,7 +15,7 @@ namespace ViewModels.Basic
         
         [SerializeField] private BaseView view;
 
-        protected DisposableCancellationTokenSource TasksCancellationTokenSource;
+        protected readonly AsyncOperationCancellationController OperationCancellationController = new AsyncOperationCancellationController();
 
         public BaseViewModel(string tag)
         {
@@ -22,11 +23,7 @@ namespace ViewModels.Basic
         }
 
         public BaseView View => view;
-
-        protected void CancelOngoingTask()
-        {
-            TasksCancellationTokenSource.Cancel();
-        }
+        
 
 #if UNITY_EDITOR
         private void OnValidate()

@@ -8,7 +8,7 @@ using GlobalVariables;
 namespace HttpRequests.RequestsProcessors.PostRequests
 {
     public class CreateACommunityInterestPostProcessor : BaseRequestProcessor<ICommunityCreateInterestModel,
-        InterestPagePageDataModel, IInterestPageModel>
+        MerchantInterestPageDataModel, IInterestPageModel>
     {
         public CreateACommunityInterestPostProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             ICommunityCreateInterestModel requestBodyModel, int communityId) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(

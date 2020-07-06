@@ -58,7 +58,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             public bool FreezeContentEndEdgeOnCountChange => repositoryAdapterParameters.FreezeContentEndEdgeOnCountChange;
         }
 
-        [SerializeField] private UserInterestsBasicDataPaginatedListRepository userInterestsBasicDataPaginatedListRepository;
+        [SerializeField] private InterestsBasicDataPaginatedListRepository interestsBasicDataPaginatedListRepository;
 
         public event Action StartedFetching;
         public event Action EndedFetching;
@@ -67,7 +67,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
         public SimpleDataHelper<InterestBasicDataModel> Data { get; private set; }
-        private uint TotalCapacity => userInterestsBasicDataPaginatedListRepository.TotalItemsNumber;
+        private uint TotalCapacity => interestsBasicDataPaginatedListRepository.TotalItemsNumber;
         
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
@@ -92,7 +92,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 Data = new SimpleDataHelper<InterestBasicDataModel>(this);
             }
-            return userInterestsBasicDataPaginatedListRepository.LoadDataFromServer(); 
+            return interestsBasicDataPaginatedListRepository.LoadDataFromServer(); 
         }
 
 
@@ -157,7 +157,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
         private Task FetchItemModelsFromServer(uint maxCount, Action<IReadOnlyList<InterestBasicDataModel>> onDone)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
-            return userInterestsBasicDataPaginatedListRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
+            return interestsBasicDataPaginatedListRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
                 .ContinueWith(delegate(Task<IReadOnlyList<InterestBasicDataModel>> task)
                 {
                     _retrievingItemsStartingIndex += maxCount - 1;

@@ -42,7 +42,7 @@ namespace Repositories.Remote
         {
             var count = communitiesBasicData.Count;
 
-            var tasks = new Task<BaseRequestProcessor<object, CommunityItemResponseDataModel, ICommunityItemResponseModel>.HttpResponse>[count];
+            var tasks = new Task<BaseRequestProcessor<object, InterestDetailsResponseDataModel, IInterestDetailsResponseModel>.HttpResponse>[count];
 
             for (int i = 0; i < count; i++)
             {

@@ -64,7 +64,7 @@ namespace ViewModels
         {
             try
             {
-                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(out TasksCancellationTokenSource,
+                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(out OperationCancellationController.TasksCancellationTokenSource,
                     authorisationDataRepository);
                 if (!response.Success) return;
 

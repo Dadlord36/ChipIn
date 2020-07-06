@@ -144,8 +144,7 @@ namespace ScriptableObjects.DataSynchronizers
         {
             try
             {
-                var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders)
-                    .ConfigureAwait(false);
+                var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders);
                 UserProfile.Set(response.ResponseModelInterface);
             }
             catch (Exception e)
@@ -153,6 +152,7 @@ namespace ScriptableObjects.DataSynchronizers
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             ConfirmDataLoading();
         }
 
@@ -160,15 +160,14 @@ namespace ScriptableObjects.DataSynchronizers
         {
             try
             {
-                await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile)
-                    .ConfigureAwait(false);
+                await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile);
+                ConfirmDataSaving();
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-            ConfirmDataSaving();
         }
 
         private void ConfirmDataLoading()

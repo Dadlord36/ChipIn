@@ -144,7 +144,8 @@ namespace ViewModels
         {
             try
             {
-                var result = await RegistrationStaticProcessor.TryRegisterUserFull(out TasksCancellationTokenSource, _registrationRequestModel);
+                var result = await RegistrationStaticProcessor.TryRegisterUserFull(
+                    out OperationCancellationController.TasksCancellationTokenSource, _registrationRequestModel);
                 // If registration was successful 
                 if (result.Success)
                 {

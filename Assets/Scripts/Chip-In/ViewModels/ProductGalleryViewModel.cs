@@ -72,8 +72,8 @@ namespace ViewModels
             try
             {
                 OfferIsSelected = SelectedOfferId != int.MinValue;
-                var response = await OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, authorisationDataRepository,
-                    SelectedOfferId);
+                var response = await OffersStaticRequestProcessor.GetOfferDetails(out OperationCancellationController.TasksCancellationTokenSource,
+                    authorisationDataRepository, SelectedOfferId);
 
                 var offer = response.ResponseModelInterface.Offer;
                 await infoCardController.ShowCard(offer, offer, offer, offer);
@@ -103,11 +103,13 @@ namespace ViewModels
         {
             try
             {
-                var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(out TasksCancellationTokenSource, authorisationDataRepository,
-                    SelectedOfferId).ConfigureAwait(false);
+                var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(
+                    out OperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, SelectedOfferId)
+                    .ConfigureAwait(false);
 
                 var gameId = offerDetails.ResponseModelInterface.Offer.GameData.Id;
-                var response = await UserGamesStaticProcessor.TryJoinAGame(out TasksCancellationTokenSource, authorisationDataRepository, gameId);
+                var response = await UserGamesStaticProcessor.TryJoinAGame(out OperationCancellationController.TasksCancellationTokenSource,
+                    authorisationDataRepository, gameId);
                 if (response.Success)
                 {
                     await gameIconsRepository.StoreNewGameIconsSet(gameId, response.ResponseModelInterface.GameBoard.Icons).ConfigureAwait(false);
