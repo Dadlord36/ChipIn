@@ -15,7 +15,7 @@ using Views;
 namespace ViewModels
 {
     [Serializable]
-    public class UserInterestLabelsPaginatedDataExplorer : PaginatedDataExplorer<UserInterestsBasicDataPaginatedListRepository, InterestBasicDataModel>
+    public class UserInterestLabelsPaginatedDataExplorer : PaginatedDataExplorer<InterestsBasicDataPaginatedListRepository, InterestBasicDataModel>
     {
         public UserInterestLabelsPaginatedDataExplorer() : base(nameof(UserInterestLabelsPaginatedDataExplorer))
         {

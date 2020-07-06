@@ -320,8 +320,8 @@ namespace ViewModels
         {
             try
             {
-                TasksCancellationTokenSource = new DisposableCancellationTokenSource();
-                await OffersStaticRequestProcessor.TryCreateAnOffer(TasksCancellationTokenSource, userAuthorisationDataRepository, _offerDataModel);
+                await OffersStaticRequestProcessor.TryCreateAnOffer(OperationCancellationController.TasksCancellationTokenSource, 
+                    userAuthorisationDataRepository, _offerDataModel);
                 _alertCardController.ShowAlertWithText("Offer was created");
             }
             catch (Exception e)

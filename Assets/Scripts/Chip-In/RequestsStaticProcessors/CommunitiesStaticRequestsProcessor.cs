@@ -28,25 +28,11 @@ namespace RequestsStaticProcessors
                 .SendRequest("Communities paginated data was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, CommunityItemResponseDataModel, ICommunityItemResponseModel>.HttpResponse>
+        public static Task<BaseRequestProcessor<object, InterestDetailsResponseDataModel, IInterestDetailsResponseModel>.HttpResponse>
             GetCommunityDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId)
         {
             return new CommunityDetailsGetProcessor(out cancellationTokenSource, requestHeaders, communityId).SendRequest(
                 "Community details data was retrieved");
-        }
-
-        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            JoinCommunity(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId)
-        {
-            return new CommunityJoinPostProcessor(out cancellationTokenSource, requestHeaders, communityId)
-                .SendRequest($"Joined successfully to community {communityId.ToString()}");
-        }
-
-        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
-            LeaveCommunity(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId)
-        {
-            return new CommunityLeaveDeleteProcessor(out cancellationTokenSource, requestHeaders, communityId)
-                .SendRequest($"Leaving successfully community {communityId.ToString()}");
         }
     }
 }

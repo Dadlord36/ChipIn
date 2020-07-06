@@ -3,10 +3,10 @@ using DataModels.Interfaces;
 
 namespace DataModels.ResponsesModels
 {
-    public sealed class CommunitiesBasicDataRequestResponse : ICommunitiesBasicDataRequestResponse
+    public sealed class MarketInterestsDetailsDataRequestResponse : IMarketInterestsDetailsDataRequestResponse
     {
         public bool Success { get; set; }
         public PaginatedResponseData Paginated { get; set; }
-        public InterestBasicDataModel[] Communities { get; set; }
+        public MarketInterestDetailsDataModel[] MarketInterestsDetails { get; set; }
     }
 }

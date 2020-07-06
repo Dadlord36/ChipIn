@@ -2,7 +2,7 @@
 
 namespace DataModels.ResponsesModels
 {
-    public class CommunityItemResponseDataModel : ICommunityItemResponseModel
+    public class InterestDetailsResponseDataModel : IInterestDetailsResponseModel
     {
         public bool Success { get; set; }
         public MarketInterestDetailsDataModel LabelDetailsDataModel { get; set; }

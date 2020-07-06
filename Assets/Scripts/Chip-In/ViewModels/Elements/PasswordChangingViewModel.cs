@@ -110,8 +110,8 @@ namespace ViewModels.Elements
         {
             try
             {
-                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out TasksCancellationTokenSource,
-                    authorisationDataRepository,
+                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(
+                    out OperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
                     new UserProfilePasswordChangingModel
                     {
                         Password = this.Password, PasswordConfirmation = PasswordRepeat,

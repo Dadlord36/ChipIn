@@ -17,8 +17,8 @@ namespace Repositories.Remote.Paginated
     [CreateAssetMenu(fileName = nameof(UserInterestPagesPaginatedRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"
                    + nameof(Paginated) + "/" + nameof(UserInterestPagesPaginatedRepository), order = 0)]
-    public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<InterestPagePageDataModel, InterestsPagesPagesResponseDataModel,
-        IInterestsPagesResponseModel>
+    public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<UserInterestPageDataModel, UserInterestsPagesResponseDataModel,
+        IUserInterestsPagesResponseModel>
     {
         [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
         protected override string Tag => nameof(UserInterestPagesPaginatedRepository);
@@ -28,9 +28,9 @@ namespace Repositories.Remote.Paginated
         public override Task SaveDataToServer()
         {
             throw new NotImplementedException();
-        }
-        
-        protected override Task<BaseRequestProcessor<object, InterestsPagesPagesResponseDataModel, IInterestsPagesResponseModel>.HttpResponse>
+		}
+		
+		protected override Task<BaseRequestProcessor<object, UserInterestsPagesResponseDataModel, IUserInterestsPagesResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
             Debug.Assert(SelectedCommunityId != null, nameof(SelectedCommunityId) + " != null");
@@ -38,9 +38,9 @@ namespace Repositories.Remote.Paginated
                 (int) SelectedCommunityId, paginatedRequestData);
         }
 
-        protected override List<InterestPagePageDataModel> GetItemsFromResponseModelInterface(IInterestsPagesResponseModel pagesResponseModelInterface)
+        protected override List<UserInterestPageDataModel> GetItemsFromResponseModelInterface(IUserInterestsPagesResponseModel pagesResponseModelInterface)
         {
-            return new List<InterestPagePageDataModel>(pagesResponseModelInterface.Interests);
+            return new List<UserInterestPageDataModel>(pagesResponseModelInterface.Interests);
         }
     }
 }
