@@ -1,60 +1,146 @@
-﻿using Repositories.Local;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Controllers;
+using DataModels;
+using DataModels.Interfaces;
+using DataModels.ResponsesModels;
+using JetBrains.Annotations;
+using Repositories.Local;
+using Repositories.Local.SingleItem;
 using UnityEngine;
+using UnityWeld.Binding;
 using Utilities;
-using ViewModels.UI.Elements.ScrollBars;
 using Views;
 using Views.Bars.BarItems;
+using Views.ViewElements.Lists.ScrollableList;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
-    public class MerchantInterestDetailsViewModel : ViewsSwitchingViewModel
+    [Binding]
+    public sealed class MerchantInterestDetailsViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private TitledItemsList itemsList;
-        [SerializeField] private OfferCreationRepository offerCreationRepository;
-        [SerializeField] private ScrollBarOfTitlesViewModel scrollBar;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        [SerializeField] private MerchantInterestAnswersListAdapter merchantInterestAnswersListAdapter;
 
+        [SerializeField] private SelectedMerchantInterestPageRepository selectedMerchantInterestPageRepository;
+        [SerializeField] private ScrollableItemsSelector scrollableItemsSelector;
 
-        private string _currentCategory;
+        //TODO: remove this field once API request will be implemented
+        [SerializeField] private string jsonString;
+        private Dictionary<string, IList<InterestQuestionAnswer>> _questionAnswersDictionary;
+
+        private string _currentQuestion;
+        private string _interestPageName;
+
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController =
+            new AsyncOperationCancellationController();
+
+        [Binding]
+        public string InterestPageName
+        {
+            get => _interestPageName;
+            private set
+            {
+                if (value == _interestPageName) return;
+                _interestPageName = value;
+                OnPropertyChanged();
+            }
+        }
 
         public MerchantInterestDetailsViewModel() : base(nameof(MerchantInterestDetailsViewModel))
         {
         }
 
-        protected override void OnEnable()
+        [Binding]
+        public void CreateOffer_OnButtonClick()
         {
-            base.OnEnable();
-            scrollBar.NewItemSelected += ScrollBarOnNewItemSelected;
+            SwitchToView(nameof(CreateOfferView));
         }
 
-        protected override void OnDisable()
+        protected override async void OnBecomingActiveView()
         {
-            base.OnDisable();
-            scrollBar.NewItemSelected -= ScrollBarOnNewItemSelected;
+            base.OnBecomingActiveView();
+
+            RefillAnswersDictionary(JsonConverterUtility
+                .ConvertJsonString<InterestQuestionAnswerRequestResponse>(jsonString));
+            FillListAdapterWithCorrespondingData(_questionAnswersDictionary.Keys.First());
+            scrollableItemsSelector.NewItemSelected += ScrollableItemsSelectorOnNewItemSelected;
+            try
+            {
+                await SetViewNameToInterestPageName();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        private void Start()
+        protected override void OnBecomingInactiveView()
         {
-            scrollBar.Initialize();
-
-
-            //Todo: remove next line
-            itemsList.SubscribeOnElementsSelection(OnItemSelected);
+            base.OnBecomingInactiveView();
+            scrollableItemsSelector.NewItemSelected -= ScrollableItemsSelectorOnNewItemSelected;
         }
 
-        private void ScrollBarOnNewItemSelected(ITitled selectedCategoryTitle)
+        private Task SetViewNameToInterestPageName()
         {
-            _currentCategory = selectedCategoryTitle.Title;
+            return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
+                delegate(Task<MerchantInterestPageDataModel> task) { InterestPageName = task.Result.Name; },
+                scheduler: downloadedSpritesRepository.MainThreadScheduler,
+                continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
+                cancellationToken: _asyncOperationCancellationController.CancellationToken);
         }
 
-        private void RefillList()
+        private void FillListAdapterWithCorrespondingData(string question)
         {
-            itemsList.Fill(null, OnItemSelected);
+            merchantInterestAnswersListAdapter.RefillWithData(_questionAnswersDictionary[question]);
         }
 
-        private void OnItemSelected(string selectedItemFromListTitle)
+        private void RefillAnswersDictionary(IInterestQuestionAnswerRequestResponseModel questionAnswerRequestResponse)
         {
-            LogUtility.PrintLog(Tag, selectedItemFromListTitle);
-            offerCreationRepository[_currentCategory] = selectedItemFromListTitle;
+            var questions = questionAnswerRequestResponse.Questions;
+            var count = questions.Length;
+            _questionAnswersDictionary = new Dictionary<string, IList<InterestQuestionAnswer>>(count);
+
+            foreach (var question in questions)
+            {
+                _questionAnswersDictionary.Add(ReformatQuestion(question.Question), question.Answers);
+            }
+        }
+
+        private void ScrollableItemsSelectorOnNewItemSelected(Transform selectedTransform)
+        {
+            SwitchSelectedQuestion(selectedTransform.GetComponent<ITitled>());
+        }
+
+
+        private void SwitchSelectedQuestion(ITitled selectedCategoryTitle)
+        {
+            _currentQuestion = ReformatQuestion(selectedCategoryTitle.Title);
+            FillListAdapterWithCorrespondingData(_currentQuestion);
+        }
+
+
+        private static string ReformatQuestion(in string question)
+        {
+            return string.Concat(question.ToLower().Where(c => !char.IsWhiteSpace(c)));;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

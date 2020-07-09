@@ -34,10 +34,11 @@ namespace Views.ViewElements.Lists.ScrollableList
             rectTransform = transform as RectTransform;
             Update();
         }
-
+        
         private void Update()
         {
             if (!enabled) return;
+            
             for (int i = 0; i < _contentItems.Length; i++)
             {
                 SendDataToContentItemControllers(_contentItems[i], Mathf.Clamp01(GetItemPathPercentage(_contentItems[i])));

@@ -10,35 +10,41 @@ using HttpRequests.RequestsProcessors;
 using Repositories.Local.SingleItem;
 using RequestsStaticProcessors;
 using UnityEngine;
-using Debug = System.Diagnostics.Debug;
 
 namespace Repositories.Remote.Paginated
 {
     [CreateAssetMenu(fileName = nameof(UserInterestPagesPaginatedRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"
                    + nameof(Paginated) + "/" + nameof(UserInterestPagesPaginatedRepository), order = 0)]
-    public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<UserInterestPageDataModel, UserInterestsPagesResponseDataModel,
-        IUserInterestsPagesResponseModel>
+    public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<UserInterestPageDataModel, UserInterestPagesResponseDataModel,
+        IUserInterestPagesResponseModel>
     {
         [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
         protected override string Tag => nameof(UserInterestPagesPaginatedRepository);
-        public int? SelectedCommunityId => selectedUserInterestRepository.SelectedInterestId;
-        
+        private Task<int?> SelectedCommunityId => selectedUserInterestRepository.SelectedUserInterestId;
+
 
         public override Task SaveDataToServer()
         {
             throw new NotImplementedException();
-		}
-		
-		protected override Task<BaseRequestProcessor<object, UserInterestsPagesResponseDataModel, IUserInterestsPagesResponseModel>.HttpResponse>
-            CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
-        {
-            Debug.Assert(SelectedCommunityId != null, nameof(SelectedCommunityId) + " != null");
-            return CommunitiesInterestsStaticProcessor.GetCommunityClientsInterests(out cancellationTokenSource, authorisationDataRepository, 
-                (int) SelectedCommunityId, paginatedRequestData);
         }
 
-        protected override List<UserInterestPageDataModel> GetItemsFromResponseModelInterface(IUserInterestsPagesResponseModel pagesResponseModelInterface)
+        protected override Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
+            CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
+        {
+
+            DisposableCancellationTokenSource cancellationTokenSourceLocal = null;
+
+            var task = SelectedCommunityId.ContinueWith(selectedCommunityIdGetTask =>
+                    CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSourceLocal,
+                        authorisationDataRepository, selectedCommunityIdGetTask.Result.Value, paginatedRequestData),
+                TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
+
+            cancellationTokenSource = cancellationTokenSourceLocal;
+            return task;
+        }
+
+        protected override List<UserInterestPageDataModel> GetItemsFromResponseModelInterface(IUserInterestPagesResponseModel pagesResponseModelInterface)
         {
             return new List<UserInterestPageDataModel>(pagesResponseModelInterface.Interests);
         }
