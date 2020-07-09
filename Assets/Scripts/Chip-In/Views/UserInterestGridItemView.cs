@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
@@ -12,16 +13,16 @@ using UnityEngine.UI;
 
 namespace Views
 {
-    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler
+    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler, IIdentifiedSelection
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
-        public event Action<int?> ItemSelected;
+        public event Action<uint> ItemSelected;
 
-        private int? _interestId;
+        private uint _interestId;
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
@@ -55,14 +56,12 @@ namespace Views
         public void SetItemText(IIndexedAndNamed gridItemData)
         {
             ItemName = gridItemData.Name;
-            _interestId = gridItemData.Id;
         }
 
         public void SetItemImageAndText(int id, string itemName, Sprite sprite)
         {
             ItemImageSprite = sprite;
             ItemName = itemName;
-            _interestId = id;
         }
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
@@ -75,14 +74,10 @@ namespace Views
             ItemSelected?.Invoke(_interestId);
         }
 
-        private string previouslyUsedIconUrl;
-
         public Task FillView(InterestBasicDataModel dataModel, uint dataBaseIndex)
         {
             ItemName = dataModel.Name;
-            _interestId = dataModel.Id;
-
-            // if (previouslyUsedIconUrl == dataModel.PosterUri) return Task.CompletedTask;
+            _interestId = dataBaseIndex;
 
             _asyncOperationCancellationController.CancelOngoingTask();
 
@@ -90,7 +85,6 @@ namespace Views
                 .ContinueWith(delegate(Task<Sprite> task)
                     {
                         ItemImageSprite = task.Result;
-                        previouslyUsedIconUrl = dataModel.PosterUri;
                     },
                     _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());
