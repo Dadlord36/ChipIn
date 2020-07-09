@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using Repositories.Local;
@@ -8,35 +9,19 @@ using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Basic;
 using Views.Cards;
-using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels.Cards
 {
     [Binding]
     public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IEngageModel,
-        IFillingView<MarketInterestDetailsDataModel>, INotifyPropertyChanged
+        IFillingView<MarketInterestDetailsDataModel>, IIdentifiedSelection, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        public event Action<EngageCardDataModel> CardWasSelected;
+        public event Action<uint> ItemSelected;
+
         private readonly EngageCardDataModel _cardData = new EngageCardDataModel();
+        private uint _selectedItemDataBaseIndex;
 
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            RelatedView.WasClicked += OnCardWasClicked;
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            RelatedView.WasClicked -= OnCardWasClicked;
-        }
-
-        private void OnCardWasClicked()
-        {
-            OnCardWasSelected(_cardData);
-        }
 
         public event PropertyChangedEventHandler PropertyChanged
         {
@@ -44,10 +29,6 @@ namespace ViewModels.Cards
             remove => _cardData.PropertyChanged -= value;
         }
 
-        private void OnCardWasSelected(EngageCardDataModel obj)
-        {
-            CardWasSelected?.Invoke(obj);
-        }
 
         #region IEngageModel implementation
 
@@ -120,8 +101,27 @@ namespace ViewModels.Cards
         {
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            RelatedView.WasClicked += OnCardWasClicked;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            RelatedView.WasClicked -= OnCardWasClicked;
+        }
+
+        private void OnCardWasClicked()
+        {
+            OnItemSelected(_selectedItemDataBaseIndex);
+        }
+
+
         public Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
+            _selectedItemDataBaseIndex = dataBaseIndex;
             OperationCancellationController.CancelOngoingTask();
             Age = dataModel.Age;
             Description = dataModel.Description;
@@ -130,8 +130,19 @@ namespace ViewModels.Cards
             MaxCap = dataModel.MaxCap;
             MinCap = dataModel.MinCap;
             Id = dataModel.Id;
-            Name = dataModel.Name;
-            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken);
+            Name = dataModel.Name; ;
+            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken).
+                ContinueWith(delegate(Task<Sprite> getSpriteTask)
+                    {
+                        Icon = getSpriteTask.Result;
+                    }
+                , continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler:downloadedSpritesRepository.MainThreadScheduler,
+                cancellationToken: OperationCancellationController.CancellationToken);
+        }
+
+        private void OnItemSelected(uint index)
+        {
+            ItemSelected?.Invoke(index);
         }
     }
 }

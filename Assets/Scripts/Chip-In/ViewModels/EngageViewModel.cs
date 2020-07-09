@@ -1,6 +1,6 @@
 ﻿using System;
-using DataModels;
 using Repositories.Local;
+using Repositories.Local.SingleItem;
 using UnityEngine;
 using Utilities;
 using Views;
@@ -12,6 +12,7 @@ namespace ViewModels
     {
         [SerializeField] private OfferCreationRepository offerCreationRepository;
         [SerializeField] private MerchantInterestListAdapter merchantInterestListAdapter;
+        [SerializeField] private SelectedMerchantInterestRepository selectedMerchantInterestRepository;
 
         public EngageViewModel() : base(nameof(EngageViewModel))
         {
@@ -23,6 +24,7 @@ namespace ViewModels
             try
             {
                 await merchantInterestListAdapter.Initialize();
+                merchantInterestListAdapter.ItemSelected += MerchantInterestListAdapterOnItemSelected;
             }
             catch (Exception e)
             {
@@ -31,9 +33,15 @@ namespace ViewModels
             }
         }
 
-        private void OnNewCommunityInterestCardSelected(EngageCardDataModel engageCardDataModel)
+        protected override void OnBecomingInactiveView()
         {
-            offerCreationRepository.SelectedInterestData = engageCardDataModel;
+            base.OnBecomingInactiveView();
+            merchantInterestListAdapter.ItemSelected -= MerchantInterestListAdapterOnItemSelected;
+        }
+
+        private void MerchantInterestListAdapterOnItemSelected(uint index)
+        {
+            selectedMerchantInterestRepository.SelectedInterestRepositoryIndex = index;
             SwitchToView(nameof(MerchantInterestView));
         }
     }
