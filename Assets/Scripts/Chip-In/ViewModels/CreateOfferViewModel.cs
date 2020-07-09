@@ -2,9 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Common;
 using DataModels;
-using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using GlobalVariables;
 using JetBrains.Annotations;
@@ -23,14 +21,13 @@ using WebOperationUtilities;
 namespace ViewModels
 {
     [Binding]
-    public sealed class CreateOfferViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged, IChallengingOffer
+    public sealed class CreateOfferViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged, ICreatedOfferModel
     {
         #region Serialized fields
-
+        
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private OfferCreationRepository offerCreationRepository;
 
-        [SerializeField] private BaseTextValidationWithAlert startDateTimeInputFieldTextValidationWithAlert;
         [SerializeField] private BaseTextValidationWithAlert validityDateInputFieldTextValidationWithAlert;
         [SerializeField] private BaseTextValidationWithAlert descriptionInputFieldTextValidationWithAlert;
         [SerializeField] private BaseTextValidationWithAlert priceInputFieldTextValidationWithAlert;
@@ -41,7 +38,6 @@ namespace ViewModels
 
 
         private bool _iconIsSelected;
-        private const string Tag = nameof(CreateOfferViewModel);
 
         private MobileDateTimePicker _timeDataPicker;
 
@@ -53,7 +49,7 @@ namespace ViewModels
             }
         };
 
-        private IChallengingOffer ChallengingOfferDataModel => _offerDataModel.Offer;
+        private ICreatedOfferModel ChallengingOfferDataModel => _offerDataModel.Offer;
 
         private CreateOfferView ThisView => View as CreateOfferView;
 
@@ -143,7 +139,7 @@ namespace ViewModels
             }
         }
 
-        [Binding]
+        /*[Binding]
         public string ChallengeType
         {
             get => ChallengingOfferDataModel.ChallengeType;
@@ -163,7 +159,7 @@ namespace ViewModels
                 ChallengingOfferDataModel.StartedAt = value;
                 OnPropertyChanged();
             }
-        }
+        }*/
 
         #endregion
 
@@ -179,6 +175,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
+
 
         [Binding]
         public bool CanCreateOffer
@@ -196,12 +193,13 @@ namespace ViewModels
         public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
         {
         }
+        
 
         protected override void OnEnable()
         {
             base.OnEnable();
             ThisView.NewCategorySelected += SetCategoryName;
-            ThisView.NewGameTypeSelected += SelectGameType;
+            // ThisView.NewGameTypeSelected += SelectGameType;
             // priceInputFieldTextValidationWithAlert.ValidityChanged += VerifyEnteredData;
         }
 
@@ -209,14 +207,14 @@ namespace ViewModels
         {
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
-            ThisView.NewGameTypeSelected -= SelectGameType;
-            // priceInputFieldTextValidationWithAlert.ValidityChanged -= VerifyEnteredData;
+            // ThisView.NewGameTypeSelected -= SelectGameType;
+            priceInputFieldTextValidationWithAlert.ValidityChanged -= VerifyEnteredData;
         }
 
-        private void SelectGameType(string challengeTypeName)
+        /*private void SelectGameType(string challengeTypeName)
         {
             ChallengeType = challengeTypeName;
-        }
+        }*/
 
         protected override void OnBecomingActiveView()
         {
@@ -246,12 +244,17 @@ namespace ViewModels
         {
             try
             {
+                CanCreateOffer = false;
                 await SendCreateOfferRequest();
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
+            }
+            finally
+            {
+                CanCreateOffer = true;
             }
         }
 
@@ -264,49 +267,47 @@ namespace ViewModels
             MobileNative.showDatePicker(now.Year, now.Month, now.Day);
         }
 
-        [Binding]
+        /*[Binding]
         public void ShowUpDataPickerForStartingData()
         {
             var now = DateTime.Now;
             _timeDataPicker.OnDateChanged = SetStatingDate;
             _timeDataPicker.OnPickerClosed = ShowUpDataPickerForStartingTime;
             MobileNative.showDatePicker(now.Year, now.Month, now.Day);
-        }
+        }*/
 
         private void VerifyEnteredData()
         {
             CanCreateOffer =
-                startDateTimeInputFieldTextValidationWithAlert.IsValid && validityDateInputFieldTextValidationWithAlert
-                                                                           .IsValid
-                                                                       && descriptionInputFieldTextValidationWithAlert
-                                                                           .IsValid
-                                                                       && Quantity > 0
-                                                                       && priceInputFieldTextValidationWithAlert
-                                                                           .IsValid;
+                validityDateInputFieldTextValidationWithAlert
+                    .IsValid
+                && descriptionInputFieldTextValidationWithAlert
+                    .IsValid
+                && Quantity > 0
+                && priceInputFieldTextValidationWithAlert
+                    .IsValid;
         }
 
-        private DateTime _startingDate;
+        // private DateTime _startingDate;
         private bool _canCreateOffer;
 
 
-        private void ShowUpDataPickerForStartingTime(DateTime dateTime)
+        /*private void ShowUpDataPickerForStartingTime(DateTime dateTime)
         {
             _startingDate = dateTime;
             _timeDataPicker.OnDateChanged = SetStatingDate;
             _timeDataPicker.OnPickerClosed = SetStatingDate;
             MobileNative.showTimePicker();
-        }
+        }*/
 
-        private void SetStatingDate(DateTime time)
+        /*private void SetStatingDate(DateTime time)
         {
             var startingDateTime = new DateTime(_startingDate.Year, _startingDate.Month, _startingDate.Day, time.Hour,
                 time.Minute, time.Second, time.Millisecond);
 
             StartedAt = startingDateTime.ToUniversalTime();
-            ThisView.StartingTime = startingDateTime;
-            startDateTimeInputFieldTextValidationWithAlert.CheckIsValid(startingDateTime);
             VerifyEnteredData();
-        }
+        }*/
 
         private void SetExpireDate(DateTime time)
         {
@@ -320,7 +321,7 @@ namespace ViewModels
         {
             try
             {
-                await OffersStaticRequestProcessor.TryCreateAnOffer(OperationCancellationController.TasksCancellationTokenSource, 
+                await OffersStaticRequestProcessor.TryCreateAnOffer(OperationCancellationController.TasksCancellationTokenSource,
                     userAuthorisationDataRepository, _offerDataModel);
                 _alertCardController.ShowAlertWithText("Offer was created");
             }
