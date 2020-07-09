@@ -31,6 +31,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.CustomAdapters.GridView;
 using Com.TheFallenGames.OSA.DataHelpers;
+using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
@@ -62,7 +63,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 
         public event Action StartedFetching;
         public event Action EndedFetching;
-        public event Action<int?> NewInterestSelected; 
+        public event Action<uint> NewInterestSelected; 
 
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
@@ -136,12 +137,12 @@ namespace Views.ViewElements.ScrollViews.Adapters
             var viewsHolder = base.CreateViewsHolder(itemIndex);
             foreach (var holder in viewsHolder.ContainingCellViewsHolders)
             {
-                holder.root.GetComponent<UserInterestGridItemView>().ItemSelected += OnNewInterestSelected;
+                holder.root.GetComponent<IIdentifiedSelection>().ItemSelected += OnNewInterestSelected;
             }
             return viewsHolder;
         }
 
-        private void OnNewInterestSelected(int? index)
+        private void OnNewInterestSelected(uint index)
         {
             NewInterestSelected?.Invoke(index);
         }

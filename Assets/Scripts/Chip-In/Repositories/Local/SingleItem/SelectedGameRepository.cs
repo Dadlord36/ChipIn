@@ -14,7 +14,7 @@ namespace Repositories.Local
 {
     [CreateAssetMenu(fileName = nameof(SelectedGameRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SelectedGameRepository), order = 0)]
-    public sealed class SelectedGameRepository : SingleItemLocalRepository, IGameWinnerIdentifier
+    public sealed class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
         [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         public event Action<IReadOnlyList<MatchUserDownloadingData>> UsersDataUpdated;

@@ -9,7 +9,7 @@ namespace Views
     {
         [SerializeField] private UserInterestsLabelsGridAdapter labelsGridAdapter;
 
-        public event Action<int?> NewInterestSelected;
+        public event Action<uint> NewInterestSelected;
         public UserInterestsLabelsView() : base(nameof(UserInterestsLabelsView))
         {
         }
@@ -45,7 +45,7 @@ namespace Views
             labelsGridAdapter.NewInterestSelected -= OnNewInterestSelected;
         }
 
-        private void OnNewInterestSelected(int? interestIndex)
+        private void OnNewInterestSelected(uint interestIndex)
         {
             NewInterestSelected?.Invoke(interestIndex);
         }

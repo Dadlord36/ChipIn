@@ -22,30 +22,27 @@ namespace ViewModels
         }
     }
 
-    [Serializable]
-    public class CommunityBasicDataModelListUnityEvent : ReadOnlyListUnityEvent<InterestBasicDataModel>
-    {
-    }
-
     [Binding]
-    public sealed class UserInterestsLabelsViewModel : CorrespondingViewsSwitchingViewModel<UserInterestsLabelsView>, INotifyPropertyChanged
+    public sealed class UserInterestsLabelsViewModel : CorrespondingViewsSwitchingViewModel<UserInterestsLabelsView>
     {
         [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
-        
+
+
+        public UserInterestsLabelsViewModel() : base(nameof(UserInterestsLabelsViewModel))
+        {
+        }
+
         [Binding]
         public void Button_StartAnInterest_OnClick()
         {
         }
 
-        public void SetNewSelectedInterest(int? interestId)
+        public void SetNewSelectedInterest(uint interestId)
         {
-            selectedUserInterestRepository.SelectedInterestId = interestId;
+            selectedUserInterestRepository.SelectedUserInterestRepositoryIndex = interestId;
             SwitchToPagesView();
         }
-        
-        public UserInterestsLabelsViewModel() : base(nameof(UserInterestsLabelsViewModel))
-        {
-        }
+
 
         private void SwitchToPagesView()
         {
@@ -73,15 +70,6 @@ namespace ViewModels
         private void UnsubscribeFromViewEvents()
         {
             RelatedView.NewInterestSelected -= SetNewSelectedInterest;
-        }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

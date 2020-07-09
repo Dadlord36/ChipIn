@@ -8,6 +8,7 @@ using UnityWeld.Binding;
 
 namespace Validators
 {
+    [Binding]
     public class BaseTextValidationWithAlert : MonoBehaviour, INotifyPropertyChanged
     {
         [SerializeField] private TextValidation validation;

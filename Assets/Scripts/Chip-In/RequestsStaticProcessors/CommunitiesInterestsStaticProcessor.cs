@@ -15,25 +15,25 @@ namespace RequestsStaticProcessors
 {
     public static class CommunitiesInterestsStaticProcessor
     {
-        public static Task<BaseRequestProcessor<object, UserInterestsPagesResponseDataModel, IUserInterestsPagesResponseModel>.HttpResponse>
-            GetCommunityOwnersInterests(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-                PaginatedRequestData paginatedRequestData)
+        public static Task<BaseRequestProcessor<object, MerchantInterestPagesResponseDataModel, IMerchantInterestPagesResponseModel>.HttpResponse>
+            GetMerchantInterestPages(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                int selectedInterestId, PaginatedRequestData paginatedRequestData)
         {
-            return new CommunityOwnersInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+            return new MerchantInterestsPagesPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, selectedInterestId, paginatedRequestData)
                 .SendRequest("Community owners interests list was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, UserInterestsPagesResponseDataModel, IUserInterestsPagesResponseModel>.HttpResponse>
-            GetCommunityClientsInterests(out DisposableCancellationTokenSource cancellationTokenSource,
-                IRequestHeaders requestHeaders, int communityId, PaginatedRequestData paginatedRequestData)
+        public static Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
+            GetClientsInterestPages(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                int communityId, PaginatedRequestData paginatedRequestData)
         {
             return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, paginatedRequestData)
                 .SendRequest("Community clients interests list was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, MerchantInterestPageDataModel, IInterestPageModel>.HttpResponse>
-            CreateAnInterest(out DisposableCancellationTokenSource cancellationTokenSource,
-                IRequestHeaders requestHeaders, ICommunityCreateInterestModel requestBody, int communityId)
+            CreateAnInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                ICommunityCreateInterestModel requestBody, int communityId)
         {
             return new CreateACommunityInterestPostProcessor(out cancellationTokenSource, requestHeaders, requestBody, communityId).SendRequest(
                 "Community interest was created successfully");

@@ -8,13 +8,13 @@ using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public class CommunityClientsInterestsPaginatedGetProcessor : RequestWithoutBodyProcessor<UserInterestsPagesResponseDataModel,
-        IUserInterestsPagesResponseModel>
+    public class CommunityClientsInterestsPaginatedGetProcessor : RequestWithoutBodyProcessor<UserInterestPagesResponseDataModel,
+        IUserInterestPagesResponseModel>
     {
         public CommunityClientsInterestsPaginatedGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
             IRequestHeaders requestHeaders, int communityId, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource,
-            ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[] {communityId.ToString(), ApiCategories.Subcategories.Interests},
-            paginatedRequestData.ConvertPaginationToNameValueCollection())
+            ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[] {communityId.ToString(),
+                ApiCategories.Subcategories.Interests}, paginatedRequestData.ConvertPaginationToNameValueCollection())
         {
         }
     }
