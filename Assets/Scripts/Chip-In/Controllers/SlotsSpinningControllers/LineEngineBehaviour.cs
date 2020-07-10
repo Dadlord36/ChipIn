@@ -71,7 +71,8 @@ namespace Controllers.SlotsSpinningControllers
         private PathMovingObject[] _pathMovingObjects;
         private readonly LineEngine _lineEngine = new LineEngine();
 
-
+        
+        #region Public functions
         public void Initialize()
         {
             Initialize((uint) ChildCount, (uint) (ChildCount * MovementParameters.Laps));
@@ -111,7 +112,45 @@ namespace Controllers.SlotsSpinningControllers
             AlignItems();
         }
 
-        #region Public functions
+        public void AlignItems()
+        {
+            ResetLineEngine();
+            for (int i = 0; i < ChildCount; i++)
+            {
+                var position = _lineEngine.CalculateAnglePositionFromDistance(_lineEngine.ItemLength * i);
+                var childRectTransform = (RectTransform) transform.GetChild(i).transform;
+
+                childRectTransform.pivot = MovementParameters.AnchorPivot.pivot;
+                childRectTransform.anchorMin = MovementParameters.AnchorPivot.anchorMin;
+                childRectTransform.anchorMax = MovementParameters.AnchorPivot.anchorMax;
+                transform.GetChild(i).localPosition = position;
+            }
+        }
+        
+        public void SlideInstantlyToIndexPosition(uint index)
+        {
+            IndexOfItemToFocusOn = index;
+            ResetLineEngine();
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f);
+        }
+
+        public void AdjustMovingObjectsPositionOnPathFromWholePathPart(in float pathPartLength)
+        {
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(_lineEngine.CalculateWholePathPercentageFromWholePathPartLength(pathPartLength));
+        }
+
+        public void AdjustReverseMovingObjectsPositionOnPathFromWholePathPart(in float pathPartLength)
+        {
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(Mathf.Clamp01(
+                1 - _lineEngine.CalculateWholePathPercentageFromWholePathPartLength(pathPartLength)));
+        }
+
+        public void ProgressMovementAlongPath(in float wholePathPercentage)
+        {
+            AdjustMovingObjectsPositionOnPathFromPathPercentage(wholePathPercentage);
+        }
+
+        #endregion
 
         private Transform[] CreateChildren(Transform slotPrefab, uint elementsNumber)
         {
@@ -129,22 +168,7 @@ namespace Controllers.SlotsSpinningControllers
         {
             _lineEngine.RecalculatePathSizes(LapLength, WholePathLength, MovementParameters);
         }
-
-        public void AlignItems()
-        {
-            ResetLineEngine();
-            for (int i = 0; i < ChildCount; i++)
-            {
-                var position = _lineEngine.CalculateAnglePositionFromDistance(_lineEngine.ItemLength * i);
-                var childRectTransform = (RectTransform) transform.GetChild(i).transform;
-
-                childRectTransform.pivot = MovementParameters.AnchorPivot.pivot;
-                childRectTransform.anchorMin = MovementParameters.AnchorPivot.anchorMin;
-                childRectTransform.anchorMax = MovementParameters.AnchorPivot.anchorMax;
-                transform.GetChild(i).localPosition = position;
-            }
-        }
-
+        
         private void AdjustMovingObjectsPositionOnPathFromPathPercentage(float wholePathPercentage)
         {
             float ProgressMovementAlongPath(PathMovingObject movingObject)
@@ -181,37 +205,10 @@ namespace Controllers.SlotsSpinningControllers
 
             CoveredPathPercentage = wholePathPercentage;
         }
-
         private int CalculateItemSiblingIndex(float lapPart)
         {
             return Mathf.FloorToInt(lapPart / _lineEngine.ItemsLapStep);
         }
-
-        public void SlideInstantlyToIndexPosition(uint index)
-        {
-            IndexOfItemToFocusOn = index;
-            ResetLineEngine();
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(1f);
-        }
-
-        public void AdjustMovingObjectsPositionOnPathFromWholePathPart(in float pathPartLength)
-        {
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(_lineEngine.CalculateWholePathPercentageFromWholePathPartLength(pathPartLength));
-        }
-
-        public void AdjustReverseMovingObjectsPositionOnPathFromWholePathPart(in float pathPartLength)
-        {
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(Mathf.Clamp01(
-                1 - _lineEngine.CalculateWholePathPercentageFromWholePathPartLength(pathPartLength)));
-        }
-
-        public void ProgressMovementAlongPath(in float wholePathPercentage)
-        {
-            AdjustMovingObjectsPositionOnPathFromPathPercentage(wholePathPercentage);
-        }
-
-        #endregion
-
         private static PathMovingObject[] CreatePathMovingObjectsForChildren(IReadOnlyList<Transform> items)
         {
             var pathMovingObjects = new PathMovingObject[items.Count];

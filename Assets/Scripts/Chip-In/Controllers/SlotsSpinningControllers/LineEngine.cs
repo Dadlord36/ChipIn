@@ -1,8 +1,10 @@
 ﻿using ScriptableObjects.Parameters;
 using UnityEngine;
+using Utilities;
 
 namespace Controllers.SlotsSpinningControllers
 {
+
     public class LineEngine
     {
         private Vector3 _lapStartPoint, _lapEndPoint;
@@ -81,7 +83,7 @@ namespace Controllers.SlotsSpinningControllers
 
         public Vector2 CalculateAnglePositionFromDistance(float distance)
         {
-            return FindAnglePosition(_lapEndPoint, distance, MovementParameters.MovementAngle);
+            return CircleUtility.FindAnglePosition(_lapEndPoint, distance, MovementParameters.MovementAngle);
         }
 
         public Vector3 CalculateItemAnglePosition(float wholePathPercentage, uint itemNumber)
@@ -141,11 +143,7 @@ namespace Controllers.SlotsSpinningControllers
             return Vector3.Lerp(startPoint, endPoint, percentage);
         }
         
-        private static Vector2 FindAnglePosition(in Vector2 center, in float distance, in float angle)
-        {
-            var rad = angle * Mathf.Deg2Rad;
-            return new Vector2(center.x + Mathf.Cos(rad) * distance, center.y + Mathf.Sin(rad) * distance);
-        }
+
         #endregion
     }
 }
