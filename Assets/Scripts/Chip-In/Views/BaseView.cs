@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityWeld.Binding;
 
 namespace Views
 {
@@ -39,6 +40,7 @@ namespace Views
             _viewModelVisibilityNotifier = visibilityChangedNotifier;
         }
 
+        [Binding]
         public void Show()
         {
             if (gameObject.activeSelf) return;
@@ -47,6 +49,7 @@ namespace Views
             OnBeingShown();
         }
 
+        [Binding]
         public void Hide()
         {
             if (!gameObject.activeSelf) return;
