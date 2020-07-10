@@ -24,7 +24,7 @@ namespace ViewModels
     public sealed class CreateOfferViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged, ICreatedOfferModel
     {
         #region Serialized fields
-        
+
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private OfferCreationRepository offerCreationRepository;
 
@@ -139,28 +139,6 @@ namespace ViewModels
             }
         }
 
-        /*[Binding]
-        public string ChallengeType
-        {
-            get => ChallengingOfferDataModel.ChallengeType;
-            set
-            {
-                ChallengingOfferDataModel.ChallengeType = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Binding]
-        public DateTime StartedAt
-        {
-            get => ChallengingOfferDataModel.StartedAt;
-            set
-            {
-                ChallengingOfferDataModel.StartedAt = value;
-                OnPropertyChanged();
-            }
-        }*/
-
         #endregion
 
 
@@ -193,28 +171,21 @@ namespace ViewModels
         public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
         {
         }
-        
+
 
         protected override void OnEnable()
         {
             base.OnEnable();
             ThisView.NewCategorySelected += SetCategoryName;
-            // ThisView.NewGameTypeSelected += SelectGameType;
-            // priceInputFieldTextValidationWithAlert.ValidityChanged += VerifyEnteredData;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
-            // ThisView.NewGameTypeSelected -= SelectGameType;
             priceInputFieldTextValidationWithAlert.ValidityChanged -= VerifyEnteredData;
         }
 
-        /*private void SelectGameType(string challengeTypeName)
-        {
-            ChallengeType = challengeTypeName;
-        }*/
 
         protected override void OnBecomingActiveView()
         {
@@ -267,15 +238,6 @@ namespace ViewModels
             MobileNative.showDatePicker(now.Year, now.Month, now.Day);
         }
 
-        /*[Binding]
-        public void ShowUpDataPickerForStartingData()
-        {
-            var now = DateTime.Now;
-            _timeDataPicker.OnDateChanged = SetStatingDate;
-            _timeDataPicker.OnPickerClosed = ShowUpDataPickerForStartingTime;
-            MobileNative.showDatePicker(now.Year, now.Month, now.Day);
-        }*/
-
         private void VerifyEnteredData()
         {
             CanCreateOffer =
@@ -288,26 +250,8 @@ namespace ViewModels
                     .IsValid;
         }
 
-        // private DateTime _startingDate;
         private bool _canCreateOffer;
 
-
-        /*private void ShowUpDataPickerForStartingTime(DateTime dateTime)
-        {
-            _startingDate = dateTime;
-            _timeDataPicker.OnDateChanged = SetStatingDate;
-            _timeDataPicker.OnPickerClosed = SetStatingDate;
-            MobileNative.showTimePicker();
-        }*/
-
-        /*private void SetStatingDate(DateTime time)
-        {
-            var startingDateTime = new DateTime(_startingDate.Year, _startingDate.Month, _startingDate.Day, time.Hour,
-                time.Minute, time.Second, time.Millisecond);
-
-            StartedAt = startingDateTime.ToUniversalTime();
-            VerifyEnteredData();
-        }*/
 
         private void SetExpireDate(DateTime time)
         {
