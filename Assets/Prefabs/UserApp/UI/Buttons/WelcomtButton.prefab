@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3404351585221537440}
   - component: {fileID: 7224276130990320138}
   - component: {fileID: 5164494640079646879}
+  - component: {fileID: 7722721379318692118}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -61,13 +62,14 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_text: Guest
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6, type: 2}
-  m_sharedMaterial: {fileID: 7313248847455001485, guid: bc60cdd3f94b48a4f83d9ef64a9b6be6,
+  m_fontAsset: {fileID: 11400000, guid: 243d59ba55ac4a34d85f51cbf3652abc, type: 2}
+  m_sharedMaterial: {fileID: -5219021190251119313, guid: 243d59ba55ac4a34d85f51cbf3652abc,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -95,7 +97,7 @@ MonoBehaviour:
     rgba: 4278190080
   m_fontSize: 14
   m_fontSizeBase: 14
-  m_fontWeight: 400
+  m_fontWeight: 600
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
@@ -141,7 +143,7 @@ MonoBehaviour:
     linkCount: 0
     lineCount: 1
     pageCount: 1
-    materialCount: 1
+    materialCount: 2
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}
@@ -157,6 +159,18 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7722721379318692118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1176766936167807305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfdbd179aed34250a77f02ab7ec649ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4314281648008083324
 GameObject:
   m_ObjectHideFlags: 0
@@ -169,7 +183,6 @@ GameObject:
   - component: {fileID: 5988923903207140320}
   - component: {fileID: 2751762011402769045}
   - component: {fileID: 7421750913216578385}
-  - component: {fileID: 774666526403156682}
   m_Layer: 5
   m_Name: WelcomtButton
   m_TagString: Untagged
@@ -220,6 +233,7 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -276,24 +290,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &774666526403156682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4314281648008083324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29d4a0e4e9a42029a6bf4d2ace8bdd3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_color1: {r: 0.13725491, g: 0.14117648, b: 0.17254902, a: 1}
-  m_color2: {r: 0.078431375, g: 0.08235294, b: 0.11372549, a: 1}
-  m_angle: 0
-  m_ignoreRatio: 1
-  linearGradientParameter: {fileID: 11400000, guid: 414f327aad4a8854eb6864dba91502db,
-    type: 2}
 --- !u!1 &7367615285302021107
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,7 +302,7 @@ GameObject:
   - component: {fileID: 1146588647535687569}
   - component: {fileID: 5079256949532123281}
   m_Layer: 5
-  m_Name: TMP SubMeshUI [Titillium Web regular Atlas Material + LiberationSans SDF
+  m_Name: TMP SubMeshUI [TitilliumWeb-Regular Atlas Material + TitilliumWeb-SemiBold
     Atlas]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,10 +351,11 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a50969baff374524699df1fcb824510a, type: 2}
   m_spriteAsset: {fileID: 0}
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
