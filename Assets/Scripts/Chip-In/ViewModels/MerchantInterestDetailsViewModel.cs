@@ -40,6 +40,8 @@ namespace ViewModels
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController =
             new AsyncOperationCancellationController();
 
+        private string _interestPageDescription;
+
         [Binding]
         public string InterestPageName
         {
@@ -48,6 +50,18 @@ namespace ViewModels
             {
                 if (value == _interestPageName) return;
                 _interestPageName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Binding]
+        public string InterestPageDescription
+        {
+            get => _interestPageDescription;
+            private set
+            {
+                if (value == _interestPageDescription) return;
+                _interestPageDescription = value;
                 OnPropertyChanged();
             }
         }
@@ -72,7 +86,7 @@ namespace ViewModels
             scrollableItemsSelector.NewItemSelected += ScrollableItemsSelectorOnNewItemSelected;
             try
             {
-                await SetViewNameToInterestPageName();
+                await SetInterestPageReflectionData();
             }
             catch (OperationCanceledException)
             {
@@ -91,10 +105,14 @@ namespace ViewModels
             scrollableItemsSelector.NewItemSelected -= ScrollableItemsSelectorOnNewItemSelected;
         }
 
-        private Task SetViewNameToInterestPageName()
+        private Task SetInterestPageReflectionData()
         {
             return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
-                delegate(Task<MerchantInterestPageDataModel> task) { InterestPageName = task.Result.Name; },
+                delegate(Task<MerchantInterestPageDataModel> task)
+                {
+                    InterestPageName = task.Result.Name;
+                    InterestPageDescription = task.Result.Message;
+                },
                 scheduler: downloadedSpritesRepository.MainThreadScheduler,
                 continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
                 cancellationToken: _asyncOperationCancellationController.CancellationToken);
