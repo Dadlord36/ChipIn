@@ -8,14 +8,16 @@ namespace Repositories.Local
     public class OfferCreationRepository : ScriptableObject
     {
         public string OfferSegmentName { get; set; }
-        public EngageCardDataModel SelectedInterestData { get; set; }
-        public OfferFormationData OfferFormationData { get; } = new OfferFormationData();
+        
+        /*public EngageCardDataModel SelectedInterestData { get; set; }*/
+        
+        /*public OfferFormationData OfferFormationData { get; } = new OfferFormationData();
 
 
         public string this[string fieldName]
         {
             get => OfferFormationData[fieldName];
             set => OfferFormationData[fieldName] = value;
-        }
+        }*/
     }
 }

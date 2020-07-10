@@ -7,4 +7,6 @@ namespace DataModels.ResponsesModels
         public bool Success { get; set; }
         public MarketInterestDetailsDataModel LabelDetailsDataModel { get; set; }
     }
+    
+    
 }

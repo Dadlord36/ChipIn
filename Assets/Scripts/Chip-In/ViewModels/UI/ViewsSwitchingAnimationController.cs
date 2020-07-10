@@ -21,7 +21,7 @@ namespace ViewModels.UI
 
         [SerializeField, Space(10)] private ViewSlot previousViewSlot;
         [SerializeField, Space(10)] private ViewSlot nextViewSlot;
-
+        
         private readonly ProgressiveOperationsController _mainProgressiveOperationsController = new ProgressiveOperationsController();
         private readonly ProgressiveOperationsController _secondaryProgressiveOperationsController = new ProgressiveOperationsController();
 
@@ -34,13 +34,20 @@ namespace ViewModels.UI
         private void StartAnimation(ViewsSwitchingParameters viewsSwitchingParameters)
         {
             ClearProgressiveOperationsController();
+            ResetViewSlotsAnimationParameters();
             _progressiveOperationsCompletionTracker.ResetCounter();
-            
+
             if (viewsSwitchingParameters.PreviousViewAppearanceParameters != null)
                 SetupPreviousViewSlotAnimation(viewsSwitchingParameters.PreviousViewAppearanceParameters);
-            
+
             SetupNextViewAnimation(viewsSwitchingParameters.NextViewAppearanceParameters);
             StartUpdating();
+        }
+
+        private void ResetViewSlotsAnimationParameters()
+        {
+            previousViewSlot.CanvasGroup.alpha = 1;
+            nextViewSlot.CanvasGroup.alpha = 1;
         }
 
         private void SetupViewSlotAnimation(ViewSlot viewSlot, ProgressiveOperationsController progressiveOperationsController,
@@ -122,7 +129,6 @@ namespace ViewModels.UI
             base.Awake();
             StopUpdating();
             SetMovementDistanceAndDestinations();
-
             viewsSwitchingAnimationBinding.ViewsSwitchingAnimationRequested += StartAnimation;
             _progressiveOperationsCompletionTracker.WhenAllIsDone += ProgressiveOperationsCompletionTrackerOnWhenAllIsDone;
         }
@@ -140,9 +146,13 @@ namespace ViewModels.UI
 
         private void SetMovementDistanceAndDestinations()
         {
-            var rectTransform = transform;
-            _centerDestinationPoint = ((RectTransform) rectTransform).anchoredPosition;
-            _movementDistance = ((RectTransform) rectTransform).rect.width;
+            _centerDestinationPoint = Vector2.zero;
+            _movementDistance = CalculateScreenWidth();
+        }
+
+        private static float CalculateScreenWidth()
+        {
+            return ScreenUtility.GetScreenSize().x;
         }
 
         private void StartUpdating()

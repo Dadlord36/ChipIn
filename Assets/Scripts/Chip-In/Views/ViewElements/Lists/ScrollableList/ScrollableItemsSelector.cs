@@ -26,6 +26,7 @@ namespace Views.ViewElements.Lists.ScrollableList
                 if (ReferenceEquals(_selectedItem, value)) return;
                 _selectedItem = value;
                 LogUtility.PrintLog(Tag,$"Selected item name: {_selectedItem.GetComponent<ITitled>().Title}");
+                _selectedItem.SetAsLastSibling();
                 OnNewItemSelected(value);
             }
         }

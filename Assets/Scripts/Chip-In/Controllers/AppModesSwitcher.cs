@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Controllers
 {
@@ -45,19 +46,27 @@ namespace Controllers
         private void SwitchToGuestMode()
         {
             ClearContainer();
-            Instantiate(guestBottomBarPrefab, bottomBarContainer);
+            PlaceBarInstance(guestBottomBarPrefab);
         }
 
         private void SwitchToUserMode()
         {
             ClearContainer();
-            Instantiate(userAppBottomBarPrefab, bottomBarContainer);
+            PlaceBarInstance(userAppBottomBarPrefab);
         }
 
         private void SwitchToMerchantMode()
         {
             ClearContainer();
-            Instantiate(merchantAppBottomBarPrefab, bottomBarContainer);
+            PlaceBarInstance(merchantAppBottomBarPrefab);
+        }
+
+        private void PlaceBarInstance(Object barPrefab)
+        {
+            var instance =  Instantiate(barPrefab, bottomBarContainer);
+            var rectTransform = (instance as GameObject)?.GetComponent<RectTransform>();
+            RectTransformUtility.Stretch(rectTransform);
+            RectTransformUtility.ResetSize(rectTransform);
         }
 
         private void ClearContainer()

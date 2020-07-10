@@ -24,7 +24,7 @@ namespace Repositories.Remote.Paginated
                 .HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-            return CommunitiesStaticRequestsProcessor.GetPaginatedCommunitiesList(out cancellationTokenSource, authorisationDataRepository,
+            return CommunitiesStaticRequestsProcessor.GetUserCommunitiesPaginatedList(out cancellationTokenSource, authorisationDataRepository,
                 paginatedRequestData);
         }
 

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2506030820273199971
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2506030820273199970}
+  - component: {fileID: 2506030820273199969}
+  m_Layer: 5
+  m_Name: AppModesSwitch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2506030820273199970
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506030820273199971}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2506030820273199969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2506030820273199971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926c7ac20cc449c899c759197bb4fbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sessionController: {fileID: 11400000, guid: d755fcd763af13048895403ee85b8653, type: 2}
+  bottomBarContainer: {fileID: 0}
+  userAppBottomBarPrefab: {fileID: 8583675342056072950, guid: 6569e9f23f022854e9770bd50cae515c,
+    type: 3}
+  merchantAppBottomBarPrefab: {fileID: 8583675342056072950, guid: d84ec997ccac9ad439032d486f574fda,
+    type: 3}
+  guestBottomBarPrefab: {fileID: 3467538321111325983, guid: 0a9a345e2966e844e9d47f751abdf591,
+    type: 3}

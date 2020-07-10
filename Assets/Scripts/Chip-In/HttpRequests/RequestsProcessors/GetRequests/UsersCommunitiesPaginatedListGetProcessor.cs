@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Threading;
 using Common;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
@@ -9,11 +8,10 @@ using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public sealed class CommunitiesPaginatedListGetProcessor : BaseRequestProcessor<object,
-        CommunitiesBasicDataRequestResponse,
-        ICommunitiesBasicDataRequestResponse>
+    public sealed class UsersCommunitiesPaginatedListGetProcessor : BaseRequestProcessor<object,
+        CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
     {
-        public CommunitiesPaginatedListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+        public UsersCommunitiesPaginatedListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
             ApiCategories.Communities, HttpMethod.Get, requestHeaders, null, null,
             paginatedRequestData.ConvertPaginationToNameValueCollection()))

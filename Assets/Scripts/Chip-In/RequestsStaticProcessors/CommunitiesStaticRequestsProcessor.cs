@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using Common;
-using DataModels;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
+using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
-using Repositories.Interfaces;
 
 namespace RequestsStaticProcessors
 {
@@ -16,16 +15,24 @@ namespace RequestsStaticProcessors
         public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             GetCommunitiesList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
-            var processor = new CommunitiesListGetProcessor(out cancellationTokenSource, requestHeaders);
-            return processor.SendRequest("Communities data was retrieved successfully");
+            return new CommunitiesListGetProcessor(out cancellationTokenSource, requestHeaders)
+                .SendRequest("Communities data was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
-            GetPaginatedCommunitiesList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            GetUserCommunitiesPaginatedList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
                 PaginatedRequestData paginatedRequestData)
         {
-            return new CommunitiesPaginatedListGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
-                .SendRequest("Communities paginated data was retrieved successfully");
+            return new UsersCommunitiesPaginatedListGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+                .SendRequest("User Communities paginated data was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, MerchantInterestsResponseDataModel, IMerchantInterestsResponseModel>.HttpResponse>
+            GetOwnersCommunityPaginatedList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new OwnerCommunitiesPaginatedListGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+                .SendRequest("Owner Communities interests paginated data was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<object, InterestDetailsResponseDataModel, IInterestDetailsResponseModel>.HttpResponse>

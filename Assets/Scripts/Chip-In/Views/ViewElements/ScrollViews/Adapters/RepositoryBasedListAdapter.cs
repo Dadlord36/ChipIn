@@ -11,20 +11,33 @@ using Repositories.Remote;
 using UnityEngine;
 using Utilities;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
+using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
-    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder> : OSA<RepositoryPagesAdapterParameters,
-        TViewPageViewHolder>
+    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter> :
+        OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>
         where TDataType : class
+        where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
-        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TDataType>, new()
+        where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
+        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
+        private readonly string Tag;
+
         [SerializeField] private TRepository pagesPaginatedRepository;
+
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+        private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
 
         public event Action StartedFetching;
         public event Action EndedFetching;
+
+        public RepositoryBasedListAdapter()
+        {
+            Tag = GetType().Name;
+        }
+
 
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
@@ -55,7 +68,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 Data = new SimpleDataHelper<TDataType>(this);
             }
-
+            
             return pagesPaginatedRepository.LoadDataFromServer();
         }
 
@@ -151,7 +164,12 @@ namespace Views.ViewElements.ScrollViews.Adapters
             // to retrieve the model from your data set
             try
             {
-                await newOrRecycled.FillView(Data[newOrRecycled.ItemIndex], (uint) newOrRecycled.ItemIndex);
+                var index = (uint) newOrRecycled.ItemIndex;
+                await newOrRecycled.FillView(_fillingViewAdapter.Convert(Data[(int) index],index), index);
+            }
+            catch (OperationCanceledException e)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

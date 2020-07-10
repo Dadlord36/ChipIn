@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GlobalVariables;
+using Repositories.Local.SingleItem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,9 @@ namespace Views
     public sealed class CreateOfferView : BaseView
     {
         [SerializeField] private Image avatarIconImage;
-
         [SerializeField] private TMP_Text validityPeriodTextField;
-        [SerializeField] private TMP_Text startingTimerField;
-
-        [SerializeField] private TMP_Dropdown categoriesDropdown;
-        [SerializeField] private TMP_Dropdown challengeTypeDropdown;
-        [SerializeField] private TMP_Dropdown offerTypeDropdown;
-
+        
+        
         public event Action<string> NewCategorySelected;
         public event Action<string> NewGameTypeSelected;
         public event Action<string> NewOfferTypeSelected;
@@ -32,31 +28,13 @@ namespace Views
         {
             base.OnEnable();
             ResetDropdowns();
-            categoriesDropdown.onValueChanged.AddListener(OnNewCategoryItemSelected);
-            challengeTypeDropdown.onValueChanged.AddListener(OnNewGameTypeSelected);
-            offerTypeDropdown.onValueChanged.AddListener(OnNewOfferTypeSelected);
         }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            categoriesDropdown.onValueChanged.RemoveListener(OnNewCategoryItemSelected);
-            challengeTypeDropdown.onValueChanged.RemoveListener(OnNewGameTypeSelected);
-            offerTypeDropdown.onValueChanged.RemoveListener(OnNewOfferTypeSelected);
-        }
+        
 
         private void ResetDropdowns()
         {
-            categoriesDropdown.ClearOptions();
-            categoriesDropdown.AddOptions(new List<string>(MainNames.OfferSegments.OffersSegmentsArray));
             OnNewCategoryItemSelected(0);
-
-            challengeTypeDropdown.ClearOptions();
-            challengeTypeDropdown.AddOptions(new List<string>(MainNames.ChallengeTypes.ChallengeTypesArray));
             OnNewGameTypeSelected(0);
-
-            offerTypeDropdown.ClearOptions();
-            offerTypeDropdown.AddOptions(new List<string>(MainNames.OfferCategories.OfferCategoriesArray));
             OnNewOfferTypeSelected(0);
         }
 
@@ -78,11 +56,6 @@ namespace Views
         public DateTime ValidityPeriod
         {
             set => validityPeriodTextField.text = value.ToShortDateString();
-        }
-
-        public DateTime StartingTime
-        {
-            set => startingTimerField.text = $"{value.ToLongDateString()} : {value.ToShortTimeString()}";
         }
 
         public Sprite AvatarIconSprite
