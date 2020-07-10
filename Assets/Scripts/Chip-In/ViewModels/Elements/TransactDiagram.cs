@@ -7,7 +7,7 @@ namespace ViewModels.Elements
 {
     public class TransactDiagram : UIBehaviour
     {
-        [SerializeField] private RadarView radarView;
+        [SerializeField] private Radar radar;
         [SerializeField] private DiagramView diagramView;
 
         protected override void Start()
@@ -17,10 +17,10 @@ namespace ViewModels.Elements
         }
 
 #if UNITY_EDITOR
-        public void DrawAxis()
+        /*public void DrawAxis()
         {
-            radarView.SetAxis();
-        }
+            radar.SetAxis();
+        }*/
 
         public void InsertMinimalValues()
         {
@@ -52,7 +52,7 @@ namespace ViewModels.Elements
 
         private void SetDiagramValues(Vector2[] valuesArray)
         {
-            radarView.SetDataToVisualize(valuesArray[0], valuesArray[1], valuesArray[2]);
+            radar.SetDataToVisualize(valuesArray[0], valuesArray[1], valuesArray[2]);
             diagramView.SetValues(valuesArray[0], valuesArray[1], valuesArray[2]);
         }
 

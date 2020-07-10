@@ -29,7 +29,6 @@ namespace ViewModels
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            CreatePreviewObject();
             TryAuthorizeWebCameraAndStartQrReader();
         }
 
@@ -61,6 +60,7 @@ namespace ViewModels
 
         private void ActivateQrScanning()
         {
+            CreatePreviewObject();
             Initialize();
             CodeReader.OnCodeFinished += CodeReaderOnCodeFinished;
             qrCodeReader.StartWork();

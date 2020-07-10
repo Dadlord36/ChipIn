@@ -5,55 +5,55 @@ using Views.ViewElements;
 
 namespace Inspectors
 {
-    [CustomEditor(typeof(RadarView))]
+    [CustomEditor(typeof(Radar))]
     public class RadarViewEditor : Editor
     {
-        private RadarView _analyticView;
+        private Radar _analytic;
 
         private void OnEnable()
         {
-            _analyticView = (RadarView) target;
+            _analytic = (Radar) target;
         }
 
         public override void OnInspectorGUI()
         {
             EditorGUI.BeginChangeCheck();
 
-            _analyticView.circlesThickness =
-                (uint) EditorGUILayout.IntField("Circle thickness", (int) _analyticView.circlesThickness);
-            _analyticView.arcSteps =
-                (uint) EditorGUILayout.IntField("Arc steps", (int) _analyticView.arcSteps);
-            _analyticView.circlesColor = EditorGUILayout.ColorField("Circles color", _analyticView.circlesColor);
-            _analyticView.scaleFactor = EditorGUILayout.Slider("Scale factor", _analyticView.scaleFactor, 0f, 1f);
-            _analyticView.circlesBaseSize = EditorGUILayout.IntField("Circles size", _analyticView.circlesBaseSize);
+            _analytic.circlesThickness =
+                (uint) EditorGUILayout.IntField("Circle thickness", (int) _analytic.circlesThickness);
+            _analytic.arcSteps =
+                (uint) EditorGUILayout.IntField("Arc steps", (int) _analytic.arcSteps);
+            _analytic.circlesColor = EditorGUILayout.ColorField("Circles color", _analytic.circlesColor);
+            _analytic.scaleFactor = EditorGUILayout.Slider("Scale factor", _analytic.scaleFactor, 0f, 1f);
+            _analytic.circlesBaseSize = EditorGUILayout.IntField("Circles size", _analytic.circlesBaseSize);
 
             void UpdateCircles()
             {
-                _analyticView.SetCirclesStyle(false, _analyticView.circlesBaseSize,_analyticView.arcSteps, _analyticView.circlesThickness,
-                    _analyticView.circlesColor);
-                _analyticView.ScaleCircles(_analyticView.scaleFactor);
+                _analytic.SetCirclesStyle(false, _analytic.circlesBaseSize,_analytic.arcSteps, _analytic.circlesThickness,
+                    _analytic.circlesColor);
+                _analytic.ScaleCircles(_analytic.scaleFactor);
             }
 
             if (EditorGUI.EndChangeCheck())
             {
                 UpdateCircles();
-                EditorUtility.SetDirty(_analyticView);
+                EditorUtility.SetDirty(_analytic);
             }
 
             if (GUILayout.Button("Add circle"))
             {
-                _analyticView.AddCircle();
+                _analytic.AddCircle();
                 UpdateCircles();
             }
 
             if (GUILayout.Button("Delete circle"))
             {
-                _analyticView.RemoveLastCircle();
+                _analytic.RemoveLastCircle();
             }
 
             if (GUILayout.Button("Remove all circles"))
             {
-                _analyticView.ClearCirclesArray();
+                _analytic.ClearCirclesArray();
             }
 
             base.OnInspectorGUI();
