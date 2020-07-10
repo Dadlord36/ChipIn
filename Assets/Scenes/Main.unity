@@ -254,11 +254,11 @@ RectTransform:
   m_Father: {fileID: 239698752}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -771}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 21}
+  m_SizeDelta: {x: -44, y: 60}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!223 &164528621
 Canvas:
   m_ObjectHideFlags: 0
@@ -280,57 +280,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 50
   m_TargetDisplay: 0
---- !u!1 &186968700
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 186968701}
-  - component: {fileID: 186968702}
-  m_Layer: 5
-  m_Name: AppModesSwitch
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &186968701
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 186968700}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &186968702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 186968700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 926c7ac20cc449c899c759197bb4fbda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sessionController: {fileID: 11400000, guid: d755fcd763af13048895403ee85b8653, type: 2}
-  bottomBarContainer: {fileID: 164528620}
-  userAppBottomBarPrefab: {fileID: 8583675342056072950, guid: 6569e9f23f022854e9770bd50cae515c,
-    type: 3}
-  merchantAppBottomBarPrefab: {fileID: 8583675342056072950, guid: d84ec997ccac9ad439032d486f574fda,
-    type: 3}
-  guestBottomBarPrefab: {fileID: 8583675342056072950, guid: 6537ed3de6e80a84581e983c1d9a10e0,
-    type: 3}
 --- !u!1 &239698748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,3 +1477,77 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2360339433194200445}
   m_CullTransparentMesh: 0
+--- !u!1001 &2506030820392988959
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2506030820273199969, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: bottomBarContainer
+      value: 
+      objectReference: {fileID: 164528620}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199970, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506030820273199971, guid: d7925f41b1b212d4a8aa997292fbc76d,
+        type: 3}
+      propertyPath: m_Name
+      value: AppModesSwitch
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d7925f41b1b212d4a8aa997292fbc76d, type: 3}
