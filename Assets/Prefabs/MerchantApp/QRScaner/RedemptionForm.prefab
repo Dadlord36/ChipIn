@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 3919426283974333741}
   - component: {fileID: 5505790970755573040}
   - component: {fileID: 7970757757530277013}
+  - component: {fileID: 7369402737733229366}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -251,6 +252,20 @@ MonoBehaviour:
     _usePolygonMap: 0
   wasConverted: 0
   preConvertedScale: {x: 0, y: 0, z: 0}
+--- !u!114 &7369402737733229366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2885497927178244118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.QrCodeScannerViewModel.ScanButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &1739706202481207529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +315,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 1
+  m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
@@ -532,7 +547,7 @@ PrefabInstance:
     - target: {fileID: 333242629968544600, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
       propertyPath: m_OverrideSorting
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 333242629968544600, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
@@ -562,7 +577,7 @@ PrefabInstance:
     - target: {fileID: 5558391163908282113, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
       propertyPath: m_OverrideSorting
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5558391163908282113, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
