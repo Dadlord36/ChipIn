@@ -25,13 +25,13 @@ namespace ViewModels
                 ? View.ViewName
                 : viewsPairInfo.ViewToSwitchFromName, viewsPairInfo.ViewToSwitchToName);
         }
-        
+
         protected void SwitchToView(ViewsPairInfo viewsPairInfo)
         {
             InvokeViewsSwitching(viewsPairInfo);
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultSwitchingParameters);
         }
-        
+
         protected void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters)
         {
             InvokeViewsSwitching(viewsPairInfo);

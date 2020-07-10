@@ -54,6 +54,8 @@ namespace ViewModels
             SwitchToWelcomeView();
         }
 
+        [Binding] public bool IsMerchant { get; set; }
+        
         [Binding]
         public string UserEmail
         {

@@ -39,7 +39,7 @@ namespace Repositories.Local
 
         private readonly List<DownloadHandleSprite> _spritesDownloadHandles = new List<DownloadHandleSprite>();
 
-        private TaskScheduler MainThreadScheduler { get; set; }
+        public TaskScheduler MainThreadScheduler { get; private set; }
 
         private void OnEnable()
         {
