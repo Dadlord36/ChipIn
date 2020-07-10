@@ -19,26 +19,7 @@ namespace ViewModels
         public MarketViewModel() : base(nameof(MarketViewModel))
         {
         }
-
-        protected override async void OnBecomingActiveView()
-        {
-            base.OnBecomingActiveView();
-            try
-            {
-                await TryUpdateRadarViewData();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-        }
-
+        
         /*private void DebugPoints()
         {
             if (positions == null || positions.Length == 0) return;
@@ -60,28 +41,6 @@ namespace ViewModels
             DebugPoints();
         }*/
 
-        private async Task TryUpdateRadarViewData()
-        {
-            try
-            {
-                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(out OperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository);
-                if (!response.Success) return;
 
-                var responseModel = response.ResponseModelInterface;
-                if (responseModel.Data.Points == null)
-                {
-                    LogUtility.PrintLog(Tag, "There are no points were returned");
-                    return;
-                }
-
-                ThisView.SetRadarData(responseModel.Data);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
     }
 }

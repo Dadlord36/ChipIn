@@ -6,7 +6,7 @@ namespace Views
 {
     public sealed class MarketView : BaseView
     {
-        [SerializeField] private RadarView radarView;
+        [SerializeField] private SplineDiagram splineDiagram;
 
         public MarketView() : base(nameof(MarketView))
         {
@@ -14,7 +14,7 @@ namespace Views
 
         public void SetRadarData(RadarData radarData)
         {
-            radarView.SetDataToVisualize(radarData);
+            // splineDiagram.VisualizePoints(radarData.Points, radarData.Max);
         }
     }
 }
