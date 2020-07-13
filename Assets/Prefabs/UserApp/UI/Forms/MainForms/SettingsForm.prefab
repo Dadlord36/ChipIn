@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2798121210166974240}
   - component: {fileID: 5410218853765376292}
+  - component: {fileID: 8333535563040806722}
   - component: {fileID: 466230363169403379}
   m_Layer: 0
   m_Name: SwitchingFromViewContainer
@@ -58,6 +59,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &8333535563040806722
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357392557536131879}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &466230363169403379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,7 +257,7 @@ MonoBehaviour:
   view: {fileID: 4303201889344921751}
   viewsSwitchingController: {fileID: 11400000, guid: 3d3d90c6cff5899438d2c36b60361266,
     type: 2}
-  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: deeae7319ebeeee47a413f7408108106,
     type: 2}
   viewsPlacer: {fileID: 1030333898212797912}
   sessionController: {fileID: 11400000, guid: d755fcd763af13048895403ee85b8653, type: 2}
@@ -354,6 +367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 761821466230358217}
   - component: {fileID: 1447807206430120984}
+  - component: {fileID: 5005165496007743069}
   - component: {fileID: 1030333898212797912}
   m_Layer: 5
   m_Name: CardsHolder
@@ -391,6 +405,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4587682474847849468}
   m_CullTransparentMesh: 0
+--- !u!114 &5005165496007743069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4587682474847849468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718d6c786c694375a62136c23b3ae9d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: deeae7319ebeeee47a413f7408108106,
+    type: 2}
+  speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  transitionTime: 1
+  fadingTime: 200
+  previousViewSlot: {fileID: 466230363169403379}
+  nextViewSlot: {fileID: 630876782120891720}
 --- !u!114 &1030333898212797912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5853386699970437837}
   - component: {fileID: 2829992580315464089}
+  - component: {fileID: 2154822018721131834}
   - component: {fileID: 630876782120891720}
   m_Layer: 0
   m_Name: SwitchingToViewContainer
@@ -468,6 +549,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 1
   m_TargetDisplay: 0
+--- !u!225 &2154822018721131834
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6946233917923276947}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &630876782120891720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1001,6 +1094,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_firstOverflowCharacterIndex
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1430439707192560178, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -2284,15 +2382,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &8804407023754933438 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 3863514999743777286}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7577433387335682968 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 3863514999743777286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &8804407023754933438 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 3863514999743777286}
   m_PrefabAsset: {fileID: 0}
@@ -2743,15 +2841,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 277c8944090719c4b835c5eb1aaa82ed, type: 3}
---- !u!1 &326910814124852367 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9216735969577541202, guid: 277c8944090719c4b835c5eb1aaa82ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 8890395039630973661}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1142819801105944494 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 8890395039630973661}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &326910814124852367 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9216735969577541202, guid: 277c8944090719c4b835c5eb1aaa82ed,
     type: 3}
   m_PrefabInstance: {fileID: 8890395039630973661}
   m_PrefabAsset: {fileID: 0}
