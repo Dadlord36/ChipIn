@@ -1477,7 +1477,8 @@ MonoBehaviour:
   view: {fileID: 5080488836059154952}
   viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
     type: 2}
-  viewsSwitchingAnimationBinding: {fileID: 0}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+    type: 2}
   sessionController: {fileID: 11400000, guid: d755fcd763af13048895403ee85b8653, type: 2}
 --- !u!114 &5080488836059154952
 MonoBehaviour:
@@ -1491,7 +1492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aace82bd6b66428b823531d8f1906855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tokenBalanceTextField: {fileID: 0}
+  tokenBalanceTextField: {fileID: 847145758}
   adSpendField: {fileID: 1279818455989320966}
   salesFromThisAppTextField: {fileID: 8390551069793977410}
   salesCommissionsTextField: {fileID: 0}
@@ -3771,6 +3772,11 @@ PrefabInstance:
       propertyPath: m_textAlignment
       value: 514
       objectReference: {fileID: 0}
+    - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1909966624631251181, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -3938,12 +3944,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &7519286764543159215 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 2876569392976942359}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4347143609871369844 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
@@ -3953,6 +3953,12 @@ RectTransform:
 --- !u!1 &8889583910484038793 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 2876569392976942359}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7519286764543159215 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5742793102763163320, guid: 536657986c77fee48ab69e6895bcce73,
     type: 3}
   m_PrefabInstance: {fileID: 2876569392976942359}
   m_PrefabAsset: {fileID: 0}
