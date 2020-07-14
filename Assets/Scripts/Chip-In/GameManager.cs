@@ -18,9 +18,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataRestorationController restorationController;
     [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
     [SerializeField] private ViewsLogoController viewsLogoController;
+    [SerializeField] private Camera mainCamera;
 
+    public static Camera MainCamera { get; private set; }
+    
     private async void Start()
     {
+        MainCamera = mainCamera;
         try
         {
             await Initialize();

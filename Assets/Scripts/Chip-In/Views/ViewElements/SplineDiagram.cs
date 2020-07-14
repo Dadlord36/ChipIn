@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PathCreation;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 using BezierPath = PathCreation.BezierPath;
+using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Views.ViewElements
 {
@@ -21,9 +21,13 @@ namespace Views.ViewElements
             pointsVisualizerLineRenderer.transform.position = pathCreator.transform.position = Vector3.zero;
         }
 
+        private static Vector2[] ConvertToScreenSpace(Vector2[] vectorsArray)
+        {
+            return RectTransformUtility.ConvertFromWorldToScreenSpace(GameManager.MainCamera, vectorsArray);
+        }
+
         private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
         {
-            ResetPathCreatorAndLineRendererPositions();
             var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
             {
                 ControlPointMode = BezierPath.ControlMode.Automatic
@@ -36,11 +40,13 @@ namespace Views.ViewElements
 
         public void VisualizePoints(float[,] points, float radarDataMax)
         {
-            SetupPointsVisualization(Radar.CalculatePositionsForGivenRadarPoints(points, radarDataMax));
             pointsVisualizerLineRenderer.enabled = true;
+            var positionsInWorldSpace = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarDataMax);
+
+            SetupPointsVisualization(positionsInWorldSpace);
         }
 
-        private void SetupPointsVisualization(IEnumerable<Vector2> vectorsArray)
+        private void SetupPointsVisualization(Vector2[] vectorsArray)
         {
             SetupPathCreator(vectorsArray);
             pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);

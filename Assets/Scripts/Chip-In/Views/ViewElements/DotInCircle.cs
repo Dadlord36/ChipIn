@@ -13,26 +13,27 @@ namespace Views.ViewElements
         private float GetRadius(UICircle circle)
         {
             var rectTransform = circle.rectTransform;
-            return rectTransform.sizeDelta.x / 2 * rectTransform.localScale.x * percentageOfRadius;
+            var worldCorners = new Vector3[4];
+            rectTransform.GetWorldCorners(worldCorners);
+            var rectWidth = Vector3.Distance(worldCorners[0], worldCorners[1]) ;
+            return rectWidth / 2 *  percentageOfRadius;
         }
 
         private float Rad => Mathf.Deg2Rad * angle;
 
         public Vector2 DotPosition { get; private set; }
 
-        public Vector2 CalculatePosition(UICircle circle)
+        public Vector2 CalculatePointOffsetInWorldSpace(UICircle circle)
         {
-            DotPosition = circle.rectTransform.position;
-            DotPosition += CalculateVector2DotPosition(GetRadius(circle));
-
+            DotPosition = CalculateVector2DotPosition(GetRadius(circle));
             return DotPosition;
         }
 
-        public Vector2 CalculatePosition(UICircle circle, float relativeAngle, float percentageOfRadius)
+        public Vector2 CalculatePointOffsetInWorldSpace(UICircle circle, float relativeAngle, float inPercentageOfRadius)
         {
             angle = relativeAngle;
-            this.percentageOfRadius = percentageOfRadius;
-            return CalculatePosition(circle);
+            percentageOfRadius = inPercentageOfRadius;
+            return CalculatePointOffsetInWorldSpace(circle);
         }
 
         private Vector3 CalculateVector3DotPosition(float radius)

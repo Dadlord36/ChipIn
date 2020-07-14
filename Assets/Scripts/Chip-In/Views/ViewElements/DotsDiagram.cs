@@ -64,7 +64,7 @@ namespace Views.ViewElements
 
             for (int i = 0; i < diagramAxisAngles.Length; i++)
             {
-                var endPoint = new DotInCircle().CalculatePosition(LargestCircle,
+                var endPoint = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle,
                     diagramAxisAngles[i], 1f);
                 endPoints[i] = transform.InverseTransformPoint(endPoint);
             }
@@ -81,7 +81,7 @@ namespace Views.ViewElements
             var pointsCount = points.GetLength(0);
             _dotsViews = new List<GameObject>(pointsCount);
 
-            var positions = Radar.CalculatePositionsForGivenRadarPoints(points, radarData.Max);
+            var positions = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarData.Max);
 
             for (int i = 0; i < positions.Length; i++)
             {
