@@ -14,7 +14,7 @@ namespace Views
 
         public void SetRadarData(RadarData radarData)
         {
-            // splineDiagram.VisualizePoints(radarData.Points, radarData.Max);
+            splineDiagram.VisualizePoints(radarData.Points, radarData.Max);
         }
     }
 }

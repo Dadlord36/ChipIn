@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -12,15 +13,15 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        /*[SerializeField] private Vector2[] positions;
-        [SerializeField] private float max = 10f;*/
+        [SerializeField] private Vector2[] positions;
+        [SerializeField] private float max = 10f;
         private MarketView ThisView => View as MarketView;
 
         public MarketViewModel() : base(nameof(MarketViewModel))
         {
         }
         
-        /*private void DebugPoints()
+        private void DebugPoints()
         {
             if (positions == null || positions.Length == 0) return;
 
@@ -34,13 +35,11 @@ namespace ViewModels
             }
 
             ThisView.SetRadarData(new RadarData {Max = max, Points = array});
-        }*/
+        }
 
-        /*private void Update()
+        private void Update()
         {
             DebugPoints();
-        }*/
-
-
+        }
     }
 }

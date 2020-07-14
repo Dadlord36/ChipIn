@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PathCreation;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -15,8 +16,14 @@ namespace Views.ViewElements
 
         private IRadar Radar => radar;
 
+        private void ResetPathCreatorAndLineRendererPositions()
+        {
+            pointsVisualizerLineRenderer.transform.position = pathCreator.transform.position = Vector3.zero;
+        }
+
         private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
         {
+            ResetPathCreatorAndLineRendererPositions();
             var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
             {
                 ControlPointMode = BezierPath.ControlMode.Automatic
@@ -26,10 +33,11 @@ namespace Views.ViewElements
             pathCreator.bezierPath = bezierPath;
             pathCreator.TriggerPathUpdate();
         }
-        
+
         public void VisualizePoints(float[,] points, float radarDataMax)
         {
             SetupPointsVisualization(Radar.CalculatePositionsForGivenRadarPoints(points, radarDataMax));
+            pointsVisualizerLineRenderer.enabled = true;
         }
 
         private void SetupPointsVisualization(IEnumerable<Vector2> vectorsArray)
@@ -37,7 +45,7 @@ namespace Views.ViewElements
             SetupPathCreator(vectorsArray);
             pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
         }
-       
+
         private Vector2[] GetPathPointsSample(int stepsCount)
         {
             var resultList = new List<Vector2>(pathCreator.path.NumPoints);
@@ -58,7 +66,5 @@ namespace Views.ViewElements
         {
             return pathCreator.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
         }
-
-
     }
 }
