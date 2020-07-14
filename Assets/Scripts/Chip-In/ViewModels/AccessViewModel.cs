@@ -2,6 +2,7 @@
 using Repositories.Remote;
 using UnityEngine;
 using UnityWeld.Binding;
+using Views;
 
 namespace ViewModels
 {
@@ -81,9 +82,20 @@ namespace ViewModels
             get => MerchantProfileSettingsModelImplementation.BranchCode3;
             set => MerchantProfileSettingsModelImplementation.BranchCode3 = value;
         }
-        
+
         public AccessViewModel() : base(nameof(AccessViewModel))
         {
+        }
+
+        [Binding]
+        public void ChangePasswordButton_OnClick()
+        {
+        }
+
+        [Binding]
+        public void EditButton_OnClick()
+        {
+            SwitchToView(nameof(EditAdminView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged

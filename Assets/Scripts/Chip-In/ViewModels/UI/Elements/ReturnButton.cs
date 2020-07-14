@@ -50,8 +50,8 @@ namespace ViewModels.UI.Elements
         {
             LogUtility.PrintLog(Tag, "Button was clicked");
         }
-
-        private void SwitchToPreviousView()
+        
+        public void SwitchToPreviousView()
         {
             viewsSwitchingController.SwitchToPreviousView();
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultParameters);

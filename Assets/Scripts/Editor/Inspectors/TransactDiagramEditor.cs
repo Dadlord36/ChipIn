@@ -21,11 +21,11 @@ namespace Inspectors
                 ((TransactDiagram)target).SetRandomDiagramsValues();
             }
 
-            if (GUILayout.Button("Redraw axis"))
+            /*if (GUILayout.Button("Redraw axis"))
             {
                 _transactDiagram.DrawAxis();
                 EditorUtility.SetDirty(_transactDiagram);
-            }
+            }*/
             if (GUILayout.Button("Insert minimal values"))
             {
                 _transactDiagram.InsertMinimalValues();

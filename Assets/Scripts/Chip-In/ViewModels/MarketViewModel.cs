@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
@@ -12,34 +13,15 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        /*[SerializeField] private Vector2[] positions;
-        [SerializeField] private float max = 10f;*/
+        [SerializeField] private Vector2[] positions;
+        [SerializeField] private float max = 10f;
         private MarketView ThisView => View as MarketView;
 
         public MarketViewModel() : base(nameof(MarketViewModel))
         {
         }
-
-        protected override async void OnBecomingActiveView()
-        {
-            base.OnBecomingActiveView();
-            try
-            {
-                await TryUpdateRadarViewData();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-        }
-
-        /*private void DebugPoints()
+        
+        private void DebugPoints()
         {
             if (positions == null || positions.Length == 0) return;
 
@@ -53,35 +35,11 @@ namespace ViewModels
             }
 
             ThisView.SetRadarData(new RadarData {Max = max, Points = array});
-        }*/
+        }
 
-        /*private void Update()
+        private void Update()
         {
             DebugPoints();
-        }*/
-
-        private async Task TryUpdateRadarViewData()
-        {
-            try
-            {
-                var response = await MerchantMarketRequestsStaticProcessor.GetRadarData(out OperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository);
-                if (!response.Success) return;
-
-                var responseModel = response.ResponseModelInterface;
-                if (responseModel.Data.Points == null)
-                {
-                    LogUtility.PrintLog(Tag, "There are no points were returned");
-                    return;
-                }
-
-                ThisView.SetRadarData(responseModel.Data);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
         }
     }
 }

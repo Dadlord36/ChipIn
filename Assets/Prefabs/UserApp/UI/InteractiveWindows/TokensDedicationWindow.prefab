@@ -392,7 +392,6 @@ GameObject:
   - component: {fileID: 4372095260983021716}
   - component: {fileID: 6945164992403365779}
   - component: {fileID: 3185051242715770200}
-  - component: {fileID: 6825785960017878430}
   m_Layer: 5
   m_Name: CancellButton
   m_TagString: Untagged
@@ -500,20 +499,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &6825785960017878430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477633465556536902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: Views.InteractiveWindows.TokensDedicationView.Hide
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &626909172705983691
 GameObject:
   m_ObjectHideFlags: 0
@@ -1898,7 +1883,6 @@ GameObject:
   - component: {fileID: 1049333032615644666}
   - component: {fileID: 3216220654899760732}
   - component: {fileID: 5168728335593708121}
-  - component: {fileID: 7914977680595094313}
   m_Layer: 5
   m_Name: OkButton
   m_TagString: Untagged
@@ -2021,20 +2005,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
---- !u!114 &7914977680595094313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8979164512199734388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: Views.InteractiveWindows.TokensDedicationView.Hide
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1001 &2248947235064819071
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2164,15 +2134,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cfc5e0b7d3c59b145914eab9e5c1df5b, type: 3}
---- !u!224 &1846965486787666326 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 474110287130135785, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
+--- !u!1 &7468253729552146392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8687809451800113831, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
     type: 3}
   m_PrefabInstance: {fileID: 2248947235064819071}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &7246501006621462231 stripped
+--- !u!224 &1846965486787666326 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8909637242227286952, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
+  m_CorrespondingSourceObject: {fileID: 474110287130135785, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
     type: 3}
   m_PrefabInstance: {fileID: 2248947235064819071}
   m_PrefabAsset: {fileID: 0}
@@ -2182,9 +2152,9 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2248947235064819071}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7468253729552146392 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8687809451800113831, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
+--- !u!224 &7246501006621462231 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8909637242227286952, guid: cfc5e0b7d3c59b145914eab9e5c1df5b,
     type: 3}
   m_PrefabInstance: {fileID: 2248947235064819071}
   m_PrefabAsset: {fileID: 0}

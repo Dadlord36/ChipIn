@@ -5,11 +5,14 @@ using Repositories.Remote;
 using RequestsStaticProcessors;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityWeld.Binding;
 using Utilities;
+using Views;
 using Object = UnityEngine.Object;
 
 namespace ViewModels
 {
+    [Binding]
     public class QrCodeScannerViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -25,11 +28,16 @@ namespace ViewModels
         public QrCodeScannerViewModel() : base(nameof(QrCodeScannerViewModel))
         {
         }
-        
+
+        [Binding]
+        public void ScanButton_OnClick()
+        {
+            SwitchToView(nameof(RedeemedView));
+        }
+
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            CreatePreviewObject();
             TryAuthorizeWebCameraAndStartQrReader();
         }
 
@@ -61,6 +69,7 @@ namespace ViewModels
 
         private void ActivateQrScanning()
         {
+            CreatePreviewObject();
             Initialize();
             CodeReader.OnCodeFinished += CodeReaderOnCodeFinished;
             qrCodeReader.StartWork();
