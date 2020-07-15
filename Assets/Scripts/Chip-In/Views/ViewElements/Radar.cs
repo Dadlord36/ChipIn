@@ -8,7 +8,7 @@ namespace Views.ViewElements
     public interface IRadar
     {
         UICircle LargestCircle { get; }
-        Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint);
+        Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint, float widthScale);
     }
 
     public class Radar : UIBehaviour, IRadar
@@ -43,7 +43,7 @@ namespace Views.ViewElements
         }
 
 
-        public Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint)
+        public Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint, float widthScale)
         {
             var pointsCount = points.GetLength(0);
             var positions = new Vector2[pointsCount];
@@ -56,7 +56,7 @@ namespace Views.ViewElements
                 var percentage = Mathf.InverseLerp(0, maxPoint, distance);
 
                 positions[i] = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle,
-                    CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage);
+                    CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage, widthScale);
             }
 
             return positions;
@@ -177,6 +177,21 @@ namespace Views.ViewElements
                 topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
                 bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB));
             }
+        }
+
+        public static Vector2[] ConvertToLocalSpace(Transform owner, Vector2[] vectorsArray)
+        {
+            var result = new Vector2[vectorsArray.Length];
+            var calculationsTransform = new GameObject().transform;
+            calculationsTransform.SetParent(owner);
+
+            for (int i = 0; i < vectorsArray.Length; i++)
+            {
+                result[i] = calculationsTransform.InverseTransformPoint(vectorsArray[i]);
+            }
+
+            Destroy(calculationsTransform.gameObject);
+            return result;
         }
 
 

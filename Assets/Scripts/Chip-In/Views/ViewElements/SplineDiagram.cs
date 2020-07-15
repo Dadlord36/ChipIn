@@ -3,7 +3,6 @@ using PathCreation;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 using BezierPath = PathCreation.BezierPath;
-using RectTransformUtility = Utilities.RectTransformUtility;
 
 namespace Views.ViewElements
 {
@@ -21,12 +20,20 @@ namespace Views.ViewElements
             pointsVisualizerLineRenderer.transform.position = pathCreator.transform.position = Vector3.zero;
         }
 
-        private static Vector2[] ConvertToScreenSpace(Vector2[] vectorsArray)
+        public void VisualizePoints(float[,] points, float radarDataMax)
         {
-            return RectTransformUtility.ConvertFromWorldToScreenSpace(GameManager.MainCamera, vectorsArray);
+            pointsVisualizerLineRenderer.enabled = true;
+            var worldsPositions = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarDataMax, GameManager.ScreenResolutionScale.y);
+            SetupPointsVisualization(worldsPositions);
         }
 
-        private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
+        private void SetupPointsVisualization(Vector2[] vectorsArray)
+        {
+            SetupPathCreator(vectorsArray);
+            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
+        }
+
+        private void SetupPathCreator(Vector2[] vectorsArray)
         {
             var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
             {
@@ -36,20 +43,6 @@ namespace Views.ViewElements
             bezierPath.ResetNormalAngles();
             pathCreator.bezierPath = bezierPath;
             pathCreator.TriggerPathUpdate();
-        }
-
-        public void VisualizePoints(float[,] points, float radarDataMax)
-        {
-            pointsVisualizerLineRenderer.enabled = true;
-            var positionsInWorldSpace = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarDataMax);
-
-            SetupPointsVisualization(positionsInWorldSpace);
-        }
-
-        private void SetupPointsVisualization(Vector2[] vectorsArray)
-        {
-            SetupPathCreator(vectorsArray);
-            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
         }
 
         private Vector2[] GetPathPointsSample(int stepsCount)
@@ -70,7 +63,7 @@ namespace Views.ViewElements
 
         private Vector2 GetPoint(float percentage)
         {
-            return pathCreator.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
+            return pointsVisualizerLineRenderer.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
         }
     }
 }

@@ -19,17 +19,6 @@ namespace Utilities
         {
             rectTransform.localScale = Vector3.one;
         }
-
-        public static Vector2[] ConvertFromWorldToScreenSpace(Camera camera, Vector2[] vectorsArray)
-        {
-            var result = new Vector2[vectorsArray.Length];
-
-            for (int i = 0; i < vectorsArray.Length; i++)
-            {
-                result[i] = UnityEngine.RectTransformUtility.WorldToScreenPoint(camera, vectorsArray[i]);
-            }
-
-            return result;
-        }
+        
     }
 }
