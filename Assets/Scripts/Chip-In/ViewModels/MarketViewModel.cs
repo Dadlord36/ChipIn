@@ -1,10 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using HttpRequests.RequestsProcessors.GetRequests;
+﻿using HttpRequests.RequestsProcessors.GetRequests;
 using Repositories.Remote;
-using RequestsStaticProcessors;
 using UnityEngine;
-using Utilities;
 using Views;
 
 namespace ViewModels
@@ -20,7 +16,7 @@ namespace ViewModels
         public MarketViewModel() : base(nameof(MarketViewModel))
         {
         }
-        
+
         private void DebugPoints()
         {
             if (positions == null || positions.Length == 0) return;

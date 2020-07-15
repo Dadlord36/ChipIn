@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PathCreation;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -21,9 +20,21 @@ namespace Views.ViewElements
             pointsVisualizerLineRenderer.transform.position = pathCreator.transform.position = Vector3.zero;
         }
 
-        private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
+        public void VisualizePoints(float[,] points, float radarDataMax)
         {
-            ResetPathCreatorAndLineRendererPositions();
+            pointsVisualizerLineRenderer.enabled = true;
+            var worldsPositions = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarDataMax, GameManager.ScreenResolutionScale.y);
+            SetupPointsVisualization(worldsPositions);
+        }
+
+        private void SetupPointsVisualization(Vector2[] vectorsArray)
+        {
+            SetupPathCreator(vectorsArray);
+            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
+        }
+
+        private void SetupPathCreator(Vector2[] vectorsArray)
+        {
             var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
             {
                 ControlPointMode = BezierPath.ControlMode.Automatic
@@ -32,18 +43,6 @@ namespace Views.ViewElements
             bezierPath.ResetNormalAngles();
             pathCreator.bezierPath = bezierPath;
             pathCreator.TriggerPathUpdate();
-        }
-
-        public void VisualizePoints(float[,] points, float radarDataMax)
-        {
-            SetupPointsVisualization(Radar.CalculatePositionsForGivenRadarPoints(points, radarDataMax));
-            pointsVisualizerLineRenderer.enabled = true;
-        }
-
-        private void SetupPointsVisualization(IEnumerable<Vector2> vectorsArray)
-        {
-            SetupPathCreator(vectorsArray);
-            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
         }
 
         private Vector2[] GetPathPointsSample(int stepsCount)
@@ -64,7 +63,7 @@ namespace Views.ViewElements
 
         private Vector2 GetPoint(float percentage)
         {
-            return pathCreator.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
+            return pointsVisualizerLineRenderer.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
         }
     }
 }

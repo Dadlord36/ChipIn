@@ -19,5 +19,6 @@ namespace Utilities
         {
             rectTransform.localScale = Vector3.one;
         }
+        
     }
 }
