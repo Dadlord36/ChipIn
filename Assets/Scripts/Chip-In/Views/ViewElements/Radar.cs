@@ -7,10 +7,10 @@ namespace Views.ViewElements
 {
     public interface IRadar
     {
-         UICircle LargestCircle { get;}
-         Vector2[] CalculatePositionsForGivenRadarPoints(float[,] points, float maxPoint);
+        UICircle LargestCircle { get; }
+        Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint, float widthScale);
     }
-    
+
     public class Radar : UIBehaviour, IRadar
     {
         private const string Tag = nameof(Radar);
@@ -23,13 +23,6 @@ namespace Views.ViewElements
         [SerializeField, HideInInspector] public float scaleFactor;
         [SerializeField, HideInInspector] public int circlesBaseSize;
         [SerializeField, HideInInspector] public uint arcSteps;
-
-       
-
-       
-        
-
-
         [Space(10f)] [SerializeField] private float minRadiusPercentageValue;
 
         public UICircle LargestCircle => innerCircles[0];
@@ -50,8 +43,7 @@ namespace Views.ViewElements
         }
 
 
-        
-        public Vector2[] CalculatePositionsForGivenRadarPoints(float[,] points, float maxPoint)
+        public Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint, float widthScale)
         {
             var pointsCount = points.GetLength(0);
             var positions = new Vector2[pointsCount];
@@ -63,13 +55,13 @@ namespace Views.ViewElements
                 var distance = Vector2.Distance(Vector2.zero, point);
                 var percentage = Mathf.InverseLerp(0, maxPoint, distance);
 
-                positions[i] = new DotInCircle().CalculatePosition(LargestCircle,
-                    CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage);
+                positions[i] = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle,
+                    CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage, widthScale);
             }
 
             return positions;
         }
-        
+
         public void SetCirclesStyle(bool fill, int analyticViewCirclesBaseSize, uint arcSteps, uint thickness, in Color color)
         {
             void SetCircleSize(GameObject gO, float size)
@@ -159,7 +151,6 @@ namespace Views.ViewElements
             }
         }
 
-       
 
         public void SetDataToVisualize(Vector2 firstColumn, Vector2 secondColumn, Vector2 thirdColumn)
         {
@@ -175,17 +166,32 @@ namespace Views.ViewElements
             var resultList = new List<Vector2>(3 * 2);
             resultList.AddRange(topPointsList);
             resultList.AddRange(bottomPointsList);
-            
+
 
             void AddColumnRelatedDots(Vector2 columnValues, Vector2 relativeAngles)
             {
-                var positionA = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.x,
+                var positionA = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle, relativeAngles.x,
                     columnValues.x);
-                var positionB = new DotInCircle().CalculatePosition(LargestCircle, relativeAngles.y,
+                var positionB = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle, relativeAngles.y,
                     columnValues.y);
                 topPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionA));
                 bottomPointsList.Add(LargestCircle.transform.InverseTransformPoint(positionB));
             }
+        }
+
+        public static Vector2[] ConvertToLocalSpace(Transform owner, Vector2[] vectorsArray)
+        {
+            var result = new Vector2[vectorsArray.Length];
+            var calculationsTransform = new GameObject().transform;
+            calculationsTransform.SetParent(owner);
+
+            for (int i = 0; i < vectorsArray.Length; i++)
+            {
+                result[i] = calculationsTransform.InverseTransformPoint(vectorsArray[i]);
+            }
+
+            Destroy(calculationsTransform.gameObject);
+            return result;
         }
 
 
