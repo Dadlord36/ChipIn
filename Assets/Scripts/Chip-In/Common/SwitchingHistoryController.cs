@@ -33,9 +33,10 @@ namespace Common
             _viewsSwitchingNamesHistory.AddToHistory(viewName);
         }
         
-        private void ClearHistory()
+        public void ClearHistory()
         {
             _viewsSwitchingNamesHistory.ClearHistory();
         }
+        
     }
 }
