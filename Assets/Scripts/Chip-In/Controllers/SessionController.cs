@@ -76,6 +76,7 @@ namespace Controllers
                 if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
                     await sessionStateRepository.SignOut();
                 DestroyView(nameof(CoinsGameView));
+                viewsSwitchingController.ClearSwitchingHistory();
                 SwitchToLoginView();
             }
             catch (Exception e)

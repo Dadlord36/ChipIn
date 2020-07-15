@@ -118,11 +118,16 @@ namespace ViewModels.Cards
             OnItemSelected(_selectedItemDataBaseIndex);
         }
 
-
+        private void ClearIcon()
+        {
+            Icon = null;
+        }
+        
         public Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
-            _selectedItemDataBaseIndex = dataBaseIndex;
             OperationCancellationController.CancelOngoingTask();
+            ClearIcon();
+            _selectedItemDataBaseIndex = dataBaseIndex;
             Age = dataModel.Age;
             Description = dataModel.Description;
             Size = dataModel.Size;
