@@ -6,7 +6,7 @@ public static class BuildScript
     private const string AndroidBuildsPath = "./builds/Android/";
     private static readonly string[] DefaultScene = {"Assets/Scenes/Main.unity"};
     private const string AndroidExtension = ".apk";
-    
+
     [MenuItem("Builds/Build For Android_Mono_Development")]
     public static void BuildForAndroid_Mono_Development()
     {
@@ -26,6 +26,7 @@ public static class BuildScript
     {
         PlayerSettings.SetScriptingBackend(buildTargetGroup, scriptingImplementation);
         PlayerSettings.Android.targetArchitectures = architecture;
-        BuildPipeline.BuildPlayer(DefaultScene, $"{AndroidBuildsPath}{apkName}", buildTarget, typeOfBuild);
+        BuildPipeline.BuildPlayer(DefaultScene, $"{AndroidBuildsPath}{apkName}", buildTarget, typeOfBuild
+                                                                                              | BuildOptions.ShowBuiltPlayer);
     }
 }
