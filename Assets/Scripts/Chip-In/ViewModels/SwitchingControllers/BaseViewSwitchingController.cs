@@ -26,6 +26,11 @@ namespace ViewModels.SwitchingControllers
             switchingHistoryController.AddViewsSwitchingHistoryRecord(viewName);
         }
 
+        public void ClearSwitchingHistory()
+        {
+            switchingHistoryController.ClearHistory();
+        }
+        
         public void SwitchToPreviousView()
         {
             ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack());

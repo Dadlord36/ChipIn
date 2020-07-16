@@ -14,8 +14,9 @@ namespace Views.ViewElements
         [SerializeField] private UILineRenderer axisLineRenderer;
         [SerializeField] private Radar radar;
         [SerializeField] private Object dotViewPrefab;
-        
+
         [SerializeField] private Vector2 firstColumnAngles, secondColumnAngles, thirdColumnAngles;
+
         #endregion
 
         private List<GameObject> _dotsViews = new List<GameObject>();
@@ -51,7 +52,7 @@ namespace Views.ViewElements
 
             axisLineRenderer.Points = segmentsFromCenter.ToArray();
         }
-        
+
         private Vector2[] GetDiagramAxisEndPoints()
         {
             var diagramAxisAngles = new[]
@@ -64,7 +65,7 @@ namespace Views.ViewElements
 
             for (int i = 0; i < diagramAxisAngles.Length; i++)
             {
-                var endPoint = new DotInCircle().CalculatePosition(LargestCircle,
+                var endPoint = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle,
                     diagramAxisAngles[i], 1f);
                 endPoints[i] = transform.InverseTransformPoint(endPoint);
             }
@@ -81,7 +82,7 @@ namespace Views.ViewElements
             var pointsCount = points.GetLength(0);
             _dotsViews = new List<GameObject>(pointsCount);
 
-            var positions = Radar.CalculatePositionsForGivenRadarPoints(points, radarData.Max);
+            var positions = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarData.Max, 1f);
 
             for (int i = 0; i < positions.Length; i++)
             {
@@ -92,7 +93,7 @@ namespace Views.ViewElements
         private GameObject CreateDotAtPosition(Vector2 position)
         {
             var gO = (GameObject) Instantiate(dotViewPrefab, transform);
-            gO.transform.position = position;
+            gO.transform.localPosition = position;
             _dotsViews.Add(gO);
             return gO;
         }

@@ -15,7 +15,25 @@ namespace Views.ViewElements
 
         private IRadar Radar => radar;
 
-        private void SetupPathCreator(IEnumerable<Vector2> vectorsArray)
+        private void ResetPathCreatorAndLineRendererPositions()
+        {
+            pointsVisualizerLineRenderer.transform.position = pathCreator.transform.position = Vector3.zero;
+        }
+
+        public void VisualizePoints(float[,] points, float radarDataMax)
+        {
+            pointsVisualizerLineRenderer.enabled = true;
+            var worldsPositions = Radar.CalculateWorldPositionsForGivenRadarPoints(points, radarDataMax, GameManager.ScreenResolutionScale.y);
+            SetupPointsVisualization(worldsPositions);
+        }
+
+        private void SetupPointsVisualization(Vector2[] vectorsArray)
+        {
+            SetupPathCreator(vectorsArray);
+            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
+        }
+
+        private void SetupPathCreator(Vector2[] vectorsArray)
         {
             var bezierPath = new BezierPath(vectorsArray, PathSpace.xy, true)
             {
@@ -26,18 +44,7 @@ namespace Views.ViewElements
             pathCreator.bezierPath = bezierPath;
             pathCreator.TriggerPathUpdate();
         }
-        
-        public void VisualizePoints(float[,] points, float radarDataMax)
-        {
-            SetupPointsVisualization(Radar.CalculatePositionsForGivenRadarPoints(points, radarDataMax));
-        }
 
-        private void SetupPointsVisualization(IEnumerable<Vector2> vectorsArray)
-        {
-            SetupPathCreator(vectorsArray);
-            pointsVisualizerLineRenderer.Points = GetPathPointsSample(sampleSteps);
-        }
-       
         private Vector2[] GetPathPointsSample(int stepsCount)
         {
             var resultList = new List<Vector2>(pathCreator.path.NumPoints);
@@ -56,9 +63,7 @@ namespace Views.ViewElements
 
         private Vector2 GetPoint(float percentage)
         {
-            return pathCreator.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
+            return pointsVisualizerLineRenderer.transform.InverseTransformPoint(pathCreator.path.GetPointAtDistance(percentage));
         }
-
-
     }
 }

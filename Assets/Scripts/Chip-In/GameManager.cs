@@ -18,9 +18,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataRestorationController restorationController;
     [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
     [SerializeField] private ViewsLogoController viewsLogoController;
+    [SerializeField] private Camera mainCamera;
+
+
+    public static Camera MainCamera { get; private set; }
+    public static Vector2 OriginalResolution { get; private set; } = new Vector2(375, 815);
+    public static Vector2 ScreenResolutionScale { get; private set; }
 
     private async void Start()
     {
+        MainCamera = mainCamera;
+        ScreenResolutionScale = OriginalResolution / ScreenUtility.GetScreenSize();
+
         try
         {
             await Initialize();
