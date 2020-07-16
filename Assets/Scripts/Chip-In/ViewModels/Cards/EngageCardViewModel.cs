@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
+using JetBrains.Annotations;
 using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -13,21 +15,23 @@ using Views.Cards;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IEngageModel,
-        IFillingView<MarketInterestDetailsDataModel>, IIdentifiedSelection, INotifyPropertyChanged
+    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IFillingView<MarketInterestDetailsDataModel>, IIdentifiedSelection,
+        INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         public event Action<uint> ItemSelected;
 
-        private readonly EngageCardDataModel _cardData = new EngageCardDataModel();
+        private const string EmptyFieldText = "-";
+
         private uint _selectedItemDataBaseIndex;
-
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add => _cardData.PropertyChanged += value;
-            remove => _cardData.PropertyChanged -= value;
-        }
+        private uint _size;
+        private string _minCapMaxCap = EmptyFieldText;
+        private string _age = EmptyFieldText;
+        private int? _id;
+        private string _name = EmptyFieldText;
+        private string _description = EmptyFieldText;
+        private Sprite _icon;
+        private string _spirit = EmptyFieldText;
 
 
         #region IEngageModel implementation
@@ -35,64 +39,97 @@ namespace ViewModels.Cards
         [Binding]
         public uint Size
         {
-            get => _cardData.Size;
-            set => _cardData.Size = value;
+            get => _size;
+            private set
+            {
+                if (value == _size) return;
+                _size = value;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
-        public uint MinCap
+        public string MinCapMaxCap
         {
-            get => _cardData.MinCap;
-            set => _cardData.MinCap = value;
-        }
-
-        [Binding]
-        public uint MaxCap
-        {
-            get => _cardData.MaxCap;
-            set => _cardData.MaxCap = value;
+            get => _minCapMaxCap;
+            private set
+            {
+                if (value == _minCapMaxCap) return;
+                _minCapMaxCap = value;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public string Age
         {
-            get => _cardData.Age;
-            set => _cardData.Age = value;
+            get => _age;
+            private set
+            {
+                if (value == _age) return;
+                _age = ChooseFieldValue(value);
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public int? Id
         {
-            get => _cardData.Id;
-            set => _cardData.Id = value;
+            get => _id;
+            private set
+            {
+                if (value == _id) return;
+                _id = value;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public string Name
         {
-            get => _cardData.Name;
-            set => _cardData.Name = value;
+            get => _name;
+            private set
+            {
+                if (value == _name) return;
+                _name = ChooseFieldValue(value);
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public string Description
         {
-            get => _cardData.Description;
-            set => _cardData.Description = value;
+            get => _description;
+            private set
+            {
+                if (value == _description) return;
+                _description = ChooseFieldValue(value);
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public Sprite Icon
         {
-            get => _cardData.Icon;
-            set => _cardData.Icon = value;
+            get => _icon;
+            private set
+            {
+                if (Equals(value, _icon)) return;
+                _icon = value;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
         public string Spirit
         {
-            get => _cardData.Spirit;
-            set => _cardData.Spirit = value;
+            get => _spirit;
+            private set
+            {
+                if (value == _spirit) return;
+                _spirit = ChooseFieldValue(value);
+                OnPropertyChanged();
+            }
         }
 
         #endregion
@@ -122,32 +159,40 @@ namespace ViewModels.Cards
         {
             Icon = null;
         }
-        
+
+        private static string ChooseFieldValue(in string value)
+        {
+            return string.IsNullOrEmpty(value) ? EmptyFieldText : value;
+        }
+
         public Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
             OperationCancellationController.CancelOngoingTask();
             ClearIcon();
             _selectedItemDataBaseIndex = dataBaseIndex;
-            Age = dataModel.Age;
             Description = dataModel.Description;
+            Age = dataModel.Age;
             Size = dataModel.Size;
             Spirit = dataModel.Spirit;
-            MaxCap = dataModel.MaxCap;
-            MinCap = dataModel.MinCap;
+            MinCapMaxCap =  $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
             Id = dataModel.Id;
-            Name = dataModel.Name; ;
-            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken).
-                ContinueWith(delegate(Task<Sprite> getSpriteTask)
-                    {
-                        Icon = getSpriteTask.Result;
-                    }
-                , continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler:downloadedSpritesRepository.MainThreadScheduler,
+            Name = dataModel.Name;
+            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken).ContinueWith(delegate(Task<Sprite> getSpriteTask) { Icon = getSpriteTask.GetAwaiter().GetResult(); }
+                , continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: downloadedSpritesRepository.MainThreadScheduler,
                 cancellationToken: OperationCancellationController.CancellationToken);
         }
 
         private void OnItemSelected(uint index)
         {
             ItemSelected?.Invoke(index);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
