@@ -71,13 +71,14 @@ namespace Controllers
 
         public async Task SignOut()
         {
+            viewsSwitchingController.ClearSwitchingHistory();
+            DestroyView(nameof(CoinsGameView));
+            SwitchToLoginView();
             try
             {
+                //TODO: figure out should app sing-out if it was logged in as guest
                 if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
-                    await sessionStateRepository.SignOut();
-                DestroyView(nameof(CoinsGameView));
-                viewsSwitchingController.ClearSwitchingHistory();
-                SwitchToLoginView();
+                    await sessionStateRepository.SignOut().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -162,7 +163,7 @@ namespace Controllers
             try
             {
                 var result = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource);
-                
+
                 if (!result.Success)
                 {
                     LogUtility.PrintLog(Tag, "Failed to register user as Guest");
