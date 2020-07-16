@@ -190,6 +190,10 @@ namespace Repositories.Remote
                 LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
                     this);
             }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
