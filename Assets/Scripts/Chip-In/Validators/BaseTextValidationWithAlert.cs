@@ -13,6 +13,7 @@ namespace Validators
     {
         [SerializeField] private TextValidation validation;
         [SerializeField] private GameObject alertTextField;
+        [SerializeField] private bool shouldCheckValidity;
 
         public event Action ValidityChanged;
 
@@ -33,6 +34,7 @@ namespace Validators
 
         public void CheckIsValid(object dataToValidate)
         {
+            if (!shouldCheckValidity) return;
             IsValid = validation.CheckIsValid(dataToValidate);
             alertTextField.SetActive(!IsValid);
         }
