@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DataModels;
 using DataModels.RequestsModels;
+using DataModels.ResponsesModels;
 using GlobalVariables;
 using Repositories;
 using Repositories.Local;
@@ -41,21 +43,19 @@ namespace Controllers
         {
             try
             {
-                var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel);
-
-                if (response.ResponseModelInterface == null)
+                var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel)
+                    .ConfigureAwait(true);
+                var responseInterface = response.ResponseModelInterface;
+                if (responseInterface == null)
                 {
                     LogUtility.PrintLog(Tag, "SignIn response model is null");
                     alertCardController.ShowAlertWithText(response.Error);
                     return;
                 }
 
-                if (response.ResponseModelInterface.Success)
+                if (responseInterface.Success)
                 {
-                    repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(response.ResponseModelInterface);
-                    SaveUserAuthentication(response.ResponseModelInterface.UserProfileData.Role);
-                    SwitchToViewCorrespondingToUseRole();
-                    sessionStateRepository.ConfirmSingingIn();
+                    ProceedWithGivenAuthorisationData(responseInterface, responseInterface.UserProfileData.Role);
                 }
                 else
                 {
@@ -69,22 +69,57 @@ namespace Controllers
             }
         }
 
-        public async Task SignOut()
+        public async Task TryRegisterAndLoginAsGuest()
         {
-            viewsSwitchingController.ClearSwitchingHistory();
-            DestroyView(nameof(CoinsGameView));
-            SwitchToLoginView();
             try
             {
-                //TODO: figure out should app sing-out if it was logged in as guest
-                if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
-                    await sessionStateRepository.SignOut().ConfigureAwait(false);
+                var result = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource)
+                    .ConfigureAwait(true);
+
+                if (!result.Success)
+                {
+                    LogUtility.PrintLog(Tag, "Failed to register user as Guest");
+                    alertCardController.ShowAlertWithText(result.Error);
+                }
+
+                var responseInterface = result.ResponseModelInterface;
+
+                ProceedWithGivenAuthorisationData(responseInterface.AuthorisationData, responseInterface.UserData.Role);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        private void ProceedWithGivenAuthorisationData(ILoginResponseModel loginResponseModel, string role)
+        {
+            repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(loginResponseModel);
+            SaveRoAndInvokeSwitchingToCorrespondingView(role);
+        }
+
+        private void ProceedWithGivenAuthorisationData(IAuthorisationModel authorisationModel, string role)
+        {
+            repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
+            SaveRoAndInvokeSwitchingToCorrespondingView(role);
+        }
+
+        private void SaveRoAndInvokeSwitchingToCorrespondingView(in string role)
+        {
+            SaveUserAuthentication(role);
+            SwitchToViewCorrespondingToUseRole();
+            sessionStateRepository.ConfirmSingingIn();
+        }
+        
+        public Task SignOut()
+        {
+            viewsSwitchingController.ClearSwitchingHistory();
+            DestroyView(nameof(CoinsGameView));
+            SwitchToLoginView();
+
+            //TODO: figure out should app sing-out if it was logged in as guest
+            return sessionStateRepository.UserRole != MainNames.UserRoles.Guest ? sessionStateRepository.SignOut() : Task.CompletedTask;
         }
 
         private void DestroyView(string coinsGameViewName)
@@ -158,38 +193,10 @@ namespace Controllers
             viewsSwitchingController.RequestSwitchToView(null, toViewName);
         }
 
-        public async Task<bool> TryRegisterAndLoginAsGuest()
-        {
-            try
-            {
-                var result = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource);
-
-                if (!result.Success)
-                {
-                    LogUtility.PrintLog(Tag, "Failed to register user as Guest");
-                    alertCardController.ShowAlertWithText(result.Error);
-                    return false;
-                }
-
-                repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(result.ResponseModelInterface.AuthorisationData);
-                SaveUserAuthentication(MainNames.UserRoles.Guest);
-                return true;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
 
         private void OnSwitchingToMode(SessionMode obj)
         {
             SwitchingToMode?.Invoke(obj);
-        }
-
-        public async Task SignInAsGuest(UserLoginRequestModel userLoginRequestModel)
-        {
-            throw new NotImplementedException();
         }
     }
 }
