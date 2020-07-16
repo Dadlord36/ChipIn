@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Controllers;
 using JetBrains.Annotations;
-using TMPro;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -15,7 +14,6 @@ namespace ViewModels
     public sealed class WelcomeViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private SessionController sessionController;
-        TMP_Text text;
 
         private bool _isPendingLogin;
 
@@ -49,19 +47,21 @@ namespace ViewModels
 
             try
             {
-                bool success = await sessionController.TryRegisterAndLoginAsGuest();
-                if (success)
-                {
-                    SwitchToView(nameof(CoinsGameView));
-                }
+                await sessionController.TryRegisterAndLoginAsGuest().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-
-            IsPendingLogin = false;
+            finally
+            {
+                IsPendingLogin = false;
+            }
         }
 
         [Binding]

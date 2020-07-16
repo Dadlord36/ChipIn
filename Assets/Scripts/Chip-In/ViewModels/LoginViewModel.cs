@@ -55,7 +55,7 @@ namespace ViewModels
         }
 
         [Binding] public bool IsMerchant { get; set; }
-        
+
         [Binding]
         public string UserEmail
         {
@@ -132,12 +132,21 @@ namespace ViewModels
         {
             try
             {
-                await ProcessLogin();
+                IsPendingLogin = true;
+                await ProcessLoginAsync().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
+            }
+            finally
+            {
+                IsPendingLogin = false;
             }
         }
 
@@ -146,43 +155,32 @@ namespace ViewModels
         {
             try
             {
-                await ProcessLoginAsGuest();
+                IsPendingLogin = true;
+                await ProcessLoginAsGuestAsync().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
-        
-        private async Task ProcessLogin()
-        {
-            IsPendingLogin = true;
-            try
+            finally
             {
-                await sessionController.TryToSignIn(_userLoginRequestModel);
+                IsPendingLogin = false;
             }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
-
-            IsPendingLogin = false;
         }
 
-        private async Task ProcessLoginAsGuest()
+        private Task ProcessLoginAsync()
         {
-            IsPendingLogin = true;
-            try
-            {
-                await sessionController.SignInAsGuest(_userLoginRequestModel);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+            return sessionController.TryToSignIn(_userLoginRequestModel);
+        }
 
-            IsPendingLogin = false;
+        private Task ProcessLoginAsGuestAsync()
+        {
+            return sessionController.TryRegisterAndLoginAsGuest();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
