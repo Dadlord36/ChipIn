@@ -174,12 +174,13 @@ namespace ViewModels.Cards
             Age = dataModel.Age;
             Size = dataModel.Size;
             Spirit = dataModel.Spirit;
-            MinCapMaxCap =  $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
+            MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
             Id = dataModel.Id;
             Name = dataModel.Name;
-            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken).ContinueWith(delegate(Task<Sprite> getSpriteTask) { Icon = getSpriteTask.GetAwaiter().GetResult(); }
-                , continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: downloadedSpritesRepository.MainThreadScheduler,
-                cancellationToken: OperationCancellationController.CancellationToken);
+            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
+                .ContinueWith(delegate(Task<Sprite> getSpriteTask) { Icon = getSpriteTask.GetAwaiter().GetResult(); },
+                    continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: downloadedSpritesRepository.MainThreadScheduler,
+                    cancellationToken: OperationCancellationController.CancellationToken);
         }
 
         private void OnItemSelected(uint index)
