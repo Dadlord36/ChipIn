@@ -17,8 +17,6 @@ namespace ViewModels.Settings
         [SerializeField] private UserProfileRemoteRepository repository;
         [SerializeField] private GeoLocationRepository geoLocationRepository;
 
-        [SerializeField] private SimpleView passwordChangingView;
-
         private IUserProfileModel UserSettingsModel => repository;
 
         #region UserProfileModel interface implementation
@@ -126,30 +124,12 @@ namespace ViewModels.Settings
         public UserProfileViewModel() : base(nameof(UserProfileViewModel))
         {
         }
-
-
-        [Binding]
-        public void ChangePassword_Click()
-        {
-            ShowPasswordSwitchingView();
-            LogUtility.PrintLog(Tag, "Changing password");
-        }
-
-        [Binding]
-        public void EditProfile_Click()
-        {
-            LogUtility.PrintLog(Tag, "Editing profile");
-        }
+        
 
         [Binding]
         public void UserRadar_OnTryToTurnOn()
         {
             geoLocationRepository.SetLocationServiceActivity(!UserRadarState);
-        }
-
-        private void ShowPasswordSwitchingView()
-        {
-            passwordChangingView.Show();
         }
 
 
