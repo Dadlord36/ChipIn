@@ -86,7 +86,7 @@ namespace ViewModels
             Handheld.Vibrate();
             try
             {
-                await ActivateProduct(decodedText);
+                await ActivateProductAsync(decodedText).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -95,18 +95,10 @@ namespace ViewModels
             }
         }
 
-        private async Task ActivateProduct(string decodedText)
+        private Task ActivateProductAsync(string decodedText)
         {
-            try
-            {
-                await UserProductsStaticRequestsProcessor.ActivateProduct(out OperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, new ProductQrCode(decodedText));
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return UserProductsStaticRequestsProcessor.ActivateProduct(out OperationCancellationController.TasksCancellationTokenSource,
+                authorisationDataRepository, new ProductQrCode(decodedText));
         }
 
         private void TryAuthorizeWebCameraAndStartQrReader()

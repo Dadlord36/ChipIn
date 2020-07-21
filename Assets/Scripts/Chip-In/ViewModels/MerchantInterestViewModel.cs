@@ -117,14 +117,14 @@ namespace ViewModels
             return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
                 delegate(Task<MerchantInterestPageDataModel> getDataTask)
                 {
-                    offerCreationRepository.OfferSegmentName = getDataTask.Result.Segment;
+                    offerCreationRepository.OfferSegmentName = getDataTask.GetAwaiter().GetResult().Segment;
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private Task SetViewNameToInterestName()
         {
             return selectedMerchantInterestRepository.CreateGetSelectedInterestDataTask().ContinueWith(
-                delegate(Task<MarketInterestDetailsDataModel> task) { InterestName = task.Result.Name; },
+                delegate(Task<MarketInterestDetailsDataModel> task) { InterestName = task.GetAwaiter().GetResult().Name; },
                 scheduler: downloadedSpritesRepository.MainThreadScheduler,
                 continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
                 cancellationToken: _asyncOperationCancellationController.CancellationToken);
@@ -133,14 +133,14 @@ namespace ViewModels
         private Task LoadAndSetInterestPageLogo()
         {
             return selectedMerchantInterestRepository.CreateGetSelectedInterestDataTask().ContinueWith(dataLoadingTask
-                => SetLogoFromUrl(dataLoadingTask.Result.PosterUri), TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
+                => SetLogoFromUrl(dataLoadingTask.GetAwaiter().GetResult().PosterUri), TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
         }
 
         private Task SetLogoFromUrl(in string url)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
             return downloadedSpritesRepository.CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.Result; },
+                .ContinueWith(delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.GetAwaiter().GetResult(); },
                     scheduler: downloadedSpritesRepository.MainThreadScheduler,
                     continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
                     cancellationToken: _asyncOperationCancellationController.CancellationToken);

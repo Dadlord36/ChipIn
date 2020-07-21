@@ -14,7 +14,7 @@ namespace Repositories.Local.SingleItem
 
         public Task<int?> SelectedInterestId =>
             marketInterestsPaginatedListRepository.CreateGetItemWithIndexTask(SelectedInterestRepositoryIndex).ContinueWith(
-                task => task.Result.Id, TaskContinuationOptions.OnlyOnRanToCompletion);
+                task => task.GetAwaiter().GetResult().Id, TaskContinuationOptions.OnlyOnRanToCompletion);
         
         public uint SelectedInterestRepositoryIndex { get; set; }
         

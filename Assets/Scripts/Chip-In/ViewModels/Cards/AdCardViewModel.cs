@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
@@ -13,17 +14,16 @@ namespace ViewModels.Cards
     {
         public class FieldFillingData
         {
-            public readonly Texture2D AdIcon;
+            public readonly Task<Texture2D> AdIcon;
             public readonly string Description;
 
-            public FieldFillingData(Texture2D adIcon, string description)
+            public FieldFillingData(Task<Texture2D> adIcon, string description)
             {
                 AdIcon = adIcon;
                 Description = description;
             }
         }
-
-
+        
         private Texture2D _adIcon;
         private string _description;
 
@@ -53,9 +53,11 @@ namespace ViewModels.Cards
 
         public Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            AdIcon = dataModel.AdIcon;
             Description = dataModel.Description;
-            return Task.CompletedTask;
+            return dataModel.AdIcon.ContinueWith(delegate (Task<Texture2D> taskResult)
+            {
+                AdIcon = taskResult.GetAwaiter().GetResult();
+            } ,CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, GameManager.MainThreadScheduler);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

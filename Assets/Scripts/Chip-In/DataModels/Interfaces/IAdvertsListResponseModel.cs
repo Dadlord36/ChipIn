@@ -7,6 +7,6 @@ namespace DataModels.Interfaces
     public interface IAdvertsListResponseModel : ISuccess, IPaginatedResponse
     {
         [JsonProperty("adverts")]
-        public IList<AdvertItemDataModel> Adverts { get; set; }
+        IList<AdvertItemDataModel> Adverts { get; set; }
     }
 }

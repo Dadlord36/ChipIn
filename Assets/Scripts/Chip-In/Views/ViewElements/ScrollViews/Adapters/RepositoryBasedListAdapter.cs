@@ -7,6 +7,7 @@ using Com.TheFallenGames.OSA.DataHelpers;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
+using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
 using Utilities;
@@ -26,6 +27,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
         private readonly string Tag;
 
         [SerializeField] private TRepository pagesPaginatedRepository;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
@@ -59,6 +61,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
         public Task Initialize()
         {
             ResetStateVariables();
+            _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
+
             if (Data != null)
             {
                 if (Data.Count > 0)
@@ -68,7 +72,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 Data = new SimpleDataHelper<TDataType>(this);
             }
-            
+
             return pagesPaginatedRepository.LoadDataFromServer();
         }
 
@@ -137,7 +141,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 .ContinueWith(delegate(Task<IReadOnlyList<TDataType>> task)
                     {
                         _retrievingItemsStartingIndex += maxCount - 1;
-                        onDone(task.Result);
+                        onDone(task.GetAwaiter().GetResult());
 
                         _loadedAll = Data.Count == TotalCapacity;
                     }, _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
@@ -157,17 +161,26 @@ namespace Views.ViewElements.ScrollViews.Adapters
         // or when anything that requires a refresh happens
         // Here you bind the data from the model to the item's views
         // *For the method's full description check the base implementation
-        protected override async void UpdateViewsHolder(TViewPageViewHolder newOrRecycled)
+        protected override async void UpdateViewsHolder(TViewPageViewHolder viewHolder)
         {
             // In this callback, "newOrRecycled.ItemIndex" is guaranteed to always reflect the
             // index of item that should be represented by this views holder. You'll use this index
             // to retrieve the model from your data set
             try
             {
-                var index = (uint) newOrRecycled.ItemIndex;
-                await newOrRecycled.FillView(_fillingViewAdapter.Convert(Data[(int) index],index), index);
+                var index = (uint) viewHolder.ItemIndex;
+                await viewHolder.FillView
+                (
+                    _fillingViewAdapter.Convert
+                    (
+                        _asyncOperationCancellationController.TasksCancellationTokenSource,
+                        Data[(int) index],
+                        index
+                    ),
+                    index
+                ).ConfigureAwait(true);
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }

@@ -13,9 +13,9 @@ using UnityEngine;
 
 namespace Repositories.Remote.Paginated
 {
-    [CreateAssetMenu(fileName = nameof(UserInterestPagesPaginatedRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"
-                   + nameof(Paginated) + "/" + nameof(UserInterestPagesPaginatedRepository), order = 0)]
+    [CreateAssetMenu(fileName = nameof(UserInterestPagesPaginatedRepository), menuName = nameof(Repositories) + "/" + nameof(Remote) + "/"
+                                                                                         + nameof(Paginated) + "/"
+                                                                                         + nameof(UserInterestPagesPaginatedRepository), order = 0)]
     public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<UserInterestPageDataModel, UserInterestPagesResponseDataModel,
         IUserInterestPagesResponseModel>
     {
@@ -37,7 +37,7 @@ namespace Repositories.Remote.Paginated
 
             var task = SelectedCommunityId.ContinueWith(selectedCommunityIdGetTask =>
                     CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSourceLocal,
-                        authorisationDataRepository, selectedCommunityIdGetTask.Result.Value, paginatedRequestData),
+                        authorisationDataRepository, selectedCommunityIdGetTask.GetAwaiter().GetResult().Value, paginatedRequestData),
                 TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
 
             cancellationTokenSource = cancellationTokenSourceLocal;

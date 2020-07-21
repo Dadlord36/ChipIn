@@ -162,7 +162,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 .ContinueWith(delegate(Task<IReadOnlyList<InterestBasicDataModel>> task)
                 {
                     _retrievingItemsStartingIndex += maxCount - 1;
-                    onDone(task.Result);
+                    onDone(task.GetAwaiter().GetResult());
                     
                     loadedAll = Data.Count == TotalCapacity;
                 },_asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, 

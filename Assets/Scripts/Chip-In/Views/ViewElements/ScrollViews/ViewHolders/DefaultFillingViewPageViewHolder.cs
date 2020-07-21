@@ -23,9 +23,9 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
             }
         }
 
-        public async Task FillView(TDataType dataModel, uint dataBaseIndex)
+        public Task FillView(TDataType dataModel, uint dataBaseIndex)
         {
-            await _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
+            return _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
         }
     }
 }
