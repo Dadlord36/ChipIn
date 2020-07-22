@@ -32,15 +32,20 @@ namespace Views.TabsContentSwitching
         {
             StopUpdate();
             ResetProgressiveOperationsController();
-            
+
             GetCanvasGroups(index, out var tabCanvasGroup, out var otherCanvasGroups);
 
             tabCanvasGroup.alpha = CanvasGroupFading.MinAlpha;
+            tabCanvasGroup.blocksRaycasts = true;
+            tabCanvasGroup.interactable = true;
+
             foreach (var canvasGroup in otherCanvasGroups)
             {
                 canvasGroup.alpha = CanvasGroupFading.MaxAlpha;
+                canvasGroup.blocksRaycasts = false;
+                canvasGroup.interactable = false;
             }
-            
+
             var fadingActions = PrepareFadingAnimations(new[] {tabCanvasGroup}, otherCanvasGroups);
 
             foreach (var action in fadingActions)
@@ -89,7 +94,7 @@ namespace Views.TabsContentSwitching
         {
             _progressiveOperationsController.Clear();
         }
-        
+
         private void Update()
         {
             _progressiveOperationsController.Update();

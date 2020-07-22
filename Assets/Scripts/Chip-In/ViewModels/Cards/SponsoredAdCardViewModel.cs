@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
@@ -9,15 +10,16 @@ using UnityWeld.Binding;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsorAdCardViewModel : MonoBehaviour, INotifyPropertyChanged, IFillingView<SponsorAdCardViewModel.FieldFillingData>
+    public sealed class SponsoredAdCardViewModel : MonoBehaviour, INotifyPropertyChanged,
+        IFillingView<SponsoredAdCardViewModel.FieldFillingData>
     {
         public class FieldFillingData
         {
-            public readonly Texture2D BackgroundTexture;
+            public readonly Task<Texture2D> LoadBackgroundTextureTask;
 
-            public FieldFillingData(Texture2D backgroundTexture)
+            public FieldFillingData(Task<Texture2D> loadBackgroundTextureTask)
             {
-                BackgroundTexture = backgroundTexture;
+                LoadBackgroundTextureTask = loadBackgroundTextureTask;
             }
         }
 
@@ -37,13 +39,10 @@ namespace ViewModels.Cards
 
         public Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            BackgroundTexture = dataModel.BackgroundTexture;
-            return Task.CompletedTask;
-        }
-
-        public static FieldFillingData CreateFillingData(Texture2D backgroundTexture)
-        {
-            return new FieldFillingData(backgroundTexture);
+            return dataModel.LoadBackgroundTextureTask.ContinueWith(
+                delegate(Task<Texture2D> finishedTask) { BackgroundTexture = finishedTask.GetAwaiter().GetResult(); }
+                , CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, GameManager.MainThreadScheduler
+            );
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
