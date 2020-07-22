@@ -1,11 +1,10 @@
 ﻿using Common.UnityEvents;
-using UnityEngine;
 using UnityWeld.Binding;
 
 [Binding]
-public class TwoButtonsOptionSelectorWithStringOptions : TwoButtonsOptionSelector
+public sealed class TwoButtonsOptionSelectorWithStringOptions : TwoButtonsOptionSelector
 {
-    [SerializeField] private StringUnityEvent selectionChanged;
+    public StringUnityEvent selectedOptionChanged;
     private SelectableStringOptions _selectableStringOptions;
     private string _selectedOption;
 
@@ -18,7 +17,7 @@ public class TwoButtonsOptionSelectorWithStringOptions : TwoButtonsOptionSelecto
         {
             if (value == _selectedOption) return;
             _selectedOption = value;
-            OnSelectionChanged(value);
+            OnSelectedOptionChanged(value);
         }
     }
 
@@ -29,13 +28,18 @@ public class TwoButtonsOptionSelectorWithStringOptions : TwoButtonsOptionSelecto
         SelectDefault();
     }
 
+    public void SetOptionByIndex(int index)
+    {
+        SelectedOption = _selectableStringOptions[index];
+    }
+
     private void SelectDefault()
     {
         SelectedOption = _selectableStringOptions[0];
     }
 
-    private void OnSelectionChanged(string obj)
+    private void OnSelectedOptionChanged(in string value)
     {
-        selectionChanged?.Invoke(obj);
+        selectedOptionChanged.Invoke(value);
     }
 }

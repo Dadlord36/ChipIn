@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 7525912992158651454}
   - component: {fileID: 3677225230587909160}
   - component: {fileID: 3503473375221048057}
-  - component: {fileID: 8606773423302813061}
   - component: {fileID: 6324246625465890185}
   - component: {fileID: 7912338713548433368}
   - component: {fileID: 2228244081391543048}
   - component: {fileID: 3528822889921662236}
+  - component: {fileID: 39055833037438170}
   m_Layer: 5
   m_Name: UserTypeSelection
   m_TagString: Untagged
@@ -81,33 +81,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac16cf220afc4323b52c13759a1f3266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8606773423302813061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3103041895330570772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9f100292ecd49df8e517f3008edc57d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roleChanged:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: set_Role
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  selectedByDefaultButton: {fileID: 8953315206384731664}
 --- !u!114 &6324246625465890185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +190,22 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 1, y: -1}
   m_UseGraphicAlpha: 1
+--- !u!114 &39055833037438170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3103041895330570772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b2aa80b71d4d49901fd627029fa4dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedByDefaultButton: {fileID: 8953315206384731664}
+  selectionChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3232344219920444192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,34 +281,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -113}
   m_SizeDelta: {x: -44, y: 36}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &9201267915232732107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4412316000619226180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: RegistrationRoleSelector.SelectUserRole
-  viewEventName: ViewModels.UI.Elements.Buttons.GroupedHighlightedButton.onClick
---- !u!114 &3996960655212904067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5137435850547747062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: RegistrationRoleSelector.SelectBusinessOwnerRole
-  viewEventName: ViewModels.UI.Elements.Buttons.GroupedHighlightedButton.onClick
 --- !u!1 &5286189492910700512
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,12 +621,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 277c8944090719c4b835c5eb1aaa82ed, type: 3}
---- !u!1 &5137435850547747062 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9216735969577541202, guid: 277c8944090719c4b835c5eb1aaa82ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 4081310368280692388}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5484998990033834967 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
@@ -852,12 +807,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 277c8944090719c4b835c5eb1aaa82ed, type: 3}
---- !u!1 &4412316000619226180 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9216735969577541202, guid: 277c8944090719c4b835c5eb1aaa82ed,
-    type: 3}
-  m_PrefabInstance: {fileID: 4815437129172810262}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3922289122411605861 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8411910064636073331, guid: 277c8944090719c4b835c5eb1aaa82ed,
@@ -870,7 +819,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 4815437129172810262}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4412316000619226180}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b0de939f08147bdbce3167b50a0f703, type: 3}
