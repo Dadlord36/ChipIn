@@ -3,11 +3,23 @@ using Newtonsoft.Json;
 
 namespace DataModels.RequestsModels
 {
-    public interface IUserRegistrationModel : IBasicLoginModel
+    public interface IRole
+    {
+        [JsonProperty("role")] string Role { get; set; }
+    }
+
+    public interface IGender
     {
         [JsonProperty("gender")] string Gender { get; set; }
-        [JsonProperty("role")] string Role { get; set; }
+    }
+
+    public interface IDevice
+    {
         [JsonProperty("device")] DeviceData Device { get; set; }
+    }
+
+    public interface IUserRegistrationModel : IBasicLoginModel, IGender, IRole, IDevice
+    {
     }
 
     public interface IBaseDeviceData

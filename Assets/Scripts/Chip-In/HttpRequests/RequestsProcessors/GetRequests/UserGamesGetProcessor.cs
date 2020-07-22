@@ -11,7 +11,7 @@ using Repositories.Interfaces;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public struct SpinBoardParameters
+    public readonly struct SpinBoardParameters
     {
         public readonly bool SpinFrame, SpinBoard;
 
@@ -28,9 +28,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
 
     public class UserGamesGetProcessor : RequestWithoutBodyProcessor<UserGamesResponseModel, IUserGamesResponseModel>
     {
-        public UserGamesGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
-            out cancellationTokenSource, ApiCategories.UserGames, HttpMethod.Get,
-            requestHeaders, null)
+        public UserGamesGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+            : base(out cancellationTokenSource, ApiCategories.UserGames, HttpMethod.Get, requestHeaders, requestParameters: null)
         {
         }
     }

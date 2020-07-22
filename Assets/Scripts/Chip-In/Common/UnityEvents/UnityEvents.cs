@@ -15,6 +15,11 @@ namespace Common.UnityEvents
     public abstract class ReadOnlyListUnityEvent<T> : UnityEvent<IReadOnlyList<T>>
     {
     }
+    
+    [Serializable]
+    public class StringUnityEvent : UnityEvent<string>
+    {
+    }
 
     [Serializable]
     public sealed class UintUnityEvent : UnityEvent<uint>

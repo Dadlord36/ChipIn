@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ActionsTranslators;
 using Controllers;
 using DataModels.RequestsModels;
+using GlobalVariables;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
 using UnityEngine;
@@ -31,6 +32,7 @@ namespace ViewModels
         {
             base.OnBecomingActiveView();
             SubscribeToMainInputEventsTranslation();
+            _userLoginRequestModel.Device = DeviceUtility.DeviceData;
         }
 
         protected override void OnBecomingInactiveView()
@@ -175,6 +177,7 @@ namespace ViewModels
 
         private Task ProcessLoginAsync()
         {
+            _userLoginRequestModel.Role = IsMerchant ? MainNames.UserRoles.BusinessOwner : MainNames.UserRoles.Client;
             return sessionController.TryToSignIn(_userLoginRequestModel);
         }
 

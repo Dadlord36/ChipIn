@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
+using Controllers;
+using Repositories.Local;
+using UnityEngine;
 using Utilities;
 using Views.ViewElements.Fields;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
@@ -16,9 +19,11 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         private readonly string Tag;
 
-        private SimpleDataHelper<TDataType> Data { get; set; }
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
+        private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
+        private SimpleDataHelper<TDataType> Data { get; set; }
 
 
         public NameAndNumberSelectableFieldListAdapter()
@@ -29,6 +34,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
         public void RefillWithData(IList<TDataType> data)
         {
             ClearData();
+            _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
             if (!IsInitialized)
             {
                 Init();
@@ -64,12 +70,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
             return instance;
         }
 
-        protected override async void UpdateViewsHolder(DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData> newOrRecycled)
+        protected override async void UpdateViewsHolder(DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData> viewHolder)
         {
             try
             {
-                var index = (uint) newOrRecycled.ItemIndex;
-                await newOrRecycled.FillView(_fillingViewAdapter.Convert(Data[(int) index], index), index);
+                var index = (uint) viewHolder.ItemIndex;
+                await viewHolder.FillView(_fillingViewAdapter.Convert(_cancellationController.TasksCancellationTokenSource,
+                    Data[(int) index], index), index).ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {

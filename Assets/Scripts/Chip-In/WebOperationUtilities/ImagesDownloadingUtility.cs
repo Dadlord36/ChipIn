@@ -36,12 +36,12 @@ namespace WebOperationUtilities
             return CreateLoadDataTask(httpClient, url, cancellationToken).ContinueWith(
                 delegate(Task<HttpResponseMessage> loadDataResponseTask)
                 {
-                    var resultMessage = loadDataResponseTask.Result;
+                    var resultMessage = loadDataResponseTask.GetAwaiter().GetResult();
                     var readBytesTask = resultMessage.Content.ReadAsByteArrayAsync();
 
                     return readBytesTask.ContinueWith(delegate(Task<byte[]> loadBytesTask)
                     {
-                        var bytesArray = loadBytesTask.Result;
+                        var bytesArray = loadBytesTask.GetAwaiter().GetResult();
                         var textureToReturn = new Texture2D(0, 0);
                         textureToReturn.LoadImage(bytesArray);
                         textureToReturn.Apply();
@@ -66,7 +66,7 @@ namespace WebOperationUtilities
 
             return Task.WhenAll(tasks).ContinueWith( delegate(Task<HttpResponseMessage[]> task)
             {
-                var result = task.Result;
+                var result = task.GetAwaiter().GetResult();
                 var bytesTasks = new List<Task<byte[]>>(result.Length);
 
                 for (int i = 0; i < result.Length; i++)
