@@ -18,6 +18,11 @@ namespace Temp
             _apiClient.DefaultRequestHeaders.Accept.Clear();
         }
 
+        public static void StopAllOngoingAPI_Requests()
+        {
+            _apiClient.CancelPendingRequests();
+        }
+
         public static void Dispose()
         {
             _apiClient.Dispose();
