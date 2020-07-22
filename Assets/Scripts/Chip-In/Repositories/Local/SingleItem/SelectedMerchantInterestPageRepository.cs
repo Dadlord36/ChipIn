@@ -15,7 +15,7 @@ namespace Repositories.Local.SingleItem
         
         public Task<int?> SelectedInterestPageId =>
             merchantInterestPagesPaginatedRepository.CreateGetItemWithIndexTask(SelectedInterestPageRepositoryIndex).ContinueWith(
-                task => task.Result.Id, TaskContinuationOptions.OnlyOnRanToCompletion);
+                task => task.GetAwaiter().GetResult().Id, TaskContinuationOptions.OnlyOnRanToCompletion);
         public Task<MerchantInterestPageDataModel> CreateGetSelectedInterestPageDataTask()
         {
             return merchantInterestPagesPaginatedRepository.CreateGetItemWithIndexTask(SelectedInterestPageRepositoryIndex);

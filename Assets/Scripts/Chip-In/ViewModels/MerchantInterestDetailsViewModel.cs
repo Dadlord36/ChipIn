@@ -110,8 +110,8 @@ namespace ViewModels
             return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
                 delegate(Task<MerchantInterestPageDataModel> task)
                 {
-                    InterestPageName = task.Result.Name;
-                    InterestPageDescription = task.Result.Message;
+                    InterestPageName = task.GetAwaiter().GetResult().Name;
+                    InterestPageDescription = task.GetAwaiter().GetResult().Message;
                 },
                 scheduler: downloadedSpritesRepository.MainThreadScheduler,
                 continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
@@ -150,7 +150,8 @@ namespace ViewModels
 
         private static string ReformatQuestion(in string question)
         {
-            return string.Concat(question.ToLower().Where(c => !char.IsWhiteSpace(c)));;
+            return string.Concat(question.ToLower().Where(c => !char.IsWhiteSpace(c)));
+            ;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

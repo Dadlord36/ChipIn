@@ -23,7 +23,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await merchantInterestListAdapter.Initialize();
+                await merchantInterestListAdapter.Initialize().ConfigureAwait(true);
                 merchantInterestListAdapter.ItemSelected += MerchantInterestListAdapterOnItemSelected;
             }
             catch (Exception e)

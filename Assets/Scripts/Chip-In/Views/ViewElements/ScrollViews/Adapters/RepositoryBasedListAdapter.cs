@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.DataHelpers;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using JetBrains.Annotations;
 using Repositories.Interfaces;
+using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
+using UnityWeld.Binding;
 using Utilities;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
+    [Binding]
     public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter> :
-        OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>
+        OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>, INotifyPropertyChanged
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
@@ -26,12 +32,25 @@ namespace Views.ViewElements.ScrollViews.Adapters
         private readonly string Tag;
 
         [SerializeField] private TRepository pagesPaginatedRepository;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
 
         public event Action StartedFetching;
         public event Action EndedFetching;
+
+        [Binding]
+        public bool ItemsListIsEmpty
+        {
+            get => _itemsListIsEmpty;
+            private set
+            {
+                if (value == _itemsListIsEmpty) return;
+                _itemsListIsEmpty = value;
+                OnPropertyChanged();
+            }
+        }
 
         public RepositoryBasedListAdapter()
         {
@@ -41,7 +60,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
-        private SimpleDataHelper<TDataType> Data { get; set; }
+        [Binding] protected SimpleDataHelper<TDataType> Data { get; set; }
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
         #region OSA implementation
@@ -49,6 +68,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
         private bool _fetching;
         private bool _loadedAll;
         private uint _retrievingItemsStartingIndex;
+        private bool _itemsListIsEmpty = true;
 
         private void ResetStateVariables()
         {
@@ -59,6 +79,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
         public Task Initialize()
         {
             ResetStateVariables();
+            _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
+
             if (Data != null)
             {
                 if (Data.Count > 0)
@@ -68,7 +90,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 Data = new SimpleDataHelper<TDataType>(this);
             }
-            
+
             return pagesPaginatedRepository.LoadDataFromServer();
         }
 
@@ -103,6 +125,9 @@ namespace Views.ViewElements.ScrollViews.Adapters
             if (_loadedAll)
                 return;
 
+            if (Data == null)
+                return;
+
             int lastVisibleItemItemIndex = -1;
             if (_VisibleItemsCount > 0)
             {
@@ -118,8 +143,22 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 if (TotalCapacity > -1) // i.e. the capacity isn't unlimited
                     newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
 
-                if (newPotentialNumberOfItems > Data.Count) // i.e. if we there's enough room for at least 1 more item
-                    await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count));
+                if (newPotentialNumberOfItems > Data.Count)
+                {
+                    try
+                    {
+                        await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        LogUtility.PrintDefaultOperationCancellationLog(Tag);
+                    }
+                    catch (Exception e)
+                    {
+                        LogUtility.PrintLogException(e);
+                        throw;
+                    }
+                } // i.e. if we there's enough room for at least 1 more item
             }
         }
 
@@ -137,7 +176,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 .ContinueWith(delegate(Task<IReadOnlyList<TDataType>> task)
                     {
                         _retrievingItemsStartingIndex += maxCount - 1;
-                        onDone(task.Result);
+                        onDone(task.GetAwaiter().GetResult());
 
                         _loadedAll = Data.Count == TotalCapacity;
                     }, _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
@@ -149,6 +188,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
             if (models.Count > 0)
                 Data.InsertItemsAtEnd(models as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
 
+            ItemsListIsEmpty = Data.Count == 0;
+
             _fetching = false;
             EndedFetching?.Invoke();
         }
@@ -157,17 +198,26 @@ namespace Views.ViewElements.ScrollViews.Adapters
         // or when anything that requires a refresh happens
         // Here you bind the data from the model to the item's views
         // *For the method's full description check the base implementation
-        protected override async void UpdateViewsHolder(TViewPageViewHolder newOrRecycled)
+        protected override async void UpdateViewsHolder(TViewPageViewHolder viewHolder)
         {
             // In this callback, "newOrRecycled.ItemIndex" is guaranteed to always reflect the
             // index of item that should be represented by this views holder. You'll use this index
             // to retrieve the model from your data set
             try
             {
-                var index = (uint) newOrRecycled.ItemIndex;
-                await newOrRecycled.FillView(_fillingViewAdapter.Convert(Data[(int) index],index), index);
+                var index = (uint) viewHolder.ItemIndex;
+                await viewHolder.FillView
+                (
+                    _fillingViewAdapter.Convert
+                    (
+                        _asyncOperationCancellationController.TasksCancellationTokenSource,
+                        Data[(int) index],
+                        index
+                    ),
+                    index
+                ).ConfigureAwait(true);
             }
-            catch (OperationCanceledException e)
+            catch (OperationCanceledException)
             {
                 LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
@@ -219,6 +269,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
 
         // This class keeps references to an item's views.
         // Your views holder should extend BaseItemViewsHolder for ListViews and CellViewsHolder for GridViews
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
     /*class MerchantInterestsListAdapter : RepositoryBasedListAdapter<>

@@ -1,7 +1,18 @@
-﻿namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
+﻿using Common;
+using Repositories.Local;
+
+namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
 {
     public abstract class FillingViewAdapter<TDataType, TViewConsumableData>
     {
-        public abstract TViewConsumableData Convert(TDataType data, uint dataIndexInRepository);
+        protected DownloadedSpritesRepository DownloadedSpritesRepository;
+
+        public void SetDownloadingSpriteRepository(DownloadedSpritesRepository downloadedSpritesRepository)
+        {
+            DownloadedSpritesRepository = downloadedSpritesRepository;
+        }
+
+        public abstract TViewConsumableData Convert(DisposableCancellationTokenSource cancellationTokenSource,
+            TDataType data, uint dataIndexInRepository);
     }
 }

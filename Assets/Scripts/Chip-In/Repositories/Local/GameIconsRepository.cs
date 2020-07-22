@@ -197,7 +197,7 @@ namespace Repositories.Local
             {
                 var texturesLoadingResponseMassages = ImagesDownloadingUtility
                     .CreateDownloadMultipleDataArrayFromUrlsTask(ApiHelper.DefaultClient, indexedUrls, cancellationToken);
-                
+
                 var textures = await texturesLoadingResponseMassages.ConfigureAwait(false);
 
                 LogUtility.PrintLog(Tag, $"Game {gameId.ToString()} icons have being successfully downloaded");
@@ -331,23 +331,17 @@ namespace Repositories.Local
                 PackedIconsData = packedIconsData;
             }
 
-            public static async Task<IconsSetRestoringData> CreateAsync(int gameId)
+            public static Task<IconsSetRestoringData> CreateAsync(int gameId)
             {
                 var storingHeadersTask = LoadStoringHeaderData(gameId);
                 var packedIconsDataTask = LoadPackedIconsData(gameId);
 
                 var tasks = new List<Task> {storingHeadersTask, packedIconsDataTask};
-                try
-                {
-                    await Task.WhenAll(tasks);
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                    throw;
-                }
-
-                return new IconsSetRestoringData(storingHeadersTask.Result, packedIconsDataTask.Result);
+                return Task.WhenAll(tasks).ContinueWith
+                (
+                    resultTask => new IconsSetRestoringData(storingHeadersTask.GetAwaiter().GetResult(),
+                        packedIconsDataTask.GetAwaiter().GetResult()), TaskContinuationOptions.OnlyOnRanToCompletion
+                );
             }
         }
 

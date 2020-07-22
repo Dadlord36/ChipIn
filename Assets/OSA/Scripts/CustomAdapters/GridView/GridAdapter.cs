@@ -307,19 +307,19 @@ namespace Com.TheFallenGames.OSA.CustomAdapters.GridView
 		/// <para>Override it (and call the base implementation!) only if you know what you're doing. If you just want to update your cells' views, do it in <see cref="UpdateCellViewsHolder(TCellVH)"/></para>
 		/// </summary>
 		/// <seealso cref="OSA{TParams, TItemViewsHolder}.UpdateViewsHolder(TItemViewsHolder)"/>
-		/// <param name="newOrRecycled">The viewsholder of the group that needs updated</param>
-		protected override void UpdateViewsHolder(CellGroupViewsHolder<TCellVH> newOrRecycled)
+		/// <param name="viewHolder">The viewsholder of the group that needs updated</param>
+		protected override void UpdateViewsHolder(CellGroupViewsHolder<TCellVH> viewHolder)
         {
 			// At this point there are enough groups for sure, but there may not be enough enabled cells, or there may be too many enabled cells
 
 			int activeCellsForThisGroup;
             // If it's the last one
-            if (newOrRecycled.ItemIndex + 1 == GetCellGroupsCount())
+            if (viewHolder.ItemIndex + 1 == GetCellGroupsCount())
             {
                 int totalCellsBeforeThisGroup = 0;
-                if (newOrRecycled.ItemIndex > 0)
+                if (viewHolder.ItemIndex > 0)
                 {
-                    totalCellsBeforeThisGroup = newOrRecycled.ItemIndex * _Params.CurrentUsedNumCellsPerGroup;
+                    totalCellsBeforeThisGroup = viewHolder.ItemIndex * _Params.CurrentUsedNumCellsPerGroup;
                 }
                 activeCellsForThisGroup = _CellsCount - totalCellsBeforeThisGroup;
             }
@@ -327,10 +327,10 @@ namespace Com.TheFallenGames.OSA.CustomAdapters.GridView
             {
                 activeCellsForThisGroup = _Params.CurrentUsedNumCellsPerGroup;
             }
-            newOrRecycled.NumActiveCells = activeCellsForThisGroup;
+            viewHolder.NumActiveCells = activeCellsForThisGroup;
 
             for (int i = 0; i < activeCellsForThisGroup; ++i)
-                UpdateCellViewsHolder(newOrRecycled.ContainingCellViewsHolders[i]);
+                UpdateCellViewsHolder(viewHolder.ContainingCellViewsHolders[i]);
         }
 
 		/// <summary>Provide your own implementation of the group prefab, if you have a custom one. Most often than not, you won't use this</summary>

@@ -84,7 +84,7 @@ namespace Views
             return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
                 .ContinueWith(delegate(Task<Sprite> task)
                     {
-                        ItemImageSprite = task.Result;
+                        ItemImageSprite = task.GetAwaiter().GetResult();
                     },
                     _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());

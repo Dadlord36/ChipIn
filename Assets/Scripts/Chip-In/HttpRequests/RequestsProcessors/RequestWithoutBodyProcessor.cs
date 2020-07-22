@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.Net.Http;
 using Common;
+using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 
 namespace HttpRequests.RequestsProcessors
@@ -22,6 +23,13 @@ namespace HttpRequests.RequestsProcessors
             HttpMethod requestMethod, IRequestHeaders requestHeaders, IReadOnlyList<string> requestParameters,
             NameValueCollection queryStringParameters) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
             requestSuffix, requestMethod, requestHeaders, null, requestParameters, queryStringParameters))
+        {
+        }
+
+        protected RequestWithoutBodyProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData) :
+            base(out cancellationTokenSource, new BaseRequestProcessorParameters(requestSuffix, requestMethod, requestHeaders,
+                null, null, paginatedRequestData.ConvertPaginationToNameValueCollection()))
         {
         }
     }
