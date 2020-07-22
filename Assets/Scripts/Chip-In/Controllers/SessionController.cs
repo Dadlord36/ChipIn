@@ -10,6 +10,7 @@ using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects;
 using ScriptableObjects.CardsControllers;
+using Temp;
 using UnityEngine;
 using Utilities;
 using ViewModels.SwitchingControllers;
@@ -114,6 +115,7 @@ namespace Controllers
         
         public Task SignOut()
         {
+            ApiHelper.StopAllOngoingAPI_Requests();
             viewsSwitchingController.ClearSwitchingHistory();
             DestroyView(nameof(CoinsGameView));
             SwitchToLoginView();
