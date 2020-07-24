@@ -21,9 +21,9 @@ public sealed class TwoButtonsOptionSelectorWithStringOptions : TwoButtonsOption
         }
     }
 
-    protected override void OnEnable()
+    protected override void Start()
     {
-        base.OnEnable();
+        base.Start();
         _selectableStringOptions = GetComponent<SelectableStringOptions>();
         SelectDefault();
     }

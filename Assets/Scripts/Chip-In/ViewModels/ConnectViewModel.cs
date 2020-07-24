@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views;
 using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
@@ -17,11 +18,6 @@ namespace ViewModels
         [SerializeField] private SponsoredAdListAdapter sponsoredAdListAdapter;
         [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
 
-
-        private bool _companyAdListIsNotEmpty;
-
-
-
         public ConnectViewModel() : base(nameof(ConnectViewModel))
         {
         }
@@ -32,8 +28,8 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-               await Task.WhenAll(companyAdListAdapter.Initialize(), sponsoredAdListAdapter.Initialize(), reservedSponsoredAdListAdapter.Initialize())
-               .ConfigureAwait(true);
+                await Task.WhenAll(companyAdListAdapter.Initialize(), sponsoredAdListAdapter.Initialize(), reservedSponsoredAdListAdapter.Initialize())
+                    .ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
@@ -49,6 +45,7 @@ namespace ViewModels
         [Binding]
         public void CreateAdButton_OnClick()
         {
+            SwitchToView(nameof(CreateCompanyAdView));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
