@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using Utilities;
 
@@ -37,6 +39,13 @@ namespace WebOperationUtilities
         public static Sprite CreateSpriteWithDefaultParameters(byte[] rawData)
         {
             return CreateSpriteWithDefaultParameters(CreateNonReadableTextureFromData(rawData));
+        }
+
+        public static Task<Texture2D> CreateTexture2DFromPathAsync(string pathToImage, TaskScheduler mainThreadTaskScheduler)
+        {
+            return FilesUtility.ReadFileBytesAsync(pathToImage).ContinueWith(finishedTask => 
+                CreateNonReadableTextureFromData(finishedTask.GetAwaiter().GetResult()), 
+                CancellationToken.None,TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadTaskScheduler);
         }
 
         private static void PrintLog(string message)

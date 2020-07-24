@@ -12,7 +12,8 @@ namespace ViewModels.Cards
     {
         private string _posterImagePath;
         private string _description;
-        private int _tokensRewardAmount;
+        
+       [SerializeField] private int tokensRewardAmount;
 
 
         [Binding] public int FeatureNumber { get; private set; }
@@ -20,11 +21,11 @@ namespace ViewModels.Cards
         [Binding]
         public int TokensRewardAmount
         {
-            get => _tokensRewardAmount;
+            get => tokensRewardAmount;
             set
             {
-                if (value == _tokensRewardAmount) return;
-                _tokensRewardAmount = value;
+                if (value == tokensRewardAmount) return;
+                tokensRewardAmount = value;
                 OnPropertyChanged();
             }
         }
