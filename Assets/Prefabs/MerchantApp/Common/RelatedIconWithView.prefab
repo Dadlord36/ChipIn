@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb9318b342a04439b11cf0bb723a95d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 6858414111924090327}
+  iconWasSelectedFromGallery:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8698166412261468896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155,6 +157,16 @@ PrefabInstance:
       propertyPath: viewModelPropertyName
       value: Views.ViewElements.SettableIconView.IconIsSelected
       objectReference: {fileID: 0}
+    - target: {fileID: 2756853271323586727, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854124414513372983, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3168282185674686959, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
       propertyPath: viewModelPropertyName
@@ -248,15 +260,3 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8698166412261468896}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6858414111924090327 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2854124414513372983, guid: c580fd31b1c2c7e40985d816bf66fcca,
-    type: 3}
-  m_PrefabInstance: {fileID: 8698166412261468896}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
