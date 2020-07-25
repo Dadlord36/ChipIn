@@ -19,6 +19,8 @@ namespace ScriptableObjects.DataSynchronizers
     public class UserProfileDataSynchronizer : ScriptableObject, IUserProfileDataWebModel, IDataSynchronization,
         INotifyPropertyChanged, IClearable
     {
+        private const string Tag = nameof(UserProfileDataSynchronizer);
+        
         #region EventsDeclaretion
 
         public event Action DataWasLoaded;
@@ -144,8 +146,13 @@ namespace ScriptableObjects.DataSynchronizers
         {
             try
             {
-                var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders);
+                var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders)
+                    .ConfigureAwait(true);
                 UserProfile.Set(response.ResponseModelInterface);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
@@ -160,8 +167,13 @@ namespace ScriptableObjects.DataSynchronizers
         {
             try
             {
-                await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile);
+                await UserProfileDataStaticRequestsProcessor.TryUpdateUserProfileData(out TasksCancellationTokenSource, RequestHeaders, UserProfile)
+                .ConfigureAwait(false);
                 ConfirmDataSaving();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

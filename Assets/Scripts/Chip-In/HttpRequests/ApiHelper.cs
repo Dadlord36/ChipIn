@@ -17,20 +17,19 @@ namespace HttpRequests
         private const string Tag = nameof(ApiHelper);
 
         private static HttpClient _mainApiClient;
-        private static HttpClient _defaultClient;
 
-        private const string JsonMediaTypeHeader = "application/json";
-        private const string MultipartFormData = "multipart/form-data";
+        public const string JsonMediaTypeHeader = "application/json";
+        public const string MultipartFormData = "multipart/form-data";
 
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
 
-        public static HttpClient DefaultClient => _defaultClient;
+        public static HttpClient DefaultClient { get; private set; }
 
         public static void InitializeClient()
         {
-            if (_defaultClient == null)
+            if (DefaultClient == null)
             {
-                _defaultClient = new HttpClient();
+                DefaultClient = new HttpClient();
             }
 
             if (_mainApiClient != null) return;
@@ -43,12 +42,12 @@ namespace HttpRequests
         public static void Close()
         {
             _mainApiClient.CancelPendingRequests();
-            _defaultClient.CancelPendingRequests();
+            DefaultClient.CancelPendingRequests();
 
             _mainApiClient.Dispose();
-            _defaultClient.Dispose();
+            DefaultClient.Dispose();
             _mainApiClient = null;
-            _defaultClient = null;
+            DefaultClient = null;
         }
 
         private static string FormRequestUri(string requestSuffix, string requestParameters,
@@ -114,9 +113,8 @@ namespace HttpRequests
             }
         }
 
-        public static async Task<Task<HttpResponseMessage>> MakeAsyncMultiPartRequest(
-            CancellationToken cancellationToken, HttpMethod methodType, string requestSuffix,
-            MultipartFormDataContent formDataContent, List<KeyValuePair<string, string>> requestHeaders)
+        public static async Task<Task<HttpResponseMessage>> MakeAsyncMultiPartRequest(CancellationToken cancellationToken, HttpMethod methodType,
+            string requestSuffix, MultipartFormDataContent formDataContent, List<KeyValuePair<string, string>> requestHeaders)
         {
             Assert.IsFalse(requestHeaders == null && formDataContent == null);
 
@@ -124,25 +122,24 @@ namespace HttpRequests
             {
                 var asString = await formDataContent.ReadAsStringAsync().ConfigureAwait(false);
                 LogUtility.PrintLog(Tag, $"MultipartFormDataContent: {asString}");
+                using (var requestMessage = new HttpRequestMessage(methodType, FormRequestUri(requestSuffix, null, null)))
+                {
+                    AddHeaders(requestMessage, requestHeaders);
+                    requestMessage.Content = formDataContent;
+                    requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
+                    return _mainApiClient.SendAsync(requestMessage, cancellationToken);
+                }
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-            using (var requestMessage = new HttpRequestMessage(methodType, FormRequestUri(requestSuffix, null, null)))
-            {
-                AddHeaders(requestMessage, requestHeaders);
-                requestMessage.Content = formDataContent;
-                requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
-                return _mainApiClient.SendAsync(requestMessage, cancellationToken);
-            }
         }
 
         private static StringContent CreateStringContent(object objectToSerialize)
         {
             var contentAsString = JsonConverterUtility.ConvertModelToJson(objectToSerialize);
-
             return CreateStringContent(contentAsString);
         }
 
