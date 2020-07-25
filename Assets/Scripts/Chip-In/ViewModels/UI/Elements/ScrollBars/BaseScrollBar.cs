@@ -1,5 +1,4 @@
-﻿using System;
-using Common.Interfaces;
+﻿using Common.Interfaces;
 using ScriptableObjects.DataSets;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -8,33 +7,14 @@ using Views.ViewElements.Lists.ScrollableList;
 
 namespace ViewModels.UI.Elements.ScrollBars
 {
-    public abstract class BaseScrollBar<TScrollBarItemView> : MonoBehaviour,IInitialize where TScrollBarItemView : BaseScrollBarItem
+    public abstract class BaseScrollBar<TScrollBarItemView> : MonoBehaviour, IInitialize where TScrollBarItemView : BaseScrollBarItem
     {
         [SerializeField] private Transform scrollBarItemsContainer;
         [SerializeField] private ItemsScrollBarElements scrollBarElementsData;
         [SerializeField] private TScrollBarItemView prefab;
 
-        public event Action<ITitled> NewItemSelected;
-
-
         private TScrollBarItemView[] _scrollElements;
         private ScrollableItemsSelector ScrollableItemsSelector => scrollBarItemsContainer.GetComponent<ScrollableItemsSelector>();
-
-
-        private void OnEnable()
-        {
-            ScrollableItemsSelector.NewItemSelected += OnCenterItemChanged;
-        }
-
-        private void OnDisable()
-        {
-            ScrollableItemsSelector.NewItemSelected -= OnCenterItemChanged;
-        }
-
-        private void OnCenterItemChanged(Transform itemTransform)
-        {
-            OnNewItemSelected(itemTransform.GetComponent<ITitled>());
-        }
 
         public void RemoveScrollBarItems()
         {
@@ -57,18 +37,10 @@ namespace ViewModels.UI.Elements.ScrollBars
             Initialize();
         }
 
-
-        private void OnNewItemSelected(ITitled obj)
-        {
-            NewItemSelected?.Invoke(obj);
-        }
-
         public void Initialize()
         {
             scrollBarItemsContainer.GetComponent<ScrollItemsUpdater>().Initialize();
             GetComponent<UI_InfiniteScroll>().Init();
         }
-        
-       
     }
 }

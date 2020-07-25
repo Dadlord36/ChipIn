@@ -1,8 +1,8 @@
 ﻿using System;
+using DataModels.Interfaces;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using Utilities;
-using Views.Bars.BarItems;
 using Views.ViewElements.Interfaces;
 
 namespace Views.ViewElements.Lists.ScrollableList
@@ -10,7 +10,8 @@ namespace Views.ViewElements.Lists.ScrollableList
     public sealed class ScrollableItemsSelector : UIBehaviour, IContentItemUpdater
     {
         private const string Tag = nameof(ScrollableItemsSelector);
-        public event Action<Transform> NewItemSelected;
+
+        public UnityEvent newItemSelected;
 
         [SerializeField] private RectTransform scrollCenter;
         [SerializeField] private float tolerance;
@@ -21,15 +22,29 @@ namespace Views.ViewElements.Lists.ScrollableList
         public Transform SelectedItem
         {
             get => _selectedItem;
-            private set
+            set
             {
                 if (ReferenceEquals(_selectedItem, value)) return;
                 _selectedItem = value;
-                LogUtility.PrintLog(Tag,$"Selected item name: {_selectedItem.GetComponent<ITitled>().Title}");
-                // _selectedItem.SetAsLastSibling();
-                OnNewItemSelected(value);
+                OnNewItemSelected();
             }
         }
+
+        public int SelectedItemIndex
+        {
+            get
+            {
+                var id = SelectedItem.GetComponent<IIdentifier>().Id;
+                if (id != null) return (int) id;
+                return 0;
+            }
+            set
+            {
+                if (SelectedItem)
+                    SelectedItem.GetComponent<IIdentifier>().Id = value;
+            }
+        }
+
 
         public void UpdateContentItem(Transform contentItem, float pathPercentage)
         {
@@ -44,9 +59,9 @@ namespace Views.ViewElements.Lists.ScrollableList
             }
         }
 
-        private void OnNewItemSelected(Transform obj)
+        private void OnNewItemSelected()
         {
-            NewItemSelected?.Invoke(obj);
+            newItemSelected?.Invoke();
         }
     }
 }

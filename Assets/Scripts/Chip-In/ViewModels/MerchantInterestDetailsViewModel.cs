@@ -83,7 +83,6 @@ namespace ViewModels
             RefillAnswersDictionary(JsonConverterUtility
                 .ConvertJsonString<InterestQuestionAnswerRequestResponse>(jsonString));
             FillListAdapterWithCorrespondingData(_questionAnswersDictionary.Keys.First());
-            scrollableItemsSelector.NewItemSelected += ScrollableItemsSelectorOnNewItemSelected;
             try
             {
                 await SetInterestPageReflectionData();
@@ -97,12 +96,6 @@ namespace ViewModels
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            scrollableItemsSelector.NewItemSelected -= ScrollableItemsSelectorOnNewItemSelected;
         }
 
         private Task SetInterestPageReflectionData()

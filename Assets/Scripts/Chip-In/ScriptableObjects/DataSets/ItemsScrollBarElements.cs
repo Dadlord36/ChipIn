@@ -1,4 +1,5 @@
 ﻿using System;
+using DataModels.Interfaces;
 using UnityEngine;
 using Views.Bars.BarItems;
 
@@ -10,7 +11,7 @@ namespace ScriptableObjects.DataSets
         Color BackgroundGradientColor2 { get; set; }
     }
     
-    public interface IScrollBarItem : IScrollBarItemBackground, ITitled
+    public interface IScrollBarItem : IScrollBarItemBackground, ITitled, IIdentifier
     {
         Sprite IconSprite { get; set; }
     }
@@ -22,6 +23,7 @@ namespace ScriptableObjects.DataSets
         [SerializeField] private string title;
         [SerializeField] private Color backgroundGradientColor1;
         [SerializeField] private Color backgroundGradientColor2;
+        [SerializeField] private int id;
 
         public Sprite IconSprite
         {
@@ -45,6 +47,12 @@ namespace ScriptableObjects.DataSets
         {
             get => backgroundGradientColor2;
             set => backgroundGradientColor2 = value;
+        }
+
+        public int? Id
+        {
+            get => id;
+            set => id = (int) value;
         }
     }
 

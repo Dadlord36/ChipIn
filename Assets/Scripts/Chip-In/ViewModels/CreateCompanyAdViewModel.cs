@@ -1,73 +1,109 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
-using ViewModels.Basic;
+using Utilities;
+using Validators;
+using ViewModels.Cards;
+using ViewModels.Interfaces;
 using Views;
 using WebOperationUtilities;
 
 namespace ViewModels
 {
-    [Binding]
-    public sealed class CreateCompanyAdViewModel : BaseViewModel, INotifyPropertyChanged
+    public class CompanyAdFeaturesPreviewData
     {
-        private bool _logoIsSelected;
-        private bool _posterIsSelected;
+        public readonly string CompanyLogoImagePath;
+        public readonly string CompanyPosterImagePath;
+        public readonly ICompanyAdFeatureModel[] FeatureModelsToPreview;
 
-        private CreateCompanyAdView ThisView => View as CreateCompanyAdView;
+        public CompanyAdFeaturesPreviewData(ICompanyAdFeatureModel[] featureModelsToPreview, string companyLogoImagePath, string companyPosterImagePath)
+        {
+            FeatureModelsToPreview = featureModelsToPreview;
+            CompanyLogoImagePath = companyLogoImagePath;
+            CompanyPosterImagePath = companyPosterImagePath;
+        }
+    }
+
+    [Binding]
+    public sealed class CreateCompanyAdViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    {
+        [SerializeField] private CompanyAdFeatureCardViewModel[] companyAdFeatureCardViewModels;
+        private string _companyLogoImagePath;
+        private string _companyPosterImagePath;
 
         [Binding]
-        public bool LogoIconSelected
+        public string CompanyPosterImagePath
         {
-            get => _logoIsSelected;
+            get => _companyPosterImagePath;
             set
             {
-                if (value == _logoIsSelected) return;
-                _logoIsSelected = true;
+                if (value == _companyPosterImagePath) return;
+                _companyPosterImagePath = value;
                 OnPropertyChanged();
             }
         }
 
         [Binding]
-        public bool PosterIsSelected
+        public string CompanyLogoImagePath
         {
-            get => _posterIsSelected;
+            get => _companyLogoImagePath;
             set
             {
-                if (value == _posterIsSelected) return;
-                _posterIsSelected = value;
+                if (value == _companyLogoImagePath) return;
+                _companyLogoImagePath = value;
                 OnPropertyChanged();
             }
         }
-        
+
         public CreateCompanyAdViewModel() : base(nameof(CreateCompanyAdViewModel))
         {
         }
 
         [Binding]
-        public void ChoseLogoImage_OnClick()
+        public async void PreviewButton_OnClick()
         {
-            NativeGallery.GetImageFromGallery(delegate(string path) { SetLogoIconFromTexture(NativeGallery.LoadImageAtPath(path)); });
+            bool canPreview = true;
+
+            foreach (var cardViewModel in companyAdFeatureCardViewModels)
+            {
+                if (new CompanyAdFeatureValidator(cardViewModel).IsValid) continue;
+                canPreview = false;
+                break;
+            }
+
+            if (string.IsNullOrEmpty(_companyLogoImagePath) || string.IsNullOrEmpty(_companyPosterImagePath))
+            {
+                canPreview = false;
+            }
+
+            if (!canPreview) return;
+
+            Texture2D texture = null;
+            try
+            {
+                texture = await SpritesUtility.CreateTexture2DFromPathAsync(CompanyPosterImagePath, GameManager.MainThreadScheduler)
+                    .ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            finally
+            {
+                SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
+                    Array.ConvertAll(companyAdFeatureCardViewModels, item => (ICompanyAdFeatureModel) item),
+                    CompanyLogoImagePath, CompanyPosterImagePath)));
+            }
         }
 
-        [Binding]
-        public void ChosePosterImage_OnClick()
-        {
-            NativeGallery.GetImageFromGallery(delegate(string path) { SetPosterIconFromTexture(NativeGallery.LoadImageAtPath(path)); });
-        }
-
-        private void SetLogoIconFromTexture(Texture2D texture)
-        {
-            LogoIconSelected = true;
-            ThisView.Logo = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-        }
-
-        private void SetPosterIconFromTexture(Texture2D texture)
-        {
-            PosterIsSelected = true;
-            ThisView.CompanyPoster = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

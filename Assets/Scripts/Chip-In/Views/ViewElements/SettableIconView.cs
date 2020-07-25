@@ -1,27 +1,53 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using WebOperationUtilities;
 
 namespace Views.ViewElements
 {
     [Binding]
-    public sealed class SettableIconView : BaseView, INotifyPropertyChanged
+    public sealed class SettableIconView : UIBehaviour, INotifyPropertyChanged
     {
-        [SerializeField] private Image iconImage;
-
-        public event Action<string> IconWasSelectedFromGallery;
+        public UnityEvent iconWasSelectedFromGallery;
 
         private bool _iconIsSelected;
+        private string _selectedImagePath;
+        private Sprite _selectedImageSprite;
 
-        private Sprite IconSprite
+        [Binding]
+        public string SelectedImagePath
         {
-            get => iconImage.sprite;
-            set => iconImage.sprite = value;
+            get => _selectedImagePath;
+            set
+            {
+                if (value == _selectedImagePath) return;
+                _selectedImagePath = value;
+                
+                if (!string.IsNullOrEmpty(_selectedImagePath))
+                {
+                    SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(
+                        NativeGallery.LoadImageAtPath(_selectedImagePath));
+                }
+
+                OnPropertyChanged();
+            }
+        }
+
+
+        [Binding]
+        public Sprite SelectedImageSprite
+        {
+            get => _selectedImageSprite;
+            set
+            {
+                _selectedImageSprite = value;
+                IconIsSelected = _selectedImageSprite != null;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
@@ -36,10 +62,6 @@ namespace Views.ViewElements
             }
         }
 
-        public SettableIconView() : base(nameof(SettableIconView))
-        {
-        }
-
         [Binding]
         public void IconPlaceholder_OnClick()
         {
@@ -50,16 +72,11 @@ namespace Views.ViewElements
         {
             NativeGallery.GetImageFromGallery(delegate(string path)
             {
-                SetIconFromTexture(NativeGallery.LoadImageAtPath(path));
-                OnIconWasSelectedFromGallery(path);
+                SelectedImagePath = path;
+                OnIconWasSelectedFromGallery();
             });
         }
 
-        private void SetIconFromTexture(Texture2D texture)
-        {
-            IconSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-            IconIsSelected = true;
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -69,9 +86,9 @@ namespace Views.ViewElements
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void OnIconWasSelectedFromGallery(string obj)
+        private void OnIconWasSelectedFromGallery()
         {
-            IconWasSelectedFromGallery?.Invoke(obj);
+            iconWasSelectedFromGallery?.Invoke();
         }
     }
 }

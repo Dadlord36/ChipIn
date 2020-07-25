@@ -6,7 +6,7 @@ public class TwoButtonsOptionSelector : MonoBehaviour
     [SerializeField] private GroupedHighlightedButton selectedByDefaultButton;
 
 
-    protected virtual void OnEnable()
+    protected virtual void Start()
     {
         selectedByDefaultButton.PerformGroupAction();
     }

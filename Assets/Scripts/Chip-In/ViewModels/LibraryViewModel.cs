@@ -8,24 +8,12 @@ namespace ViewModels
     [Binding]
     public class LibraryViewModel : ViewsSwitchingViewModel, IMerchantLibraryModel
     {
-        [SerializeField] private SettableIconView settableIconView;
         [SerializeField] private MerchantLibraryRepository merchantLibraryRepository;
 
         public LibraryViewModel() : base(nameof(LibraryViewModel))
         {
         }
 
-        protected override void OnBecomingActiveView()
-        {
-            base.OnBecomingActiveView();
-            settableIconView.IconWasSelectedFromGallery += OnIconWasSelectedFromGallery;
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            settableIconView.IconWasSelectedFromGallery -= OnIconWasSelectedFromGallery;
-        }
 
         private void OnIconWasSelectedFromGallery(string path)
         {
