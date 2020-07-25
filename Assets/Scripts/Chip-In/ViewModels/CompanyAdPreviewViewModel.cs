@@ -1,10 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Repositories.Remote;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using ViewModels.Basic;
-using ViewModels.Interfaces;
 using Views;
 using WebOperationUtilities;
 
@@ -13,11 +16,13 @@ namespace ViewModels
     [Binding]
     public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<CompanyAdPreviewView>, INotifyPropertyChanged
     {
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+
         private Sprite _backgroundSprite;
         private int _selectedItemIndex;
         private string _selectedFeatureDescription;
 
-        private ICompanyAdFeatureModel[] _featuresModels;
+        private CompanyAdFeaturesPreviewData _companyAdFeaturesPreviewData;
 
         [Binding]
         public string SelectedFeatureDescription
@@ -39,7 +44,7 @@ namespace ViewModels
             {
                 if (value == _selectedItemIndex) return;
                 _selectedItemIndex = value;
-                SelectedFeatureDescription = _featuresModels[value].Description;
+                SelectedFeatureDescription = _companyAdFeaturesPreviewData.FeatureModelsToPreview[value].Description;
                 OnPropertyChanged();
             }
         }
@@ -60,17 +65,33 @@ namespace ViewModels
         {
         }
 
+        [Binding]
+        public async void ConfirmButton_OnClick()
+        {
+            try
+            {
+                var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository, _companyAdFeaturesPreviewData)
+                    .ConfigureAwait(true);
+                LogUtility.PrintLog(Tag, result.Content);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            var companyAdFeaturesPreviewData = RelatedView.FormTransitionBundle.TransitionData as CompanyAdFeaturesPreviewData;
-            Debug.Assert(companyAdFeaturesPreviewData != null, nameof(companyAdFeaturesPreviewData) + " != null");
-            
-            if (companyAdFeaturesPreviewData.BackgroundTexture != null)
-                BackgroundSprite = SpritesUtility.CreateSpriteWithDefaultParameters(companyAdFeaturesPreviewData.BackgroundTexture);
-            
-            _featuresModels = companyAdFeaturesPreviewData.FeatureModelsToPreview;
+            _companyAdFeaturesPreviewData = RelatedView.FormTransitionBundle.TransitionData as CompanyAdFeaturesPreviewData;
+            Debug.Assert(_companyAdFeaturesPreviewData != null, nameof(_companyAdFeaturesPreviewData) + " != null");
+
+            if (_companyAdFeaturesPreviewData.CompanyPosterImagePath != null)
+                BackgroundSprite = SpritesUtility.CreateSpriteWithDefaultParameters(
+                    await SpritesUtility.CreateTexture2DFromPathAsync(_companyAdFeaturesPreviewData.CompanyPosterImagePath, GameManager.MainThreadScheduler)
+                        .ConfigureAwait(true)
+                );
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -15,13 +15,15 @@ namespace ViewModels
 {
     public class CompanyAdFeaturesPreviewData
     {
-        public readonly Texture2D BackgroundTexture;
+        public readonly string CompanyLogoImagePath;
+        public readonly string CompanyPosterImagePath;
         public readonly ICompanyAdFeatureModel[] FeatureModelsToPreview;
 
-        public CompanyAdFeaturesPreviewData(ICompanyAdFeatureModel[] featureModelsToPreview, Texture2D backgroundTexture)
+        public CompanyAdFeaturesPreviewData(ICompanyAdFeatureModel[] featureModelsToPreview, string companyLogoImagePath, string companyPosterImagePath)
         {
             FeatureModelsToPreview = featureModelsToPreview;
-            BackgroundTexture = backgroundTexture;
+            CompanyLogoImagePath = companyLogoImagePath;
+            CompanyPosterImagePath = companyPosterImagePath;
         }
     }
 
@@ -54,6 +56,10 @@ namespace ViewModels
                 _companyLogoImagePath = value;
                 OnPropertyChanged();
             }
+        }
+
+        public CreateCompanyAdViewModel() : base(nameof(CreateCompanyAdViewModel))
+        {
         }
 
         [Binding]
@@ -92,15 +98,10 @@ namespace ViewModels
             }
             finally
             {
-                SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(
-                    new CompanyAdFeaturesPreviewData(Array.ConvertAll(companyAdFeatureCardViewModels,
-                        item => (ICompanyAdFeatureModel) item), texture)));
+                SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
+                    Array.ConvertAll(companyAdFeatureCardViewModels, item => (ICompanyAdFeatureModel) item),
+                    CompanyLogoImagePath, CompanyPosterImagePath)));
             }
-        }
-
-
-        public CreateCompanyAdViewModel() : base(nameof(CreateCompanyAdViewModel))
-        {
         }
 
 
