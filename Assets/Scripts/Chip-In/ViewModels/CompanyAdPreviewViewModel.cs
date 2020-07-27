@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -17,12 +18,14 @@ namespace ViewModels
     public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<CompanyAdPreviewView>, INotifyPropertyChanged
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private AlertCardController alertCardController;
 
         private Sprite _backgroundSprite;
         private int _selectedItemIndex;
         private string _selectedFeatureDescription;
 
         private CompanyAdFeaturesPreviewData _companyAdFeaturesPreviewData;
+        private bool _isSendingRequest;
 
         [Binding]
         public string SelectedFeatureDescription
@@ -49,6 +52,17 @@ namespace ViewModels
             }
         }
 
+        [Binding]
+        public bool IsSendingRequest
+        {
+            get => _isSendingRequest;
+            set
+            {
+                if (value == _isSendingRequest) return;
+                _isSendingRequest = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public Sprite BackgroundSprite
@@ -70,14 +84,24 @@ namespace ViewModels
         {
             try
             {
+                IsSendingRequest = true;
                 var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository, _companyAdFeaturesPreviewData)
                     .ConfigureAwait(true);
-                LogUtility.PrintLog(Tag, result.Content);
+                alertCardController.ShowAlertWithText(result.IsSuccessful ? "Advert created successfully" : result.ErrorMessage);
+                SwitchToView(nameof(ConnectView));
+            }
+            catch (OperationCanceledException)
+            {
+                alertCardController.ShowAlertWithText("Operation was cancelled");
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
+            }
+            finally
+            {
+                IsSendingRequest = false;
             }
         }
 
