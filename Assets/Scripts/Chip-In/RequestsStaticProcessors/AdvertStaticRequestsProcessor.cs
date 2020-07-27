@@ -16,7 +16,7 @@ namespace RequestsStaticProcessors
 {
     public static class AdvertStaticRequestsProcessor
     {
-        private static string Tag = nameof(AdvertStaticRequestsProcessor);
+        private const string Tag = nameof(AdvertStaticRequestsProcessor);
 
         public static Task<BaseRequestProcessor<object, AdvertsListResponseDataModel, IAdvertsListResponseModel>.HttpResponse>
             ListAdverts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, PaginatedRequestData

@@ -19,8 +19,8 @@ namespace HttpRequests
         private static HttpClient _mainApiClient;
         private static HttpClient _defaultClient;
 
-        private const string JsonMediaTypeHeader = "application/json";
-        private const string MultipartFormData = "multipart/form-data";
+        public const string JsonMediaTypeHeader = "application/json";
+        public const string MultipartFormData = "multipart/form-data";
 
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
 
