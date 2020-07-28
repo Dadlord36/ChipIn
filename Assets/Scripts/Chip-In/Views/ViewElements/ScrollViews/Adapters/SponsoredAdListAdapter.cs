@@ -11,7 +11,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class SponsoredAdListAdapter : RepositoryBasedListAdapter<SponsoredAdRepository, SponsoredAdDataModel,
+    public class SponsoredAdListAdapter : SelectableElementsPagesListAdapter<SponsoredAdRepository, SponsoredAdDataModel,
         DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>,
         SponsoredAdCardViewModel.FieldFillingData, SponsoredAdListAdapter.SponsoredAdFillingViewAdapter>
     {

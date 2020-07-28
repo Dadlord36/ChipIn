@@ -13,7 +13,9 @@ namespace ViewModels.UI.Elements
         
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private ViewsSwitchingAnimationBinding viewsSwitchingAnimationBinding;
-        private readonly ViewsSwitchingParameters _defaultParameters = new ViewsSwitchingParameters(
+        
+        
+        public static readonly ViewsSwitchingParameters DefaultParameters = new ViewsSwitchingParameters(
             new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveOut, false,
                ViewAppearanceParameters.SwitchingViewPosition.Above, MoveDirection.Right),
             new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveIn, false, 
@@ -54,7 +56,7 @@ namespace ViewModels.UI.Elements
         public void SwitchToPreviousView()
         {
             viewsSwitchingController.SwitchToPreviousView();
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultParameters);
+            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(DefaultParameters);
         }
     }
 }

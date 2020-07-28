@@ -19,6 +19,14 @@ namespace Utilities
         {
             rectTransform.localScale = Vector3.one;
         }
-        
+
+        public static void Centralize(RectTransform rectTransform)
+        {
+            var center = new Vector2(.5f, .5f);
+            rectTransform.anchorMin = center;
+            rectTransform.anchorMax = center;
+            rectTransform.pivot = center;
+            ResetSize(rectTransform);
+        }
     }
 }

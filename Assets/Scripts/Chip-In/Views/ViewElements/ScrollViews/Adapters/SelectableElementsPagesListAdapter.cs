@@ -9,8 +9,7 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
-        TFillingViewAdapter> : RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>,
-        IIdentifiedSelection
+        TFillingViewAdapter> : RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
@@ -22,7 +21,9 @@ namespace Views.ViewElements.ScrollViews.Adapters
         protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
         {
             var viewHolder = base.CreateViewsHolder(itemIndex);
-            viewHolder.root.GetComponent<IIdentifiedSelection>().ItemSelected += OnItemSelected;
+            var selection = viewHolder.root.GetComponent<IIdentifiedSelection>();
+            selection.IndexInOrder = (uint) itemIndex;
+            selection.ItemSelected += OnItemSelected;
             return viewHolder;
         }
 

@@ -28,6 +28,7 @@ namespace Views.ViewElements.Fields
         [SerializeField] private TMP_Text nameField;
         [SerializeField] private TMP_Text numberField;
 
+        public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
 
         private uint _index;

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using ViewModels.Basic;
 using ViewModels.SwitchingControllers;
+using ViewModels.UI.Elements;
 
 namespace ViewModels
 {
@@ -42,6 +43,12 @@ namespace ViewModels
         public void SwitchToView(string viewName, FormsTransitionBundle formsTransitionBundle = default)
         {
             SwitchToView(new ViewsPairInfo(null, viewName), formsTransitionBundle);
+        }
+        
+        protected void SwitchToPreviousView()
+        {
+            viewsSwitchingController.SwitchToPreviousView();
+            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
         }
 
         public ViewsSwitchingViewModel(string tag) : base(tag)
