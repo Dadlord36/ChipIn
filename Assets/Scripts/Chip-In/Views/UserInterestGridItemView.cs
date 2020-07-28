@@ -20,6 +20,7 @@ namespace Views
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
+        public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
 
         private uint _interestId;

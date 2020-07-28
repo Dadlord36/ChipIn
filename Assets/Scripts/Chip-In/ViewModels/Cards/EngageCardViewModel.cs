@@ -19,6 +19,7 @@ namespace ViewModels.Cards
         INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
 
         private const string EmptyFieldText = "-";

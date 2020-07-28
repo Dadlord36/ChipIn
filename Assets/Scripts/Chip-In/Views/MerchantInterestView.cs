@@ -7,7 +7,7 @@ using Views.ViewElements.ScrollViews.Adapters;
 
 namespace Views
 {
-    public sealed class MerchantInterestView : BaseView, IIdentifiedSelection
+    public sealed class MerchantInterestView : BaseView
     {
         [SerializeField] private MerchantInterestPagesListAdapter merchantInterestPagesListAdapter;
         public UnityEvent beingSwitchedTo;

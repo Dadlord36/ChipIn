@@ -1,18 +1,24 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsoredAdCardViewModel : MonoBehaviour, INotifyPropertyChanged,
-        IFillingView<SponsoredAdCardViewModel.FieldFillingData>
+    public sealed class SponsoredAdCardViewModel : MonoBehaviour, INotifyPropertyChanged, IPointerClickHandler,
+        IFillingView<SponsoredAdCardViewModel.FieldFillingData>, IIdentifiedSelection
     {
+        public uint IndexInOrder { get; set; }
+        public event Action<uint> ItemSelected;
+        
         public class FieldFillingData
         {
             public readonly Task<Texture2D> LoadBackgroundTextureTask;
@@ -51,6 +57,16 @@ namespace ViewModels.Cards
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            OnItemSelected(IndexInOrder);
+        }
+
+        private void OnItemSelected(uint index)
+        {
+            ItemSelected?.Invoke(index);
         }
     }
 }

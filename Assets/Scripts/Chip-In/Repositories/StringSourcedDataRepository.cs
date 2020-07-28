@@ -51,13 +51,18 @@ namespace Repositories
 
         public Task<TDataType> CreateGetItemWithIndexTask(uint itemIndex)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_dataList[(int) itemIndex]);
         }
 
+        public void AddItem(TDataType item)
+        {
+            _dataList.Add(item);
+        }
 
         public override Task LoadDataFromServer()
         {
-            if (string.IsNullOrEmpty(sourceString)) return Task.CompletedTask;
+            if (_dataList.Count > 0 || string.IsNullOrEmpty(sourceString)) return Task.CompletedTask;
+
             var parsedData = JsonConverterUtility.ConvertJsonString<TempRepoList<TDataType>>(sourceString);
             _dataList.Clear();
             _dataList = parsedData.ListOfItems;
