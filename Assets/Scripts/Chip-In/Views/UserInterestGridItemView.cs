@@ -20,6 +20,7 @@ namespace Views
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
 
+        public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
 
         private uint _interestId;
@@ -84,7 +85,7 @@ namespace Views
             return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
                 .ContinueWith(delegate(Task<Sprite> task)
                     {
-                        ItemImageSprite = task.Result;
+                        ItemImageSprite = task.GetAwaiter().GetResult();
                     },
                     _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());

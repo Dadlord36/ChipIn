@@ -31,7 +31,7 @@ namespace Repositories.Local
                 return ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, taskScheduler, Url, cancellationToken)
                     .ContinueWith(delegate(Task<Texture2D> task)
                     {
-                        var texture = task.Result;
+                        var texture = task.GetAwaiter().GetResult();
                         return LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
                     }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, taskScheduler);
             }

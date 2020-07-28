@@ -42,14 +42,9 @@ namespace RequestsStaticProcessors
             var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterImageFilePath);
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
 
-            var form = new MultipartFormDataContent
-            {
-                {
-                    new ByteArrayContent(imageAsBytesArray), "offer[poster]",
-                    Path.GetFileName(requestModel.PosterImageFilePath)
-                }
-            };
-
+            var form = new MultipartFormDataContent();
+            
+            form.Add(new ByteArrayContent(imageAsBytesArray), "offer[poster]", Path.GetFileName(requestModel.PosterImageFilePath));
             foreach (var element in elements)
             {
                 form.Add(new StringContent(element.Value), $"offer[{element.Key}]");

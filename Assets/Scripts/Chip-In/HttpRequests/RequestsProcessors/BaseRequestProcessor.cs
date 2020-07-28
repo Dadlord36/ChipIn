@@ -156,9 +156,8 @@ namespace HttpRequests.RequestsProcessors
                         return default;
                     }
 
-                    var requestResponse =
-                        await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode)
-                            .ConfigureAwait(false);
+                    var requestResponse = await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode)
+                        .ConfigureAwait(false);
                     var httpResponse = new HttpResponse
                     {
                         ResponseModelInterface = requestResponse, Headers = responseMessage.Headers,

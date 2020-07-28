@@ -30,7 +30,7 @@ namespace Repositories.Remote.Paginated
             DisposableCancellationTokenSource innerCancellationTokenSource = null;
             var cratedTask = SelectedInterestId.ContinueWith(task => CommunitiesInterestsStaticProcessor
                 .GetMerchantInterestPages(out innerCancellationTokenSource, authorisationDataRepository,
-                    task.Result.Value, paginatedRequestData), TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
+                    task.GetAwaiter().GetResult().Value, paginatedRequestData), TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
             cancellationTokenSource = innerCancellationTokenSource;
             return cratedTask;
         }

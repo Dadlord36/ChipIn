@@ -12,7 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb9318b342a04439b11cf0bb723a95d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 6858414111924090327}
+  iconWasSelectedFromGallery:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1597468343693890370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6842189623306328647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
+  viewPropertyName: UnityEngine.UI.Image.sprite
 --- !u!1001 &8698166412261468896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -155,6 +173,16 @@ PrefabInstance:
       propertyPath: viewModelPropertyName
       value: Views.ViewElements.SettableIconView.IconIsSelected
       objectReference: {fileID: 0}
+    - target: {fileID: 2756853271323586727, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2854124414513372983, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3168282185674686959, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
       propertyPath: viewModelPropertyName
@@ -189,6 +217,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4197402396884714298, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4197402396884714298, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4431148107804166194, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
@@ -240,6 +278,31 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9156067860044936180, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._roundness
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156067860044936180, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._roundnessBottomLeft
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156067860044936180, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._roundnessBottomRight
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156067860044936180, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._roundnessTopLeft
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 9156067860044936180, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._roundnessTopRight
+      value: 13
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c580fd31b1c2c7e40985d816bf66fcca, type: 3}
 --- !u!1 &1858095095194699604 stripped
@@ -248,15 +311,9 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8698166412261468896}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6858414111924090327 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2854124414513372983, guid: c580fd31b1c2c7e40985d816bf66fcca,
+--- !u!1 &6842189623306328647 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2756853271323586727, guid: c580fd31b1c2c7e40985d816bf66fcca,
     type: 3}
   m_PrefabInstance: {fileID: 8698166412261468896}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

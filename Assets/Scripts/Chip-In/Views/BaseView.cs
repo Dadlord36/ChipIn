@@ -22,6 +22,8 @@ namespace Views
         protected readonly string Tag;
         public string ViewName => GetType().Name;
         public RectTransform ViewRootRectTransform => transform as RectTransform;
+        public FormsTransitionBundle FormTransitionBundle { get; set; }
+
         private INotifySwitching _viewModelNotifier;
         private INotifyVisibilityChanged _viewModelVisibilityNotifier;
 

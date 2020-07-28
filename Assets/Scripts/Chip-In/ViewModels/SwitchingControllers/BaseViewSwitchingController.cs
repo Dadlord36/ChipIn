@@ -9,7 +9,7 @@ namespace ViewModels.SwitchingControllers
     {
         [SerializeField] protected ViewsSwitchingBinding viewsSwitchingBindingObject;
         [SerializeField] private SwitchingHistoryController switchingHistoryController;
-        
+
         protected virtual void OnEnable()
         {
             Assert.IsNotNull(viewsSwitchingBindingObject);
@@ -30,19 +30,20 @@ namespace ViewModels.SwitchingControllers
         {
             switchingHistoryController.ClearHistory();
         }
-        
+
         public void SwitchToPreviousView()
         {
             ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack());
         }
 
-        public void RequestSwitchToView(string fromViewName, string toViewName)
+        public void RequestSwitchToView(string fromViewName, string toViewName, FormsTransitionBundle formsTransitionBundle = default)
         {
             if (!string.IsNullOrEmpty(fromViewName))
                 AddToHistoryStack(fromViewName);
-            ProcessViewsSwitching(fromViewName, toViewName);
+            ProcessViewsSwitching(fromViewName, toViewName, formsTransitionBundle);
         }
 
-        protected abstract void ProcessViewsSwitching(in string fromViewName, in string toViewName);
+        protected abstract void ProcessViewsSwitching(in string fromViewName, in string toViewName,
+            FormsTransitionBundle formsTransitionBundle = default);
     }
 }

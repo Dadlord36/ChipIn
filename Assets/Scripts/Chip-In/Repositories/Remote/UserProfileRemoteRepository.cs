@@ -38,8 +38,6 @@ namespace Repositories.Remote
 
         #region IUserProfile delegation
 
-        private int _coinsGameResult;
-
         private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
 
         public GeoLocation UserLocation
@@ -163,7 +161,7 @@ namespace Repositories.Remote
             if (!IsAllowedToSaveToServer) return;
             try
             {
-                await SaveDataToServer();
+                await SaveDataToServer().ConfigureAwait(true);
             }
             catch (Exception e)
             {
@@ -172,32 +170,24 @@ namespace Repositories.Remote
             }
         }
 
-        private async Task LoadAvatarImageFromServerAsync()
+        private Task LoadAvatarImageFromServerAsync()
         {
-            try
+            if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
             {
-                if (string.IsNullOrEmpty(UserProfileDataRemote.AvatarImageUrl))
+                LogUtility.PrintLog(Tag, "There is not URL to load user profile avatar image from", this);
+                return Task.CompletedTask;
+            }
+
+            return downloadedSpritesRepository.CreateLoadTexture2DTask(UserProfileDataRemote.AvatarImageUrl,
+                _cancellationController.TasksCancellationTokenSource.Token).ContinueWith(
+                delegate(Task<Texture2D> iconLoadingTask)
                 {
-                    LogUtility.PrintLog(Tag, "There is not URL to load user profile avatar image from", this);
-                    return;
+                    AvatarImage = iconLoadingTask.GetAwaiter().GetResult();
+
+                    LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
+                        this);
                 }
-
-                _cancellationController.CancelOngoingTask();
-                var texture2D = await downloadedSpritesRepository.CreateLoadTexture2DTask(UserProfileDataRemote.AvatarImageUrl,
-                    _cancellationController.TasksCancellationTokenSource.Token);
-                AvatarImage = texture2D;
-
-                LogUtility.PrintLog(Tag, AvatarImage ? "User avatar image was loaded" : "User avatar image is null after being loaded",
-                    this);
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+                , TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private void OnProfileDataChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -214,36 +204,23 @@ namespace Repositories.Remote
             AvatarImage = defaultAvatarImage;
         }
 
-        public override async Task LoadDataFromServer()
+        public override Task LoadDataFromServer()
         {
             _isLoadingData = true;
-            try
-            {
-                await UserProfileDataSynchronization.LoadDataFromServer();
-                await LoadAvatarImageFromServerAsync();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-
-            ConfirmDataLoading();
+            _cancellationController.CancelOngoingTask();
+            return UserProfileDataSynchronization.LoadDataFromServer().ContinueWith(
+                delegate
+                {
+                    return LoadAvatarImageFromServerAsync().ContinueWith(delegate { ConfirmDataLoading(); },
+                        TaskContinuationOptions.OnlyOnRanToCompletion);
+                }
+                , TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        public override async Task SaveDataToServer()
+        public override Task SaveDataToServer()
         {
-            try
-            {
-                await UserProfileDataSynchronization.SaveDataToServer();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-
-            ConfirmDataSaved();
+            return UserProfileDataSynchronization.SaveDataToServer().ContinueWith(
+                delegate { ConfirmDataSaved(); }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         protected override void ConfirmDataLoading()

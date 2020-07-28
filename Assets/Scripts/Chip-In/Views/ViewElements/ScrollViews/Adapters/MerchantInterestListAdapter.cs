@@ -1,4 +1,6 @@
-﻿using DataModels;
+﻿using System.Threading.Tasks;
+using Common;
+using DataModels;
 using Repositories.Remote.Paginated;
 using Views.ViewElements.Fields;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
@@ -16,7 +18,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         public class MerchantInterestDataAdapter : FillingViewAdapter<MarketInterestDetailsDataModel, NameAndNumberSelectableFieldFillingData>
         {
-            public override NameAndNumberSelectableFieldFillingData Convert(MarketInterestDetailsDataModel data, uint dataIndexInRepository)
+            public override NameAndNumberSelectableFieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
+                MarketInterestDetailsDataModel data, uint dataIndexInRepository)
             {
                 return new NameAndNumberSelectableFieldFillingData(data.Name, dataIndexInRepository, data.Size);
             }

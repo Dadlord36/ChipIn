@@ -12,10 +12,8 @@ namespace ViewModels
     [Binding]
     public sealed class SettingsViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
         [SerializeField] private SessionController sessionController;
-
-
+        
         public SettingsViewModel() : base(nameof(SettingsViewModel))
         {
         }
@@ -28,7 +26,6 @@ namespace ViewModels
 
         private void Start()
         {
-            viewsPlacer.Initialize();
             ShowMyProfile();
         }
 
@@ -37,7 +34,11 @@ namespace ViewModels
         {
             try
             {
-                await LogOut();
+                await LogOut().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
@@ -49,19 +50,19 @@ namespace ViewModels
         [Binding]
         public void ShowMyProfile()
         {
-            SwitchToView(nameof(UserProfileView));
+           
         }
 
         [Binding]
         public void ShowMyWallet()
         {
-            SwitchToView(nameof(TokenBalanceView));
+           
         }
 
         [Binding]
         public void ShowMyInterest()
         {
-            SwitchToView(nameof(MyInterestView));
+            
         }
 
         private Task LogOut()

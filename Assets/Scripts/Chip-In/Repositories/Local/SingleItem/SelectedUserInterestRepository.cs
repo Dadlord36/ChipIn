@@ -13,6 +13,6 @@ namespace Repositories.Local.SingleItem
 
         public Task<int?> SelectedUserInterestId =>
             basicDataPaginatedListRepository.CreateGetItemWithIndexTask(SelectedUserInterestRepositoryIndex).ContinueWith(task =>
-                task.Result.Id, TaskContinuationOptions.OnlyOnRanToCompletion);
+                task.GetAwaiter().GetResult().Id, TaskContinuationOptions.OnlyOnRanToCompletion);
     }
 }

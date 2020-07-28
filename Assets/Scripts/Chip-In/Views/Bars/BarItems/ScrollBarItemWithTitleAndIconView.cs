@@ -11,6 +11,7 @@ namespace Views.Bars.BarItems
         public event Action<string> Selected;
 
         [SerializeField] private Image iconImage;
+        [SerializeField] private int id;
 
 
         private PointClickRetranslator PointClickRetranslatorComponent => GetComponent<PointClickRetranslator>();
@@ -19,6 +20,15 @@ namespace Views.Bars.BarItems
         {
             get => iconImage.sprite;
             set => iconImage.sprite = value;
+        }
+
+        public int? Id
+        {
+            get => id;
+            set
+            {
+                if (value != null) id = (int) value;
+            }
         }
 
         protected override void OnEnable()
@@ -42,11 +52,14 @@ namespace Views.Bars.BarItems
         {
             base.Set(scrollBarItemData);
             IconSprite = scrollBarItemData.IconSprite;
+            id = (int) scrollBarItemData.Id;
         }
 
         private void OnSelected()
         {
             Selected?.Invoke(Title);
         }
+
+
     }
 }

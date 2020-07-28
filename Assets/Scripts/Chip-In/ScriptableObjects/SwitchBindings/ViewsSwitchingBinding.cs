@@ -12,9 +12,11 @@ namespace ScriptableObjects.SwitchBindings
         [SerializeField] private ViewsContainer viewsContainer;
         public event Action<BaseView> ViewSwitchingRequested;
 
-        public void SwitchViews(in ViewsPairInfo viewsPairInfo)
+        public void SwitchViews(in ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle)
         {
-            ViewSwitchingRequested?.Invoke(viewsContainer.GetViewByName(viewsPairInfo.ViewToSwitchToName));
+            var viewToSwitchTo = viewsContainer.GetViewByName(viewsPairInfo.ViewToSwitchToName);
+            viewToSwitchTo.FormTransitionBundle = formsTransitionBundle;
+            ViewSwitchingRequested?.Invoke(viewToSwitchTo);
         }
 
         public void RemoveExistingViewInstance(in string viewName)
