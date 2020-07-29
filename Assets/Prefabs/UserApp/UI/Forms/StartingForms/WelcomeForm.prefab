@@ -997,13 +997,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7543345072215469577}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9133138484910998965}
-  m_Father: {fileID: 8690907754332001720}
-  m_RootOrder: 1
+  m_Father: {fileID: 1365536131243246675}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1192,6 +1192,7 @@ GameObject:
   - component: {fileID: 6360542944954598607}
   - component: {fileID: 6054712432066407343}
   - component: {fileID: 4882341878190551065}
+  - component: {fileID: 7809273435470269181}
   m_Layer: 5
   m_Name: ClickRect
   m_TagString: Untagged
@@ -1209,7 +1210,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4041666105589989771}
   m_Father: {fileID: 8690907754332001720}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1271,6 +1273,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7809273435470269181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497838765908270144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.WelcomeViewModel.SignUpButton_OnClick
+  viewEventName: Common.PointClickRetranslator.pointerClicked
 --- !u!1 &8591826154053974987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,7 +1317,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1365536131243246675}
-  - {fileID: 4041666105589989771}
   m_Father: {fileID: 2410876309829289492}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
