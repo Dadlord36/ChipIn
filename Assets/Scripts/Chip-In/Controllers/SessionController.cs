@@ -4,13 +4,13 @@ using DataModels;
 using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
 using GlobalVariables;
+using HttpRequests;
 using Repositories;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects;
 using ScriptableObjects.CardsControllers;
-using Temp;
 using UnityEngine;
 using Utilities;
 using ViewModels.SwitchingControllers;
@@ -115,7 +115,7 @@ namespace Controllers
         
         public Task SignOut()
         {
-            ApiHelper.StopAllOngoingAPI_Requests();
+            ApiHelper.StopAllOngoingRequests();
             viewsSwitchingController.ClearSwitchingHistory();
             DestroyView(nameof(CoinsGameView));
             SwitchToLoginView();

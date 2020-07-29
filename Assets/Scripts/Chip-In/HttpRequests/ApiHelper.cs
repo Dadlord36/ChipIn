@@ -38,11 +38,16 @@ namespace HttpRequests
             _mainApiClient.DefaultRequestHeaders.Accept.Clear();
         }
 
-
-        public static void Close()
+        public static void StopAllOngoingRequests()
         {
             _mainApiClient.CancelPendingRequests();
             DefaultClient.CancelPendingRequests();
+        }
+
+
+        public static void Close()
+        {
+            StopAllOngoingRequests();
 
             _mainApiClient.Dispose();
             DefaultClient.Dispose();
