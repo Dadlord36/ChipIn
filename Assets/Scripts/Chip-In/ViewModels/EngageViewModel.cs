@@ -1,18 +1,22 @@
 ﻿using System;
-using Repositories.Local;
-using Repositories.Local.SingleItem;
-using UnityEngine;
+using UnityWeld.Binding;
 using Utilities;
 using Views;
 using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
+    [Binding]
     public class EngageViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private OfferCreationRepository offerCreationRepository;
-        [SerializeField] private MerchantInterestListAdapter merchantInterestListAdapter;
-        [SerializeField] private SelectedMerchantInterestRepository selectedMerchantInterestRepository;
+        private uint _selectedCommunityId;
+
+        [Binding]
+        public uint SelectedCommunityId
+        {
+            get => _selectedCommunityId;
+            set => MerchantInterestListAdapterOnItemSelected(_selectedCommunityId = value);
+        }
 
         public EngageViewModel() : base(nameof(EngageViewModel))
         {
@@ -21,11 +25,16 @@ namespace ViewModels
         protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
+            var adapter = GetComponentInChildren<MerchantCommunitiesDetailsListAdapter>();
             try
             {
-                await merchantInterestListAdapter.Initialize().ConfigureAwait(true);
-                merchantInterestListAdapter.ItemSelected += MerchantInterestListAdapterOnItemSelected;
+                await adapter.Initialize().ConfigureAwait(true);
             }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
@@ -33,16 +42,10 @@ namespace ViewModels
             }
         }
 
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            merchantInterestListAdapter.ItemSelected -= MerchantInterestListAdapterOnItemSelected;
-        }
 
         private void MerchantInterestListAdapterOnItemSelected(uint index)
         {
-            selectedMerchantInterestRepository.SelectedInterestRepositoryIndex = index;
-            SwitchToView(nameof(MerchantInterestView));
+            SwitchToView(nameof(MerchantInterestView), new FormsTransitionBundle(index));
         }
     }
 }
