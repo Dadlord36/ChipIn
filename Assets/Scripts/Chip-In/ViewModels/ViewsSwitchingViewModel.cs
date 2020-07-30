@@ -44,6 +44,11 @@ namespace ViewModels
         {
             SwitchToView(new ViewsPairInfo(null, viewName), formsTransitionBundle);
         }
+
+        public void SwitchToView(string viewName)
+        {
+            SwitchToView(new ViewsPairInfo(null, viewName));
+        }
         
         protected void SwitchToPreviousView()
         {
