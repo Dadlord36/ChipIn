@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.RequestsModels;
+using DataModels.SimpleTypes;
 using GlobalVariables;
 using JetBrains.Annotations;
 using pingak9;
@@ -266,7 +267,7 @@ namespace ViewModels
             try
             {
                 await OffersStaticRequestProcessor.TryCreateAnOffer(OperationCancellationController.TasksCancellationTokenSource,
-                    userAuthorisationDataRepository, _offerDataModel);
+                    userAuthorisationDataRepository, _offerDataModel).ConfigureAwait(true);
                 _alertCardController.ShowAlertWithText("Offer was created");
             }
             catch (Exception e)
@@ -280,7 +281,7 @@ namespace ViewModels
         {
             NativeGallery.GetImageFromGallery(delegate(string path)
             {
-                _offerDataModel.PosterImageFilePath = path;
+                _offerDataModel.PosterFilePath = new FilePath(path);
                 SetIconFromTexture(NativeGallery.LoadImageAtPath(path));
             });
         }

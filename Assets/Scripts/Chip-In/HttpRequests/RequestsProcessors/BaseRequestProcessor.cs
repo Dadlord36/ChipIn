@@ -172,7 +172,7 @@ namespace HttpRequests.RequestsProcessors
                     else
                     {
                         var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        httpResponse.Error = CollectErrors(contentAsString);
+                        httpResponse.Error = contentAsString;
 
                         LogUtility.PrintLogError(Tag, $"ResponsePhrase: {responseMessage.ReasonPhrase}; Error massage: {httpResponse.Error}");
                         LogUtility.PrintLog(Tag, $"Content string: {contentAsString}");

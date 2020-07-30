@@ -62,6 +62,10 @@ namespace ScriptableObjects.DataSets
     {
         [SerializeField] private ScrollBarItemData[] itemsData;
 
-        public ScrollBarItemData[] ItemsData => itemsData;
+        public ScrollBarItemData[] ItemsData
+        {
+            get => itemsData;
+            set => itemsData = value;
+        }
     }
 }

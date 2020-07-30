@@ -5,15 +5,15 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
-    public class MerchantInterestAnswersListAdapter : NameAndNumberSelectableFieldListAdapter<InterestQuestionAnswer,
+    public class MerchantInterestAnswersListAdapter : NameAndNumberSelectableFieldListAdapter<AnswerData,
         MerchantInterestAnswersListAdapter.MerchantInterestDetailsDataAdapter>
     {
-        public class MerchantInterestDetailsDataAdapter : FillingViewAdapter<InterestQuestionAnswer, NameAndNumberSelectableFieldFillingData>
+        public class MerchantInterestDetailsDataAdapter : FillingViewAdapter<AnswerData, NameAndNumberSelectableFieldFillingData>
         {
             public override NameAndNumberSelectableFieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
-                InterestQuestionAnswer data, uint dataIndexInRepository)
+                AnswerData data, uint dataIndexInRepository)
             {
-                return new NameAndNumberSelectableFieldFillingData(data.Answer, dataIndexInRepository, data.Percent);
+                return new NameAndNumberSelectableFieldFillingData(data.Answer, (int) dataIndexInRepository, data.Percent);
             }
         }
     }

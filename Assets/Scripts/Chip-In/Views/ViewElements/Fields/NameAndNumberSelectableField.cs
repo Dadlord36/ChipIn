@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
-using TMPro;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 
@@ -14,11 +12,11 @@ namespace Views.ViewElements.Fields
 {
     public sealed class NameAndNumberSelectableFieldFillingData
     {
-        public readonly uint Id;
+        public readonly int Id;
         public readonly string Name;
         public readonly uint Number;
 
-        public NameAndNumberSelectableFieldFillingData(string name, uint id, uint number)
+        public NameAndNumberSelectableFieldFillingData(string name, int id, uint number)
         {
             Name = name;
             Id = id;
@@ -30,7 +28,7 @@ namespace Views.ViewElements.Fields
     public sealed class NameAndNumberSelectableField : UIBehaviour, IFillingView<NameAndNumberSelectableFieldFillingData>,
         IIdentifiedSelection, IPointerClickHandler, INotifyPropertyChanged
     {
-        private uint _index;
+        private uint _id;
         private string _name;
         private string _number;
         public event Action<uint> ItemSelected;
@@ -63,7 +61,7 @@ namespace Views.ViewElements.Fields
 
         public Task FillView(NameAndNumberSelectableFieldFillingData fillingData, uint dataBaseIndex)
         {
-            _index = dataBaseIndex;
+            _id = (uint) fillingData.Id;
             Name = fillingData.Name;
             Number = fillingData.Number.ToString();
             return Task.CompletedTask;
@@ -77,7 +75,7 @@ namespace Views.ViewElements.Fields
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnItemSelected(_index);
+            OnItemSelected(_id);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -6,7 +6,9 @@ using Controllers;
 using DataModels;
 using JetBrains.Annotations;
 using Repositories.Local;
-using Repositories.Local.SingleItem;
+using Repositories.Remote;
+using Repositories.Remote.Paginated;
+using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -19,14 +21,30 @@ namespace ViewModels
     public sealed class MerchantInterestViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestView>, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private OfferCreationRepository offerCreationRepository;
-        [SerializeField] private SelectedMerchantInterestRepository selectedMerchantInterestRepository;
-        [SerializeField] private SelectedMerchantInterestPageRepository selectedMerchantInterestPageRepository;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private MerchantInterestPagesPaginatedRepository merchantInterestPagesPaginatedRepository;
 
 
         private string _interestName;
+        private uint _selectedInterestId;
         private Sprite _logoSprite;
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController
+            = new AsyncOperationCancellationController();
+
+        private MarketInterestDetailsDataModel _selectedCommunityData;
+
+        [Binding]
+        public uint SelectedInterestId
+
+        {
+            get => _selectedInterestId;
+            set
+            {
+                _selectedInterestId = value;
+                OnInterestIdSelected();
+            }
+        }
 
 
         [Binding]
@@ -55,26 +73,21 @@ namespace ViewModels
         {
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            SubscribeOnEvents();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            UnsubscribeFromEvents();
-        }
-
 
         protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
             try
             {
-                await SetViewNameToInterestName();
-                await LoadAndSetInterestPageLogo();
+                var selectedCommunityId = (int) (uint) RelatedView.FormTransitionBundle.TransitionData;
+
+                merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
+
+                await merchantInterestPagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(true);
+                _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(true);
+
+                InterestName = _selectedCommunityData.Name;
+                await SetLogoFromUrlAsync(_selectedCommunityData.PosterUri).ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
@@ -87,56 +100,22 @@ namespace ViewModels
             }
         }
 
-        private void SubscribeOnEvents()
+        private Task<MarketInterestDetailsDataModel> GetSelectedCommunityDetailsAsync(int selectedCommunityId)
         {
-            RelatedView.ItemSelected += RelatedViewOnItemSelected;
+            return CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _asyncOperationCancellationController
+                    .TasksCancellationTokenSource, authorisationDataRepository, selectedCommunityId)
+                .ContinueWith(task => task.GetAwaiter().GetResult().ResponseModelInterface.LabelDetailsDataModel,
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        private void UnsubscribeFromEvents()
+        private void OnInterestIdSelected()
         {
-            RelatedView.ItemSelected -= RelatedViewOnItemSelected;
+            SwitchToView(nameof(MerchantInterestDetailsView), new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds
+                ((int) _selectedCommunityData.Id, (int) _selectedInterestId)));
         }
 
-        private async void RelatedViewOnItemSelected(uint index)
-        {
-            try
-            {
-                selectedMerchantInterestPageRepository.SelectedInterestPageRepositoryIndex = index;
-                await SaveSelectedInterestPageSegment();
-                SwitchToView(nameof(MerchantInterestDetailsView));
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
 
-        private Task SaveSelectedInterestPageSegment()
-        {
-            return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
-                delegate(Task<MerchantInterestPageDataModel> getDataTask)
-                {
-                    offerCreationRepository.OfferSegmentName = getDataTask.GetAwaiter().GetResult().Segment;
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
-        }
-
-        private Task SetViewNameToInterestName()
-        {
-            return selectedMerchantInterestRepository.CreateGetSelectedInterestDataTask().ContinueWith(
-                delegate(Task<MarketInterestDetailsDataModel> task) { InterestName = task.GetAwaiter().GetResult().Name; },
-                scheduler: downloadedSpritesRepository.MainThreadScheduler,
-                continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
-                cancellationToken: _asyncOperationCancellationController.CancellationToken);
-        }
-
-        private Task LoadAndSetInterestPageLogo()
-        {
-            return selectedMerchantInterestRepository.CreateGetSelectedInterestDataTask().ContinueWith(dataLoadingTask
-                => SetLogoFromUrl(dataLoadingTask.GetAwaiter().GetResult().PosterUri), TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
-        }
-
-        private Task SetLogoFromUrl(in string url)
+        private Task SetLogoFromUrlAsync(in string url)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
             return downloadedSpritesRepository.CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
