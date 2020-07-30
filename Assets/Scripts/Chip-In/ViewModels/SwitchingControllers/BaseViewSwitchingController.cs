@@ -2,6 +2,7 @@
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 namespace ViewModels.SwitchingControllers
 {
@@ -26,9 +27,9 @@ namespace ViewModels.SwitchingControllers
             switchingHistoryController.AddViewsSwitchingHistoryRecord(viewName);
         }
 
-        public void ClearSwitchingHistory()
+        public void ClearSwitchingHistory(string welcomeViewName)
         {
-            switchingHistoryController.ClearHistory();
+            switchingHistoryController.ClearHistory(welcomeViewName);
         }
 
         public void SwitchToPreviousView()
