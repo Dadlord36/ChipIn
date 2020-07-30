@@ -17,9 +17,9 @@ namespace RequestsStaticProcessors
     {
         public static Task<BaseRequestProcessor<object, MerchantInterestPagesResponseDataModel, IMerchantInterestPagesResponseModel>.HttpResponse>
             GetMerchantInterestPages(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-                int selectedInterestId, PaginatedRequestData paginatedRequestData)
+                int selectedCommunityId, PaginatedRequestData paginatedRequestData)
         {
-            return new MerchantInterestsPagesPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, selectedInterestId, paginatedRequestData)
+            return new MerchantInterestsPagesPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, selectedCommunityId, paginatedRequestData)
                 .SendRequest("Community owners interests list was retrieved successfully");
         }
 
@@ -59,6 +59,13 @@ namespace RequestsStaticProcessors
         {
             return new LeaveAnInterestDeleteRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
                 $"Successfully leaved the interest by index: {interestId.ToString()}");
+        }
+
+        public static Task<BaseRequestProcessor<object, InterestAnswersRequestDataModel, IInterestAnswersRequestModel>.HttpResponse>
+            GetInterestQuestionsAnswers(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
+        {
+            return new GetInterestsQuestionsAnswersGetRequestProcessor(out cancellationTokenSource, requestHeaders, interestId)
+                .SendRequest("Interest survey was retrieved successfully");
         }
     }
 }

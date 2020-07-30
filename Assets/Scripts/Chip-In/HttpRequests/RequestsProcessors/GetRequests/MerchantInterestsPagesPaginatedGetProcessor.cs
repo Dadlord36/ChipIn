@@ -12,9 +12,9 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         IMerchantInterestPagesResponseModel>
     {
         public MerchantInterestsPagesPaginatedGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-            int selectedInterestId, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, ApiCategories.Communities,
-            HttpMethod.Get, requestHeaders, new[] {selectedInterestId.ToString(), ApiCategories.Subcategories.Interests},
-            paginatedRequestData.ConvertPaginationToNameValueCollection())
+            int selectedCommunityId, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, ApiCategories.Communities,
+            HttpMethod.Get, requestHeaders, new[] {selectedCommunityId.ToString(), ApiCategories.Subcategories.Interests},
+            paginatedRequestData?.ConvertPaginationToNameValueCollection())
         {
         }
     }

@@ -19,9 +19,16 @@ namespace ViewModels
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
         [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
-        
+
         [SerializeField] private SponsoredAdListAdapter sponsoredAdListAdapter;
         [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
+        private uint _reservedSponsoredAd;
+
+        public uint ReservedSponsoredAd
+        {
+            get => _reservedSponsoredAd;
+            set { Task.Run(delegate { ReservedSponsoredAdListAdapterOnItemSelected(_reservedSponsoredAd = value); }); }
+        }
 
         public ConnectViewModel() : base(nameof(ConnectViewModel))
         {
@@ -33,10 +40,9 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.Initialize(), sponsoredAdListAdapter.Initialize(), 
+                await Task.WhenAll(companyAdListAdapter.Initialize(), sponsoredAdListAdapter.Initialize(),
                         reservedSponsoredAdListAdapter.Initialize())
                     .ConfigureAwait(true);
-                sponsoredAdListAdapter.ItemSelected += ReservedSponsoredAdListAdapterOnItemSelected;
             }
             catch (OperationCanceledException)
             {
@@ -49,18 +55,12 @@ namespace ViewModels
             }
         }
 
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            sponsoredAdListAdapter.ItemSelected -= ReservedSponsoredAdListAdapterOnItemSelected;
-        }
-
         private async void ReservedSponsoredAdListAdapterOnItemSelected(uint index)
         {
             try
             {
-                SponsoredAdDataModel data = await sponsoredAdRepository.CreateGetItemWithIndexTask(index).ConfigureAwait(true);
-                
+                var data = await sponsoredAdRepository.CreateGetItemWithIndexTask(index).ConfigureAwait(true);
+
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
             catch (OperationCanceledException)

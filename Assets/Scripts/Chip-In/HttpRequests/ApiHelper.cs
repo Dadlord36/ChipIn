@@ -87,7 +87,7 @@ namespace HttpRequests
             using (var requestMessage = new HttpRequestMessage(methodType, requestUri))
             {
                 Assert.IsFalse(requestHeaders == null && requestBody == null);
-
+                
                 void AddBody(object requestBodyObject)
                 {
                     requestMessage.Content = CreateStringContent(requestBodyObject);
@@ -95,8 +95,7 @@ namespace HttpRequests
 
                 void AddBodyAsQueryStringFormat(object requestBodyObject)
                 {
-                    requestMessage.Content =
-                        CreateStringContent(DataModelsUtility.ConvertToQueryStringFormat(requestBodyObject));
+                    requestMessage.Content = CreateStringContent(DataModelsUtility.ConvertToQueryStringFormat(requestBodyObject));
                 }
 
                 if (requestHeaders != null)

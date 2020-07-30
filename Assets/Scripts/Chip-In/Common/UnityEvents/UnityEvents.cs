@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using DataModels.Interfaces;
 using InputDetection;
 using UnityEngine.Events;
@@ -15,7 +16,12 @@ namespace Common.UnityEvents
     public abstract class ReadOnlyListUnityEvent<T> : UnityEvent<IReadOnlyList<T>>
     {
     }
-    
+
+    [Serializable]
+    public sealed class CollectionChangedUnityEvent : UnityEvent<NotifyCollectionChangedEventArgs>
+    {
+    }
+
     [Serializable]
     public class StringUnityEvent : UnityEvent<string>
     {

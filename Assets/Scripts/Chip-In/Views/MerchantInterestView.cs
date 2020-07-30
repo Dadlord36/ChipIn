@@ -13,12 +13,6 @@ namespace Views
         public UnityEvent beingSwitchedTo;
         public UnityEvent beingSwitchedFrom;
 
-        public event Action<uint> ItemSelected
-        {
-            add => merchantInterestPagesListAdapter.ItemSelected += value;
-            remove => merchantInterestPagesListAdapter.ItemSelected -= value;
-        }
-
         public MerchantInterestView() : base(nameof(MerchantInterestView))
         {
         }
@@ -29,7 +23,11 @@ namespace Views
             OnSwitchTo();
             try
             {
-                await merchantInterestPagesListAdapter.Initialize();
+                await merchantInterestPagesListAdapter.Initialize().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

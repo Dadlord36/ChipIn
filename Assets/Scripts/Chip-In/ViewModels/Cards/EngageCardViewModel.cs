@@ -23,8 +23,6 @@ namespace ViewModels.Cards
         public event Action<uint> ItemSelected;
 
         private const string EmptyFieldText = "-";
-
-        private uint _selectedItemDataBaseIndex;
         private uint _size;
         private string _minCapMaxCap = EmptyFieldText;
         private string _age = EmptyFieldText;
@@ -153,7 +151,7 @@ namespace ViewModels.Cards
 
         private void OnCardWasClicked()
         {
-            OnItemSelected(_selectedItemDataBaseIndex);
+            OnItemSelected((uint) Id);
         }
 
         private void ClearIcon()
@@ -170,7 +168,6 @@ namespace ViewModels.Cards
         {
             OperationCancellationController.CancelOngoingTask();
             ClearIcon();
-            _selectedItemDataBaseIndex = dataBaseIndex;
             Description = dataModel.Description;
             Age = dataModel.Age;
             Size = dataModel.Size;
