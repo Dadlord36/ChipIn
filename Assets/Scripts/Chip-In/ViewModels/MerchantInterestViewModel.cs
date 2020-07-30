@@ -79,6 +79,8 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
+                if (RelatedView.FormTransitionBundle.TransitionData == null) return;
+
                 var selectedCommunityId = (int) (uint) RelatedView.FormTransitionBundle.TransitionData;
 
                 merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
