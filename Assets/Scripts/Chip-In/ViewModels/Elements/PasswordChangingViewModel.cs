@@ -1,26 +1,30 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using HttpRequests.RequestsProcessors.PutRequests;
+using Controllers;
 using JetBrains.Annotations;
-using Repositories.Remote;
-using RequestsStaticProcessors;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities;
 using ViewModels.Basic;
 
 namespace ViewModels.Elements
 {
+    public interface IPasswordChangingViewModel
+    {
+        event Action<string> NewPasswordApproved;
+        RectTransform RootTransform { get; }
+    }
+
     [Binding]
-    public sealed class PasswordChangingViewModel : BaseViewModel, INotifyPropertyChanged
+    public sealed class PasswordChangingViewModel : MonoBehaviour, INotifyPropertyChanged, IPasswordChangingViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        public event Action<string> NewPasswordApproved;
 
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
+        public RectTransform RootTransform => transform as RectTransform;
+
         [SerializeField] private PasswordAnalyzer passwordAnalyzer;
+
 
         private bool _canChangePassword;
         private string _currentPassword;
@@ -74,58 +78,30 @@ namespace ViewModels.Elements
             }
         }
         
-        public PasswordChangingViewModel() : base(nameof(PasswordChangingViewModel))
-        {
-        }
-
         [Binding]
-        public async void Confirm_OnClick()
+        public void Confirm_OnClick()
         {
-            try
-            {
-                if (await TryChangePassword())
-                    HideView();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            OnNewPasswordApproved(Password);
             ClearFields();
+            MakeFormInteractive();
         }
 
         [Binding]
         public void Close_OnClick()
         {
             HideView();
+            MakeFormInteractive();
         }
 
         private void HideView()
         {
-            View.Hide();
+            gameObject.SetActive(false);
             ClearFields();
         }
 
-        private async Task<bool> TryChangePassword()
+        private void MakeFormInteractive()
         {
-            try
-            {
-                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(
-                    out OperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
-                    new UserProfilePasswordChangingModel
-                    {
-                        Password = this.Password, PasswordConfirmation = PasswordRepeat,
-                        CurrentPassword = this.CurrentPassword
-                    });
-
-                return response.ResponseModelInterface != null && response.ResponseModelInterface.Success;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
-
-            return false;
+            FindObjectOfType<FormInteractivityController>().Interactive = true;
         }
 
         private void ClearFields()
@@ -135,7 +111,13 @@ namespace ViewModels.Elements
 
         private void CheckIfCanConfirmChange()
         {
-            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid() && passwordAnalyzer.IsPasswordValid(CurrentPassword);
+            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid() && 
+                                passwordAnalyzer.IsPasswordValid(CurrentPassword);
+        }
+
+        private void OnNewPasswordApproved(in string approvedPassword)
+        {
+            NewPasswordApproved?.Invoke(approvedPassword);
         }
 
         [NotifyPropertyChangedInvocator]
@@ -143,7 +125,5 @@ namespace ViewModels.Elements
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
     }
 }
