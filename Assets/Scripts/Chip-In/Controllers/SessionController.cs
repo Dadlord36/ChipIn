@@ -116,7 +116,7 @@ namespace Controllers
         public Task SignOut()
         {
             ApiHelper.StopAllOngoingRequests();
-            viewsSwitchingController.ClearSwitchingHistory();
+            viewsSwitchingController.ClearSwitchingHistory(nameof(WelcomeView));
             DestroyView(nameof(CoinsGameView));
             SwitchToLoginView();
 
