@@ -11,10 +11,10 @@ namespace Utilities
         public static IBaseDeviceData BaseDeviceData => DeviceData;
 
         public static DeviceData DeviceData => new DeviceData(DeviceId,
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_ANDROID
             "android",
-#else
-            Application.platform.ToString().ToLower(),
+#elif UNITY_IOS
+            "ios"
 #endif
             DeviceToken);
 
@@ -24,7 +24,7 @@ namespace Utilities
         public static string DeviceId
         {
 #if UNITY_EDITOR
-            get => "UVr864F8zUbyYOAUd4cFOW9hpsZuGn";
+             get => "UVr864F8zUbyYOAUd4cFOW9hpsZuGn";
 #else
              get=> SystemInfo.deviceUniqueIdentifier;
 #endif
