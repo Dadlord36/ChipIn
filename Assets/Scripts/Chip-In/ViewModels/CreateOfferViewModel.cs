@@ -281,7 +281,7 @@ namespace ViewModels
         {
             NativeGallery.GetImageFromGallery(delegate(string path)
             {
-                _offerDataModel.PosterFilePath = new FilePath(path);
+                _offerDataModel.PosterImageFilePath = path;
                 SetIconFromTexture(NativeGallery.LoadImageAtPath(path));
             });
         }

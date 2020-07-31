@@ -39,14 +39,14 @@ namespace RequestsStaticProcessors
         public static async Task<ChallengingOfferWithIdentifierModel> TryCreateAnOffer(CancellationTokenSource cancellationTokenSource,
             IRequestHeaders requestHeaders, IOfferCreationRequestModel requestModel)
         {
-            var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterFilePath.Path);
+            var imageAsBytesArray = File.ReadAllBytes(requestModel.PosterImageFilePath);
             var elements = DataModelsUtility.ToKeyValue(requestModel.Offer);
 
             var form = new MultipartFormDataContent
             {
                 {
                     new ByteArrayContent(imageAsBytesArray), "offer[poster]",
-                    Path.GetFileName(requestModel.PosterFilePath.Path)
+                    Path.GetFileName(requestModel.PosterImageFilePath)
                 }
             };
 
