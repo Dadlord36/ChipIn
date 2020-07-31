@@ -54,6 +54,11 @@ namespace Repositories
             return Task.FromResult(_dataList[(int) itemIndex]);
         }
 
+        public void Clear()
+        {
+            _dataList.Clear();
+        }
+
         public void AddItem(TDataType item)
         {
             _dataList.Add(item);

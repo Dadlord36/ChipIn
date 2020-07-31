@@ -1,12 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Common.UnityEvents;
-using Controllers.PaginationControllers;
-using DataModels;
 using JetBrains.Annotations;
 using Repositories.Local.SingleItem;
-using Repositories.Remote.Paginated;
 using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Basic;
@@ -14,14 +10,6 @@ using Views;
 
 namespace ViewModels
 {
-    [Serializable]
-    public class UserInterestLabelsPaginatedDataExplorer : PaginatedDataExplorer<InterestsBasicDataPaginatedListRepository, InterestBasicDataModel>
-    {
-        public UserInterestLabelsPaginatedDataExplorer() : base(nameof(UserInterestLabelsPaginatedDataExplorer))
-        {
-        }
-    }
-
     [Binding]
     public sealed class UserInterestsLabelsViewModel : CorrespondingViewsSwitchingViewModel<UserInterestsLabelsView>
     {

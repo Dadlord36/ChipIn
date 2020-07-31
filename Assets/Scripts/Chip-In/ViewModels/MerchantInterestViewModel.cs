@@ -14,15 +14,18 @@ using UnityWeld.Binding;
 using Utilities;
 using ViewModels.Basic;
 using Views;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class MerchantInterestViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestView>, INotifyPropertyChanged
+    public sealed class MerchantInterestViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestView>,
+        INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private MerchantInterestPagesPaginatedRepository merchantInterestPagesPaginatedRepository;
+        [SerializeField] private MerchantInterestPagesListAdapter merchantInterestPagesListAdapter;
 
 
         private string _interestName;
@@ -85,7 +88,16 @@ namespace ViewModels
 
                 merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
 
-                await merchantInterestPagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(true);
+                try
+                {
+                    await merchantInterestPagesListAdapter.Initialize().ConfigureAwait(true);
+                }
+                catch (OperationCanceledException)
+                {
+                    LogUtility.PrintDefaultOperationCancellationLog(Tag);
+                }
+
+
                 _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(true);
 
                 InterestName = _selectedCommunityData.Name;
@@ -112,16 +124,20 @@ namespace ViewModels
 
         private void OnInterestIdSelected()
         {
-            SwitchToView(nameof(MerchantInterestDetailsView), new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds
-                ((int) _selectedCommunityData.Id, (int) _selectedInterestId)));
+            SwitchToView(nameof(MerchantInterestDetailsView),
+                new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds(
+                    (int) _selectedCommunityData.Id,
+                    (int) _selectedInterestId)));
         }
 
 
         private Task SetLogoFromUrlAsync(in string url)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
-            return downloadedSpritesRepository.CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.GetAwaiter().GetResult(); },
+            return downloadedSpritesRepository
+                .CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
+                .ContinueWith(
+                    delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.GetAwaiter().GetResult(); },
                     scheduler: downloadedSpritesRepository.MainThreadScheduler,
                     continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
                     cancellationToken: _asyncOperationCancellationController.CancellationToken);
