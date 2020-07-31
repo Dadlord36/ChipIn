@@ -295,10 +295,7 @@ namespace Repositories
             var httpResponse = CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber,
                 itemsPerPage)).ContinueWith
             (
-                delegate(Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse> task)
-                {
-                    GetResponseItemsAndFillPaginatedData(task.GetAwaiter().GetResult().ResponseModelInterface);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion
+                delegate(Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse> task) { GetResponseItemsAndFillPaginatedData(task.GetAwaiter().GetResult().ResponseModelInterface); }, TaskContinuationOptions.OnlyOnRanToCompletion
             );
 
             return PagesLoadingTaskManager.RequestTask(pageNumber, httpResponse);

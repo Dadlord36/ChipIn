@@ -4,43 +4,64 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Common.UnityEvents;
 using Controllers;
 using DataModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
+using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
 using Repositories.Local;
-using Repositories.Local.SingleItem;
+using Repositories.Remote;
+using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.Basic;
 using Views;
 using Views.Bars.BarItems;
-using Views.ViewElements.Lists.ScrollableList;
 using Views.ViewElements.ScrollViews.Adapters;
+using Component = UnityEngine.Component;
+using NotifyCollectionChangedAction = System.Collections.Specialized.NotifyCollectionChangedAction;
+using NotifyCollectionChangedEventArgs = System.Collections.Specialized.NotifyCollectionChangedEventArgs;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class MerchantInterestDetailsViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    public sealed class MerchantInterestDetailsViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestDetailsView>, INotifyPropertyChanged
     {
+        [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private MerchantInterestAnswersListAdapter merchantInterestAnswersListAdapter;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        [SerializeField] private SelectedMerchantInterestPageRepository selectedMerchantInterestPageRepository;
-        [SerializeField] private ScrollableItemsSelector scrollableItemsSelector;
+        private Dictionary<string, IList<AnswerData>> _questionAnswersDictionary;
 
-        //TODO: remove this field once API request will be implemented
-        [SerializeField] private string jsonString;
-        private Dictionary<string, IList<InterestQuestionAnswer>> _questionAnswersDictionary;
+        public CollectionChangedUnityEvent questionsCollectionChanged;
 
         private string _currentQuestion;
         private string _interestPageName;
+
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController =
             new AsyncOperationCancellationController();
 
         private string _interestPageDescription;
+        private Transform _selectedItemTransform;
+        private bool _listIsFilled;
+
+        [Binding]
+        public bool ListIsFilled
+        {
+            get => _listIsFilled;
+            set
+            {
+                if (value == _listIsFilled) return;
+                _listIsFilled = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public string InterestPageName
@@ -66,8 +87,21 @@ namespace ViewModels
             }
         }
 
+        [Binding]
+        public Transform SelectedItemTransform
+        {
+            get => _selectedItemTransform;
+            set => ScrollableItemsSelectorOnNewItemSelected(_selectedItemTransform = value);
+        }
+
         public MerchantInterestDetailsViewModel() : base(nameof(MerchantInterestDetailsViewModel))
         {
+        }
+
+
+        private void QuestionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            questionsCollectionChanged.Invoke(e);
         }
 
         [Binding]
@@ -76,16 +110,24 @@ namespace ViewModels
             SwitchToView(nameof(CreateOfferView));
         }
 
+        public readonly struct CommunityAndInterestIds
+        {
+            public readonly int CommunityId;
+            public readonly int InterestId;
+
+            public CommunityAndInterestIds(int communityId, int interestId)
+            {
+                CommunityId = communityId;
+                InterestId = interestId;
+            }
+        }
+
         protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-
-            RefillAnswersDictionary(JsonConverterUtility
-                .ConvertJsonString<InterestQuestionAnswerRequestResponse>(jsonString));
-            FillListAdapterWithCorrespondingData(_questionAnswersDictionary.Keys.First());
             try
             {
-                await SetInterestPageReflectionData();
+                await FillScrollsWithDataFromServerAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
@@ -98,9 +140,46 @@ namespace ViewModels
             }
         }
 
-        private Task SetInterestPageReflectionData()
+        private async Task FillScrollsWithDataFromServerAsync()
         {
-            return selectedMerchantInterestPageRepository.CreateGetSelectedInterestPageDataTask().ContinueWith(
+            var selectedCommunityInterest = RelatedView.FormTransitionBundle.TransitionData as CommunityAndInterestIds? ?? default;
+            await SetInterestPageReflectionDataAsync(selectedCommunityInterest).ConfigureAwait(true);
+            var result = await CommunitiesInterestsStaticProcessor.GetInterestQuestionsAnswers
+            (out _asyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
+                selectedCommunityInterest.InterestId).ConfigureAwait(true);
+            
+            if (!result.Success)
+            {
+                alertCardController.ShowAlertWithText(result.Error);
+                return;
+            }
+            else
+            {
+                var answers = result.ResponseModelInterface.Answers;
+                if (answers == null || answers.Count == 0)
+                {
+                    alertCardController.ShowAlertWithText("Nothing to show");
+                    return;
+                }
+            }
+                
+            RefillAnswersDictionary(result.ResponseModelInterface);
+        }
+        
+        private Task<MerchantInterestPageDataModel> GetInterestDataAsync(CommunityAndInterestIds communityAndInterestIds)
+        {
+            return CommunitiesInterestsStaticProcessor.GetMerchantInterestPages(out _asyncOperationCancellationController.TasksCancellationTokenSource,
+                    authorisationDataRepository, communityAndInterestIds.CommunityId, null)
+                .ContinueWith(delegate(Task<BaseRequestProcessor<object, MerchantInterestPagesResponseDataModel, IMerchantInterestPagesResponseModel>.HttpResponse> task)
+                {
+                    var result = task.GetAwaiter().GetResult();
+                    return result.ResponseModelInterface.Interests.First(model => model.Id == communityAndInterestIds.InterestId);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+        }
+
+        private Task SetInterestPageReflectionDataAsync(in CommunityAndInterestIds communityAndInterestIds)
+        {
+            return GetInterestDataAsync(communityAndInterestIds).ContinueWith(
                 delegate(Task<MerchantInterestPageDataModel> task)
                 {
                     InterestPageName = task.GetAwaiter().GetResult().Name;
@@ -113,26 +192,42 @@ namespace ViewModels
 
         private void FillListAdapterWithCorrespondingData(string question)
         {
+            if(string.IsNullOrEmpty(question)) return;
+            
             merchantInterestAnswersListAdapter.RefillWithData(_questionAnswersDictionary[question]);
         }
 
-        private void RefillAnswersDictionary(IInterestQuestionAnswerRequestResponseModel questionAnswerRequestResponse)
+        private void RefillAnswersDictionary(IInterestAnswersRequestModel interestAnswersRequestDataModel)
         {
-            var questions = questionAnswerRequestResponse.Questions;
-            var count = questions.Length;
-            _questionAnswersDictionary = new Dictionary<string, IList<InterestQuestionAnswer>>(count);
-
-            foreach (var question in questions)
+            var answers = interestAnswersRequestDataModel.Answers;
+            var count = answers.Count;
+            _questionAnswersDictionary = new Dictionary<string, IList<AnswerData>>(count);
+            var questions = new List<string>(count);
+            foreach (var answer in answers)
             {
-                _questionAnswersDictionary.Add(ReformatQuestion(question.Question), question.Answers);
+                questions.Add(answer.Question);
+                _questionAnswersDictionary.Add(ReformatQuestion(answer.Question), answer.Answers);
             }
+
+            CheckIfThereIsQuestions();
+            RefillQuestionsList(questions);
         }
 
-        private void ScrollableItemsSelectorOnNewItemSelected(Transform selectedTransform)
+        private void CheckIfThereIsQuestions()
+        {
+            ListIsFilled = _questionAnswersDictionary.Count > 0;
+        }
+        
+        private void RefillQuestionsList(IList<string> questions)
+        {
+            questionsCollectionChanged.Invoke(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            questionsCollectionChanged.Invoke(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, questions));
+        }
+
+        private void ScrollableItemsSelectorOnNewItemSelected(Component selectedTransform)
         {
             SwitchSelectedQuestion(selectedTransform.GetComponent<ITitled>());
         }
-
 
         private void SwitchSelectedQuestion(ITitled selectedCategoryTitle)
         {
@@ -140,11 +235,9 @@ namespace ViewModels
             FillListAdapterWithCorrespondingData(_currentQuestion);
         }
 
-
         private static string ReformatQuestion(in string question)
         {
             return string.Concat(question.ToLower().Where(c => !char.IsWhiteSpace(c)));
-            ;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

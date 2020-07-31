@@ -149,6 +149,10 @@ namespace Views.ViewElements.ScrollViews.Adapters
                     {
                         await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
                     }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        LogUtility.PrintLog(Tag,e.Message);
+                    }
                     catch (OperationCanceledException)
                     {
                         LogUtility.PrintDefaultOperationCancellationLog(Tag);
@@ -277,8 +281,4 @@ namespace Views.ViewElements.ScrollViews.Adapters
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-
-    /*class MerchantInterestsListAdapter : RepositoryBasedListAdapter<>
-    {
-    }*/
 }

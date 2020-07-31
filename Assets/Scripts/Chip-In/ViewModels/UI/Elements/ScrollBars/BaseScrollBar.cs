@@ -10,11 +10,10 @@ namespace ViewModels.UI.Elements.ScrollBars
     public abstract class BaseScrollBar<TScrollBarItemView> : MonoBehaviour, IInitialize where TScrollBarItemView : BaseScrollBarItem
     {
         [SerializeField] private Transform scrollBarItemsContainer;
-        [SerializeField] private ItemsScrollBarElements scrollBarElementsData;
+        [SerializeField] protected ItemsScrollBarElements scrollBarElementsData;
         [SerializeField] private TScrollBarItemView prefab;
 
         private TScrollBarItemView[] _scrollElements;
-        private ScrollableItemsSelector ScrollableItemsSelector => scrollBarItemsContainer.GetComponent<ScrollableItemsSelector>();
 
         public void RemoveScrollBarItems()
         {
