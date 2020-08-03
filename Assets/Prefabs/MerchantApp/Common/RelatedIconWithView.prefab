@@ -29,8 +29,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
-  viewPropertyName: UnityEngine.UI.Image.sprite
+  viewModelPropertyName: Views.ViewElements.SettableIconView.SelectedImageTexture2D
+  viewPropertyName: Shapes2D.ShapeWithBindableTexture.FillTexture
 --- !u!1001 &8698166412261468896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: viewModelPropertyName
       value: Views.ViewElements.SettableIconView.IconIsSelected
       objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: settings._fillType
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3683135877391721431, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -247,6 +252,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6609027379071891469, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7025439362014637492, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}

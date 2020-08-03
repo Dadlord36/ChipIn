@@ -26,11 +26,10 @@ namespace Views.ViewElements
             {
                 if (value == _selectedImagePath) return;
                 _selectedImagePath = value;
-                
+
                 if (!string.IsNullOrEmpty(_selectedImagePath))
                 {
-                    SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(
-                        NativeGallery.LoadImageAtPath(_selectedImagePath));
+                    SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
                 }
 
                 OnPropertyChanged();
@@ -49,6 +48,8 @@ namespace Views.ViewElements
                 OnPropertyChanged();
             }
         }
+
+        [Binding] public Texture2D SelectedImageTexture2D => _selectedImageSprite.texture;
 
         [Binding]
         public bool IconIsSelected

@@ -4,10 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.RequestsModels;
-using DataModels.SimpleTypes;
 using GlobalVariables;
 using JetBrains.Annotations;
-using pingak9;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
@@ -17,7 +15,6 @@ using UnityWeld.Binding;
 using Utilities;
 using Validators;
 using Views;
-using WebOperationUtilities;
 
 namespace ViewModels
 {
@@ -29,18 +26,12 @@ namespace ViewModels
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private OfferCreationRepository offerCreationRepository;
 
-        [SerializeField] private BaseTextValidationWithAlert validityDateInputFieldTextValidationWithAlert;
-        [SerializeField] private BaseTextValidationWithAlert descriptionInputFieldTextValidationWithAlert;
-        [SerializeField] private BaseTextValidationWithAlert priceInputFieldTextValidationWithAlert;
-
         [SerializeField] private AlertCardController _alertCardController;
 
         #endregion
 
-
-        private bool _iconIsSelected;
-
-        private MobileDateTimePicker _timeDataPicker;
+        private bool _canCreateOffer;
+        private DateTime _expireLocalDate;
 
         private readonly OfferCreationRequestModel _offerDataModel = new OfferCreationRequestModel
         {
@@ -50,11 +41,14 @@ namespace ViewModels
             }
         };
 
+        private string _expireLocalDateAsString;
+
         private ICreatedOfferModel ChallengingOfferDataModel => _offerDataModel.Offer;
 
         private CreateOfferView ThisView => View as CreateOfferView;
 
         #region IChallangeOffer implementatation
+        
 
         [Binding]
         public string Title
@@ -78,6 +72,8 @@ namespace ViewModels
             }
         }
 
+        public bool AllFieldsAreValid { get; set; }
+
         [Binding]
         public string Category
         {
@@ -90,6 +86,19 @@ namespace ViewModels
         }
 
         [Binding]
+        public DateTime ExpireLocalDate
+        {
+            get => _expireLocalDate;
+            set
+            {
+                if (value.Equals(_expireLocalDate)) return;
+                _expireLocalDate = value;
+                ExpireDate = value.ToUniversalTime();
+                OnPropertyChanged();
+            }
+        }
+
+        
         public DateTime ExpireDate
         {
             get => ChallengingOfferDataModel.ExpireDate;
@@ -99,6 +108,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
+
 
         [Binding]
         public string Segment
@@ -144,19 +154,6 @@ namespace ViewModels
 
 
         [Binding]
-        public bool IconIsSelected
-        {
-            get => _iconIsSelected;
-            set
-            {
-                if (value == _iconIsSelected) return;
-                _iconIsSelected = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        [Binding]
         public bool CanCreateOffer
         {
             get => _canCreateOffer;
@@ -165,14 +162,12 @@ namespace ViewModels
                 if (value == _canCreateOffer) return;
                 _canCreateOffer = value;
                 OnPropertyChanged();
-                VerifyEnteredData();
             }
         }
 
         public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
         {
         }
-
 
         protected override void OnEnable()
         {
@@ -184,7 +179,6 @@ namespace ViewModels
         {
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
-            priceInputFieldTextValidationWithAlert.ValidityChanged -= VerifyEnteredData;
         }
 
 
@@ -194,10 +188,6 @@ namespace ViewModels
             Segment = offerCreationRepository.OfferSegmentName;
         }
 
-        private void Start()
-        {
-            _timeDataPicker = MobileDateTimePicker.CreateTime();
-        }
 
         private void SetCategoryName(string categoryName)
         {
@@ -205,15 +195,12 @@ namespace ViewModels
         }
 
         [Binding]
-        public void AddPhoto_OnClick()
-        {
-            FillIconWithImageFromGallery();
-            LogUtility.PrintLog(Tag, "AddPhoto clicked");
-        }
-
-        [Binding]
         public async void CreateOffer_OnClick()
         {
+            if (!CheckIfAllFieldsAreValid())
+            {
+                return;
+            }
             try
             {
                 CanCreateOffer = false;
@@ -230,37 +217,24 @@ namespace ViewModels
             }
         }
 
-        [Binding]
-        public void ShowUpDatePickerForValidityPeriod()
+        private bool CheckIfAllFieldsAreValid()
         {
-            var now = DateTime.Now;
-            _timeDataPicker.OnDateChanged = SetExpireDate;
-            _timeDataPicker.OnPickerClosed = SetExpireDate;
-            MobileNative.showDatePicker(now.Year, now.Month, now.Day);
+            var result = transform.GetComponentsInChildren<IValidationWithAlert>();
+            
+            foreach (var validationWithAlert in result)
+            {
+                validationWithAlert.ShowAlertIfIsNotValid();
+            }
+            
+            foreach (var validationWithAlert in result)
+            {
+                if (validationWithAlert.IsValid is false)
+                    return false;
+            }
+
+            return true;
         }
 
-        private void VerifyEnteredData()
-        {
-            CanCreateOffer =
-                validityDateInputFieldTextValidationWithAlert
-                    .IsValid
-                && descriptionInputFieldTextValidationWithAlert
-                    .IsValid
-                && Quantity > 0
-                && priceInputFieldTextValidationWithAlert
-                    .IsValid;
-        }
-
-        private bool _canCreateOffer;
-
-
-        private void SetExpireDate(DateTime time)
-        {
-            ExpireDate = time.ToUniversalTime();
-            ThisView.ValidityPeriod = time;
-            validityDateInputFieldTextValidationWithAlert.CheckIsValid(time);
-            VerifyEnteredData();
-        }
 
         private async Task SendCreateOfferRequest()
         {
@@ -277,20 +251,6 @@ namespace ViewModels
             }
         }
 
-        private void FillIconWithImageFromGallery()
-        {
-            NativeGallery.GetImageFromGallery(delegate(string path)
-            {
-                _offerDataModel.PosterImageFilePath = path;
-                SetIconFromTexture(NativeGallery.LoadImageAtPath(path));
-            });
-        }
-
-        private void SetIconFromTexture(Texture2D texture)
-        {
-            IconIsSelected = true;
-            ThisView.AvatarIconSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -298,7 +258,6 @@ namespace ViewModels
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            VerifyEnteredData();
         }
     }
 }

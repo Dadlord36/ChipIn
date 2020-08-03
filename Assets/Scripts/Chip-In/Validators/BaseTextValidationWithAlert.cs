@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using ScriptableObjects.Validations;
@@ -8,16 +7,22 @@ using UnityWeld.Binding;
 
 namespace Validators
 {
+    public interface IValidationWithAlert
+    {
+        void ShowAlertIfIsNotValid();
+        bool IsValid { get; }
+    }
+
     [Binding]
-    public class BaseTextValidationWithAlert : MonoBehaviour, INotifyPropertyChanged
+    public abstract class BaseTextValidationWithAlert<T> : MonoBehaviour, INotifyPropertyChanged, IValidationWithAlert
     {
         [SerializeField] private TextValidation validation;
-        [SerializeField] private GameObject alertTextField;
-        [SerializeField] private bool shouldCheckValidity;
 
-        public event Action ValidityChanged;
+        [Binding] public T TextToValidate { get; set; }
 
+        private object PropertyToValidate => TextToValidate;
         private bool _isValid = true;
+        private bool _showAlert;
 
         [Binding]
         public bool IsValid
@@ -28,15 +33,36 @@ namespace Validators
                 if (value == _isValid) return;
                 _isValid = value;
                 OnPropertyChanged();
-                OnValidityChanged();
             }
         }
 
-        public void CheckIsValid(object dataToValidate)
+        [Binding]
+        public bool ShowAlert
         {
-            if (!shouldCheckValidity) return;
-            IsValid = validation.CheckIsValid(dataToValidate);
-            alertTextField.SetActive(!IsValid);
+            get => _showAlert;
+            set
+            {
+                if (value == _showAlert) return;
+                _showAlert = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        [Binding]
+        public void HideAlertText()
+        {
+            ShowAlert = false;
+        }
+        
+        private bool CheckIsValid()
+        {
+            return IsValid = validation.CheckIsValid(PropertyToValidate);
+        }
+
+        public void ShowAlertIfIsNotValid()
+        {
+            ShowAlert = !CheckIsValid();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -45,11 +71,6 @@ namespace Validators
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void OnValidityChanged()
-        {
-            ValidityChanged?.Invoke();
         }
     }
 }

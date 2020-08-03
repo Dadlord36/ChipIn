@@ -103,36 +103,7 @@ namespace HttpRequests.RequestsProcessors
                 _requestProcessorParameters.QueryStringParameters, requestHeaders?.GetRequestHeaders(), requestBodyModel,
                 SendBodyAsQueryStringFormat);
         }
-
-        private static async Task<TResponseModel> ProcessResponse(HttpContent responseContent,
-            bool isSuccessStatusCode, HttpStatusCode responseMessageStatusCode)
-        {
-            try
-            {
-                var responseAsString = await responseContent.ReadAsStringAsync().ConfigureAwait(false);
-                LogUtility.PrintLog(Tag, $"Response content: {responseAsString}");
-
-                if (isSuccessStatusCode)
-                {
-                    return JsonConverterUtility.ConvertJsonString<TResponseModel>(responseAsString);
-                }
-                else
-                {
-                    var errorMessageBuilder = new StringBuilder();
-                    errorMessageBuilder.Append(responseAsString);
-                    errorMessageBuilder.Append("\r\n");
-                    errorMessageBuilder.Append($"Error Code: {responseMessageStatusCode}");
-                    LogUtility.PrintLog(Tag, errorMessageBuilder.ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-
-            return default;
-        }
+        
 
         public struct HttpResponse : ISuccess
         {
@@ -141,6 +112,7 @@ namespace HttpRequests.RequestsProcessors
             public string ResponsePhrase;
             public string Error;
             public bool Success { get; set; }
+            public string ResponseContentAsString { get; set; }
         }
 
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
@@ -150,29 +122,23 @@ namespace HttpRequests.RequestsProcessors
                 using (var responseMessage = await SendRequestToWebServer(RequestCancellationToken, _requestProcessorParameters.RequestBodyModel,
                     _requestProcessorParameters.RequestHeaders).ConfigureAwait(false))
                 {
-                    if (responseMessage == null)
-                    {
-                        LogUtility.PrintLogError(Tag, "Response message is null");
-                        return default;
-                    }
+                    var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                    var requestResponse = await ProcessResponse(responseMessage.Content, responseMessage.IsSuccessStatusCode, responseMessage.StatusCode)
-                        .ConfigureAwait(false);
                     var httpResponse = new HttpResponse
                     {
-                        ResponseModelInterface = requestResponse, Headers = responseMessage.Headers,
+                        Headers = responseMessage.Headers,
                         ResponsePhrase = responseMessage.ReasonPhrase,
-                        Success = responseMessage.IsSuccessStatusCode
+                        Success = responseMessage.IsSuccessStatusCode,
+                        ResponseContentAsString = contentAsString
                     };
 
                     if (responseMessage.IsSuccessStatusCode)
                     {
                         LogUtility.PrintLog(Tag, successfulResponseMassage);
+                        httpResponse.ResponseModelInterface= JsonConverterUtility.ConvertJsonString<TResponseModel>(contentAsString);
                     }
                     else
                     {
-                        var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-
                         try
                         {
                             httpResponse.Error = CollectErrors(contentAsString);
