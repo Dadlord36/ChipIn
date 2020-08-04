@@ -135,6 +135,12 @@ namespace ViewModels
             try
             {
                 IsPendingLogin = true;
+                if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
+                {
+                    IsPendingLogin = false;
+                    return;
+                }
+                
                 await ProcessLoginAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)

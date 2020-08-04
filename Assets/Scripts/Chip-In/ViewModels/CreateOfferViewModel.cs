@@ -197,7 +197,7 @@ namespace ViewModels
         [Binding]
         public async void CreateOffer_OnClick()
         {
-            if (!CheckIfAllFieldsAreValid())
+            if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
             {
                 return;
             }
@@ -216,26 +216,7 @@ namespace ViewModels
                 CanCreateOffer = true;
             }
         }
-
-        private bool CheckIfAllFieldsAreValid()
-        {
-            var result = transform.GetComponentsInChildren<IValidationWithAlert>();
-            
-            foreach (var validationWithAlert in result)
-            {
-                validationWithAlert.ShowAlertIfIsNotValid();
-            }
-            
-            foreach (var validationWithAlert in result)
-            {
-                if (validationWithAlert.IsValid is false)
-                    return false;
-            }
-
-            return true;
-        }
-
-
+        
         private async Task SendCreateOfferRequest()
         {
             try
