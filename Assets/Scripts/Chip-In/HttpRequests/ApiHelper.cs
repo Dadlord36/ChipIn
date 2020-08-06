@@ -22,7 +22,8 @@ namespace HttpRequests
         public const string MultipartFormData = "multipart/form-data";
 
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
-
+        
+        public static string ApiUrl => ApiUri + ApiVersion;
         public static HttpClient DefaultClient { get; private set; }
 
         public static void InitializeClient()
@@ -34,7 +35,7 @@ namespace HttpRequests
 
             if (_mainApiClient != null) return;
 
-            _mainApiClient = new HttpClient {BaseAddress = new Uri(ApiUri + ApiVersion)};
+            _mainApiClient = new HttpClient {BaseAddress = new Uri(ApiUrl)};
             _mainApiClient.DefaultRequestHeaders.Accept.Clear();
         }
 
@@ -129,6 +130,7 @@ namespace HttpRequests
                 using (var requestMessage = new HttpRequestMessage(methodType, FormRequestUri(requestSuffix, null, null)))
                 {
                     AddHeaders(requestMessage, requestHeaders);
+                    
                     requestMessage.Content = formDataContent;
                     requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
                     return _mainApiClient.SendAsync(requestMessage, cancellationToken);

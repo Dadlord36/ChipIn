@@ -1,18 +1,44 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DataModels.Interfaces;
 using DataModels.SimpleTypes;
 using JetBrains.Annotations;
 
-namespace DataModels
+namespace DataModels.RequestsModels
 {
-    public sealed class FlashOfferDataModel : IFlashOfferModel, INotifyPropertyChanged
+    public sealed class FlashOfferGetRequestDataModel : IFlashOfferGetRequestModel, INotifyPropertyChanged
     {
+        private FilePath _posterFilePath;
+        private string _category;
         private string _title;
         private string _description;
         private uint _quantity;
-        private int _tokensAmount;
-        private FilePath _posterFilePath;
+        private string _radius;
+        private uint _tokensAmount = 1;
+        private DateTime _expireDate;
+
+        public FilePath PosterFilePath
+        {
+            get => _posterFilePath;
+            set
+            {
+                if (Equals(value, _posterFilePath)) return;
+                _posterFilePath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Category
+        {
+            get => _category;
+            set
+            {
+                if (value == _category) return;
+                _category = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Title
         {
@@ -47,18 +73,18 @@ namespace DataModels
             }
         }
 
-        public FilePath PosterFilePath
+        public string Radius
         {
-            get => _posterFilePath;
+            get => _radius;
             set
             {
-                if (Equals(value, _posterFilePath)) return;
-                _posterFilePath = value;
+                if (value == _radius) return;
+                _radius = value;
                 OnPropertyChanged();
             }
         }
 
-        public int TokensAmount
+        public uint TokensAmount
         {
             get => _tokensAmount;
             set
@@ -68,6 +94,18 @@ namespace DataModels
                 OnPropertyChanged();
             }
         }
+
+        public DateTime ExpireDate
+        {
+            get => _expireDate;
+            set
+            {
+                if (value.Equals(_expireDate)) return;
+                _expireDate = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
