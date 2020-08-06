@@ -6,7 +6,7 @@ namespace DataModels
     {
         public int? Id { get; set; }
         public string Description { get; set; }
-        public int TokensAmount { get; set; }
+        public uint TokensAmount { get; set; }
         public string Icon { get; set; }
         public bool Watched { get; set; }
     }

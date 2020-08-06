@@ -12,10 +12,10 @@ namespace ViewModels.Cards
     {
         private string _posterImagePath;
         private string _description;
-        private int _tokensRewardAmount;
+        private int _tokensRewardAmount = 1;
 
         [SerializeField] private int featureNumber;
-        
+
         [Binding] public int FeatureNumber => featureNumber;
 
         [Binding]

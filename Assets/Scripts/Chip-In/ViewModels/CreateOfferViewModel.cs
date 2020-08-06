@@ -13,13 +13,12 @@ using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using Validators;
 using Views;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class CreateOfferViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged, ICreatedOfferModel
+    public sealed class CreateOfferViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         #region Serialized fields
 
@@ -32,6 +31,7 @@ namespace ViewModels
 
         private bool _canCreateOffer;
         private DateTime _expireLocalDate;
+        private string _posterFilePath;
 
         private readonly OfferCreationRequestModel _offerDataModel = new OfferCreationRequestModel
         {
@@ -48,7 +48,18 @@ namespace ViewModels
         private CreateOfferView ThisView => View as CreateOfferView;
 
         #region IChallangeOffer implementatation
-        
+
+        [Binding]
+        public string PosterFilePath
+        {
+            get => _posterFilePath;
+            set
+            {
+                if (value == _posterFilePath) return;
+                _posterFilePath = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public string Title
@@ -140,12 +151,12 @@ namespace ViewModels
         }
 
         [Binding]
-        public uint Price
+        public string Price
         {
-            get => ChallengingOfferDataModel.Price;
+            get => ChallengingOfferDataModel.Price.ToString();
             set
             {
-                ChallengingOfferDataModel.Price = value;
+                ChallengingOfferDataModel.Price = uint.Parse(value);
                 OnPropertyChanged();
             }
         }

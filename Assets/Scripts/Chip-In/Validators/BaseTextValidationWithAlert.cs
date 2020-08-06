@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using ScriptableObjects.Validations;
+﻿using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
 
@@ -26,7 +23,8 @@ namespace Validators
 
         protected override bool CheckIsValid()
         {
-            return IsValid = validation.CheckIsValid(PropertyToValidate);
+            var state = validation.CheckIsValid(PropertyToValidate);
+            return IsValid = state;
         }
     }
 }
