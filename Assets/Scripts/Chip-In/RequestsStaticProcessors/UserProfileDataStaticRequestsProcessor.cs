@@ -24,8 +24,7 @@ namespace RequestsStaticProcessors
                 "User profile data was retrieved");
         }
 
-        public static
-            Task<BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
+        public static Task<BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
             TryUpdateUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource,
                 IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyProvider)
         {
@@ -35,9 +34,9 @@ namespace RequestsStaticProcessors
                 "User profile data was updated");
         }
 
-        public static
-            Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse> TryChangeUserProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource,
-                IRequestHeaders requestHeaders, IUserProfilePasswordChangeModel requestBodyModel)
+        public static Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse> 
+            TryChangeUserProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                IUserProfilePasswordChangeModel requestBodyModel)
         {
             return new UserProfilePasswordChangePutProcessor(out cancellationTokenSource, requestHeaders, requestBodyModel)
                 .SendRequest("User password was changed successfully");
