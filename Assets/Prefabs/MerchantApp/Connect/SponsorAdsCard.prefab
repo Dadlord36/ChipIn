@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5592510638587760035}
   - component: {fileID: 8034877603509302739}
   - component: {fileID: 3704794034945597840}
-  - component: {fileID: 6541223485709474709}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -133,22 +132,6 @@ MonoBehaviour:
     _usePolygonMap: 0
   wasConverted: 0
   preConvertedScale: {x: 0, y: 0, z: 0}
---- !u!114 &6541223485709474709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1491480350891266394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.Cards.SponsoredAdCardViewModel.BackgroundTexture
-  viewPropertyName: Shapes2D.ShapeWithBindableTexture.FillTexture
 --- !u!1 &5617399161747674362
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +189,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6996481284520324410}
     m_Modifications:
+    - target: {fileID: 4884928389099399309, guid: 0816a5f73da0cf6459359f4d8d4302d6,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 29.7
+      objectReference: {fileID: 0}
     - target: {fileID: 6128723059483479175, guid: 0816a5f73da0cf6459359f4d8d4302d6,
         type: 3}
       propertyPath: m_Name
