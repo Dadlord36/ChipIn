@@ -153,7 +153,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             try
             {
                 _fetching = true;
-                await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
+                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -174,26 +174,20 @@ namespace Views.ViewElements.ScrollViews.Adapters
             }
         }
 
-        private Task StartPreFetching(uint additionalItems)
+        private Task StartPreFetchingAsync(uint additionalItems)
         {
             StartedFetching?.Invoke();
-            return FetchItemModelsFromServer(additionalItems);
+            return FetchItemModelsFromServerAsync(additionalItems);
         }
 
-        private Task FetchItemModelsFromServer(uint maxCount)
+        private async Task FetchItemModelsFromServerAsync(uint maxCount)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
-            return pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
-                .ContinueWith(delegate(Task<IReadOnlyList<TDataType>> task)
-                    {
-                        var result = task.GetAwaiter().GetResult();
-                        _retrievingItemsStartingIndex += (uint) result.Count;
-                        OnPreFetchingFinished(result);
-
-                        _loadedAll = Data.Count == TotalCapacity;
-                    }, _asyncOperationCancellationController.CancellationToken,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+            var items = await pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
+                .ConfigureAwait(true);
+            _retrievingItemsStartingIndex += (uint) items.Count;
+            _loadedAll = Data.Count == TotalCapacity;
+            OnPreFetchingFinished(items);
         }
 
         private void OnPreFetchingFinished(IReadOnlyCollection<TDataType> models)
