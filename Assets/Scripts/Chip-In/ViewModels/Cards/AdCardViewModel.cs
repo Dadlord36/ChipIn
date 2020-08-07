@@ -59,6 +59,10 @@ namespace ViewModels.Cards
             {
                 AdIcon = await dataModel.AdIcon.ConfigureAwait(true);
             }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(nameof(AdCardViewModel));
+            }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
