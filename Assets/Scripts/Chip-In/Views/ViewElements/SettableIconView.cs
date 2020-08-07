@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -26,11 +28,6 @@ namespace Views.ViewElements
             {
                 if (value == _selectedImagePath) return;
                 _selectedImagePath = value;
-
-                if (!string.IsNullOrEmpty(_selectedImagePath))
-                {
-                    SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
-                }
 
                 OnPropertyChanged();
             }
@@ -59,6 +56,7 @@ namespace Views.ViewElements
             {
                 if (value == _iconIsSelected) return;
                 _iconIsSelected = value;
+                OnIconWasSelectedFromGallery();
                 OnPropertyChanged();
             }
         }
@@ -74,10 +72,26 @@ namespace Views.ViewElements
             NativeGallery.GetImageFromGallery(delegate(string path)
             {
                 SelectedImagePath = path;
-                OnIconWasSelectedFromGallery();
+
+                if (string.IsNullOrEmpty(SelectedImagePath)) return;
+                SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
+
             });
         }
 
+        private void ChangeToSomething()
+        {
+            SelectedImagePath = RandomString(10);
+        }
+
+
+        public static string RandomString(int length)
+        {
+            var rand = new System.Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[rand.Next(s.Length)]).ToArray());
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
