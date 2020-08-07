@@ -138,7 +138,7 @@ namespace ViewModels
                 .CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
                 .ContinueWith(
                     delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.GetAwaiter().GetResult(); },
-                    scheduler: downloadedSpritesRepository.MainThreadScheduler,
+                    scheduler: DownloadedSpritesRepository.MainThreadScheduler,
                     continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
                     cancellationToken: _asyncOperationCancellationController.CancellationToken);
         }

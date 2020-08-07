@@ -12,45 +12,43 @@ namespace WebOperationUtilities
     {
         private const string Tag = "ImagesDownloadingUtility";
 
-        public static Task<Texture2D[]> CreateDownloadImagesArrayTask(HttpClient httpClient, TaskScheduler mainThreadScheduler,
-            string[] imagesUrls, in CancellationToken cancellationToken)
-        {
-            var length = imagesUrls.Length;
-            var tasks = new Task<Texture2D> [length];
-            for (var i = 0; i < length; i++)
-            {
-                tasks[i] = CreateDownloadImageTask(httpClient, mainThreadScheduler, imagesUrls[i], cancellationToken);
-            }
 
-            return Task.WhenAll(tasks);
-        }
-
-        public static Task<Texture2D> CreateDownloadImageTask(HttpClient httpClient, TaskScheduler mainThreadScheduler, string url,
+        public static async Task<Sprite> CreateDownloadImageTask(HttpClient httpClient, TaskFactory mainThreadTaskFactory, string url,
             CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(url))
+            try
             {
-                throw new Exception("Given url is null or empty");
-            }
-
-            return CreateLoadDataTask(httpClient, url, cancellationToken).ContinueWith(
-                delegate(Task<HttpResponseMessage> loadDataResponseTask)
+                if (string.IsNullOrEmpty(url))
                 {
-                    var resultMessage = loadDataResponseTask.GetAwaiter().GetResult();
-                    var readBytesTask = resultMessage.Content.ReadAsByteArrayAsync();
+                    throw new Exception("Given url is null or empty");
+                }
 
-                    return readBytesTask.ContinueWith(delegate(Task<byte[]> loadBytesTask)
-                    {
-                        var bytesArray = loadBytesTask.GetAwaiter().GetResult();
-                        var textureToReturn = new Texture2D(0, 0);
-                        textureToReturn.LoadImage(bytesArray);
-                        textureToReturn.Apply();
-                        return textureToReturn;
-                    }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadScheduler);
-                }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadScheduler).Unwrap();
+                var responseMessage = await LoadDataAsync(httpClient, url, cancellationToken).ConfigureAwait(false);
+
+                if (!responseMessage.IsSuccessStatusCode)
+                {
+                    throw new Exception(responseMessage.ReasonPhrase);
+                }
+
+                var bytesArray = await responseMessage.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+
+
+                return await mainThreadTaskFactory.StartNew(delegate
+                {
+                    var texture = new Texture2D(0, 0);
+                    texture.LoadImage(bytesArray);
+                    texture.Apply();
+                    return SpritesUtility.CreateSpriteWithDefaultParameters(texture);
+                }, cancellationToken).ConfigureAwait(true);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
-        
-        private static Task<HttpResponseMessage> CreateLoadDataTask(HttpClient httpClient, in string uri, in CancellationToken cancellationToken)
+
+        private static Task<HttpResponseMessage> LoadDataAsync(HttpClient httpClient, in string uri, in CancellationToken cancellationToken)
         {
             return httpClient.GetAsync(uri, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
@@ -61,10 +59,10 @@ namespace WebOperationUtilities
             var tasks = new List<Task<HttpResponseMessage>>(imagesUrls.Count);
             foreach (var url in imagesUrls)
             {
-                tasks.Add(CreateLoadDataTask(httpClient, url.Url, cancellationToken));
+                tasks.Add(LoadDataAsync(httpClient, url.Url, cancellationToken));
             }
 
-            return Task.WhenAll(tasks).ContinueWith( delegate(Task<HttpResponseMessage[]> task)
+            return Task.WhenAll(tasks).ContinueWith(delegate(Task<HttpResponseMessage[]> task)
             {
                 var result = task.GetAwaiter().GetResult();
                 var bytesTasks = new List<Task<byte[]>>(result.Length);

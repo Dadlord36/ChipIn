@@ -148,6 +148,13 @@ namespace ScriptableObjects.DataSynchronizers
             {
                 var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out TasksCancellationTokenSource, RequestHeaders)
                     .ConfigureAwait(true);
+
+                if (!response.Success)
+                {
+                    LogUtility.PrintLogError(Tag, response.Error);
+                    return;
+                }
+
                 UserProfile.Set(response.ResponseModelInterface);
             }
             catch (OperationCanceledException)

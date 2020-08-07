@@ -111,16 +111,14 @@ namespace Views.InteractiveWindows
             _cancellationTokenSource?.Cancel();
         }
 
-        public async Task FillCardWithData(IPosterImageUri posterUri, IDescription description, ITitled titled, ICategory category)
+        public Task FillCardWithData(Sprite labelIcon, IDescription description, ITitled titled, ICategory category)
         {
             try
             {
                 CancelFillingTask();
                 _cancellationTokenSource = new CancellationTokenSource();
-                var label = SpritesUtility.CreateSpriteWithDefaultParameters(await ImagesDownloadingUtility
-                    .CreateDownloadImageTask(ApiHelper.DefaultClient, TaskScheduler.FromCurrentSynchronizationContext(),
-                        posterUri.PosterUri, _cancellationTokenSource.Token));
-                FillCardWithData(new InfoPanelData(label, description, titled, category));
+                FillCardWithData(new InfoPanelData(labelIcon, description, titled, category));
+                return Task.CompletedTask;
             }
             catch (Exception e)
             {

@@ -94,8 +94,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 Data = new SimpleDataHelper<TDataType>(this);
             }
-            
-            
+
+
             pagesPaginatedRepository.Clear();
             return pagesPaginatedRepository.LoadDataFromServer();
         }
@@ -218,16 +218,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await viewHolder.FillView
+                var data = _fillingViewAdapter.Convert
                 (
-                    _fillingViewAdapter.Convert
-                    (
-                        _asyncOperationCancellationController.TasksCancellationTokenSource,
-                        Data[(int) index],
-                        index
-                    ),
+                    _asyncOperationCancellationController.TasksCancellationTokenSource,
+                    Data[(int) index],
                     index
-                ).ConfigureAwait(true);
+                );
+                await viewHolder.FillView(data, index).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

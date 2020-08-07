@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public static Camera MainCamera { get; private set; }
     public static Vector2 OriginalResolution { get; private set; } = new Vector2(375, 815);
     public static Vector2 ScreenResolutionScale { get; private set; }
-    
+
     public static TaskScheduler MainThreadScheduler { get; private set; }
 
     private void Awake()
@@ -60,15 +60,14 @@ public class GameManager : MonoBehaviour
         try
         {
             await InitializeControllers();
+            LogUtility.PrintLog(Tag, ScreenUtility.GetScreenSize().ToString());
+            FireBaseNotificationsController.Dispose();
         }
         catch (Exception e)
         {
             LogUtility.PrintLogException(e);
             throw;
         }
-
-        LogUtility.PrintLog(Tag, ScreenUtility.GetScreenSize().ToString());
-        FireBaseNotificationsController.Dispose();
     }
 
     private async Task InitializeControllers()
