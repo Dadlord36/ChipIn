@@ -313,17 +313,14 @@ namespace Repositories
         private Task CreateLoadAndStorePageItemsTask(uint pageNumber)
         {
             if (!PageIsValid(pageNumber)) throw new Exception("Impossible page");
-
-
-            var task = Task.Run(() =>
+            
+            var task = Task.Run(async () =>
             {
-                var httpResponse =
-                    CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage));
-                GetResponseItemsAndFillPaginatedData(httpResponse.Result.ResponseModelInterface);
+                var httpResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage))
+                    .ConfigureAwait(false);
+                GetResponseItemsAndFillPaginatedData(httpResponse.ResponseModelInterface);
             });
             
-
-
             return PagesLoadingTaskManager.RequestTask(pageNumber, task);
         }
 
