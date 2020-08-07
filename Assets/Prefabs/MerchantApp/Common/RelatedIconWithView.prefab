@@ -81,22 +81,6 @@ MonoBehaviour:
   iconWasSelectedFromGallery:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1597468343693890370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6842189623306328647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.SettableIconView.SelectedImageTexture2D
-  viewPropertyName: Shapes2D.ShapeWithBindableTexture.FillTexture
 --- !u!1001 &1754510245436213940
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -469,20 +453,35 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3168282185674686959, guid: c580fd31b1c2c7e40985d816bf66fcca,
-        type: 3}
-      propertyPath: viewModelPropertyName
-      value: Views.ViewElements.SettableIconView.IconIsSelected
-      objectReference: {fileID: 0}
-    - target: {fileID: 3168282185674686959, guid: c580fd31b1c2c7e40985d816bf66fcca,
-        type: 3}
-      propertyPath: viewAdapterTypeName
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
       propertyPath: settings._fillType
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: wasConverted
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: preConvertedScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: preConvertedScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3192257176976257159, guid: c580fd31b1c2c7e40985d816bf66fcca,
+        type: 3}
+      propertyPath: preConvertedScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3683135877391721431, guid: c580fd31b1c2c7e40985d816bf66fcca,
         type: 3}
@@ -660,12 +659,6 @@ GameObject:
 --- !u!224 &8446988090499420486 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 977178514186337190, guid: c580fd31b1c2c7e40985d816bf66fcca,
-    type: 3}
-  m_PrefabInstance: {fileID: 8698166412261468896}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6842189623306328647 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2756853271323586727, guid: c580fd31b1c2c7e40985d816bf66fcca,
     type: 3}
   m_PrefabInstance: {fileID: 8698166412261468896}
   m_PrefabAsset: {fileID: 0}
