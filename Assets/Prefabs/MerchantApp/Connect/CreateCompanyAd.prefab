@@ -36,35 +36,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -63.5}
   m_SizeDelta: {x: -40, y: -127}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6992906883910877114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858466217994493424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7119443e5d45d8a55f9349579c3843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 7158537869196564134}
-  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
-    type: 2}
-  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
-    type: 2}
---- !u!114 &7158537869196564134
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858466217994493424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03cc9e79ccdb4fd7b87d4caeaf954892, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1555305818770634949
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,6 +72,35 @@ RectTransform:
   m_AnchoredPosition: {x: 162.5, y: -2030.1543}
   m_SizeDelta: {x: 325, y: 52.2}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6992906883910877114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858466217994493424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7119443e5d45d8a55f9349579c3843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 7158537869196564134}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+    type: 2}
+--- !u!114 &7158537869196564134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858466217994493424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03cc9e79ccdb4fd7b87d4caeaf954892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2242005413744355784
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,28 +339,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.CreateCompanyAdViewModel.PreviewButton_OnClick
   viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &5367889050411885021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3999068486306794127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateCompanyAdViewModel.CompanyLogoImagePath
-  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
-  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &7271353746005251350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -374,6 +352,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.CreateCompanyAdViewModel.CompanyPosterImagePath
+  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
+  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &5367889050411885021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3999068486306794127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateCompanyAdViewModel.CompanyLogoImagePath
   viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
   viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
   viewAdapterTypeName: 

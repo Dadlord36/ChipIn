@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -15,6 +13,7 @@ namespace Views.ViewElements
     public sealed class SettableIconView : UIBehaviour, INotifyPropertyChanged
     {
         public UnityEvent iconWasSelectedFromGallery;
+        public UnityEvent iconWasChanged;
 
         private bool _iconIsSelected;
         private string _selectedImagePath;
@@ -43,6 +42,7 @@ namespace Views.ViewElements
                 _selectedImageSprite = value;
                 IconIsSelected = _selectedImageSprite != null;
                 OnPropertyChanged();
+                OnIconWasChanged();
             }
         }
 
@@ -75,22 +75,7 @@ namespace Views.ViewElements
 
                 if (string.IsNullOrEmpty(SelectedImagePath)) return;
                 SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
-
             });
-        }
-
-        private void ChangeToSomething()
-        {
-            SelectedImagePath = RandomString(10);
-        }
-
-
-        public static string RandomString(int length)
-        {
-            var rand = new System.Random();
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-                .Select(s => s[rand.Next(s.Length)]).ToArray());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -104,6 +89,11 @@ namespace Views.ViewElements
         private void OnIconWasSelectedFromGallery()
         {
             iconWasSelectedFromGallery?.Invoke();
+        }
+
+        private void OnIconWasChanged()
+        {
+            iconWasChanged?.Invoke();
         }
     }
 }
