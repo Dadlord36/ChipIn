@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
 namespace Controllers
 {
     [RequireComponent(typeof(Image))]
@@ -13,17 +12,18 @@ namespace Controllers
         private Image _image;
 
 
-        protected override void Start()
+        protected override void Awake()
         {
-            base.Start();
+            base.Awake();
             FindControlledComponent();
+            ResetElementSize();
         }
         
         [Button]
         public void FitImage()
         {
             ResetElementSize();
-            
+
             var preferredWidth = _image.preferredWidth;
             var preferredHeight = _image.preferredHeight;
             var aspectRatio = preferredWidth / preferredHeight;
@@ -54,7 +54,7 @@ namespace Controllers
         {
             _image.rectTransform.sizeDelta = Vector2.zero;
         }
-        
+
         [Button]
         private void FindControlledComponent()
         {
