@@ -36,7 +36,6 @@ namespace Views.ViewElements.ScrollViews.Adapters
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
 
         public event Action StartedFetching;
@@ -99,6 +98,11 @@ namespace Views.ViewElements.ScrollViews.Adapters
             pagesPaginatedRepository.Clear();
             return pagesPaginatedRepository.LoadDataFromServer();
         }
+        
+        private void SetInteractivity(bool state)
+        {
+           Parameters.SetScrollInteractivity(state);
+        }
 
         // This is called initially, as many times as needed to fill the viewport, 
         // and anytime the viewport's size grows, thus allowing more items to be displayed
@@ -137,6 +141,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
             int lastVisibleItemItemIndex = -1;
             if (_VisibleItemsCount > 0)
             {
+                SetInteractivity(CheckIfShouldAllowScrolling());
+
+                bool CheckIfShouldAllowScrolling()
+                {
+                    return TotalCapacity > _VisibleItems.Count;
+                }
+                
                 lastVisibleItemItemIndex = _VisibleItems.Last().ItemIndex;
             }
 

@@ -3,6 +3,7 @@
     public interface IRepositoryAdapterParameters
     {
         int PreFetchedItemsCount { get; } 
-        bool FreezeContentEndEdgeOnCountChange { get; }
+        bool FreezeContentEndEdgeOnCountChange { get; } 
+        void SetScrollInteractivity(bool activity);
     }
 }

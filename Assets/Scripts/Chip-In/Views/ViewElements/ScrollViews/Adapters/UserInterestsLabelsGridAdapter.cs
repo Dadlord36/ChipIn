@@ -57,6 +57,11 @@ namespace Views.ViewElements.ScrollViews.Adapters
             
             public int PreFetchedItemsCount => repositoryAdapterParameters.PreFetchedItemsCount;
             public bool FreezeContentEndEdgeOnCountChange => repositoryAdapterParameters.FreezeContentEndEdgeOnCountChange;
+            
+            public void SetScrollInteractivity(bool activity)
+            {
+                DragEnabled = activity;
+            }
         }
 
         [SerializeField] private InterestsBasicDataPaginatedListRepository interestsBasicDataPaginatedListRepository;
