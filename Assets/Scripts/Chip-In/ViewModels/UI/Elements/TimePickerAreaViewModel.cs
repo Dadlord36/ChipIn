@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using I2.Loc;
 using JetBrains.Annotations;
 using pingak9;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -14,10 +12,21 @@ namespace ViewModels.UI.Elements
     [Binding]
     public sealed class TimePickerAreaViewModel : UIBehaviour, IPointerClickHandler, INotifyPropertyChanged
     {
-        [SerializeField] private string localizationTerm = "Type this date";
-
         private MobileDateTimePicker _timeDataPicker;
         private DateTime _pickedDateTime;
+        private bool _dateIsPicked;
+
+        [Binding]
+        public bool DateIsPicked
+        {
+            get => _dateIsPicked;
+            set
+            {
+                if (value == _dateIsPicked) return;
+                _dateIsPicked = value;
+                OnPropertyChanged();
+            }
+        }
 
         public UnityEvent datePicked;
         private string _localDateAsString;
@@ -32,6 +41,7 @@ namespace ViewModels.UI.Elements
                 if (value.Equals(_pickedDateTime)) return;
                 _pickedDateTime = value;
                 LocalDateAsString = value.ToShortDateString();
+                DateIsPicked = true;
                 OnPropertyChanged();
             }
         }
@@ -59,8 +69,6 @@ namespace ViewModels.UI.Elements
             _timeDataPicker = MobileDateTimePicker.CreateTime();
             _timeDataPicker.OnDateChanged = OnDateChanged;
             _timeDataPicker.OnPickerClosed = OnDateChanged;
-            
-            LocalDateAsString = LocalizationManager.GetTranslation(localizationTerm);
         }
 
         [Binding]
