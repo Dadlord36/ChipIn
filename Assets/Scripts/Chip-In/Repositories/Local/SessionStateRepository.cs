@@ -47,7 +47,6 @@ namespace Repositories.Local
                 await SessionStaticProcessor.TryLogOut(out TasksCancellationTokenSource, authorisationDataRepository, DeviceUtility.BaseDeviceData);
                 
                 cachingController.ClearCache();
-                viewsSwitchingController.RequestSwitchToView("", nameof(LoginView));
                 OnSigningOut();
             }
             catch (Exception e)
