@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Controllers;
 using DataModels.Interfaces;
+using Repositories.Local;
 using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +16,12 @@ namespace ScriptableObjects.CardsControllers
     [CreateAssetMenu(fileName = nameof(InfoCardController), menuName = nameof(CardsControllers) + "/" + nameof(InfoCardController), order = 0)]
     public class InfoCardController : BaseCardController<InfoPanelView>
     {
+        private const string Tag = nameof(InfoCardController);
+        
         [SerializeField] private ViewsSwitchingAnimationBinding viewsSwitchingAnimationBinding;
+        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         private readonly ViewAppearanceParameters _cardAppearanceParameters = new ViewAppearanceParameters(
             ViewAppearanceParameters.Appearance.MoveIn, true, ViewAppearanceParameters.SwitchingViewPosition.Above,
@@ -30,7 +37,14 @@ namespace ScriptableObjects.CardsControllers
         {
             try
             {
-                await CardView.FillCardWithData(posterUri, description, titled, category);
+                _asyncOperationCancellationController.CancelOngoingTask();
+                var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(posterUri.PosterUri, _asyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(true);
+                await CardView.FillCardWithData(sprite, description, titled, category).ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

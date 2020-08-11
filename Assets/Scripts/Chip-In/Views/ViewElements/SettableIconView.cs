@@ -13,6 +13,7 @@ namespace Views.ViewElements
     public sealed class SettableIconView : UIBehaviour, INotifyPropertyChanged
     {
         public UnityEvent iconWasSelectedFromGallery;
+        public UnityEvent iconWasChanged;
 
         private bool _iconIsSelected;
         private string _selectedImagePath;
@@ -26,12 +27,6 @@ namespace Views.ViewElements
             {
                 if (value == _selectedImagePath) return;
                 _selectedImagePath = value;
-                
-                if (!string.IsNullOrEmpty(_selectedImagePath))
-                {
-                    SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(
-                        NativeGallery.LoadImageAtPath(_selectedImagePath));
-                }
 
                 OnPropertyChanged();
             }
@@ -47,8 +42,11 @@ namespace Views.ViewElements
                 _selectedImageSprite = value;
                 IconIsSelected = _selectedImageSprite != null;
                 OnPropertyChanged();
+                OnIconWasChanged();
             }
         }
+
+        [Binding] public Texture2D SelectedImageTexture2D => _selectedImageSprite.texture;
 
         [Binding]
         public bool IconIsSelected
@@ -58,6 +56,7 @@ namespace Views.ViewElements
             {
                 if (value == _iconIsSelected) return;
                 _iconIsSelected = value;
+                OnIconWasSelectedFromGallery();
                 OnPropertyChanged();
             }
         }
@@ -73,10 +72,11 @@ namespace Views.ViewElements
             NativeGallery.GetImageFromGallery(delegate(string path)
             {
                 SelectedImagePath = path;
-                OnIconWasSelectedFromGallery();
+
+                if (string.IsNullOrEmpty(SelectedImagePath)) return;
+                SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
             });
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -89,6 +89,11 @@ namespace Views.ViewElements
         private void OnIconWasSelectedFromGallery()
         {
             iconWasSelectedFromGallery?.Invoke();
+        }
+
+        private void OnIconWasChanged()
+        {
+            iconWasChanged?.Invoke();
         }
     }
 }

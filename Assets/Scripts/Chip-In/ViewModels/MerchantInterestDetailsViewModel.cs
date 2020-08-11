@@ -11,10 +11,10 @@ using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using JetBrains.Annotations;
-using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -32,7 +32,6 @@ namespace ViewModels
     public sealed class MerchantInterestDetailsViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestDetailsView>, INotifyPropertyChanged
     {
         [SerializeField] private AlertCardController alertCardController;
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private MerchantInterestAnswersListAdapter merchantInterestAnswersListAdapter;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
@@ -177,17 +176,14 @@ namespace ViewModels
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        private Task SetInterestPageReflectionDataAsync(in CommunityAndInterestIds communityAndInterestIds)
+        private async Task SetInterestPageReflectionDataAsync(CommunityAndInterestIds communityAndInterestIds)
         {
-            return GetInterestDataAsync(communityAndInterestIds).ContinueWith(
-                delegate(Task<MerchantInterestPageDataModel> task)
-                {
-                    InterestPageName = task.GetAwaiter().GetResult().Name;
-                    InterestPageDescription = task.GetAwaiter().GetResult().Message;
-                },
-                scheduler: downloadedSpritesRepository.MainThreadScheduler,
-                continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
-                cancellationToken: _asyncOperationCancellationController.CancellationToken);
+            var interestData = await GetInterestDataAsync(communityAndInterestIds).ConfigureAwait(false);
+            await TasksFactories.MainThreadTaskFactory.StartNew(delegate
+            {
+                InterestPageName = interestData.Name;
+                InterestPageDescription = interestData.Message;
+            }).ConfigureAwait(true);
         }
 
         private void FillListAdapterWithCorrespondingData(string question)

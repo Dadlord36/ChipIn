@@ -46,7 +46,7 @@ namespace ViewModels
             }
             catch (Exception e)
             {
-               LogUtility.PrintLogException(e);
+                LogUtility.PrintLogException(e);
                 throw;
             }
         }
@@ -69,6 +69,11 @@ namespace ViewModels
             AlternativeDiagram = !AlternativeDiagram;
         }
 
+        [Binding]
+        public void CreateFlashOfferButton_OnClick()
+        {
+            SwitchToView(nameof(FlashOfferView));
+        }
 
         private async Task TryUpdateRadarViewData()
         {

@@ -9,6 +9,7 @@ using JetBrains.Annotations;
 using Repositories.Local;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using ViewModels.Basic;
 using Views.Cards;
 
@@ -31,7 +32,7 @@ namespace ViewModels.Cards
         private string _description = EmptyFieldText;
         private Sprite _icon;
         private string _spirit = EmptyFieldText;
-
+        
 
         #region IEngageModel implementation
 
@@ -156,7 +157,7 @@ namespace ViewModels.Cards
 
         private void ClearIcon()
         {
-            Icon = null;
+            Icon = downloadedSpritesRepository.IconPlaceholder;
         }
 
         private static string ChooseFieldValue(in string value)
@@ -164,7 +165,7 @@ namespace ViewModels.Cards
             return string.IsNullOrEmpty(value) ? EmptyFieldText : value;
         }
 
-        public Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
+        public async Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
             OperationCancellationController.CancelOngoingTask();
             ClearIcon();
@@ -175,10 +176,20 @@ namespace ViewModels.Cards
             MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
             Id = dataModel.Id;
             Name = dataModel.Name;
-            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> getSpriteTask) { Icon = getSpriteTask.GetAwaiter().GetResult(); },
-                    continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: downloadedSpritesRepository.MainThreadScheduler,
-                    cancellationToken: OperationCancellationController.CancellationToken);
+            try
+            {
+                Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
+                    .ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void OnItemSelected(uint index)

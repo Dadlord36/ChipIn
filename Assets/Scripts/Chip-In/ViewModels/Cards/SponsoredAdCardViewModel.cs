@@ -45,10 +45,11 @@ namespace ViewModels.Cards
 
         public Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            return dataModel.LoadBackgroundTextureTask.ContinueWith(
+            /*return dataModel.LoadBackgroundTextureTask.ContinueWith(
                 delegate(Task<Texture2D> finishedTask) { BackgroundTexture = finishedTask.GetAwaiter().GetResult(); }
                 , CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, GameManager.MainThreadScheduler
-            );
+            );*/
+            return Task.CompletedTask;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

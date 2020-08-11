@@ -1,11 +1,16 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Common.UnityEvents;
 using Controllers;
+using HttpRequests.RequestsProcessors.PutRequests;
 using JetBrains.Annotations;
+using Repositories.Remote;
+using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
-using ViewModels.Basic;
+using Utilities;
 
 namespace ViewModels.Elements
 {
@@ -16,14 +21,16 @@ namespace ViewModels.Elements
     }
 
     [Binding]
-    public sealed class PasswordChangingViewModel : MonoBehaviour, INotifyPropertyChanged, IPasswordChangingViewModel
+    public sealed class PasswordChangingViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public event Action<string> NewPasswordApproved;
-
+        public StringUnityEvent newPasswordApproved;
         public RectTransform RootTransform => transform as RectTransform;
-
         [SerializeField] private PasswordAnalyzer passwordAnalyzer;
+
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
+        [SerializeField] private UserAuthorisationDataRepository _authorisationDataRepository;
+        [SerializeField] private AlertCardController _alertCardController;
 
 
         private bool _canChangePassword;
@@ -36,7 +43,6 @@ namespace ViewModels.Elements
             set
             {
                 passwordAnalyzer.OriginalPassword = value;
-                CheckIfCanConfirmChange();
                 OnPropertyChanged();
             }
         }
@@ -48,7 +54,6 @@ namespace ViewModels.Elements
             set
             {
                 passwordAnalyzer.RepeatedPassword = value;
-                CheckIfCanConfirmChange();
                 OnPropertyChanged();
             }
         }
@@ -61,7 +66,6 @@ namespace ViewModels.Elements
             {
                 if (value == _currentPassword) return;
                 _currentPassword = value;
-                CheckIfCanConfirmChange();
                 OnPropertyChanged();
             }
         }
@@ -77,13 +81,44 @@ namespace ViewModels.Elements
                 OnPropertyChanged();
             }
         }
-        
+
         [Binding]
-        public void Confirm_OnClick()
+        public async void Confirm_OnClick()
         {
-            OnNewPasswordApproved(Password);
-            ClearFields();
-            MakeFormInteractive();
+            if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
+            {
+                return;
+            }
+
+
+            try
+            {
+                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out _asyncOperationCancellationController
+                        .TasksCancellationTokenSource,
+                    _authorisationDataRepository, new UserProfilePasswordChangingModel
+                    {
+                        CurrentPassword = CurrentPassword, Password = Password,
+                        PasswordConfirmation = PasswordRepeat
+                    });
+
+                if (response.Success)
+                {
+                    _alertCardController.ShowAlertWithText("Password changed successfully");
+                }
+                else
+                {
+                    _alertCardController.ShowAlertWithText("Failed to change password");
+                }
+
+                OnNewPasswordApproved(Password);
+                ClearFields();
+                MakeFormInteractive();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [Binding]
@@ -111,13 +146,13 @@ namespace ViewModels.Elements
 
         private void CheckIfCanConfirmChange()
         {
-            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid() && 
+            CanChangePassword = passwordAnalyzer.CheckIfPasswordsAreMatchAndItIsValid() &&
                                 passwordAnalyzer.IsPasswordValid(CurrentPassword);
         }
 
         private void OnNewPasswordApproved(in string approvedPassword)
         {
-            NewPasswordApproved?.Invoke(approvedPassword);
+            newPasswordApproved?.Invoke(approvedPassword);
         }
 
         [NotifyPropertyChangedInvocator]

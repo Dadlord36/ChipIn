@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HttpRequests;
+using Tasking;
 using UnityEngine;
+using Utilities;
 using WebOperationUtilities;
 
 namespace Repositories.Local
@@ -11,7 +14,14 @@ namespace Repositories.Local
                                                                                 + nameof(DownloadedSpritesRepository), order = 0)]
     public sealed class DownloadedSpritesRepository : ScriptableObject
     {
+        [SerializeField] private Sprite iconPlaceholder;
+
+        public Sprite IconPlaceholder => iconPlaceholder;
+
         private const string Tag = nameof(DownloadedSpritesRepository);
+
+        
+
 
         private sealed class DownloadHandleSprite
         {
@@ -26,25 +36,28 @@ namespace Repositories.Local
                 Url = url;
             }
 
-            public Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskScheduler taskScheduler)
+            public async Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskFactory mainThreadTaskFactory, Sprite defaultIcon)
             {
-                return ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, taskScheduler, Url, cancellationToken)
-                    .ContinueWith(delegate(Task<Texture2D> task)
-                    {
-                        var texture = task.GetAwaiter().GetResult();
-                        return LoadedSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-                    }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, taskScheduler);
+                try
+                {
+                    return LoadedSprite = await ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, mainThreadTaskFactory, Url,
+                        cancellationToken).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLog(Tag, e.Message);
+                    return defaultIcon;
+                }
             }
         }
 
         private readonly List<DownloadHandleSprite> _spritesDownloadHandles = new List<DownloadHandleSprite>();
 
-        public TaskScheduler MainThreadScheduler { get; private set; }
+        public static TaskScheduler MainThreadScheduler => GameManager.MainThreadScheduler;
 
         private void OnEnable()
         {
             _spritesDownloadHandles.Clear();
-            MainThreadScheduler = TaskScheduler.FromCurrentSynchronizationContext();
         }
 
         private bool SpriteIsAlreadyLoaded(string url, out DownloadHandleSprite handleSprite)
@@ -54,32 +67,46 @@ namespace Repositories.Local
             return handleSprite != null;
         }
 
-        public Task CreateLoadSpritesTask(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)
-        {
-            return Task.WhenAll(CreateLoadSpritesTasks(parameters, cancellationToken));
-        }
-
-        public Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken)
+        public async Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken)
         {
             if (SpriteIsAlreadyLoaded(url, out var downloadHandleSprite))
             {
-                return downloadHandleSprite.IsLoaded
-                    ? Task.FromResult(downloadHandleSprite.LoadedSprite)
-                    : downloadHandleSprite.InvokeDownloading(cancellationToken, MainThreadScheduler);
+                if (downloadHandleSprite.IsLoaded)
+                {
+                    return downloadHandleSprite.LoadedSprite;
+                }
+                try
+                {
+                    return await downloadHandleSprite.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory,
+                        IconPlaceholder).ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                    return IconPlaceholder;
+                }
             }
 
             var downloadHandle = new DownloadHandleSprite(url);
             _spritesDownloadHandles.Add(downloadHandle);
-            return downloadHandle.InvokeDownloading(cancellationToken, MainThreadScheduler);
+            try
+            {
+                return await downloadHandle.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory,
+                    IconPlaceholder).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return iconPlaceholder;
+            }
         }
 
         public Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken)
         {
-            return CreateLoadSpriteTask(url, cancellationToken).ContinueWith(async delegate(Task<Sprite> task)
+            return CreateLoadSpriteTask(url, cancellationToken).ContinueWith(delegate(Task<Sprite> task)
             {
-                var sprite = await task;
+                if (!task.IsCompleted) return iconPlaceholder.texture;
+                var sprite = task.GetAwaiter().GetResult();
                 return sprite.texture;
-            }, cancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion, MainThreadScheduler).Unwrap();
+            }, cancellationToken, TaskContinuationOptions.NotOnCanceled, MainThreadScheduler);
         }
 
         private Task[] CreateLoadSpritesTasks(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)

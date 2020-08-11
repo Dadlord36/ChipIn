@@ -15,6 +15,7 @@
         public const string Profile = "profile";
         public const string SingOut = "sign_out";
         public const string Radar = "radar";
+        public const string FlashOffers = "flash_offers";
 
         public static class Subcategories
         {

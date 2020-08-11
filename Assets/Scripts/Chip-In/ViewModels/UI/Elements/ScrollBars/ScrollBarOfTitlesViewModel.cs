@@ -9,12 +9,13 @@ namespace ViewModels.UI.Elements.ScrollBars
     public class ScrollBarOfTitlesViewModel : BaseScrollBar<ScrollBarItemWithTextView>
     {
         [SerializeField] private bool shouldFillFromContainer;
+        [SerializeField] private bool shouldBeInitializedOnStart;
 
         private void Start()
         {
             if (shouldFillFromContainer)
                 FillContainerWithItems();
-            else
+            else if (shouldBeInitializedOnStart)
             {
                 Initialize();
             }

@@ -1,20 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using GlobalVariables;
-using Repositories.Local.SingleItem;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
 
 namespace Views
 {
     public sealed class CreateOfferView : BaseView
     {
-        [SerializeField] private Image avatarIconImage;
-        [SerializeField] private TMP_Text validityPeriodTextField;
-        
-        
         public event Action<string> NewCategorySelected;
         public event Action<string> NewGameTypeSelected;
         public event Action<string> NewOfferTypeSelected;
@@ -52,21 +42,8 @@ namespace Views
         {
             OnNewGameTypeSelected(MainNames.ChallengeTypes.ChallengeTypesArray[index]);
         }
-
-        public DateTime ValidityPeriod
-        {
-            set => validityPeriodTextField.text = value.ToShortDateString();
-        }
-
-        public Sprite AvatarIconSprite
-        {
-            get => avatarIconImage.sprite;
-            set
-            {
-                avatarIconImage.gameObject.SetActive(true);
-                avatarIconImage.sprite = value;
-            }
-        }
+        
+        
 
         private void OnNewCategorySelected(string obj)
         {

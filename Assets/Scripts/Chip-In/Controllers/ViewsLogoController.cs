@@ -10,17 +10,25 @@ namespace Controllers
         public event Action<Sprite> LogoChanged;
 
         [SerializeField] private Sprite defaultLogo;
-        
+
         public Sprite LogoSpite
         {
-            get => _logoSpite;
+            get
+            {
+                if (!_logoSpite)
+                {
+                    _logoSpite = defaultLogo;
+                }
+
+                return _logoSpite;
+            }
             set
             {
                 _logoSpite = value;
                 OnLogoChanged(_logoSpite);
             }
         }
-        
+
         public void SetDefaultLogo()
         {
             LogoSpite = defaultLogo;

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 
 namespace ViewModels.Cards
 {
@@ -23,7 +24,7 @@ namespace ViewModels.Cards
                 Description = description;
             }
         }
-        
+
         private Texture2D _adIcon;
         private string _description;
 
@@ -51,13 +52,22 @@ namespace ViewModels.Cards
             }
         }
 
-        public Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
+        public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
             Description = dataModel.Description;
-            return dataModel.AdIcon.ContinueWith(delegate (Task<Texture2D> taskResult)
+            try
             {
-                AdIcon = taskResult.GetAwaiter().GetResult();
-            } ,CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, GameManager.MainThreadScheduler);
+                AdIcon = await dataModel.AdIcon.ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(nameof(AdCardViewModel));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

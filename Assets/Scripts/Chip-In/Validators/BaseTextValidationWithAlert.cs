@@ -1,55 +1,30 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
-using ScriptableObjects.Validations;
+﻿using ScriptableObjects.Validations;
 using UnityEngine;
 using UnityWeld.Binding;
 
 namespace Validators
 {
+    public interface IValidationWithAlert
+    {
+        void ShowAlertIfIsNotValid();
+        bool IsValid { get; }
+    }
+
+
     [Binding]
-    public class BaseTextValidationWithAlert : MonoBehaviour, INotifyPropertyChanged
+    public abstract class BaseTextValidationWithAlert<T> : BaseValidationWithAlert
     {
         [SerializeField] private TextValidation validation;
-        [SerializeField] private GameObject alertTextField;
-        [SerializeField] private bool shouldCheckValidity;
 
-        public event Action ValidityChanged;
+        [Binding] public T TextToValidate { get; set; }
 
-        private bool _isValid = true;
+        private object PropertyToValidate => TextToValidate;
 
-        [Binding]
-        public bool IsValid
+
+        protected override bool CheckIsValid()
         {
-            get => _isValid;
-            private set
-            {
-                if (value == _isValid) return;
-                _isValid = value;
-                OnPropertyChanged();
-                OnValidityChanged();
-            }
-        }
-
-        public void CheckIsValid(object dataToValidate)
-        {
-            if (!shouldCheckValidity) return;
-            IsValid = validation.CheckIsValid(dataToValidate);
-            alertTextField.SetActive(!IsValid);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void OnValidityChanged()
-        {
-            ValidityChanged?.Invoke();
+            var state = validation.CheckIsValid(PropertyToValidate);
+            return IsValid = state;
         }
     }
 }

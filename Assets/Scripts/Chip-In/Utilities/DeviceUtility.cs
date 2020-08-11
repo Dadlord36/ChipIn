@@ -14,7 +14,7 @@ namespace Utilities
 #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_ANDROID
             "android",
 #elif UNITY_IOS
-            "ios"
+            "ios",
 #endif
             DeviceToken);
 

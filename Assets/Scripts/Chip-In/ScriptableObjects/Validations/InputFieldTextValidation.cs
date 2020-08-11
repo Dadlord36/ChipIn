@@ -12,6 +12,7 @@ namespace ScriptableObjects.Validations
         [SerializeField] private uint maxCharactersNumber;
         private bool CheckIsValid(in string dateToValidate)
         {
+            if (string.IsNullOrEmpty(dateToValidate)) return false;
             var stringLength = dateToValidate.Length;
             return stringLength >= minCharactersNumber && stringLength <= maxCharactersNumber;
         }

@@ -18,8 +18,7 @@ namespace ViewModels
     public sealed class RegistrationViewModel : ViewsSwitchingViewModel, IBasicLoginModel,
         INotifyPropertyChanged
     {
-        private readonly RegistrationRequestModel
-            _registrationRequestModel = new RegistrationRequestModel();
+        private readonly RegistrationRequestModel _registrationRequestModel = new RegistrationRequestModel {Device = DeviceUtility.DeviceData};
 
         [SerializeField] private PasswordAnalyzer passwordAnalyzer;
         [SerializeField] private ScriptableObjects.Validations.EmailValidation emailValidator;
@@ -100,17 +99,23 @@ namespace ViewModels
                 CheckIfCanRegister();
             }
         }
-        
+
         public RegistrationViewModel() : base(nameof(RegistrationViewModel))
         {
         }
 
         [Binding]
-        public async void TryToRegister()
+        public async void RegisterButton_OnClick()
         {
-            PendingRegister = true;
             try
             {
+                PendingRegister = true;
+                if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
+                {
+                    PendingRegister = false;
+                    return;
+                }
+
                 await Register();
             }
             catch (Exception e)
@@ -118,7 +123,10 @@ namespace ViewModels
                 LogUtility.PrintLogException(e);
                 throw;
             }
-            PendingRegister = false;
+            finally
+            {
+                PendingRegister = false;
+            }
         }
 
         [Binding]

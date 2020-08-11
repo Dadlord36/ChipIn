@@ -21,7 +21,8 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter> :
+    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
+        TFillingViewAdapter> :
         OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>, INotifyPropertyChanged
         where TDataType : class
         where TViewConsumableData : class
@@ -84,14 +85,23 @@ namespace Views.ViewElements.ScrollViews.Adapters
             if (Data != null)
             {
                 if (Data.Count > 0)
-                    Data.RemoveItems(0, Data.Count);
+                {
+                    Data.RemoveItemsFromStart(Data.Count);
+                }
             }
             else
             {
                 Data = new SimpleDataHelper<TDataType>(this);
             }
 
+
+            pagesPaginatedRepository.Clear();
             return pagesPaginatedRepository.LoadDataFromServer();
+        }
+        
+        private void SetInteractivity(bool state)
+        {
+           Parameters.SetScrollInteractivity(state);
         }
 
         // This is called initially, as many times as needed to fill the viewport, 
@@ -131,70 +141,73 @@ namespace Views.ViewElements.ScrollViews.Adapters
             int lastVisibleItemItemIndex = -1;
             if (_VisibleItemsCount > 0)
             {
+                SetInteractivity(CheckIfShouldAllowScrolling());
+
+                bool CheckIfShouldAllowScrolling()
+                {
+                    return TotalCapacity > _VisibleItems.Count;
+                }
+                
                 lastVisibleItemItemIndex = _VisibleItems.Last().ItemIndex;
             }
 
             var numberOfItemsBelowLastVisible = Data.Count - (lastVisibleItemItemIndex + 1);
 
-            // If the number of items available below the last visible (i.e. the bottom-most one, in our case) is less than <adapterParams.preFetchedItemsCount>, get more
-            if (numberOfItemsBelowLastVisible < _Params.PreFetchedItemsCount)
-            {
-                uint newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
-                if (TotalCapacity > -1) // i.e. the capacity isn't unlimited
-                    newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
+            // If the number of items available below the last visible (i.e. the bottom-most one, in our case) is less than <adapterParams.preFetchedItemsCount>,
+            // get more
+            if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount) return;
+            uint newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
 
-                if (newPotentialNumberOfItems > Data.Count)
-                {
-                    try
-                    {
-                        await StartPreFetching((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
-                    }
-                    catch (ArgumentOutOfRangeException e)
-                    {
-                        LogUtility.PrintLog(Tag,e.Message);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        LogUtility.PrintDefaultOperationCancellationLog(Tag);
-                    }
-                    catch (Exception e)
-                    {
-                        LogUtility.PrintLogException(e);
-                        throw;
-                    }
-                } // i.e. if we there's enough room for at least 1 more item
+            newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
+
+            if (newPotentialNumberOfItems <= Data.Count) return;
+            try
+            {
+                _fetching = true;
+                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                LogUtility.PrintLog(Tag, e.Message);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            finally
+            {
+                _fetching = false;
             }
         }
 
-        private Task StartPreFetching(uint additionalItems)
+        private Task StartPreFetchingAsync(uint additionalItems)
         {
-            _fetching = true;
             StartedFetching?.Invoke();
-            return FetchItemModelsFromServer(additionalItems, OnPreFetchingFinished);
+            return FetchItemModelsFromServerAsync(additionalItems);
         }
 
-        private Task FetchItemModelsFromServer(uint maxCount, Action<IReadOnlyList<TDataType>> onDone)
+        private async Task FetchItemModelsFromServerAsync(uint maxCount)
         {
             _asyncOperationCancellationController.CancelOngoingTask();
-            return pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
-                .ContinueWith(delegate(Task<IReadOnlyList<TDataType>> task)
-                    {
-                        _retrievingItemsStartingIndex += maxCount - 1;
-                        onDone(task.GetAwaiter().GetResult());
-
-                        _loadedAll = Data.Count == TotalCapacity;
-                    }, _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+            var items = await pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
+                .ConfigureAwait(true);
+            _retrievingItemsStartingIndex += (uint) items.Count;
+            _loadedAll = Data.Count == TotalCapacity;
+            OnPreFetchingFinished(items);
         }
 
-        private void OnPreFetchingFinished(IReadOnlyList<TDataType> models)
+        private void OnPreFetchingFinished(IReadOnlyCollection<TDataType> models)
         {
             if (models.Count > 0)
                 Data.InsertItemsAtEnd(models as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
 
             ItemsListIsEmpty = Data.Count == 0;
 
-            _fetching = false;
             EndedFetching?.Invoke();
         }
 
@@ -210,16 +223,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await viewHolder.FillView
+                var data = _fillingViewAdapter.Convert
                 (
-                    _fillingViewAdapter.Convert
-                    (
-                        _asyncOperationCancellationController.TasksCancellationTokenSource,
-                        Data[(int) index],
-                        index
-                    ),
+                    _asyncOperationCancellationController.TasksCancellationTokenSource,
+                    Data[(int) index],
                     index
-                ).ConfigureAwait(true);
+                );
+                await viewHolder.FillView(data, index).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

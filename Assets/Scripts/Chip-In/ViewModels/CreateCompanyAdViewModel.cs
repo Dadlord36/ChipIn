@@ -1,15 +1,10 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using Validators;
-using ViewModels.Cards;
 using ViewModels.Interfaces;
 using Views;
-using WebOperationUtilities;
 
 namespace ViewModels
 {
@@ -30,7 +25,6 @@ namespace ViewModels
     [Binding]
     public sealed class CreateCompanyAdViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private CompanyAdFeatureCardViewModel[] companyAdFeatureCardViewModels;
         private string _companyLogoImagePath;
         private string _companyPosterImagePath;
 
@@ -63,45 +57,15 @@ namespace ViewModels
         }
 
         [Binding]
-        public async void PreviewButton_OnClick()
+        public void PreviewButton_OnClick()
         {
-            bool canPreview = true;
-
-            foreach (var cardViewModel in companyAdFeatureCardViewModels)
+            if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
             {
-                if (new CompanyAdFeatureValidator(cardViewModel).IsValid) continue;
-                canPreview = false;
-                break;
+                return;
             }
 
-            if (string.IsNullOrEmpty(_companyLogoImagePath) || string.IsNullOrEmpty(_companyPosterImagePath))
-            {
-                canPreview = false;
-            }
-
-            if (!canPreview) return;
-
-            Texture2D texture = null;
-            try
-            {
-                texture = await SpritesUtility.CreateTexture2DFromPathAsync(CompanyPosterImagePath, GameManager.MainThreadScheduler)
-                    .ConfigureAwait(true);
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-            finally
-            {
-                SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
-                    Array.ConvertAll(companyAdFeatureCardViewModels, item => (ICompanyAdFeatureModel) item),
-                    CompanyLogoImagePath, CompanyPosterImagePath)));
-            }
+            SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
+                GetComponentsInChildren<ICompanyAdFeatureModel>(), CompanyLogoImagePath, CompanyPosterImagePath)));
         }
 
 

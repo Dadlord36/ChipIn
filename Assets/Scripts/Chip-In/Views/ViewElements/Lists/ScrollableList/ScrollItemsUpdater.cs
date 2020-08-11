@@ -34,10 +34,10 @@ namespace Views.ViewElements.Lists.ScrollableList
             rectTransform = transform as RectTransform;
             Update();
         }
-        
+
         private void Update()
         {
-            if (!enabled || _contentItems.Length == 0) return;
+            if (_contentItems == null || _contentItems.Length == 0) return;
 
             for (int i = 0; i < _contentItems.Length; i++)
             {

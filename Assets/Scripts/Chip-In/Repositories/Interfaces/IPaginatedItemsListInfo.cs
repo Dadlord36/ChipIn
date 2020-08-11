@@ -3,7 +3,6 @@
     public interface IPaginatedItemsListInfo
     {
         bool IsInitialized { get; }
-        bool IsBusy { get; }
         uint GetCorrespondingToIndexPage(uint pageItemIndex);
         int ItemsPerPage { get; }
         int TotalPages { get; }

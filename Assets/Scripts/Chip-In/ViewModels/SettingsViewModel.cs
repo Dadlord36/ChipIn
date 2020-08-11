@@ -4,8 +4,6 @@ using Controllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using Views.Cards.Settings;
-using Views.ViewElements.ViewsPlacers;
 
 namespace ViewModels
 {

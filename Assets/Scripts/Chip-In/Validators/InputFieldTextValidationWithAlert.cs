@@ -1,23 +1,10 @@
-﻿using TMPro;
-using UnityEngine;
-using UnityWeld.Binding;
+﻿using UnityWeld.Binding;
 
 namespace Validators
 {
+    
     [Binding]
-    public sealed class InputFieldTextValidationWithAlert : BaseTextValidationWithAlert
+    public sealed class InputFieldTextValidationWithAlert : BaseTextValidationWithAlert<string>
     {
-        [SerializeField] private TMP_InputField inputField;
-
-
-        private void OnEnable()
-        {
-            inputField.onValueChanged.AddListener(CheckIsValid);
-        }
-
-        private void OnDisable()
-        {
-            inputField.onValueChanged.RemoveListener(CheckIsValid);
-        }
     }
 }
