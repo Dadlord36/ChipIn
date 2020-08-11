@@ -31,6 +31,8 @@ namespace ViewModels
         private string _interestName;
         private uint _selectedInterestId;
         private Sprite _logoSprite;
+        [SerializeField] private Sprite defaultLogo; //TODO: ViewsLogoController
+
 
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController
             = new AsyncOperationCancellationController();
@@ -64,7 +66,15 @@ namespace ViewModels
         [Binding]
         public Sprite LogoSprite
         {
-            get => _logoSprite;
+            get
+            {
+                if (!_logoSprite)
+                {
+                    _logoSprite = defaultLogo;
+                }
+
+                return _logoSprite;
+            }
             private set
             {
                 _logoSprite = value;
