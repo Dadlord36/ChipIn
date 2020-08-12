@@ -34,7 +34,7 @@ namespace Utilities
             return newGameObject;
         }
 
-        public static void DestroyTransformAttachments(Transform slotSpinnerRootTransform)
+        public static void DestroyTransformAttachments(Transform slotSpinnerRootTransform, bool destroyImmediate = false)
         {
             var items = new GameObject[slotSpinnerRootTransform.childCount];
 
@@ -45,9 +45,19 @@ namespace Utilities
 
             slotSpinnerRootTransform.DetachChildren();
 
-            for (int i = 0; i < items.Length; i++)
+            if (destroyImmediate)
             {
-                Object.Destroy(items[i]);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    Object.DestroyImmediate(items[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < items.Length; i++)
+                {
+                    Object.Destroy(items[i]);
+                }
             }
         }
     }
