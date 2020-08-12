@@ -1,7 +1,8 @@
-﻿using Common;
-using Controllers;
+﻿using Controllers;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityWeld.Binding;
 using Views;
 
 namespace ViewModels.Basic
@@ -12,10 +13,27 @@ namespace ViewModels.Basic
     public abstract class BaseViewModel : MonoBehaviour, INotifySwitching
     {
         protected readonly string Tag;
-        
-        [SerializeField] private BaseView view;
 
+        [SerializeField] private BaseView view;
         protected readonly AsyncOperationCancellationController OperationCancellationController = new AsyncOperationCancellationController();
+        private static AwaitingProcessVisualizerController MainAwaitingProcessVisualizerController => GameManager.MainAwaitingProcessVisualizerController;
+
+        private bool _awaitingProcess;
+
+        [Binding]
+        public bool IsAwaitingProcess
+        {
+            get => _awaitingProcess;
+            set
+            {
+                if (value == _awaitingProcess) return;
+                _awaitingProcess = value;
+                if (value)
+                    MainAwaitingProcessVisualizerController.Show();
+                else
+                    MainAwaitingProcessVisualizerController.Hide();
+            }
+        }
 
         public BaseViewModel(string tag)
         {
@@ -23,7 +41,7 @@ namespace ViewModels.Basic
         }
 
         public BaseView View => view;
-        
+
 
 #if UNITY_EDITOR
         private void OnValidate()

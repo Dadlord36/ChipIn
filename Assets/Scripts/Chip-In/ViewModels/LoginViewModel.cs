@@ -95,18 +95,7 @@ namespace ViewModels
             }
         }
 
-        private bool _pendingLogin;
 
-        [Binding]
-        public bool IsPendingLogin
-        {
-            get => _pendingLogin;
-            set
-            {
-                _pendingLogin = value;
-                OnPropertyChanged();
-            }
-        }
 
         [Binding] public bool CanReceiveInput { get; private set; } = true;
 
@@ -134,10 +123,10 @@ namespace ViewModels
         {
             try
             {
-                IsPendingLogin = true;
+                IsAwaitingProcess = true;
                 if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
                 {
-                    IsPendingLogin = false;
+                    IsAwaitingProcess = false;
                     return;
                 }
                 
@@ -154,7 +143,7 @@ namespace ViewModels
             }
             finally
             {
-                IsPendingLogin = false;
+                IsAwaitingProcess = false;
             }
         }
 
@@ -163,7 +152,7 @@ namespace ViewModels
         {
             try
             {
-                IsPendingLogin = true;
+                IsAwaitingProcess = true;
                 await ProcessLoginAsGuestAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
@@ -177,7 +166,7 @@ namespace ViewModels
             }
             finally
             {
-                IsPendingLogin = false;
+                IsAwaitingProcess = false;
             }
         }
 
