@@ -32,6 +32,10 @@ namespace ViewModels
         private bool _canCreateOffer;
         private DateTime _expireLocalDate;
         private string _posterFilePath;
+        private int _selectedCurrencyTypeIndex;
+        private string _expireLocalDateAsString;
+        private string _selectedCurrencyType;
+
 
         private readonly OfferCreationRequestModel _offerDataModel = new OfferCreationRequestModel
         {
@@ -40,14 +44,11 @@ namespace ViewModels
                 Title = string.Empty, Description = string.Empty, Category = MainNames.OfferCategories.BulkOffer
             }
         };
-
-        private string _expireLocalDateAsString;
-
+        
         private ICreatedOfferModel ChallengingOfferDataModel => _offerDataModel.Offer;
 
         private CreateOfferView ThisView => View as CreateOfferView;
 
-        #region IChallangeOffer implementatation
 
         [Binding]
         public string PosterFilePath
@@ -109,7 +110,7 @@ namespace ViewModels
             }
         }
 
-        
+
         public DateTime ExpireDate
         {
             get => ChallengingOfferDataModel.ExpireDate;
@@ -119,7 +120,6 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-
 
         [Binding]
         public string Segment
@@ -161,8 +161,44 @@ namespace ViewModels
             }
         }
 
-        #endregion
+        [Binding]
+        public string SelectedCurrencyType
+        {
+            get => _selectedCurrencyType;
+            set
+            {
+                _selectedCurrencyType = value;
+                OnPropertyChanged();
+            }
+        }
 
+        [Binding]
+        public int SelectedCurrencyTypeIndex
+        {
+            get => _selectedCurrencyTypeIndex;
+            set
+            {
+                _selectedCurrencyTypeIndex = value;
+                switch (value)
+                {
+                    case 0:
+                    {
+                        SelectedCurrencyType = "Cash";
+                        return;
+                    }
+                    case 1:
+                    {
+                        SelectedCurrencyType = "Tokens";
+                        return;
+                    }
+                    case 2:
+                    {
+                        SelectedCurrencyType = "Cash / Tokens";
+                        return;
+                    }
+                }
+            }
+        }
 
         [Binding]
         public bool CanCreateOffer
@@ -178,6 +214,16 @@ namespace ViewModels
 
         public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
         {
+        }
+        
+        private void Start()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            SelectedCurrencyTypeIndex = 0;
         }
 
         protected override void OnEnable()
@@ -212,6 +258,7 @@ namespace ViewModels
             {
                 return;
             }
+
             try
             {
                 CanCreateOffer = false;
@@ -227,7 +274,7 @@ namespace ViewModels
                 CanCreateOffer = true;
             }
         }
-        
+
         private async Task SendCreateOfferRequest()
         {
             try
