@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
-using UnityEngine.UI;
 using Views.ViewElements;
+using Toggle = UnityEngine.UI.Toggle;
 
 namespace Inspectors
 {

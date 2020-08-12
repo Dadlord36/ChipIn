@@ -4,6 +4,7 @@ using ActionsTranslators;
 using Controllers;
 using HttpRequests;
 using Notifications;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using Utilities;
 using Views.ViewElements.ViewsPlacers;
@@ -19,13 +20,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
     [SerializeField] private ViewsLogoController viewsLogoController;
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private Canvas mainCanvas;
+    [SerializeField] private AwaitingProcessVisualizerController awaitingProcessVisualizerController;
 
-
+    public static Canvas MainCanvas { get; private set; }
     public static Camera MainCamera { get; private set; }
     public static Vector2 OriginalResolution { get; private set; } = new Vector2(375, 815);
     public static Vector2 ScreenResolutionScale { get; private set; }
-
     public static TaskScheduler MainThreadScheduler { get; private set; }
+    public static AwaitingProcessVisualizerController MainAwaitingProcessVisualizerController { get; private set; }
 
     private void Awake()
     {
@@ -35,6 +38,8 @@ public class GameManager : MonoBehaviour
     private async void Start()
     {
         MainCamera = mainCamera;
+        MainCanvas = mainCanvas;
+        MainAwaitingProcessVisualizerController = awaitingProcessVisualizerController;
         ScreenResolutionScale = OriginalResolution / ScreenUtility.GetScreenSize();
 
         try

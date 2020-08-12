@@ -36,6 +36,11 @@ namespace Common.UnityEvents
     public sealed class IntUnityEvent : UnityEvent<int>
     {
     }
+    
+    [Serializable]
+    public sealed class ObjectUnityEvent : UnityEvent<object>
+    {
+    }
 
     [Serializable]
     public sealed class IntPointerUnityEvent : UnityEvent<int?>
