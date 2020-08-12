@@ -118,7 +118,7 @@ namespace Controllers
             ApiHelper.StopAllOngoingRequests();
             viewsSwitchingController.ClearSwitchingHistory(nameof(WelcomeView));
             DestroyView(nameof(CoinsGameView));
-            SwitchToLoginView();
+            SwitchToWelcomeView();
 
             //TODO: figure out should app sing-out if it was logged in as guest
             return sessionStateRepository.UserRole != MainNames.UserRoles.Guest ? sessionStateRepository.SignOut() : Task.CompletedTask;
