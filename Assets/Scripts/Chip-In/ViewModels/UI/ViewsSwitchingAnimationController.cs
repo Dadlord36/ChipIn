@@ -21,7 +21,7 @@ namespace ViewModels.UI
 
         [SerializeField, Space(10)] private ViewSlot previousViewSlot;
         [SerializeField, Space(10)] private ViewSlot nextViewSlot;
-        
+
         private readonly ProgressiveOperationsController _mainProgressiveOperationsController = new ProgressiveOperationsController();
         private readonly ProgressiveOperationsController _secondaryProgressiveOperationsController = new ProgressiveOperationsController();
 
@@ -33,6 +33,7 @@ namespace ViewModels.UI
 
         private void StartAnimation(ViewsSwitchingParameters viewsSwitchingParameters)
         {
+            StopUpdating();
             ClearProgressiveOperationsController();
             ResetViewSlotsAnimationParameters();
             _progressiveOperationsCompletionTracker.ResetCounter();
@@ -105,23 +106,34 @@ namespace ViewModels.UI
         {
             var angle = CircleUtility.GetDegreesAngleFromMovementDirection(appearanceParameters.Direction);
 
+            Vector2 startingPoint;
+            IUpdatableProgress updatableProgress;
             switch (appearanceParameters.AppearanceType)
             {
                 case ViewAppearanceParameters.Appearance.MoveOut:
-                    return new MoveToPoint(objectTransform, _centerDestinationPoint,
+                {
+                    startingPoint = _centerDestinationPoint;
+                    updatableProgress = new MoveToPoint(objectTransform, startingPoint,
                         CircleUtility.FindAnglePosition(_centerDestinationPoint, appearanceParameters.MaxPathPercentage *
-                                                                                 _movementDistance, angle),
-                        speedCurve, transitionTime);
-
+                                                                                 _movementDistance, angle), speedCurve, transitionTime);
+                    break;
+                }
                 case ViewAppearanceParameters.Appearance.MoveIn:
-                    return new MoveToPoint(objectTransform,
-                        CircleUtility.FindAnglePosition(_centerDestinationPoint, appearanceParameters.MaxPathPercentage *
-                                                                                 _movementDistance, angle), _centerDestinationPoint,
-                        speedCurve, transitionTime);
+                {
+                    startingPoint = CircleUtility.FindAnglePosition(_centerDestinationPoint, appearanceParameters.MaxPathPercentage *
+                                                                                             _movementDistance, angle);
+
+                    updatableProgress = new MoveToPoint(objectTransform, startingPoint, _centerDestinationPoint, speedCurve, transitionTime);
+                    break;
+                }
+
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            objectTransform.position = startingPoint;
+            return updatableProgress;
         }
 
         protected override void Awake()
