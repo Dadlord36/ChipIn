@@ -82,11 +82,6 @@ namespace Repositories.Remote
             throw new System.NotImplementedException();
         }
 
-        public override async Task SaveDataToServer()
-        {
-            throw new System.NotImplementedException();
-        }
-        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -94,7 +89,5 @@ namespace Repositories.Remote
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
     }
 }

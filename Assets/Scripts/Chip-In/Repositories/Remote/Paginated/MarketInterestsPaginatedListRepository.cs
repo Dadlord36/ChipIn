@@ -30,10 +30,5 @@ namespace Repositories.Remote.Paginated
         {
            return new List<MarketInterestDetailsDataModel>(responseModelInterface.LabelDetailsDataModel);
         }
-        
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

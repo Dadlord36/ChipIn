@@ -4,6 +4,7 @@ using Controllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views;
 
 namespace ViewModels
 {
@@ -14,17 +15,6 @@ namespace ViewModels
         
         public SettingsViewModel() : base(nameof(SettingsViewModel))
         {
-        }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            Destroy(gameObject);
-        }
-
-        private void Start()
-        {
-            ShowMyProfile();
         }
 
         [Binding]
@@ -46,10 +36,11 @@ namespace ViewModels
         }
 
         [Binding]
-        public void ShowMyProfile()
+        public void EditProfileButton_OnClick()
         {
-           
+            SwitchToView(nameof(EditProfileView));
         }
+        
 
         [Binding]
         public void ShowMyWallet()

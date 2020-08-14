@@ -36,10 +36,5 @@ namespace Repositories.Remote.Paginated
         {
             return new List<MerchantInterestPageDataModel>(responseModelInterface.Interests);
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

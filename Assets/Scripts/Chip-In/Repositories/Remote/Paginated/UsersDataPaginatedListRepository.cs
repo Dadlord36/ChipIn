@@ -18,12 +18,7 @@ namespace Repositories.Remote.Paginated
         UsersListResponseDataModel, IUserListResponseModel>
     {
         protected override string Tag => nameof(UsersDataPaginatedListRepository);
-
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         protected override Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource,

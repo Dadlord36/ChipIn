@@ -12,14 +12,11 @@ namespace Controllers
         menuName = nameof(Controllers) + "/" + nameof(CachingController), order = 0)]
     public class CachingController : ScriptableObject
     {
-        
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private UserCoinsAmountRepository coinsAmountRepository;
 
         public void ClearCache()
         {
-            ClearVaultCash(userProfileRemoteRepository);
             ClearVaultCash(authorisationDataRepository);
             ClearVaultCash(coinsAmountRepository);
         }

@@ -1,5 +1,4 @@
-﻿using EasyButtons;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -19,7 +18,6 @@ namespace Controllers
             ResetElementSize();
         }
         
-        [Button]
         public void FitImage()
         {
             ResetElementSize();
@@ -54,8 +52,7 @@ namespace Controllers
         {
             _image.rectTransform.sizeDelta = Vector2.zero;
         }
-
-        [Button]
+        
         private void FindControlledComponent()
         {
             _image = GetComponent<Image>();

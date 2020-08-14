@@ -12,7 +12,7 @@ namespace Repositories.Remote
             TypeName = typeName;
         }
     }
-    
+
     [CreateAssetMenu(fileName = nameof(SoloGamesRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(SoloGamesRemoteRepository), order = 0)]
     public class SoloGamesRemoteRepository : BaseNotPaginatedListRepository<SingleGameData>
@@ -28,11 +28,6 @@ namespace Repositories.Remote
         }
 
         public override Task LoadDataFromServer()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override Task SaveDataToServer()
         {
             throw new System.NotImplementedException();
         }

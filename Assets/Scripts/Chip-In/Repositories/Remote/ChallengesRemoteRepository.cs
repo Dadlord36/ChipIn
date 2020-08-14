@@ -33,10 +33,5 @@ namespace Repositories.Remote
         {
             throw new System.NotImplementedException();
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

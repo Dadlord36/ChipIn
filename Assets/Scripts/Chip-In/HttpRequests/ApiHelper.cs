@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using RestSharp;
 using UnityEngine.Assertions;
 using Utilities;
 using WebOperationUtilities;
@@ -22,15 +23,22 @@ namespace HttpRequests
         public const string MultipartFormData = "multipart/form-data";
 
         private const string ApiUri = "http://chip-in-dev.herokuapp.com/", ApiVersion = "api/v1/";
-        
+
         public static string ApiUrl => ApiUri + ApiVersion;
         public static HttpClient DefaultClient { get; private set; }
+        public static RestClient DefaultRestClient { get; private set; }
 
         public static void InitializeClient()
         {
             if (DefaultClient == null)
             {
                 DefaultClient = new HttpClient();
+            }
+
+            if (DefaultRestClient == null)
+            {
+                DefaultRestClient = new RestClient(ApiUrl) {Timeout = -1};
+                DefaultRestClient.ClearHandlers();
             }
 
             if (_mainApiClient != null) return;
@@ -88,7 +96,7 @@ namespace HttpRequests
             using (var requestMessage = new HttpRequestMessage(methodType, requestUri))
             {
                 Assert.IsFalse(requestHeaders == null && requestBody == null);
-                
+
                 void AddBody(object requestBodyObject)
                 {
                     requestMessage.Content = CreateStringContent(requestBodyObject);
@@ -130,7 +138,7 @@ namespace HttpRequests
                 using (var requestMessage = new HttpRequestMessage(methodType, FormRequestUri(requestSuffix, null, null)))
                 {
                     AddHeaders(requestMessage, requestHeaders);
-                    
+
                     requestMessage.Content = formDataContent;
                     requestMessage.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(MultipartFormData));
                     return _mainApiClient.SendAsync(requestMessage, cancellationToken);
