@@ -1,24 +1,47 @@
-﻿using System.ComponentModel;
-using Common.Structures;
-using UnityEngine;
+﻿using DataModels.RequestsModels;
+using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IUserProfileModel
+    public interface IBirthday
     {
-        GeoLocation UserLocation { get; set; }
-        Texture2D AvatarImage { get; set; }
-        string Name { get; set; }
-        int? Id { get; set; }
-        string Email { get; set; }
-        string Role { get; set; }
-        string Gender { get; set; }
-        string Birthday { get; set; }
-        string CountryCode { get; set; }
-        int TokensBalance { get; set; }
-        bool ShowAdsState { get; set; }
-        bool ShowAlertsState { get; set; }
-        bool UserRadarState { get; set; }
-        bool ShowNotificationsState { get; set; }
+        [JsonProperty("birthdate")] string Birthday { get; set; }
+    }
+
+    public interface ITokensBalance
+    {
+        [JsonProperty("tokens_balance")] int TokensBalance { get; set; }
+    }
+
+    public interface IShowAdsState
+    {
+        [JsonProperty("show_ads")] bool ShowAdsState { get; set; }
+    }
+
+    public interface IShowAlertsState
+    {
+        [JsonProperty("show_alerts")] bool ShowAlertsState { get; set; }
+    }
+
+    public interface IUserRadarState
+    {
+        [JsonProperty("user_radar")] bool UserRadarState { get; set; }
+    }
+
+    public interface IShowNotifications
+    {
+        [JsonProperty("show_notifications")] bool ShowNotificationsState { get; set; }
+    }
+
+    public interface IUserAvatarUrl
+    {
+        [JsonProperty("avatar")]
+        string Avatar { get; set; }
+    }
+
+    public interface IUserProfileModel : INamed, IEmail, IIdentifier, IRole, IGender, IBirthday, ICountryCode, ITokensBalance, IShowAdsState,
+        IShowAlertsState, IShowNotifications, IUserGeoLocation, IUserAvatarUrl,IUserRadarState
+    {
+       
     }
 }

@@ -26,10 +26,5 @@ namespace Repositories.Remote
                 LogUtility.PrintLogException(e);
             }
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

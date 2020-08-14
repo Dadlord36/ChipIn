@@ -32,7 +32,6 @@ namespace ViewModels
         {
             base.OnBecomingActiveView();
             SubscribeToMainInputEventsTranslation();
-            _userLoginRequestModel.Device = DeviceUtility.DeviceData;
         }
 
         protected override void OnBecomingInactiveView()
@@ -96,7 +95,6 @@ namespace ViewModels
         }
 
 
-
         [Binding] public bool CanReceiveInput { get; private set; } = true;
 
         private void ValidateLoginData()
@@ -129,7 +127,7 @@ namespace ViewModels
                     IsAwaitingProcess = false;
                     return;
                 }
-                
+
                 await ProcessLoginAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
@@ -172,6 +170,7 @@ namespace ViewModels
 
         private Task ProcessLoginAsync()
         {
+            // _userLoginRequestModel.Device = DeviceUtility.DeviceData;
             _userLoginRequestModel.Role = IsMerchant ? MainNames.UserRoles.BusinessOwner : MainNames.UserRoles.Client;
             return sessionController.TryToSignIn(_userLoginRequestModel);
         }

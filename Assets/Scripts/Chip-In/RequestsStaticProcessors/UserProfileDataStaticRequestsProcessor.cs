@@ -1,12 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.ResponsesModels;
+using Factories;
+using GlobalVariables;
+using HttpRequests;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
 using HttpRequests.RequestsProcessors.PutRequests;
-using Newtonsoft.Json;
+using RestSharp;
 using Utilities;
 
 namespace RequestsStaticProcessors
@@ -24,17 +31,53 @@ namespace RequestsStaticProcessors
                 "User profile data was retrieved");
         }
 
-        public static Task<BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
-            TryUpdateUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource,
-                IRequestHeaders requestHeaders, IUserProfileDataWebModel requestBodyProvider)
+        public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
+            KeyValuePair<string, string> property)
         {
-            LogUtility.PrintLog(Tag, $"RequestHeaders: {requestHeaders.GetRequestHeadersAsString()}");
-            LogUtility.PrintLog(Tag, $"RequestBody: {JsonConvert.SerializeObject(requestBodyProvider)}");
-            return new UserProfileDataPutProcessor(out cancellationTokenSource, requestHeaders, requestBodyProvider).SendRequest(
-                "User profile data was updated");
+            var client = ApiHelper.DefaultRestClient;
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            
+            request.AddParameter(property.Key, property.Value);
+            
+            var result = request.ToString();
+
+            LogUtility.PrintLog(Tag, result);
+            return client.ExecuteAsync(request, cancellationToken);
         }
 
-        public static Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse> 
+        public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
+            IReadOnlyDictionary<string, string> fields, string newAvatarImagePath)
+        {
+            var client = ApiHelper.DefaultRestClient;
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            
+            if (!string.IsNullOrEmpty(newAvatarImagePath))
+                request.AddFile(MainNames.ModelsPropertiesNames.Avatar, newAvatarImagePath);
+            FillRequestParametersWithNameValueCollection(request, fields);
+
+            var result = request.ToString();
+
+            LogUtility.PrintLog(Tag, result);
+            return client.ExecuteAsync(request, cancellationToken);
+        }
+
+        private static void FillRequestParametersWithNameValueCollection(IRestRequest request, IReadOnlyDictionary<string, string> collection)
+        {
+            foreach (var field in collection)
+            {
+                request.AddParameter(field.Key, field.Value);
+            }
+        }
+
+        private static void FillRequestParametersWithNameValueCollection(IRestRequest request, NameValueCollection collection, string containerName)
+        {
+            foreach (string fieldName in collection)
+            {
+                request.AddParameter($"{containerName}[{fieldName}]", collection[fieldName]);
+            }
+        }
+
+        public static Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse>
             TryChangeUserProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
                 IUserProfilePasswordChangeModel requestBodyModel)
         {

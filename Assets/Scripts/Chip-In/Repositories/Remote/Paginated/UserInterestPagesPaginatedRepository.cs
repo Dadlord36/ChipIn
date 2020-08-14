@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
@@ -22,12 +21,7 @@ namespace Repositories.Remote.Paginated
         [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
         protected override string Tag => nameof(UserInterestPagesPaginatedRepository);
         private Task<int?> SelectedCommunityId => selectedUserInterestRepository.SelectedUserInterestId;
-
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         protected override Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)

@@ -68,10 +68,5 @@ namespace Repositories.Remote
                 throw;
             }
         }
-
-        public override async Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

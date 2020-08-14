@@ -46,11 +46,6 @@ namespace Repositories.Local
             return ItemsData.Any(gameData => gameData.GameableData.Id == offerId);
         }
 
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse> GetOfferDataForGivenGameId(
             int selectedGameId)
         {
