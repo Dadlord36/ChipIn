@@ -175,10 +175,20 @@ namespace ViewModels
 
                 var result = await UserProfileDataStaticRequestsProcessor.UpdateUserProfileData(_asyncOperationCancellationController
                         .CancellationToken, authorisationDataRepository, _changedPropertiesCollection, NewAvatarImagePath)
-                    .ConfigureAwait(false);
-                _changedPropertiesCollection.Clear();
+                    .ConfigureAwait(true);
 
-                alertCardController.ShowAlertWithText(result.IsSuccessful ? "User profile was successfully updated" : "User profile was failed to update");
+
+                if (result.IsSuccessful)
+                {
+                    await userProfileRemoteRepository.LoadDataFromServer().ConfigureAwait(true);
+                    alertCardController.ShowAlertWithText("User profile was successfully updated");
+                    _changedPropertiesCollection.Clear();
+                    ClearFields();
+                }
+                else
+                {
+                    alertCardController.ShowAlertWithText("User profile was failed to update");
+                }
             }
             catch (Exception e)
             {
@@ -188,6 +198,13 @@ namespace ViewModels
             {
                 IsAwaitingProcess = false;
             }
+        }
+
+        private void ClearFields()
+        {
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Email = string.Empty;
         }
 
         private async Task UpdateAvatarIconAsync()
@@ -210,6 +227,7 @@ namespace ViewModels
 
         private void AddChangedField(in string value, string propertyName)
         {
+            if (string.IsNullOrEmpty(value)) return;
             _changedPropertiesCollection.AddOrUpdate(value, propertyName);
         }
 
