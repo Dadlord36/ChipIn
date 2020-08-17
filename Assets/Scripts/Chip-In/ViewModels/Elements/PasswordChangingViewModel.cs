@@ -90,12 +90,11 @@ namespace ViewModels.Elements
                 return;
             }
 
-
             try
             {
                 var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out _asyncOperationCancellationController
-                        .TasksCancellationTokenSource,
-                    _authorisationDataRepository, new UserProfilePasswordChangingModel
+                        .TasksCancellationTokenSource, _authorisationDataRepository,
+                    new UserProfilePasswordChangingModel
                     {
                         CurrentPassword = CurrentPassword, Password = Password,
                         PasswordConfirmation = PasswordRepeat
@@ -104,13 +103,15 @@ namespace ViewModels.Elements
                 if (response.Success)
                 {
                     _alertCardController.ShowAlertWithText("Password changed successfully");
+
+                    HideView();
+                    OnNewPasswordApproved(Password);
                 }
                 else
                 {
                     _alertCardController.ShowAlertWithText("Failed to change password");
                 }
-
-                OnNewPasswordApproved(Password);
+                
                 ClearFields();
                 MakeFormInteractive();
             }

@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 210355217502473442}
   - component: {fileID: 2831976937431533973}
   - component: {fileID: 7401353746519655850}
-  - component: {fileID: 7060152303147680400}
-  - component: {fileID: 8307175310109261566}
   m_Layer: 0
   m_Name: '[Button] Change'
   m_TagString: Untagged
@@ -121,36 +119,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7060152303147680400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381680956294032617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.Elements.PasswordChangingViewModel.Confirm_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &8307175310109261566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381680956294032617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.Elements.PasswordChangingViewModel.CanChangePassword
-  viewPropertyName: UnityEngine.UI.Button.interactable
 --- !u!1 &1959752101650123659
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +340,6 @@ GameObject:
   - component: {fileID: 6519983587413827498}
   - component: {fileID: 2161224287299089041}
   - component: {fileID: 5592353987833017164}
-  - component: {fileID: 4177779537506439303}
   m_Layer: 0
   m_Name: '[Button] Cancel'
   m_TagString: Untagged
@@ -451,20 +418,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4177779537506439303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4854982195724662801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.Elements.PasswordChangingViewModel.Close_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &5772362478486421395
 GameObject:
   m_ObjectHideFlags: 0
