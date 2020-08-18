@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityWeld.Binding;
-using Views.ViewElements;
+using Views.ViewElements.ListItems;
 
 namespace Controllers
 {
@@ -14,7 +14,7 @@ namespace Controllers
     public sealed class TogglesGroupController : MonoBehaviour, INotifyPropertyChanged
     {
         private int _selectedItemIndex;
-        private List<Toggle> _radialToggles;
+        private List<OptionItemView> _optionItemViews;
 
         [HideInInspector] public UnityEvent newItemSelected;
 
@@ -40,52 +40,52 @@ namespace Controllers
 
         private void Start()
         {
-            _radialToggles[0].IsToggled = true;
+            _optionItemViews[0].IsSelected = true;
         }
 
         private void SubscribeOnTogglesEvents()
         {
-            foreach (var toggle in _radialToggles)
+            foreach (var toggle in _optionItemViews)
             {
-                toggle.toggleClicked.AddListener(OnToggleSwitched);
+                toggle.Selected += OnToggleSwitched;
             }
         }
 
         private void UnsubscribeFromTogglesEvents()
         {
-            foreach (var toggle in _radialToggles)
+            foreach (var optionItemView in _optionItemViews)
             {
-                toggle.toggleClicked.RemoveListener(OnToggleSwitched);
+                optionItemView.Selected -= OnToggleSwitched;
             }
         }
 
-        private void SwitchOffOtherToggles(Toggle toggle)
+        private void OnToggleSwitched(OptionItemView optionItemView)
         {
-            SelectedItemIndex = toggle.Index;
+            SwitchOffOtherToggles(optionItemView);
+        }
 
-            var otherItems = new List<Toggle>(_radialToggles);
-            otherItems.Remove(toggle);
+        private void SwitchOffOtherToggles(OptionItemView optionItemView)
+        {
+            SelectedItemIndex = optionItemView.Index;
+
+            var otherItems = new List<OptionItemView>(_optionItemViews);
+            otherItems.Remove(optionItemView);
             foreach (var item in otherItems)
             {
-                item.IsToggled = false;
+                item.IsSelected = false;
             }
         }
-
-        private void OnToggleSwitched(object toggle)
-        {
-            SwitchOffOtherToggles(toggle as Toggle);
-        }
-
+        
         private void CollectToggles()
         {
-            _radialToggles = transform.GetComponentsInChildren<Toggle>().ToList();
+            _optionItemViews = transform.GetComponentsInChildren<OptionItemView>().ToList();
         }
 
         private void PrepareItems()
         {
-            for (var index = 0; index < _radialToggles.Count; index++)
+            for (var index = 0; index < _optionItemViews.Count; index++)
             {
-                _radialToggles[index].Index = index;
+                _optionItemViews[index].Index = index;
             }
         }
 

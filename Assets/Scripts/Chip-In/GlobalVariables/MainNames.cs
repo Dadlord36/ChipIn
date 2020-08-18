@@ -23,6 +23,7 @@
             public const string Country  = "country";
             public const string Role = "role";
             public const string TokensBalance = "tokens_balance";
+            public const string Currency = "currency";
         }
 
         public static class UserRoles

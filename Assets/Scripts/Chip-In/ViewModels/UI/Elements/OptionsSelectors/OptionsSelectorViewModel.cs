@@ -21,7 +21,16 @@ namespace ViewModels.UI.Elements.OptionsSelectors
 
 
         [Binding]
-        public int SelectedItemIndex { get; set; }
+        public int SelectedItemIndex
+        {
+            get => _selectedItemIndex;
+            set
+            {
+                if (value == _selectedItemIndex) return;
+                _selectedItemIndex = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public void SelectButton_OnClick()
@@ -32,6 +41,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
 
 #if UNITY_EDITOR
         [SerializeField] private int itemsAmount;
+        private int _selectedItemIndex;
 
         [Button]
         public void RecreateRequiredItems()
@@ -43,6 +53,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
             }
         }
 #endif
+        
         private void OnNewItemSelected()
         {
             newItemSelected?.Invoke();

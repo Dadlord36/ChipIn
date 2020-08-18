@@ -103,5 +103,11 @@ namespace DataModels.ResponsesModels
             get => User.Avatar;
             set => User.Avatar = value;
         }
+
+        public string CurrencyCode
+        {
+            get => User.CurrencyCode;
+            set => User.CurrencyCode = value;
+        }
     }
 }

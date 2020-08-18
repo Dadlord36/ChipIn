@@ -128,6 +128,12 @@ namespace Repositories.Remote
             set => UserProfileDataRemote.ShowNotificationsState = value;
         }
 
+        public string CurrencyCode
+        {
+            get => UserProfileDataRemote.CurrencyCode;
+            set => UserProfileDataRemote.CurrencyCode = value;
+        }
+
         #endregion
 
         private void SetRadarActivityState(bool value)

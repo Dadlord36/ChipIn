@@ -16,8 +16,6 @@ namespace Views.ViewElements
 
         private bool _isToggled;
 
-        public int Index { get; set; }
-
         [Binding]
         public bool IsToggled
         {

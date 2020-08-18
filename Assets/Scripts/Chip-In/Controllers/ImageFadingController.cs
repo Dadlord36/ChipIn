@@ -12,7 +12,6 @@ namespace Controllers
     {
         [SerializeField] private FloatParameter fadingDurationParameter;
         private bool _isFaded;
-        private Image _image;
 
         private float FadingDuration => fadingDurationParameter.value;
 
@@ -27,6 +26,8 @@ namespace Controllers
                 FadeImage(value);
             }
         }
+
+        private Image ControlledImage => GetComponent<Image>();
 
         protected override void OnEnable()
         {
@@ -46,12 +47,6 @@ namespace Controllers
             }
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            _image = GetComponent<Image>();
-        }
-
         protected override void Start()
         {
             base.Start();
@@ -60,18 +55,19 @@ namespace Controllers
 
         private void FadeInInstantly()
         {
-            _image.CrossFadeAlpha(1f, 0f, true);
+            ControlledImage.CrossFadeAlpha(1f, 0f, true);
         }
 
         private void FadeOutInstantly()
         {
-            _image.CrossFadeAlpha(0f, 0f, true);
+            ControlledImage.CrossFadeAlpha(0f, 0f, true);
         }
 
         private bool _isInitialized;
+
         private void FadeImage(bool toInvisible)
         {
-            _image.CrossFadeAlpha(toInvisible ? 0f : 1f,_isInitialized? FadingDuration : 0f, true);
+            ControlledImage.CrossFadeAlpha(toInvisible ? 0f : 1f, _isInitialized ? FadingDuration : 0f, true);
             _isInitialized = true;
         }
     }

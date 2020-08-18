@@ -22,6 +22,63 @@ namespace ViewModels.Settings
 
         private IUserProfileModel UserSettingsModel => repository;
 
+        private int _selectedCountryIndex;
+        private int _selectedCurrencyIndex;
+
+        public int SelectedCountryIndex
+        {
+            get => _selectedCountryIndex;
+            set
+            {
+                _selectedCountryIndex = value;
+                switch (value)
+                {
+                    case 0:
+                    {
+                        CountryCode = "canada";
+                        return;
+                    }
+                    case 1:
+                    {
+                        CountryCode = "usa";
+                        return;
+                    }
+                    case 2:
+                    {
+                        CountryCode = "england";
+                        return;
+                    }
+                }
+            }
+        }
+
+        public int SelectedCurrencyIndex
+        {
+            get => _selectedCurrencyIndex;
+            set
+            {
+                _selectedCurrencyIndex = value;
+                switch (value)
+                {
+                    case 0:
+                    {
+                        CurrencyCode = "cad";
+                        return;
+                    }
+                    case 1:
+                    {
+                        CurrencyCode = "usd";
+                        return;
+                    }
+                    case 2:
+                    {
+                        CurrencyCode = "gbr";
+                        return;
+                    }
+                }
+            }
+        }
+
 
         [Binding] public Sprite AvatarImageSprite => repository.UserAvatarSprite;
 
@@ -54,6 +111,7 @@ namespace ViewModels.Settings
             set => UserSettingsModel.Birthday = value;
         }
 
+
         [Binding]
         public string CountryCode
         {
@@ -62,6 +120,17 @@ namespace ViewModels.Settings
             {
                 UserSettingsModel.CountryCode = value;
                 SyncChangedPropertyWithServer(value, MainNames.ModelsPropertiesNames.Country);
+            }
+        }
+
+        [Binding]
+        public string CurrencyCode
+        {
+            get => UserSettingsModel.CurrencyCode;
+            set
+            {
+                UserSettingsModel.CurrencyCode = value;
+                SyncChangedPropertyWithServer(value, MainNames.ModelsPropertiesNames.Currency);
             }
         }
 
@@ -113,7 +182,7 @@ namespace ViewModels.Settings
         public UserProfileViewModel() : base(nameof(UserProfileViewModel))
         {
         }
-        
+
 
         [Binding]
         public void UserRadar_OnTryToTurnOn()

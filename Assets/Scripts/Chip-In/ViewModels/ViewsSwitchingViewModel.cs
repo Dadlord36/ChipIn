@@ -20,6 +20,10 @@ namespace ViewModels
                 ViewAppearanceParameters.SwitchingViewPosition.Above, MoveDirection.Right)
         );
 
+        public ViewsSwitchingViewModel(string tag) : base(tag)
+        {
+        }
+        
         private void InvokeViewsSwitching(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle)
         {
             viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(viewsPairInfo.ViewToSwitchFromName)
@@ -56,8 +60,10 @@ namespace ViewModels
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
         }
 
-        public ViewsSwitchingViewModel(string tag) : base(tag)
+        protected void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle)
         {
+            viewsSwitchingController.SwitchToPreviousView(formsTransitionBundle);
+            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
         }
     }
 }

@@ -37,6 +37,11 @@ namespace ViewModels.SwitchingControllers
             ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack());
         }
 
+        public void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle)
+        {
+            ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack(), formsTransitionBundle);
+        }
+
         public void RequestSwitchToView(string fromViewName, string toViewName, FormsTransitionBundle formsTransitionBundle = default)
         {
             if (!string.IsNullOrEmpty(fromViewName))

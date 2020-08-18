@@ -1,36 +1,42 @@
 ﻿using DataModels.RequestsModels;
+using GlobalVariables;
 using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
     public interface IBirthday
     {
-        [JsonProperty("birthdate")] string Birthday { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Birthdate)] string Birthday { get; set; }
     }
 
     public interface ITokensBalance
     {
-        [JsonProperty("tokens_balance")] int TokensBalance { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.TokensBalance)] int TokensBalance { get; set; }
     }
 
     public interface IShowAdsState
     {
-        [JsonProperty("show_ads")] bool ShowAdsState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAds)] bool ShowAdsState { get; set; }
     }
 
     public interface IShowAlertsState
     {
-        [JsonProperty("show_alerts")] bool ShowAlertsState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAlerts)] bool ShowAlertsState { get; set; }
     }
 
     public interface IUserRadarState
     {
-        [JsonProperty("user_radar")] bool UserRadarState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.UserRadar)] bool UserRadarState { get; set; }
     }
 
     public interface IShowNotifications
     {
-        [JsonProperty("show_notifications")] bool ShowNotificationsState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowNotifications)] bool ShowNotificationsState { get; set; }
+    }
+
+    public interface ICurrencyCode
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.Currency)] string CurrencyCode { get; set; }
     }
 
     public interface IUserAvatarUrl
@@ -39,7 +45,7 @@ namespace DataModels.Interfaces
         string Avatar { get; set; }
     }
 
-    public interface IUserProfileModel : INamed, IEmail, IIdentifier, IRole, IGender, IBirthday, ICountryCode, ITokensBalance, IShowAdsState,
+    public interface IUserProfileModel : INamed, IEmail, IIdentifier, IRole, IGender, IBirthday, ICountryCode,ICurrencyCode, ITokensBalance, IShowAdsState,
         IShowAlertsState, IShowNotifications, IUserGeoLocation, IUserAvatarUrl,IUserRadarState
     {
        

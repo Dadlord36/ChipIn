@@ -43,7 +43,7 @@ namespace DataModels
 
     [JsonObject(MemberSerialization.OptIn)]
     public interface IUserProfileDataWebModel : IIdentifier, IUserMainData, IUserAvatarUrl, IUserExtraData,
-        IUserPreferences, ICountryCode
+        IUserPreferences, ICountryCode, ICurrencyCode
     {
     }
 
@@ -71,6 +71,7 @@ namespace DataModels
         [SerializeField] private string birthday;
         [SerializeField] private string countryCode;
         private string _avatar;
+        private string _currency;
 
         public UserProfileDataWebModel(int id, string email, string name, string role, int tokensBalance,
             string gender, bool showAdsState, bool showAlertsState, bool userRadarState, bool showNotificationsState,
@@ -260,6 +261,17 @@ namespace DataModels
             }
         }
 
+        public string CurrencyCode
+        {
+            get => _currency;
+            set
+            {
+                if (value == _currency) return;
+                _currency = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -268,5 +280,7 @@ namespace DataModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+       
     }
 }
