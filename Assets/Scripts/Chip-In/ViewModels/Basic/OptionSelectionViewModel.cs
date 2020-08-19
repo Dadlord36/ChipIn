@@ -33,12 +33,7 @@ namespace ViewModels.Basic
             base.OnBecomingActiveView();
             _actionSetCorrespondingIndex = View.FormTransitionBundle.TransitionData as Action<int>;
         }
-
-        protected override void OnBecomingInactiveView()
-        {
-            base.OnBecomingInactiveView();
-            _actionSetCorrespondingIndex = null;
-        }
+        
 
         [Binding]
         public void ConfirmButton_OnClick()
