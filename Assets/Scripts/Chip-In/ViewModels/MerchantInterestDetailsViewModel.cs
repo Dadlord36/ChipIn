@@ -141,11 +141,18 @@ namespace ViewModels
 
         private async Task FillScrollsWithDataFromServerAsync()
         {
-            var selectedCommunityInterest = RelatedView.FormTransitionBundle.TransitionData as CommunityAndInterestIds? ?? default;
-            await SetInterestPageReflectionDataAsync(selectedCommunityInterest).ConfigureAwait(true);
+            if (RelatedView.FormTransitionBundle.TransitionData == null)
+            {
+                return;
+            }
+            var selectedCommunityInterest = (CommunityAndInterestIds) RelatedView.FormTransitionBundle.TransitionData;
+            
+            
+            await SetInterestPageReflectionDataAsync(selectedCommunityInterest).ConfigureAwait(false);
+            
             var result = await CommunitiesInterestsStaticProcessor.GetInterestQuestionsAnswers
             (out _asyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
-                selectedCommunityInterest.InterestId).ConfigureAwait(true);
+                selectedCommunityInterest.InterestId).ConfigureAwait(false);
             
             if (!result.Success)
             {
@@ -164,21 +171,19 @@ namespace ViewModels
                 
             RefillAnswersDictionary(result.ResponseModelInterface);
         }
-        
-        private Task<MerchantInterestPageDataModel> GetInterestDataAsync(CommunityAndInterestIds communityAndInterestIds)
-        {
-            return CommunitiesInterestsStaticProcessor.GetMerchantInterestPages(out _asyncOperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, communityAndInterestIds.CommunityId, null)
-                .ContinueWith(delegate(Task<BaseRequestProcessor<object, MerchantInterestPagesResponseDataModel, IMerchantInterestPagesResponseModel>.HttpResponse> task)
-                {
-                    var result = task.GetAwaiter().GetResult();
-                    return result.ResponseModelInterface.Interests.First(model => model.Id == communityAndInterestIds.InterestId);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
-        }
 
         private async Task SetInterestPageReflectionDataAsync(CommunityAndInterestIds communityAndInterestIds)
         {
-            var interestData = await GetInterestDataAsync(communityAndInterestIds).ConfigureAwait(false);
+            var response = await CommunitiesInterestsStaticProcessor.GetMerchantInterestPages(out _asyncOperationCancellationController
+            .TasksCancellationTokenSource, authorisationDataRepository, communityAndInterestIds.CommunityId, null)
+                .ConfigureAwait(true);
+
+            if (!response.Success)
+            {
+                alertCardController.ShowAlertWithText(response.Error);
+            }
+            var interestData = response.ResponseModelInterface.Interests.First(model => model.Id == communityAndInterestIds.InterestId);
+            
             await TasksFactories.MainThreadTaskFactory.StartNew(delegate
             {
                 InterestPageName = interestData.Name;

@@ -107,7 +107,6 @@ namespace ViewModels
                     LogUtility.PrintDefaultOperationCancellationLog(Tag);
                 }
 
-
                 _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(true);
 
                 InterestName = _selectedCommunityData.Name;
@@ -124,12 +123,11 @@ namespace ViewModels
             }
         }
 
-        private Task<MarketInterestDetailsDataModel> GetSelectedCommunityDetailsAsync(int selectedCommunityId)
+        private async Task<MarketInterestDetailsDataModel> GetSelectedCommunityDetailsAsync(int selectedCommunityId)
         {
-            return CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _asyncOperationCancellationController
-                    .TasksCancellationTokenSource, authorisationDataRepository, selectedCommunityId)
-                .ContinueWith(task => task.GetAwaiter().GetResult().ResponseModelInterface.LabelDetailsDataModel,
-                    TaskContinuationOptions.OnlyOnRanToCompletion);
+            var response = await CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _asyncOperationCancellationController
+                .TasksCancellationTokenSource, authorisationDataRepository, selectedCommunityId).ConfigureAwait(false);
+            return response.ResponseModelInterface.LabelDetailsDataModel;
         }
 
         private void OnInterestIdSelected()

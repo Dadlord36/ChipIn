@@ -20,10 +20,15 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
+    public interface IInitializeAsync
+    {
+        Task Initialize();
+    }
+
     [Binding]
     public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
         TFillingViewAdapter> :
-        OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>, INotifyPropertyChanged
+        OSA<RepositoryPagesAdapterParameters, TViewPageViewHolder>, INotifyPropertyChanged, IInitializeAsync
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
@@ -64,7 +69,6 @@ namespace Views.ViewElements.ScrollViews.Adapters
         [Binding] protected SimpleDataHelper<TDataType> Data { get; set; }
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
-        #region OSA implementation
 
         private bool _fetching;
         private bool _loadedAll;
@@ -98,10 +102,10 @@ namespace Views.ViewElements.ScrollViews.Adapters
             pagesPaginatedRepository.Clear();
             return pagesPaginatedRepository.LoadDataFromServer();
         }
-        
+
         private void SetInteractivity(bool state)
         {
-           Parameters.SetScrollInteractivity(state);
+            Parameters.SetScrollInteractivity(state);
         }
 
         // This is called initially, as many times as needed to fill the viewport, 
@@ -147,7 +151,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 {
                     return TotalCapacity > _VisibleItems.Count;
                 }
-                
+
                 lastVisibleItemItemIndex = _VisibleItems.Last().ItemIndex;
             }
 
@@ -242,7 +246,6 @@ namespace Views.ViewElements.ScrollViews.Adapters
             }
         }
 
-        #endregion
 
         // These are common data manipulation methods
         // The list containing the models is managed by you. The adapter only manages the items' sizes and the count

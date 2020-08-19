@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Repositories.Remote;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
-using Utilities;
-using ViewModels.Basic;
 using Views;
-using Views.InteractiveWindows;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
     [Binding]
-    public class CartViewModel : BaseItemsListViewModel<CartView>
+    public sealed class CartViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private UserProductsRepository userProductsRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -37,27 +37,27 @@ namespace ViewModels
         {
         }
 
-        [Binding]
-        public void SwitchInfoCanBeShown()
+        protected override void OnBecomingActiveView()
         {
-            if (!ItemIsSelected) return;
-            InfoCanBeShown = !InfoCanBeShown;
+            base.OnBecomingActiveView();
+            InitializeAsyncInChildren(transform);
         }
+
+        public static Task InitializeAsyncInChildren(Transform givenTransform)
+        {
+            var tasks = new List<Task>();
+            foreach (var initializeAsync in givenTransform.GetComponentsInChildren<IInitializeAsync>())
+            {
+                tasks.Add(initializeAsync.Initialize());
+            }
+
+            return tasks.Count == 0 ? Task.CompletedTask : Task.WhenAll(tasks);
+        }
+
 
         [Binding]
         public async Task ShowInfo_OnButtonClick()
         {
-            if (!InfoCanBeShown) return;
-            try
-            {
-                await FillInfoCardWithRelatedData(userProductsRepository.CurrentlySelectedIndex);
-                RelatedView.ShowInfoCard();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
         }
 
         [Binding]
@@ -71,58 +71,13 @@ namespace ViewModels
             SwitchToView(nameof(QrCodeView));
         }
 
-        protected override async Task FillInfoCardWithRelatedData(int selectedId)
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            try
-            {
-                var selectedItemData = userProductsRepository[selectedId];
-                await infoCardController.ShowCard(selectedItemData, selectedItemData, selectedItemData, null);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
-        {
-            base.OnSelectedItemIndexChanged(relatedItemIndex);
-            userProductsRepository.CurrentlySelectedIndex = relatedItemIndex;
-        }
-
-
-        protected override async Task LoadDataAndFillTheList()
-        {
-            try
-            {
-                await LoadRepositoryData();
-                await FillDropdownList();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        private Task LoadRepositoryData()
-        {
-            return userProductsRepository.LoadDataFromServer();
-        }
-
-        protected override Task FillDropdownList()
-        {
-            var itemsList = userProductsRepository.ItemsData;
-            var itemsNamesDictionary = new Dictionary<int?, string>(itemsList.Count);
-
-            for (int i = 0; i < itemsList.Count; i++)
-            {
-                itemsNamesDictionary.Add(itemsList[i].Id, itemsList[i].Title);
-            }
-
-            FillDropdownList(itemsNamesDictionary);
-            return Task.CompletedTask;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

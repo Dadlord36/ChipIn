@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Common;
 using DataModels;
+using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors;
@@ -13,10 +14,10 @@ namespace RequestsStaticProcessors
     public static class UserProductsStaticRequestsProcessor
     {
         public static Task<BaseRequestProcessor<object, UserProductsResponseDataModel, IUserProductsResponseModel>.HttpResponse>
-            GetUserProducts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+            GetUserProducts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData)
         {
-            return new UserProductsGetRequestProcessor(out cancellationTokenSource, requestHeaders).SendRequest(
-                "User products was retrieved successfully");
+            return new UserProductsGetRequestProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+                .SendRequest("User products was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<IQrData, SuccessConfirmationModel, ISuccess>.HttpResponse> ActivateProduct(

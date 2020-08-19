@@ -334,16 +334,13 @@ namespace Repositories
             return CalculatePageNumberForGivenIndex((uint) itemIndex);
         }
 
-        protected abstract Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                HttpResponse>
+        protected abstract Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource,
                 PaginatedRequestData paginatedRequestData);
 
-        protected abstract List<TDataType> GetItemsFromResponseModelInterface(
-            TRequestResponseModelInterface responseModelInterface);
+        protected abstract List<TDataType> GetItemsFromResponseModelInterface(TRequestResponseModelInterface responseModelInterface);
 
-        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                HttpResponse>
+        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse>
             CreateAndRegisterLoadPaginatedItemsTask(PaginatedRequestData paginatedRequestData)
         {
             var task = CreateLoadPaginatedItemsTask(out var cancellationTokenSource, paginatedRequestData);
@@ -351,13 +348,11 @@ namespace Repositories
             return task;
         }
 
-        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                HttpResponse[]>
+        private Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse[]>
             CreateLoadItemsPagesTask(IReadOnlyList<int> pagesNumbers)
         {
             var tasks =
-                new Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.
-                    HttpResponse>[pagesNumbers.Count];
+                new Task<BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse>[pagesNumbers.Count];
 
             var cancellationTokenSources = new List<DisposableCancellationTokenSource>(pagesNumbers.Count);
 

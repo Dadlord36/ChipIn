@@ -1,46 +1,36 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
+using DataModels.Common;
+using DataModels.Interfaces;
+using HttpRequests.RequestsProcessors;
+using HttpRequests.RequestsProcessors.GetRequests;
 using RequestsStaticProcessors;
 using UnityEngine;
-using Utilities;
 
 namespace Repositories.Remote
 {
-    [CreateAssetMenu(fileName = nameof(UserProductsRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProductsRepository), order = 0)]
-    public class UserProductsRepository : BaseNotPaginatedListRepository<ProductDataModel>
+    [CreateAssetMenu(fileName = nameof(UserProductsRepository), menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProductsRepository),
+        order = 0)]
+    public class UserProductsRepository : PaginatedItemsListRepository<ProductDataModel, UserProductsResponseDataModel, IUserProductsResponseModel>
     {
-        private const string Tag = nameof(UserProductsRepository);
+        // [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-
+        protected override string Tag => nameof(UserProductsRepository);
         public int CurrentlySelectedIndex { get; set; }
-        public ProductDataModel CurrentlySelectedProduct => this[CurrentlySelectedIndex];
+        public Task<ProductDataModel> GetCurrentlySelectedProductAsync => CreateGetItemWithIndexTask((uint) CurrentlySelectedIndex);
 
-        public override async Task LoadDataFromServer()
+
+        protected override Task<BaseRequestProcessor<object, UserProductsResponseDataModel, IUserProductsResponseModel>.HttpResponse>
+            CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-            try
-            {
-                var result = await UserProductsStaticRequestsProcessor.GetUserProducts(out TasksCancellationTokenSource,
-                    authorisationDataRepository);
-                
-                if (!result.Success)
-                {
-                    LogUtility.PrintLogError(Tag, "User Products was not loaded");
-                    return;
-                }
+            return UserProductsStaticRequestsProcessor.GetUserProducts(out cancellationTokenSource, authorisationDataRepository, paginatedRequestData);
+        }
 
-                ItemsLiveData = new LiveData<ProductDataModel>(result.ResponseModelInterface.ProductsData);
-
-                ConfirmDataLoading();
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+        protected override List<ProductDataModel> GetItemsFromResponseModelInterface(IUserProductsResponseModel responseModelInterface)
+        {
+            return new List<ProductDataModel>(responseModelInterface.ProductsData);
         }
     }
 }
