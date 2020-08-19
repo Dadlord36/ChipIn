@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Tasking;
+using UnityEngine;
 
 namespace ScriptableObjects.CardsControllers
 {
@@ -8,19 +9,24 @@ namespace ScriptableObjects.CardsControllers
     {
         [SerializeField] private Object visualizerPrefab;
         private GameObject _progressBarObject;
-        private Transform MainCanvasTransform => GameManager.MainCanvas.transform;
+        private static Transform MainCanvasTransform => GameManager.MainCanvas.transform;
 
         public void Show()
         {
-            _progressBarObject = Instantiate(visualizerPrefab, MainCanvasTransform) as GameObject;
+            TasksFactories.ExecuteOnMainThread(delegate
+            {
+                if (!_progressBarObject)
+                    _progressBarObject = Instantiate(visualizerPrefab, MainCanvasTransform) as GameObject;
+            });
         }
 
         public void Hide()
         {
-            if (_progressBarObject)
+            TasksFactories.ExecuteOnMainThread(delegate
             {
-                Destroy(_progressBarObject);
-            }
+                if (_progressBarObject)
+                    Destroy(_progressBarObject);
+            });
         }
     }
 }
