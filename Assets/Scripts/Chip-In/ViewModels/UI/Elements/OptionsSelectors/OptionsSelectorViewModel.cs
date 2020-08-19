@@ -15,10 +15,11 @@ namespace ViewModels.UI.Elements.OptionsSelectors
     public sealed class OptionsSelectorViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         public UnityEvent newItemSelected;
-
+        
         [SerializeField] private Transform container;
         [SerializeField] private OptionItemView prefab;
 
+        private int _selectedItemIndex;
 
         [Binding]
         public int SelectedItemIndex
@@ -41,7 +42,6 @@ namespace ViewModels.UI.Elements.OptionsSelectors
 
 #if UNITY_EDITOR
         [SerializeField] private int itemsAmount;
-        private int _selectedItemIndex;
 
         [Button]
         public void RecreateRequiredItems()
