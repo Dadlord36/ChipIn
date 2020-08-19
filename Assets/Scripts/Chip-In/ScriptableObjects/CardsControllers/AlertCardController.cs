@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Tasking;
+using UnityEngine;
 using Views.Cards;
 
 namespace ScriptableObjects.CardsControllers
@@ -9,7 +10,7 @@ namespace ScriptableObjects.CardsControllers
     {
         public void ShowAlertWithText(string textToShow)
         {
-            CardView.ShowUpAndFadeOut(textToShow);
+            TasksFactories.ExecuteOnMainThread(delegate { CardView.ShowUpAndFadeOut(textToShow); });
         }
     }
 }
