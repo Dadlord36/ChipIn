@@ -1,6 +1,8 @@
-﻿using Behaviours.Games;
+﻿using System;
+using Behaviours.Games;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -37,6 +39,21 @@ namespace ViewModels
             var game = miniGame as IGame;
             Assert.IsNotNull(game);
             game.GameComplete -= SwitchToMarketplace;
+        }
+
+        protected override async void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            try
+            {
+                await ((IGame) miniGame).InitializeCoinsGame();
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+           
         }
 
         private void DestroyMiniGame()

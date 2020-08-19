@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Behaviours;
 using Common.UnityEvents;
 using Controllers;
 using HttpRequests.RequestsProcessors.PutRequests;
@@ -21,16 +22,14 @@ namespace ViewModels.Elements
     }
 
     [Binding]
-    public sealed class PasswordChangingViewModel : MonoBehaviour, INotifyPropertyChanged
+    public sealed class PasswordChangingViewModel : AsyncOperationsMonoBehaviour, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public StringUnityEvent newPasswordApproved;
         public RectTransform RootTransform => transform as RectTransform;
         [SerializeField] private PasswordAnalyzer passwordAnalyzer;
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-        [SerializeField] private UserAuthorisationDataRepository _authorisationDataRepository;
-        [SerializeField] private AlertCardController _alertCardController;
+        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+        [SerializeField] private AlertCardController alertCardController;
 
 
         private bool _canChangePassword;
@@ -92,9 +91,9 @@ namespace ViewModels.Elements
 
             try
             {
-                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out _asyncOperationCancellationController
-                        .TasksCancellationTokenSource, _authorisationDataRepository,
-                    new UserProfilePasswordChangingModel
+                IsAwaitingProcess = true;
+                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out TasksCancellationTokenSource,
+                    authorisationDataRepository, new UserProfilePasswordChangingModel
                     {
                         CurrentPassword = CurrentPassword, Password = Password,
                         PasswordConfirmation = PasswordRepeat
@@ -102,23 +101,26 @@ namespace ViewModels.Elements
 
                 if (response.Success)
                 {
-                    _alertCardController.ShowAlertWithText("Password changed successfully");
+                    alertCardController.ShowAlertWithText("Password changed successfully");
 
                     HideView();
                     OnNewPasswordApproved(Password);
                 }
                 else
                 {
-                    _alertCardController.ShowAlertWithText("Failed to change password");
+                    alertCardController.ShowAlertWithText("Failed to change password");
                 }
-                
+
                 ClearFields();
-                MakeFormInteractive();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
+            }
+            finally
+            {
+                IsAwaitingProcess = false;
             }
         }
 
@@ -126,7 +128,6 @@ namespace ViewModels.Elements
         public void Close_OnClick()
         {
             HideView();
-            MakeFormInteractive();
         }
 
         private void HideView()
@@ -134,12 +135,7 @@ namespace ViewModels.Elements
             gameObject.SetActive(false);
             ClearFields();
         }
-
-        private void MakeFormInteractive()
-        {
-            FindObjectOfType<FormInteractivityController>().Interactive = true;
-        }
-
+        
         private void ClearFields()
         {
             CurrentPassword = PasswordRepeat = Password = string.Empty;

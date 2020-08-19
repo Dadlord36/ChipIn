@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Tasking
@@ -7,5 +8,10 @@ namespace Tasking
     {
         public static readonly TaskFactory MainThreadTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.DenyChildAttach,
             TaskContinuationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+
+        public static void ExecuteOnMainThread(Action action)
+        {
+            MainThreadTaskFactory.StartNew(action).GetAwaiter().GetResult();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Repositories.Remote;
+﻿using System;
+using Repositories.Remote;
 using ScriptableObjects.Parameters;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,13 +23,27 @@ namespace Views
         {
             base.OnEnable();
             CodeWriter.onCodeEncodeFinished += CodeWriterOnCodeEncodeFinished;
-            QrCode = userProductsRepository.CurrentlySelectedProduct.QrData;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             CodeWriter.onCodeEncodeFinished -= CodeWriterOnCodeEncodeFinished;
+        }
+
+        protected override async void Awake()
+        {
+            base.Awake();
+            try
+            {
+                var data = await userProductsRepository.GetCurrentlySelectedProductAsync;
+                QrCode = data.QrData;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private void CodeWriterOnCodeEncodeFinished(Texture2D tex)
