@@ -121,13 +121,11 @@ namespace ViewModels
         {
             try
             {
-                IsAwaitingProcess = true;
                 if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
                 {
-                    IsAwaitingProcess = false;
                     return;
                 }
-
+                IsAwaitingProcess = true;
                 await ProcessLoginAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
