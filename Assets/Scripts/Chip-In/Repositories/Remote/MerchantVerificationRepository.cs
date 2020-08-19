@@ -50,11 +50,6 @@ namespace Repositories.Remote
             throw new NotImplementedException();
         }
 
-        public override async Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

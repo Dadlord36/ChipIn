@@ -2,7 +2,7 @@
 
 namespace DataModels.RequestsModels
 {
-    public interface IUserLoginRequestModel : IBasicLoginModel, IGender, IRole, IDevice
+    public interface IUserLoginRequestModel : IBasicLoginModel, IRole, IDevice
     {
     }
 
@@ -13,7 +13,6 @@ namespace DataModels.RequestsModels
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Gender { get; set; }
         public string Role { get; set; }
         public DeviceData Device { get; set; }
     }

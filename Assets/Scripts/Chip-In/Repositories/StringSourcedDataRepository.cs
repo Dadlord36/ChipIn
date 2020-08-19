@@ -73,10 +73,5 @@ namespace Repositories
             _dataList = parsedData.ListOfItems;
             return Task.CompletedTask;
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

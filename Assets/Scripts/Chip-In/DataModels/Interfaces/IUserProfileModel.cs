@@ -1,24 +1,53 @@
-﻿using System.ComponentModel;
-using Common.Structures;
-using UnityEngine;
+﻿using DataModels.RequestsModels;
+using GlobalVariables;
+using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IUserProfileModel
+    public interface IBirthday
     {
-        GeoLocation UserLocation { get; set; }
-        Texture2D AvatarImage { get; set; }
-        string Name { get; set; }
-        int? Id { get; set; }
-        string Email { get; set; }
-        string Role { get; set; }
-        string Gender { get; set; }
-        string Birthday { get; set; }
-        string CountryCode { get; set; }
-        int TokensBalance { get; set; }
-        bool ShowAdsState { get; set; }
-        bool ShowAlertsState { get; set; }
-        bool UserRadarState { get; set; }
-        bool ShowNotificationsState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Birthdate)] string Birthday { get; set; }
+    }
+
+    public interface ITokensBalance
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.TokensBalance)] int TokensBalance { get; set; }
+    }
+
+    public interface IShowAdsState
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAds)] bool ShowAdsState { get; set; }
+    }
+
+    public interface IShowAlertsState
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAlerts)] bool ShowAlertsState { get; set; }
+    }
+
+    public interface IUserRadarState
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.UserRadar)] bool UserRadarState { get; set; }
+    }
+
+    public interface IShowNotifications
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowNotifications)] bool ShowNotificationsState { get; set; }
+    }
+
+    public interface ICurrencyCode
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.Currency)] string CurrencyCode { get; set; }
+    }
+
+    public interface IUserAvatarUrl
+    {
+        [JsonProperty("avatar")]
+        string Avatar { get; set; }
+    }
+
+    public interface IUserProfileModel : INamed, IEmail, IIdentifier, IRole, IGender, IBirthday, ICountryCode,ICurrencyCode, ITokensBalance, IShowAdsState,
+        IShowAlertsState, IShowNotifications, IUserGeoLocation, IUserAvatarUrl,IUserRadarState
+    {
+       
     }
 }

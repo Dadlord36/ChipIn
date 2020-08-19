@@ -1,10 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using GlobalVariables;
+using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IBasicLoginModel
+    public interface IEmail
     {
-        [JsonProperty("email")] string Email { get; set; }
-        [JsonProperty("password")] string Password { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Email)] string Email { get; set; }
+    }
+
+    public interface IPassword
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.Password)] string Password { get; set; }
+    }
+
+    public interface IBasicLoginModel : IEmail, IPassword
+    {
     }
 }

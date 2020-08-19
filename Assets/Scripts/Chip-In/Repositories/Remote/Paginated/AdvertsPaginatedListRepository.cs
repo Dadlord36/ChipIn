@@ -30,10 +30,5 @@ namespace Repositories.Remote.Paginated
         {
             return responseModelInterface.Adverts.ToList();
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

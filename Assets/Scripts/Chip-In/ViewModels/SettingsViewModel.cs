@@ -1,31 +1,63 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views;
+using Views.OptionsSelectionViews;
 
 namespace ViewModels
 {
     [Binding]
-    public sealed class SettingsViewModel : ViewsSwitchingViewModel
+    public sealed class SettingsViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private SessionController sessionController;
-        
+
+        private int _selectedCountryIndex;
+        private int _selectedCurrencyIndex;
+
         public SettingsViewModel() : base(nameof(SettingsViewModel))
         {
         }
 
-        protected override void OnBecomingInactiveView()
+        [Binding]
+        public int SelectedCountryIndex
         {
-            base.OnBecomingInactiveView();
-            Destroy(gameObject);
+            get => _selectedCountryIndex;
+            set
+            {
+                if (value == _selectedCountryIndex) return;
+                _selectedCountryIndex = value;
+                OnPropertyChanged();
+            }
         }
 
-        private void Start()
+        [Binding]
+        public int SelectedCurrencyIndex
         {
-            ShowMyProfile();
+            get => _selectedCurrencyIndex;
+            set
+            {
+                if (value == _selectedCurrencyIndex) return;
+                _selectedCurrencyIndex = value;
+                OnPropertyChanged();
+            }
         }
+
+        private void SetSelectedCountryIndex(int index)
+        {
+            SelectedCountryIndex = index;
+        }
+
+        private void SetSelectedCurrencyIndex(int index)
+        {
+            SelectedCurrencyIndex = index;
+        }
+
 
         [Binding]
         public async void LogOut_OnClick()
@@ -46,9 +78,22 @@ namespace ViewModels
         }
 
         [Binding]
-        public void ShowMyProfile()
+        public void EditProfileButton_OnClick()
         {
-           
+            SwitchToView(nameof(EditProfileView));
+        }
+        
+        
+        [Binding]
+        public void CountryDropdown_OnClick()
+        {
+            SwitchToView(nameof(CountrySelectionView), new FormsTransitionBundle(new Action<int>(SetSelectedCountryIndex)));
+        }
+
+        [Binding]
+        public void CurrencyDropdown_OnClick()
+        {
+            SwitchToView(nameof(CurrencySelectionView), new FormsTransitionBundle(new Action<int>(SetSelectedCurrencyIndex)));
         }
 
         [Binding]
@@ -66,6 +111,14 @@ namespace ViewModels
         private Task LogOut()
         {
             return sessionController.SignOut();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

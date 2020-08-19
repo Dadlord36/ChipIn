@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using DataModels.SimpleTypes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using UnityEngine.Assertions;
 using WebOperationUtilities;
 
@@ -127,6 +130,47 @@ namespace Utilities
         public static FormUrlEncodedContent ToFormData(object obj)
         {
             return new FormUrlEncodedContent(ConvertToKeyValuePairsList(obj));
+        }
+
+        public static MultipartFormDataContent ConvertFlatModelToMultipartFormDataContent(string rootPropertyName, object model)
+        {
+            var properties = model.GetType().GetProperties();
+            var multipartForm = new MultipartFormDataContent();
+
+            foreach (var property in properties)
+            {
+                if (property.PropertyType == typeof(FilePath))
+                {
+                    var value = property.GetValue(model);
+                    if (value == null) continue;
+
+                    multipartForm.Add(new StreamContent(File.OpenRead(((FilePath) value).Path)),
+                        FormPropertyName(GetJsonPropertyName(property)));
+                }
+                else
+                {
+                    var keyValuePair = ConvertPropertyToKeyValuePair(property, model);
+                    multipartForm.Add(new StringContent(keyValuePair.Value), FormPropertyName(keyValuePair.Key));
+                }
+            }
+
+            string FormPropertyName(in string propertyName)
+            {
+                return $"{rootPropertyName}[{propertyName}]";
+            }
+
+            string GetJsonPropertyName(MemberInfo propertyInfo)
+            {
+                var attribute = (JsonPropertyAttribute) Attribute.GetCustomAttribute(propertyInfo, typeof(JsonProperty));
+                return attribute.PropertyName;
+            }
+
+            KeyValuePair<string, string> ConvertPropertyToKeyValuePair(PropertyInfo property, object owner)
+            {
+                return new KeyValuePair<string, string>(GetJsonPropertyName(property), property.GetValue(owner).ToString());
+            }
+
+            return multipartForm;
         }
 
         public static IDictionary<string, string> ToKeyValue(object metaToken)

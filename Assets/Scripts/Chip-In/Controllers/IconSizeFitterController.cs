@@ -1,5 +1,4 @@
-﻿using EasyButtons;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -8,33 +7,30 @@ namespace Controllers
     [RequireComponent(typeof(Image))]
     public class IconSizeFitterController : UIBehaviour
     {
-        private RectTransform _parentRectTransform;
-        private Image _image;
-
-
         protected override void Awake()
         {
             base.Awake();
-            FindControlledComponent();
             ResetElementSize();
         }
-        
-        [Button]
+
         public void FitImage()
         {
             ResetElementSize();
 
-            var preferredWidth = _image.preferredWidth;
-            var preferredHeight = _image.preferredHeight;
+            var image = GetComponent<Image>();
+            var parentRectTransform = GetComponent<Image>().transform.parent.GetComponent<RectTransform>();
+
+            var preferredWidth = image.preferredWidth;
+            var preferredHeight = image.preferredHeight;
             var aspectRatio = preferredWidth / preferredHeight;
 
 
-            var scale = Mathf.Abs(preferredWidth / _parentRectTransform.rect.x);
-            var rectTransform = _image.rectTransform;
+            var scale = Mathf.Abs(preferredWidth / parentRectTransform.rect.x);
+            var rectTransform = image.rectTransform;
 
             var sizeDelta = new Vector2(preferredWidth, preferredHeight) / scale;
 
-            var difference = _parentRectTransform.rect.size - sizeDelta;
+            var difference = parentRectTransform.rect.size - sizeDelta;
 
             if (preferredWidth > preferredHeight)
             {
@@ -52,14 +48,7 @@ namespace Controllers
 
         private void ResetElementSize()
         {
-            _image.rectTransform.sizeDelta = Vector2.zero;
-        }
-
-        [Button]
-        private void FindControlledComponent()
-        {
-            _image = GetComponent<Image>();
-            _parentRectTransform = _image.transform.parent.GetComponent<RectTransform>();
+            GetComponent<Image>().rectTransform.sizeDelta = Vector2.zero;
         }
     }
 }

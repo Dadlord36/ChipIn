@@ -2,6 +2,30 @@
 {
     public static class MainNames
     {
+        public static class ModelsPropertiesNames
+        {
+            public const string Id = "id";
+            public const string Email = "email";
+            public const string Password = "password";
+            public const string PasswordConfirmation = "password_confirmation";
+            public const string CurrentPassword = "current_password";
+            public const string Gender = "gender";
+            public const string Avatar = "avatar";
+            public const string Name = "name";
+            public const string Location = "location";
+            public const string ShowNotifications = "show_notifications";
+            public const string UserRadar = "user_radar";
+            public const string ShowAlerts = "show_alerts";
+            public const string Slogan = "slogan";
+            public const string ShowAds = "show_ads";
+            public const string Birthdate = "birthdate";
+            public const string RadarRadius = "radar_radius";
+            public const string Country  = "country";
+            public const string Role = "role";
+            public const string TokensBalance = "tokens_balance";
+            public const string Currency = "currency";
+        }
+
         public static class UserRoles
         {
             public const string BusinessOwner = "owner";

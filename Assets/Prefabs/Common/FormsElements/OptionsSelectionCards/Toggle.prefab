@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a39e77590c9943e799c4e08b06549b32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeUntoggle: 0
   toggleClicked:
     m_PersistentCalls:
       m_Calls: []
@@ -316,7 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.RadialToggle.IsToggled
+  viewModelPropertyName: Views.ViewElements.Toggle.IsToggled
   viewPropertyName: Controllers.ImageFadingController.IsFaded

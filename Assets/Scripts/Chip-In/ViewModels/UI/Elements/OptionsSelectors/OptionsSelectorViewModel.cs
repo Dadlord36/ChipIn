@@ -15,13 +15,23 @@ namespace ViewModels.UI.Elements.OptionsSelectors
     public sealed class OptionsSelectorViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         public UnityEvent newItemSelected;
-
+        
         [SerializeField] private Transform container;
         [SerializeField] private OptionItemView prefab;
 
+        private int _selectedItemIndex;
 
         [Binding]
-        public int SelectedItemIndex { get; set; }
+        public int SelectedItemIndex
+        {
+            get => _selectedItemIndex;
+            set
+            {
+                if (value == _selectedItemIndex) return;
+                _selectedItemIndex = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public void SelectButton_OnClick()
@@ -43,6 +53,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
             }
         }
 #endif
+        
         private void OnNewItemSelected()
         {
             newItemSelected?.Invoke();

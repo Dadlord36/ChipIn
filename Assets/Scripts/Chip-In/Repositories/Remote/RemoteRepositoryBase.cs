@@ -26,8 +26,7 @@ namespace Repositories.Remote
         }
 
         public abstract Task LoadDataFromServer();
-        public abstract Task SaveDataToServer();
-        
+
         #region EventsInvokation
         private void OnDataWasLoaded()
         {

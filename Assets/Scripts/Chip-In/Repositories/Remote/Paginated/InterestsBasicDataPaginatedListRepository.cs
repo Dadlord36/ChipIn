@@ -32,10 +32,5 @@ namespace Repositories.Remote.Paginated
         {
             return new List<InterestBasicDataModel>(responseModelInterface.Communities);
         }
-
-        public override Task SaveDataToServer()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
