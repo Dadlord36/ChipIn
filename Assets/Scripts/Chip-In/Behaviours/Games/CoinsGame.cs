@@ -29,31 +29,17 @@ namespace Behaviours.Games
             Assert.IsNotNull(coinsAmountRepository);
         }
 
-        private async void OnEnable()
-        {
-            try
-            {
-                await InitializeCoinsGame();
-                _coinsPicked = 0;
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
         private Task UpdateCoinsRepository()
         {
             return coinsAmountRepository.UpdateRepositoryData();
         }
 
-        private async Task InitializeCoinsGame()
+        public async Task InitializeCoinsGame()
         {
             if (_isInitialized) return;
             _isInitialized = true;
             _coins = FindObjectsOfType<Coin>();
-            
+
             LockCoins();
             try
             {
@@ -69,9 +55,10 @@ namespace Behaviours.Games
             {
                 IsAwaitingProcess = false;
             }
-            
+
+            _coinsPicked = 0;
             UnlockCoins();
-            
+
             for (var i = 0; i < _coins.Length; i++)
             {
                 if (_coins[i] is IFinishingAction finishingAction)
@@ -121,7 +108,6 @@ namespace Behaviours.Games
             {
                 LogUtility.PrintLogException(e);
             }
-
         }
 
         private void LockCoins()
