@@ -57,6 +57,7 @@ namespace Behaviours.Games
             LockCoins();
             try
             {
+                IsAwaitingProcess = true;
                 await TossACoin();
             }
             catch (Exception e)
@@ -64,6 +65,11 @@ namespace Behaviours.Games
                 LogUtility.PrintLogException(e);
                 throw;
             }
+            finally
+            {
+                IsAwaitingProcess = false;
+            }
+            
             UnlockCoins();
             
             for (var i = 0; i < _coins.Length; i++)
@@ -115,6 +121,7 @@ namespace Behaviours.Games
             {
                 LogUtility.PrintLogException(e);
             }
+
         }
 
         private void LockCoins()
