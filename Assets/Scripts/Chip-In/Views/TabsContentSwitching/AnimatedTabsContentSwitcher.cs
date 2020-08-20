@@ -11,6 +11,8 @@ namespace Views.TabsContentSwitching
         [SerializeField] private CanvasGroupFading.AnimationParameters animationParameters;
 
         private readonly ProgressiveOperationsController _progressiveOperationsController = new ProgressiveOperationsController();
+        
+        private int currentContainer;
 
         private void Start()
         {
@@ -30,6 +32,10 @@ namespace Views.TabsContentSwitching
 
         public void SwitchToContainerByIndex(int index)
         {
+            if (currentContainer == index)
+                return;
+            currentContainer = index;
+            
             StopUpdate();
             ResetProgressiveOperationsController();
 

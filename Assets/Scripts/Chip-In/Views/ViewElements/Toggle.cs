@@ -9,7 +9,7 @@ using UnityWeld.Binding;
 namespace Views.ViewElements
 {
     [Binding]
-    public sealed class Toggle : UIBehaviour, INotifyPropertyChanged, IPointerClickHandler
+    public sealed class Toggle : UIBehaviour, INotifyPropertyChanged
     {
         [SerializeField] private bool canBeUntoggle;
         public ObjectUnityEvent toggleClicked;
@@ -28,7 +28,13 @@ namespace Views.ViewElements
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void ClickTheToggle()
+        {
+            ToggleTheToggle();
+            OnToggleClicked();
+        }
+
+        private void ToggleTheToggle()
         {
             if (IsToggled && !canBeUntoggle)
             {
@@ -36,7 +42,6 @@ namespace Views.ViewElements
             }
 
             IsToggled = !IsToggled;
-            OnToggleClicked();
         }
 
         public void SetToggleStateWithoutNotification(bool state)
