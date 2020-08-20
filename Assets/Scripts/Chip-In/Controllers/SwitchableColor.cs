@@ -2,11 +2,16 @@
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityWeld.Binding;
 
 namespace Controllers
 {
+    [Binding]
     public sealed class SwitchableColor : MonoBehaviour, INotifyPropertyChanged
     {
+        [SerializeField] private Color mainColor;
+        [SerializeField] private Color secondaryColor;
+
         private Color _selectedColor;
         private bool _isSwitched;
 
@@ -15,16 +20,12 @@ namespace Controllers
             get => _isSwitched;
             set
             {
-                if (value == _isSwitched) return;
                 _isSwitched = value;
                 OnPropertyChanged();
             }
         }
 
-
-        [SerializeField] private Color mainColor;
-        [SerializeField] private Color secondaryColor;
-
+        [Binding]
         public Color SelectedColor
         {
             get => _selectedColor;
@@ -33,11 +34,6 @@ namespace Controllers
                 _selectedColor = value;
                 OnPropertyChanged();
             }
-        }
-
-        public void SwitchColor()
-        {
-            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
