@@ -58,6 +58,40 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &3022720748681832644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 6200066423486263298}
+  viewsSwitchingController: {fileID: 0}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+    type: 2}
+  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  offerCreationRepository: {fileID: 11400000, guid: 7edb64470af4c8c43a1320925f905d3c,
+    type: 2}
+  _alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
+    type: 2}
+--- !u!114 &6200066423486263298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1651350354093625800
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,28 +265,6 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
---- !u!114 &5550428002221265236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3369433219794952513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Price
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &2366344079214948103
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,21 +507,21 @@ MonoBehaviour:
     _usePolygonMap: 0
   wasConverted: 0
   preConvertedScale: {x: 0, y: 0, z: 0}
---- !u!114 &7613915999253317337
+--- !u!114 &6266406395105984202
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8557986605968699733}
+  m_GameObject: {fileID: 3167707027267847862}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.ExpireLocalDate
-  viewEventName: ViewModels.UI.Elements.TimePickerAreaViewModel.datePicked
-  viewPropertyName: ViewModels.UI.Elements.TimePickerAreaViewModel.PickedDateTime
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyTypeIndex
+  viewEventName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.newItemSelected
+  viewPropertyName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.SelectedItemIndex
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -517,53 +529,41 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
---- !u!114 &3022720748681832644
+--- !u!114 &5550428002221265236
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 6200066423486263298}
-  viewsSwitchingController: {fileID: 0}
-  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
-    type: 2}
-  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
-    type: 2}
-  offerCreationRepository: {fileID: 11400000, guid: 7edb64470af4c8c43a1320925f905d3c,
-    type: 2}
-  _alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
-    type: 2}
---- !u!114 &6200066423486263298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1727062543488919176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7101355146683214584}
+  m_GameObject: {fileID: 3369433219794952513}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Description
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Price
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &1943820292472229797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5468602636126563618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Title
   viewEventName: TMPro.TMP_InputField.onSubmit
   viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
@@ -759,21 +759,21 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
---- !u!114 &6266406395105984202
+--- !u!114 &1727062543488919176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3167707027267847862}
+  m_GameObject: {fileID: 7101355146683214584}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyTypeIndex
-  viewEventName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.newItemSelected
-  viewPropertyName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.SelectedItemIndex
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Description
+  viewEventName: TMPro.TMP_InputField.onSubmit
+  viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -818,22 +818,28 @@ RectTransform:
   m_AnchoredPosition: {x: 21, y: -570}
   m_SizeDelta: {x: -42, y: 72.93}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &7595036130554183877
+--- !u!114 &7613915999253317337
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9206703443659212009}
+  m_GameObject: {fileID: 8557986605968699733}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.ExpireLocalDate
+  viewEventName: ViewModels.UI.Elements.TimePickerAreaViewModel.datePicked
+  viewPropertyName: ViewModels.UI.Elements.TimePickerAreaViewModel.PickedDateTime
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyType
-  viewPropertyName: TMPro.TextMeshProUGUI.text
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &8707706811463111431
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,28 +1032,22 @@ MonoBehaviour:
     _usePolygonMap: 0
   wasConverted: 0
   preConvertedScale: {x: 0, y: 0, z: 0}
---- !u!114 &1943820292472229797
+--- !u!114 &7595036130554183877
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5468602636126563618}
+  m_GameObject: {fileID: 9206703443659212009}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Title
-  viewEventName: TMPro.TMP_InputField.onSubmit
-  viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyType
+  viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &910307731702385496
 PrefabInstance:
   m_ObjectHideFlags: 0
