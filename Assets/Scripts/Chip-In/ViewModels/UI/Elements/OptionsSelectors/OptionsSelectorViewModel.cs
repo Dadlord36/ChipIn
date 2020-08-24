@@ -16,9 +16,6 @@ namespace ViewModels.UI.Elements.OptionsSelectors
     {
         public UnityEvent newItemSelected;
         
-        [SerializeField] private Transform container;
-        [SerializeField] private OptionItemView prefab;
-
         private int _selectedItemIndex;
 
         [Binding]
@@ -41,6 +38,8 @@ namespace ViewModels.UI.Elements.OptionsSelectors
 
 
 #if UNITY_EDITOR
+        [SerializeField] private Object prefab;
+        [SerializeField] private Transform container;
         [SerializeField] private int itemsAmount;
 
         [Button]
@@ -51,6 +50,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
             {
                 PrefabUtility.InstantiatePrefab(prefab, container);
             }
+            
         }
 #endif
         

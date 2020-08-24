@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Common.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -8,20 +9,18 @@ using UnityWeld.Binding;
 namespace Views.ViewElements.ListItems
 {
     [Binding]
-    public sealed class OptionItemView : UIBehaviour, INotifyPropertyChanged
+    public sealed class OptionItemView : UIBehaviour, INotifyPropertyChanged, INotifySelectionWithIdentifier
     {
-        public event Action<OptionItemView> Selected;
+        public event Action<INotifySelectionWithIdentifier> Selected;
         private bool _isSelected;
 
-        public int Index { get; set; }
-        
+
         [Binding]
         public bool IsSelected
         {
             get => _isSelected;
             set
             {
-                if (value == _isSelected) return;
                 _isSelected = value;
                 OnPropertyChanged();
 
@@ -29,6 +28,24 @@ namespace Views.ViewElements.ListItems
                     OnSelected();
             }
         }
+        
+        [Binding]
+        public bool InitialState
+        {
+            get => _isSelected;
+            set
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public void SetInitialState(bool state)
+        {
+            _isSelected = state;
+        }
+
+        public int Index { get; set; }
 
         private void OnSelected()
         {
