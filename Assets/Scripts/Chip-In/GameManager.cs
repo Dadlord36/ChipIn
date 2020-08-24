@@ -12,7 +12,7 @@ using Views.ViewElements.ViewsPlacers;
 public class GameManager : MonoBehaviour
 {
     private const string Tag = nameof(GameManager);
-
+    
     [SerializeField] private SessionController sessionController;
     [SerializeField] private UpdatableGroupController mainUpdatableGroupController;
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;

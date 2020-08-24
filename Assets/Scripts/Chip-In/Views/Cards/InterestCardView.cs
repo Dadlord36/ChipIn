@@ -16,88 +16,31 @@ namespace Views.Cards
     {
         [SerializeField] private UserAvatarIcon avatarIcon;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private TMP_Text cardNameTextField;
-        [SerializeField] private TMP_Text cardDescriptionTextField;
-        [SerializeField] private TMP_Text authorNameTextField;
-        [SerializeField] private TMP_Text daysPassedTextField;
-
-        [SerializeField] private InterestCardElementView congratulationsNumber;
-        [SerializeField] private InterestCardElementView joiningInNumber;
-        [SerializeField] private InterestCardElementView hoursLeftNumber;
-        [SerializeField] private InterestCardElementView usersNumber;
-
-        //Temporary 
-        [SerializeField] private TMP_Text indexInDataBaseTextField;
         
-        [SerializeField] private PercentageView percentageView;
-
         private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
 
 
-        private uint IndexInDataBaseText
-        {
-            get => uint.Parse(indexInDataBaseTextField.text);
-            set => indexInDataBaseTextField.text = value.ToString();
-        }
-        
-        public Sprite CardIcon
-        {
-            get => avatarIcon.AvatarSprite;
-            set => avatarIcon.AvatarSprite = value;
-        }
+        private uint IndexInDataBaseText;
 
-        public string AuthorName
-        {
-            get => authorNameTextField.text;
-            set => authorNameTextField.text = value;
-        }
+        public Sprite CardIcon;
 
-        public int DaysPassed
-        {
-            set => daysPassedTextField.text = $"{value.ToString()} {GetCorrespondingEndText(value)}";
-        }
+        public string AuthorName;
 
-        public string CardName
-        {
-            get => cardNameTextField.text;
-            set => cardNameTextField.text = value;
-        }
+        public int DaysPassed;
 
-        public string CardDescription
-        {
-            get => cardDescriptionTextField.text;
-            set => cardDescriptionTextField.text = value;
-        }
+        public string CardName;
 
-        public int CongratulationsNumber
-        {
-            get => congratulationsNumber.Number;
-            set => congratulationsNumber.Number = value;
-        }
+        public string CardDescription;
 
-        public int JoiningInNumber
-        {
-            get => joiningInNumber.Number;
-            set => joiningInNumber.Number = value;
-        }
+        public int CongratulationsNumber;
 
-        public int HoursLeftNumber
-        {
-            get => hoursLeftNumber.Number;
-            set => hoursLeftNumber.Number = value;
-        }
+        public int JoiningInNumber;
 
-        public int UsersNumber
-        {
-            get => usersNumber.Number;
-            set => usersNumber.Number = value;
-        }
+        public int HoursLeftNumber;
 
-        public float Percentage
-        {
-            get => percentageView.Percentage;
-            set => percentageView.Percentage = value;
-        }
+        public int UsersNumber;
+
+        public float Percentage;
 
         public InterestCardView() : base(nameof(InterestCardView))
         {
