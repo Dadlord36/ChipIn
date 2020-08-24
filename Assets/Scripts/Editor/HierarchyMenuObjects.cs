@@ -12,6 +12,9 @@ public static class HierarchyMenuObjects
     private const string TabsElementsCategory = "TabsElements/";
     private const string DelegationElementsCategory = "DelegationElements/";
     private const string DropdownsCategory = "Dropdowns/";
+    private const string CoinsCategory = "Coins/";
+
+    #region Prefabs Pathes
 
     private const string ResizableAreaImageButtonPrefabPath = "Assets/Prefabs/UI/Buttons/ResizableAreaImageButton.prefab";
 
@@ -19,6 +22,7 @@ public static class HierarchyMenuObjects
     private const string AccentButtonPath = "Assets/Prefabs/Common/Buttons/[Button] Accent.prefab";
     private const string ClickableAreaPrefabPath = "Assets/Prefabs/Common/Buttons/[InteractiveArea] ClickableArea.prefab";
     private const string ButtonWithImagePrefabPath = "Assets/Prefabs/Common/Buttons/[Button-Image].prefab";
+    private const string AccentButtonWithCoinsCount = "Assets/Prefabs/Common/Coins/[Button] Accent With CoinsCounter.prefab";
 
     private const string MultiOptionsSelectionPanelPrefabPath = "Assets/Prefabs/Common/OptionsSelection/[Selection Panel] MultiOptionsSelectionPanel.prefab";
     private const string SelectableIconPrefabPath = "Assets/Prefabs/MerchantApp/Common/RelatedIconWithView.prefab";
@@ -28,6 +32,11 @@ public static class HierarchyMenuObjects
     private const string TitledSingeLineInputFieldPrefabPath = "Assets/Prefabs/MerchantApp/Common/TitledSingleLineInputField.prefab";
 
     private const string DropdownTriggerPrefabPath = "Assets/Prefabs/Common/FormsElements/DropdownTrigger.prefab";
+
+    private const string CoinsCountPrefabPath = "Assets/Prefabs/Common/Coins/CoinsCount.prefab";
+    private const string CoinsCountWithDifferencePrefabPath = "Assets/Prefabs/Common/Coins/CoinsCountWithDifference.prefab";
+
+    #endregion
 
 
     private static Object InstantiatePrefab(string path)
@@ -113,5 +122,23 @@ public static class HierarchyMenuObjects
     public static void CreateDropdownTrigger()
     {
         InstantiatePrefab(DropdownTriggerPrefabPath);
+    }
+
+    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCunt")]
+    public static void CreateCoinsCount()
+    {
+        InstantiatePrefab(CoinsCountPrefabPath);
+    }  
+    
+    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCuntWithDifference")]
+    public static void CreateCoinsCountWithDifference()
+    {
+        InstantiatePrefab(CoinsCountWithDifferencePrefabPath);
+    }
+    
+    [MenuItem(RootMenuPath + CoinsCategory + "AccentButtonWithCoinsCount")]
+    public static void CreateAccentButtonWithCoinsCount()
+    {
+        InstantiatePrefab(AccentButtonWithCoinsCount);
     }
 }
