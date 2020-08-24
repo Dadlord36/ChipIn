@@ -7,4 +7,11 @@ namespace Common.Interfaces
         event Action Selected;
         event Action Deselected;
     }
+
+    public interface INotifySelectionWithIdentifier : IIndex
+    {
+        event Action<INotifySelectionWithIdentifier> Selected;
+        bool IsSelected { get; set; }
+        void SetInitialState(bool state);
+    }
 }

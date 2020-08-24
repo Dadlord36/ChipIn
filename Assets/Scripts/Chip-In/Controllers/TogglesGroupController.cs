@@ -2,11 +2,11 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Common.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityWeld.Binding;
-using Views.ViewElements.ListItems;
 
 namespace Controllers
 {
@@ -14,7 +14,7 @@ namespace Controllers
     public sealed class TogglesGroupController : MonoBehaviour, INotifyPropertyChanged
     {
         private int _selectedItemIndex;
-        private List<OptionItemView> _optionItemViews;
+        private List<INotifySelectionWithIdentifier> _selectableOptions;
 
         [HideInInspector] public UnityEvent newItemSelected;
 
@@ -40,52 +40,61 @@ namespace Controllers
 
         private void Start()
         {
-            _optionItemViews[0].IsSelected = true;
+            _selectableOptions[0].SetInitialState(true);
         }
 
         private void SubscribeOnTogglesEvents()
         {
-            foreach (var toggle in _optionItemViews)
+            foreach (var toggle in _selectableOptions)
             {
-                toggle.Selected += OnToggleSwitched;
+                toggle.Selected += SwitchOffOtherToggles;
             }
         }
 
         private void UnsubscribeFromTogglesEvents()
         {
-            foreach (var optionItemView in _optionItemViews)
+            foreach (var optionItemView in _selectableOptions)
             {
-                optionItemView.Selected -= OnToggleSwitched;
+                optionItemView.Selected -= SwitchOffOtherToggles;
             }
         }
 
-        private void OnToggleSwitched(OptionItemView optionItemView)
-        {
-            SwitchOffOtherToggles(optionItemView);
-        }
 
-        private void SwitchOffOtherToggles(OptionItemView optionItemView)
+        private void SwitchOffOtherToggles(INotifySelectionWithIdentifier option)
         {
-            SelectedItemIndex = optionItemView.Index;
+            SelectedItemIndex = option.Index;
+            var otherItems = GetItemsExcept(option, _selectableOptions);
 
-            var otherItems = new List<OptionItemView>(_optionItemViews);
-            otherItems.Remove(optionItemView);
             foreach (var item in otherItems)
             {
                 item.IsSelected = false;
             }
         }
+
+        private static List<T> GetItemsExcept<T>(int itemByIndex, IEnumerable<T> inList)
+        {
+            var list = new List<T>(inList);
+            list.RemoveAt(itemByIndex);
+            return list;
+        }
         
+        private static List<T> GetItemsExcept<T>(T item, IEnumerable<T> inList)
+        {
+            var list = new List<T>(inList);
+            list.Remove(item);
+            return list;
+        }
+
         private void CollectToggles()
         {
-            _optionItemViews = transform.GetComponentsInChildren<OptionItemView>().ToList();
+            _selectableOptions = transform.GetComponentsInChildren<INotifySelectionWithIdentifier>().ToList();
         }
 
         private void PrepareItems()
         {
-            for (var index = 0; index < _optionItemViews.Count; index++)
+            for (var index = 0; index < _selectableOptions.Count; index++)
             {
-                _optionItemViews[index].Index = index;
+                _selectableOptions[index].Index = index;
             }
         }
 
