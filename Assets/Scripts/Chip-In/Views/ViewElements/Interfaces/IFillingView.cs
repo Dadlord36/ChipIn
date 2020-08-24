@@ -4,6 +4,6 @@ namespace Controllers.SlotsSpinningControllers.RecyclerView.Interfaces
 {
     public interface IFillingView<in TDataModel> where TDataModel : class
     {
-        Task FillView(TDataModel dataModel, uint dataBaseIndex);
+        Task FillView(TDataModel data, uint dataBaseIndex);
     }
 }

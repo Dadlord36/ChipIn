@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using EasyButtons;
 using JetBrains.Annotations;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -14,6 +12,8 @@ namespace ViewModels.UI.Elements.Text
     {
         [SerializeField] private Color mainColor;
         [SerializeField] private Color alternativeColor;
+        
+        
         private Color _selectedColor;
         private bool _isSwitched;
         
