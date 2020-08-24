@@ -11,8 +11,19 @@ namespace Views.TabsContentSwitching
         [SerializeField] private CanvasGroupFading.AnimationParameters animationParameters;
 
         private readonly ProgressiveOperationsController _progressiveOperationsController = new ProgressiveOperationsController();
-        
-        private int currentContainer;
+
+        private int _currentContainer;
+
+        public int CurrentContainer
+        {
+            get => _currentContainer;
+            set
+            {
+                if (_currentContainer == value) return;
+                _currentContainer = value;
+                SwitchToContainerByIndex(value);
+            }
+        }
 
         private void Start()
         {
@@ -30,12 +41,8 @@ namespace Views.TabsContentSwitching
             enabled = false;
         }
 
-        public void SwitchToContainerByIndex(int index)
+        private void SwitchToContainerByIndex(int index)
         {
-            if (currentContainer == index)
-                return;
-            currentContainer = index;
-            
             StopUpdate();
             ResetProgressiveOperationsController();
 
@@ -62,7 +69,7 @@ namespace Views.TabsContentSwitching
             StartUpdate();
         }
 
-        private List<ProgressiveAction> PrepareFadingAnimations(IReadOnlyList<CanvasGroup> fadingInGroups, IReadOnlyList<CanvasGroup> fadingOutGroups)
+        private IEnumerable<ProgressiveAction> PrepareFadingAnimations(IReadOnlyList<CanvasGroup> fadingInGroups, IReadOnlyList<CanvasGroup> fadingOutGroups)
         {
             var canvasGroupFadings = new List<ProgressiveAction>(fadingInGroups.Count + fadingOutGroups.Count);
             canvasGroupFadings.AddRange(CreateFadingActions(fadingInGroups, CanvasGroupFading.FadingType.Appear));
@@ -70,7 +77,7 @@ namespace Views.TabsContentSwitching
             return canvasGroupFadings;
         }
 
-        private ProgressiveAction[] CreateFadingActions(IReadOnlyList<CanvasGroup> canvasGroups, CanvasGroupFading.FadingType fadingType)
+        private IEnumerable<ProgressiveAction> CreateFadingActions(IReadOnlyList<CanvasGroup> canvasGroups, CanvasGroupFading.FadingType fadingType)
         {
             var actions = new ProgressiveAction[canvasGroups.Count];
             for (int i = 0; i < canvasGroups.Count; i++)
