@@ -23,7 +23,7 @@ namespace Views
             OnSwitchTo();
             try
             {
-                await merchantInterestPagesListAdapter.Initialize().ConfigureAwait(true);
+                await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {

@@ -28,7 +28,7 @@ namespace ViewModels
             var adapter = GetComponentInChildren<MerchantCommunitiesDetailsListAdapter>();
             try
             {
-                await adapter.Initialize().ConfigureAwait(true);
+                await adapter.ResetAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {

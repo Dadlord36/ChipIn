@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
-using Com.TheFallenGames.OSA.DataHelpers;
-using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
@@ -16,10 +14,15 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
+    public interface IResettableAsync
+    {
+        Task ResetAsync();
+    }
+    
     [Binding]
     public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
         TFillingViewAdapter> : BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>,
-        IInitializeAsync
+        IResettableAsync
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
@@ -46,23 +49,15 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             _retrievingItemsStartingIndex = 0;
         }
 
-        public override Task Initialize()
+        public Task ResetAsync()
         {
-            base.Initialize().GetAwaiter().GetResult();
             ResetStateVariables();
-
-            if (Data != null)
-            {
-                if (Data.Count > 0)
-                {
-                    Data.RemoveItemsFromStart(Data.Count);
-                }
-            }
-            else
-            {
-                Data = new SimpleDataHelper<TDataType>(this);
-            }
             
+            if (Data.Count > 0)
+            {
+                Data.RemoveItemsFromStart(Data.Count);
+            }
+
             pagesPaginatedRepository.Clear();
             return pagesPaginatedRepository.LoadDataFromServer();
         }

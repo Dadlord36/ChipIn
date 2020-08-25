@@ -46,16 +46,17 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 OnPropertyChanged();
             }
         }
-        
+
         public BasedListAdapter()
         {
             Tag = GetType().Name;
         }
 
-        public virtual Task Initialize()
+        protected override void OnInitialized()
         {
+            base.OnInitialized();
             _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
-            return Task.CompletedTask;
+            Data = new SimpleDataHelper<TDataType>(this);
         }
 
         // This is called initially, as many times as needed to fill the viewport, 

@@ -40,8 +40,8 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.Initialize(), sponsoredAdListAdapter.Initialize(),
-                        reservedSponsoredAdListAdapter.Initialize())
+                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsoredAdListAdapter.ResetAsync(),
+                        reservedSponsoredAdListAdapter.ResetAsync())
                     .ConfigureAwait(true);
             }
             catch (OperationCanceledException)

@@ -16,7 +16,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
             public override InterestItemViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource, InterestBasicDataModel data,
                 uint dataIndexInRepository)
             {
-                throw new System.NotImplementedException();
+                return new InterestItemViewModel.FieldFillingData(DownloadedSpritesRepository
+                        .CreateLoadSpriteTask(data.PosterUri, cancellationTokenSource.Token), data.Name);
             }
         }
     }
