@@ -5,6 +5,7 @@ using Repositories.Interfaces;
 using Repositories.Remote;
 using UnityEngine.Events;
 using UnityWeld.Binding;
+using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters
