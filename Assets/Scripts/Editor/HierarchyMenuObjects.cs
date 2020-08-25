@@ -57,86 +57,86 @@ public static class HierarchyMenuObjects
         return loadedPrefab;
     }
 
-    [MenuItem(RootMenuPath + ButtonsCategory + nameof(BarButtonSelection))]
+    [MenuItem(RootMenuPath + ButtonsCategory + nameof(BarButtonSelection), false, 0)]
     public static void Init()
     {
         InstantiatePrefab(ResizableAreaImageButtonPrefabPath);
     }
 
 
-    [MenuItem(itemName: RootMenuPath + ButtonsCategory + "NeutralButton")]
+    [MenuItem(itemName: RootMenuPath + ButtonsCategory + "NeutralButton", false, 0)]
     public static void CreateDefaultSecondaryButton()
     {
         InstantiatePrefab(NeutralButtonPath);
     }
 
-    [MenuItem(RootMenuPath + ButtonsCategory + "AccentButton")]
+    [MenuItem(RootMenuPath + ButtonsCategory + "AccentButton", false, 0)]
     public static void CreateAccentButton()
     {
         InstantiatePrefab(AccentButtonPath);
     }
 
-    [MenuItem(RootMenuPath + ButtonsCategory + "ClickableArea")]
+    [MenuItem(RootMenuPath + ButtonsCategory + "ClickableArea", false, 0)]
     public static void CreateClickableArea()
     {
         InstantiatePrefab(ClickableAreaPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + TabsElementsCategory + "MultiOptionsSelectionPanel")]
+    [MenuItem(RootMenuPath + TabsElementsCategory + "MultiOptionsSelectionPanel", false, 0)]
     public static void CreateMultiOptionsSelectionPanel()
     {
         InstantiatePrefab(MultiOptionsSelectionPanelPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + DelegationElementsCategory + "SelectableIcon")]
+    [MenuItem(RootMenuPath + DelegationElementsCategory + "SelectableIcon", false, 0)]
     public static void CreateSelectableIcon()
     {
         InstantiatePrefab(SelectableIconPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + InputFieldsCategory + "SingleLineInputField")]
+    [MenuItem(RootMenuPath + InputFieldsCategory + "SingleLineInputField", false, 0)]
     public static void CreateSingleLineMuInputField()
     {
         InstantiatePrefab(SingleLineInputFiledPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + InputFieldsCategory + "MultiLineInputField")]
+    [MenuItem(RootMenuPath + InputFieldsCategory + "MultiLineInputField", false, 0)]
     public static void CreateMultiLineInputField()
     {
         InstantiatePrefab(MultiLineInputFiledPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + InputFieldsCategory + "TitledSingeLineInputField")]
+    [MenuItem(RootMenuPath + InputFieldsCategory + "TitledSingeLineInputField", false, 0)]
     public static void CreateTitledSingeLineInputField()
     {
         InstantiatePrefab(TitledSingeLineInputFieldPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + ButtonsCategory + "ButtonWithImage")]
+    [MenuItem(RootMenuPath + ButtonsCategory + "ButtonWithImage", false, 0)]
     public static void CreateButtonWithImage()
     {
         InstantiatePrefab(ButtonWithImagePrefabPath);
     }
 
-    [MenuItem(RootMenuPath + DropdownsCategory + "DropdownTrigger")]
+    [MenuItem(RootMenuPath + DropdownsCategory + "DropdownTrigger", false, 0)]
     public static void CreateDropdownTrigger()
     {
         InstantiatePrefab(DropdownTriggerPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCunt")]
+    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCunt", false, 0)]
     public static void CreateCoinsCount()
     {
         InstantiatePrefab(CoinsCountPrefabPath);
     }  
     
-    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCuntWithDifference")]
+    [MenuItem(RootMenuPath + CoinsCategory + "CoinsCuntWithDifference", false, 0)]
     public static void CreateCoinsCountWithDifference()
     {
         InstantiatePrefab(CoinsCountWithDifferencePrefabPath);
     }
     
-    [MenuItem(RootMenuPath + CoinsCategory + "AccentButtonWithCoinsCount")]
+    [MenuItem(RootMenuPath + CoinsCategory + "AccentButtonWithCoinsCount", false, 0)]
     public static void CreateAccentButtonWithCoinsCount()
     {
         InstantiatePrefab(AccentButtonWithCoinsCount);
