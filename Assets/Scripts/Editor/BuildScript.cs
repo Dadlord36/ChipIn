@@ -13,9 +13,19 @@ public static class BuildScript
     private const string ReleaseI2CPP_x64 = "_Release_IL2CPP_ARM64";
     private const string DevelopmentMono_x32 = "_Development_ARMv7";
     private const string FolderRoot = @"D:\UnityProjects\chip-in\Builds\Android\";
+    
+    private const string iOSBuildsPath = "~/Desktop/";
 
 
     private const string KeyStorePassword = "TtZWc6#7TK@r";
+    
+    [MenuItem("Builds/Build For iOS")]
+    public static void BuildFor_iOS() 
+    {
+        PlayerSettings.applicationIdentifier = "com.fruktorum.unity";
+        BuildPipeline.BuildPlayer(DefaultScene,$"{iOSBuildsPath}{AppName}", BuildTarget.iOS, BuildOptions.None);
+    }
+
 
     [MenuItem("Builds/DeployToAndroid_Mono_Development_ARMv7")]
     public static void DeployToAndroid_Mono_Development_ARMv7()
