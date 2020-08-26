@@ -18,7 +18,7 @@ namespace Views
             base.OnBeingSwitchedTo();
             try
             {
-                await userInterestPagesListAdapter.Initialize();
+                await userInterestPagesListAdapter.ResetAsync();
             }
             catch (Exception e)
             {

@@ -13,6 +13,13 @@ namespace RequestsStaticProcessors
     public static class CommunitiesStaticRequestsProcessor
     {
         public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
+            GetCommunitiesListByName(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, in string searchForString)
+        {
+            return new CommunitiesListGetProcessor(out cancellationTokenSource, requestHeaders, searchForString)
+                .SendRequest("Communities data was retrieved successfully");
+        }
+        
+        public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             GetCommunitiesList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             return new CommunitiesListGetProcessor(out cancellationTokenSource, requestHeaders)
@@ -41,5 +48,7 @@ namespace RequestsStaticProcessors
             return new CommunityDetailsGetProcessor(out cancellationTokenSource, requestHeaders, communityId).SendRequest(
                 "Community details data was retrieved");
         }
+
+
     }
 }

@@ -2,13 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Views;
-using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {

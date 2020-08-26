@@ -3,6 +3,7 @@ using DataModels;
 using Repositories.Remote;
 using UnityWeld.Binding;
 using ViewModels.Cards;
+using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 using Views.ViewElements.ScrollViews.ViewHolders;
 
