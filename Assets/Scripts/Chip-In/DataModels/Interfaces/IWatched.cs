@@ -4,6 +4,6 @@ namespace DataModels.Interfaces
 {
     public interface IWatched
     {
-        [JsonProperty("watched")] bool Watched { get; set; }
+        [JsonProperty("watched", NullValueHandling = NullValueHandling.Ignore)] bool Watched { get; set; }
     }
 }
