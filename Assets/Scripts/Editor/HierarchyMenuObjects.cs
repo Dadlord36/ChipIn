@@ -21,7 +21,8 @@ public static class HierarchyMenuObjects
     private const string NeutralButtonPath = "Assets/Prefabs/Common/Buttons/[Button] Neutral.prefab";
     private const string AccentButtonPath = "Assets/Prefabs/Common/Buttons/[Button] Accent.prefab";
     private const string ClickableAreaPrefabPath = "Assets/Prefabs/Common/Buttons/[InteractiveArea] ClickableArea.prefab";
-    private const string ButtonWithImagePrefabPath = "Assets/Prefabs/Common/Buttons/[Button-Image].prefab";
+    private const string ClickableAreaWithImagePrefabPath = "Assets/Prefabs/Common/Buttons/[InteractiveArea] ClickableAreaWithImage.prefab";
+    private const string ButtonImageWithSwitchableColorPrefabPath = "Assets/Prefabs/Common/Buttons/[Button-Image].prefab";
     private const string AccentButtonWithCoinsCount = "Assets/Prefabs/Common/Coins/[Button] Accent With CoinsCounter.prefab";
 
     private const string MultiOptionsSelectionPanelPrefabPath = "Assets/Prefabs/Common/OptionsSelection/[Selection Panel] MultiOptionsSelectionPanel.prefab";
@@ -112,10 +113,10 @@ public static class HierarchyMenuObjects
         InstantiatePrefab(TitledSingeLineInputFieldPrefabPath);
     }
 
-    [MenuItem(RootMenuPath + ButtonsCategory + "ButtonWithImage", false, 0)]
-    public static void CreateButtonWithImage()
+    [MenuItem(RootMenuPath + ButtonsCategory + "ButtonImageWithSwitchableColor", false, 0)]
+    public static void CreateButtonImageWithSwitchableColor()
     {
-        InstantiatePrefab(ButtonWithImagePrefabPath);
+        InstantiatePrefab(ButtonImageWithSwitchableColorPrefabPath);
     }
 
     [MenuItem(RootMenuPath + DropdownsCategory + "DropdownTrigger", false, 0)]
@@ -141,4 +142,11 @@ public static class HierarchyMenuObjects
     {
         InstantiatePrefab(AccentButtonWithCoinsCount);
     }
+
+    [MenuItem(RootMenuPath + ButtonsCategory + "ClickableAreaWithImage", false, 0)]
+    public static void CreateClickableAreaWithImage()
+    {
+        InstantiatePrefab(ClickableAreaWithImagePrefabPath);
+    }
+    
 }
