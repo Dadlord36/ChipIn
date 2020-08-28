@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1792477889697987642}
   - component: {fileID: 2366270655345530746}
-  - component: {fileID: 8770455882211110383}
+  - component: {fileID: 6264892942118879407}
+  - component: {fileID: 6417586702356919319}
   m_Layer: 5
   m_Name: '[Button-Image]'
   m_TagString: Untagged
@@ -25,7 +26,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5908124290889701280}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -47,7 +48,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5908124290889701280}
   m_CullTransparentMesh: 0
---- !u!114 &8770455882211110383
+--- !u!114 &6264892942118879407
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -56,10 +57,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 5908124290889701280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22452e964af942a78a7eeb124bd7ac56, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pointerClicked:
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 48539749931133946}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6417586702356919319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5908124290889701280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a39e77590c9943e799c4e08b06549b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canBeUntoggle: 1
+  toggleClicked:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &6359178769792514001
@@ -147,8 +192,11 @@ GameObject:
   - component: {fileID: 7251081568629136815}
   - component: {fileID: 438297576726539708}
   - component: {fileID: 6775008421304548801}
-  - component: {fileID: 390270188658267775}
+  - component: {fileID: 4839188671495772356}
   - component: {fileID: 2169407820638499540}
+  - component: {fileID: 2433520121999698867}
+  - component: {fileID: 3638222033681055873}
+  - component: {fileID: 3271277651371815203}
   m_Layer: 5
   m_Name: '[Image] Icon'
   m_TagString: Untagged
@@ -196,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1882353, g: 0.19607843, b: 0.2509804, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -212,7 +260,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &390270188658267775
+--- !u!114 &4839188671495772356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,11 +269,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6366015702530558341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f13256a3bf7440a8068488916ee837d, type: 3}
+  m_Script: {fileID: 11500000, guid: 7add40cd16734f7993d09c5f12c2b598, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainColor: {r: 0.1882353, g: 0.19607843, b: 0.2509804, a: 1}
-  secondaryColor: {r: 1, g: 0.5647059, b: 0.11372549, a: 1}
+  colorsPairParameter: {fileID: 11400000, guid: 1ae202a2179c1224f9ad9276d60313d6,
+    type: 2}
 --- !u!114 &2169407820638499540
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,5 +288,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Controllers.SwitchableColor.SelectedColor
+  viewModelPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.SelectedColor
   viewPropertyName: UnityEngine.UI.Image.color
+--- !u!114 &2433520121999698867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6366015702530558341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.InitialColor
+  viewPropertyName: UnityEngine.UI.Image.color
+--- !u!114 &3638222033681055873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6366015702530558341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.Toggle.IsToggled
+  viewPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.IsSwitched
+--- !u!114 &3271277651371815203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6366015702530558341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.Toggle.IsToggled
+  viewPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.InitialState
