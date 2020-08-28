@@ -33,7 +33,7 @@ namespace ViewModels
             ThisView.SetRadarData(new RadarData {Max = max, Points = array});
         }
 
-        private void Update()
+        private void Start()
         {
             DebugPoints();
         }
