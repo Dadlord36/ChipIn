@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
@@ -17,7 +16,8 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
-    public class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> : OSA<TParams, TItemViewHolder>,
+    [Binding]
+    public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> : OSA<TParams, TItemViewHolder>,
         INotifyPropertyChanged
         where TItemViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
         where TParams : BaseParamsWithPrefab
@@ -52,9 +52,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             Tag = GetType().Name;
         }
 
-        protected override void OnInitialized()
+        protected override void Awake()
         {
-            base.OnInitialized();
+            base.Awake();
             _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
             Data = new SimpleDataHelper<TDataType>(this);
         }

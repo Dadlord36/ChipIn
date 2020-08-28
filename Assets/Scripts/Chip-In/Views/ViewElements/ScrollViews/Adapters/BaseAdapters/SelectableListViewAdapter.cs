@@ -1,28 +1,24 @@
 ﻿using Com.TheFallenGames.OSA.Core;
+using Com.TheFallenGames.OSA.CustomParams;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using Repositories.Interfaces;
-using Repositories.Remote;
 using UnityEngine.Events;
 using UnityWeld.Binding;
-using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
-namespace Views.ViewElements.ScrollViews.Adapters
+namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
-    [Binding]
-    public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
-        TFillingViewAdapter> : RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>
+    public abstract class SelectableListViewAdapter<TOSAPrams, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>
+        : BasedListAdapter<TOSAPrams, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>
+        where TOSAPrams : BaseParamsWithPrefab
         where TDataType : class
         where TViewConsumableData : class
-        where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
     {
         public UnityEvent itemSelected;
 
-        [Binding]
-        public uint SelectedIndex { get; set; }
+        [Binding] public uint SelectedIndex { get; set; }
 
         protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
         {

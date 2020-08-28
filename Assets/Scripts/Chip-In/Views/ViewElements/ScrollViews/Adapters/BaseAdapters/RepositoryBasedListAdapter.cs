@@ -18,9 +18,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     {
         Task ResetAsync();
     }
-    
+
     [Binding]
-    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
+    public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
         TFillingViewAdapter> : BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>,
         IResettableAsync
         where TDataType : class
@@ -30,11 +30,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
         [SerializeField] private TRepository pagesPaginatedRepository;
-        
+
 
         public event Action StartedFetching;
         public event Action EndedFetching;
-        
+
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
 
@@ -52,7 +52,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         public Task ResetAsync()
         {
             ResetStateVariables();
-            
+
             if (Data.Count > 0)
             {
                 Data.RemoveItemsFromStart(Data.Count);
@@ -156,8 +156,5 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             EndedFetching?.Invoke();
         }
-
-
-        
     }
 }
