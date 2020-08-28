@@ -1,28 +1,99 @@
-﻿using ViewModels.Basic;
+﻿using System;
+using System.Threading.Tasks;
+using GlobalVariables;
+using Repositories.Remote.Paginated;
+using UnityEngine;
+using UnityWeld.Binding;
+using Utilities;
+using ViewModels.Basic;
 using Views;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
-
+    [Binding]
     public class UserInterestPagesViewModel : CorrespondingViewsSwitchingViewModel<UserInterestPagesView>
     {
+        [SerializeField] private UserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
+
+        #region Controlled List Adapters
+
+        [SerializeField] private UserInterestPagesListAdapter allInterestPagesListAdapter;
+        [SerializeField] private UserInterestPagesListAdapter joinInInterestPagesListAdapter;
+        [SerializeField] private UserInterestPagesListAdapter myInterestPagesListAdapter;
+
+        #endregion
+
+        private int _selectedFilterIndex;
+
+        [Binding]
+        public int SelectedFilterIndex
+        {
+            get => _selectedFilterIndex;
+            set
+            {
+                _selectedFilterIndex = value;
+                try
+                {
+                    RefreshCorrespondingListViewAsync(value);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
+                    throw;
+                }
+            }
+        }
+
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
 
-        /*protected override void OnEnable()
+        protected override void OnBecomingActiveView()
         {
-            base.OnEnable();
-            SubscribeOnEvents();
+            base.OnBecomingActiveView();
+            try
+            {
+                RefreshCorrespondingListViewAsync(SelectedFilterIndex);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
-        protected override void OnDisable()
+        private async void RefreshCorrespondingListViewAsync(int selectedFilterIndex)
         {
-            base.OnDisable();
-            UnsubscribeFromEvents();
-        }*/
+            UserInterestPagesListAdapter controllingAdapter;
+            switch (((MainNames.InterestCategory) selectedFilterIndex))
+            {
+                case MainNames.InterestCategory.all:
+                    controllingAdapter = allInterestPagesListAdapter;
+                    break;
+                case MainNames.InterestCategory.@join:
+                    controllingAdapter = joinInInterestPagesListAdapter;
+                    break;
+                case MainNames.InterestCategory.my:
+                    controllingAdapter = myInterestPagesListAdapter;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-
- 
+            try
+            {
+                await controllingAdapter.ResetAsync();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
     }
 }

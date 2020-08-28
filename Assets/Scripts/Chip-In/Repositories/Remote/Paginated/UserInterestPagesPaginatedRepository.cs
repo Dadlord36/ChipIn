@@ -5,8 +5,8 @@ using DataModels;
 using DataModels.Common;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
+using GlobalVariables;
 using HttpRequests.RequestsProcessors;
-using Repositories.Local.SingleItem;
 using RequestsStaticProcessors;
 using UnityEngine;
 
@@ -18,28 +18,22 @@ namespace Repositories.Remote.Paginated
     public class UserInterestPagesPaginatedRepository : PaginatedItemsListRepository<UserInterestPageDataModel, UserInterestPagesResponseDataModel,
         IUserInterestPagesResponseModel>
     {
-        [SerializeField] private SelectedUserInterestRepository selectedUserInterestRepository;
         protected override string Tag => nameof(UserInterestPagesPaginatedRepository);
-        private Task<int?> SelectedCommunityId => selectedUserInterestRepository.SelectedUserInterestId;
-        
+        public int SelectedCommunityId { get; set; }
+        public int SelectedFilterIndex { get; set; }
+
+        private string SelectedCategory => ((MainNames.InterestCategory) SelectedFilterIndex).ToString();
 
         protected override Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-
-            DisposableCancellationTokenSource cancellationTokenSourceLocal = null;
-
-            var task = SelectedCommunityId.ContinueWith(selectedCommunityIdGetTask =>
-                    CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSourceLocal,
-                        authorisationDataRepository, selectedCommunityIdGetTask.GetAwaiter().GetResult().Value, paginatedRequestData),
-                TaskContinuationOptions.OnlyOnRanToCompletion).Unwrap();
-
-            cancellationTokenSource = cancellationTokenSourceLocal;
-            return task;
+            return CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSource, authorisationDataRepository, SelectedCommunityId,
+                SelectedCategory, paginatedRequestData);
         }
 
         protected override List<UserInterestPageDataModel> GetItemsFromResponseModelInterface(IUserInterestPagesResponseModel pagesResponseModelInterface)
         {
+            if (pagesResponseModelInterface.Interests == null) return null;
             return new List<UserInterestPageDataModel>(pagesResponseModelInterface.Interests);
         }
     }

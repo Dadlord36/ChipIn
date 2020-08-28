@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Specialized;
+using System.Net.Http;
 using Common;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
@@ -12,10 +13,21 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         IUserInterestPagesResponseModel>
     {
         public CommunityClientsInterestsPaginatedGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
-            IRequestHeaders requestHeaders, int communityId, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource,
-            ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[] {communityId.ToString(),
-                ApiCategories.Subcategories.Interests}, paginatedRequestData.ConvertPaginationToNameValueCollection())
+            IRequestHeaders requestHeaders, int communityId, string categoryName, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource,
+            ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[]
+            {
+                communityId.ToString(),
+                ApiCategories.Subcategories.Interests
+            }, CreateNameValueCollection(categoryName, paginatedRequestData)
+        )
         {
+        }
+
+        private static NameValueCollection CreateNameValueCollection(in string categoryName, PaginatedRequestData paginatedRequestData)
+        {
+            var collection = paginatedRequestData.ConvertPaginationToNameValueCollection();
+            collection.Add(MainNames.ModelsPropertiesNames.Category, categoryName);
+            return collection;
         }
     }
 }

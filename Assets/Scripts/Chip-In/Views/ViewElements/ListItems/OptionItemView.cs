@@ -39,13 +39,19 @@ namespace Views.ViewElements.ListItems
                 OnPropertyChanged();
             }
         }
+        
+        public int Index { get; set; }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            SetInitialState(IsSelected);
+        }
 
         public void SetInitialState(bool state)
         {
-            _isSelected = state;
+            InitialState = state;
         }
-
-        public int Index { get; set; }
 
         private void OnSelected()
         {

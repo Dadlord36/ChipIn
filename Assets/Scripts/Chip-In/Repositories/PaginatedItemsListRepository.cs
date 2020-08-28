@@ -192,8 +192,7 @@ namespace Repositories
         public override async Task LoadDataFromServer()
         {
             const int initialPage = 1;
-            var firstPageResponse =
-                await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(initialPage, itemsPerPage))
+            var firstPageResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(initialPage, itemsPerPage))
                     .ConfigureAwait(false);
 
             bool CheckIfRequestIsSuccessful(

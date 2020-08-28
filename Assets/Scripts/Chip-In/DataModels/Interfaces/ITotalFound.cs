@@ -4,6 +4,6 @@ namespace DataModels.Interfaces
 {
     public interface ITotalFound
     {
-        [JsonProperty("total_fund")] string TotalFound { get; set; }
+        [JsonProperty("total_fund")] int TotalFound { get; set; }
     }
 }

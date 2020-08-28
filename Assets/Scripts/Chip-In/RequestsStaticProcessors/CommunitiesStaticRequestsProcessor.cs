@@ -7,6 +7,7 @@ using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Repositories.Remote;
 
 namespace RequestsStaticProcessors
 {
@@ -18,7 +19,7 @@ namespace RequestsStaticProcessors
             return new CommunitiesListGetProcessor(out cancellationTokenSource, requestHeaders, searchForString)
                 .SendRequest("Communities data was retrieved successfully");
         }
-        
+
         public static Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             GetCommunitiesList(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
@@ -45,10 +46,8 @@ namespace RequestsStaticProcessors
         public static Task<BaseRequestProcessor<object, InterestDetailsResponseDataModel, IInterestDetailsResponseModel>.HttpResponse>
             GetCommunityDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int communityId)
         {
-            return new CommunityDetailsGetProcessor(out cancellationTokenSource, requestHeaders, communityId).SendRequest(
-                "Community details data was retrieved");
+            return new CommunityDetailsGetProcessor(out cancellationTokenSource, requestHeaders, communityId)
+                .SendRequest("Community details data was retrieved");
         }
-
-
     }
 }

@@ -2,31 +2,42 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Common.Interfaces;
+using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
 using Tasking;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using Utilities;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class InterestItemViewModel : MonoBehaviour, INotifyPropertyChanged, IFillingView<InterestItemViewModel.FieldFillingData>
+    public sealed class InterestItemViewModel : MonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+        IFillingView<InterestItemViewModel.FieldFillingData>
     {
+        public event Action<uint> ItemSelected;
+        public uint IndexInOrder { get; set; }
+        public uint InterestIndex { get; private set; }
+
         public class FieldFillingData
         {
             public readonly Task<Sprite> LoadIconTask;
             public readonly string Description;
+            public readonly int InterestIndex;
 
-            public FieldFillingData(Task<Sprite> loadLoadIconTaskTask, string description)
+            public FieldFillingData(Task<Sprite> loadLoadIconTaskTask, string description, int interestIndex)
             {
                 LoadIconTask = loadLoadIconTaskTask;
                 Description = description;
+                InterestIndex = interestIndex;
             }
         }
 
         private const string Tag = nameof(InterestItemViewModel);
+        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         private string _text;
         private Sprite _icon;
@@ -59,13 +70,13 @@ namespace ViewModels.Cards
         {
             try
             {
+                _asyncOperationCancellationController.CancelOngoingTask();
+                InterestIndex = (uint) data.InterestIndex;
+                Text = data.Description;
+
                 var iconSprite = await data.LoadIconTask;
 
-                TasksFactories.ExecuteOnMainThread(delegate
-                {
-                    Icon = iconSprite;
-                    Text = data.Description;
-                });
+                TasksFactories.ExecuteOnMainThread(delegate { Icon = iconSprite; });
             }
             catch (OperationCanceledException)
             {
@@ -76,6 +87,16 @@ namespace ViewModels.Cards
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            OnItemSelected();
+        }
+
+        private void OnItemSelected()
+        {
+            ItemSelected?.Invoke(InterestIndex);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -15,13 +15,12 @@ namespace Repositories.Remote.Paginated
     [CreateAssetMenu(
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(Paginated) + "/" + nameof(InterestsBasicDataPaginatedListRepository),
         fileName = "Create " + nameof(InterestsBasicDataPaginatedListRepository), order = 0)]
-    public class InterestsBasicDataPaginatedListRepository : PaginatedItemsListRepository<InterestBasicDataModel,
-        CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
+    public class InterestsBasicDataPaginatedListRepository : PaginatedItemsListRepository<InterestBasicDataModel, CommunitiesBasicDataRequestResponse,
+        ICommunitiesBasicDataRequestResponse>
     {
         protected override string Tag => nameof(InterestsBasicDataPaginatedListRepository);
 
-        protected override Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>
-                .HttpResponse>
+        protected override Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
             return CommunitiesStaticRequestsProcessor.GetUserCommunitiesPaginatedList(out cancellationTokenSource, authorisationDataRepository,
