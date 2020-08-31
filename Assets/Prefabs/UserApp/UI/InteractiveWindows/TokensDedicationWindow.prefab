@@ -14,21 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelMethodName: Views.InteractiveWindows.TokensDedicationViewModel.ConfirmButton_OnClick
   viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &7429020934695982730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7468253729552146392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f9fde1c7aeb496f9d06b7c7e6e22bdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  amountConfirmed:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!223 &6985711170568027014
 Canvas:
   m_ObjectHideFlags: 0
@@ -50,6 +35,38 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 99
   m_TargetDisplay: 0
+--- !u!114 &7429020934695982730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7468253729552146392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f9fde1c7aeb496f9d06b7c7e6e22bdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  amountConfirmed:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4531050383287631410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7468253729552146392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &3042775693582426163
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +566,11 @@ PrefabInstance:
     - target: {fileID: 6519983587413827498, guid: babc28239541d2f498295cb7fd336d17,
         type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6519983587413827498, guid: babc28239541d2f498295cb7fd336d17,
+        type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6519983587413827498, guid: babc28239541d2f498295cb7fd336d17,
