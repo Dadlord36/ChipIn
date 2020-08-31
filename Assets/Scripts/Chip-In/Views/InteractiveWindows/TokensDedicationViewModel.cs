@@ -11,20 +11,20 @@ namespace Views.InteractiveWindows
     public sealed class TokensDedicationViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         private const string Tag = nameof(TokensDedicationViewModel);
-        
-        private int _number;
+
+        private int _numberAsInt;
 
         public IntUnityEvent amountConfirmed;
-        
-        
+
+
         [Binding]
-        public int Number
+        public string NumberAsString
         {
-            get => _number;
+            get => _numberAsInt.ToString();
             set
             {
-                if (value == _number) return;
-                _number = value;
+                if (string.IsNullOrEmpty(value) || value == NumberAsString) return;
+                _numberAsInt = int.Parse(value);
                 OnPropertyChanged();
             }
         }
@@ -32,7 +32,7 @@ namespace Views.InteractiveWindows
         [Binding]
         public void ConfirmButton_OnClick()
         {
-            OnAmountConfirmed(Number);
+            OnAmountConfirmed(_numberAsInt);
         }
 
         private void OnAmountConfirmed(int value)
@@ -48,6 +48,5 @@ namespace Views.InteractiveWindows
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
     }
 }
