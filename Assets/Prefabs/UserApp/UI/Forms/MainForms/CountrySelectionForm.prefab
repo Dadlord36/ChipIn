@@ -44,8 +44,8 @@ MonoBehaviour:
   newItemSelected:
     m_PersistentCalls:
       m_Calls: []
-  container: {fileID: 2651245160855998603}
   prefab: {fileID: 1181394728206784620, guid: 291a84268bebc12438ed894c4279a612, type: 3}
+  container: {fileID: 2651245160855998603}
   itemsAmount: 3
 --- !u!114 &2000350962963268732
 MonoBehaviour:
@@ -69,20 +69,6 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
---- !u!114 &7784097322400058887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3833596457714274745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.SelectButton_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &7388995333625294282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +82,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: ViewModels.Basic.OptionSelectionViewModel.ConfirmButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
+--- !u!114 &7784097322400058887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3833596457714274745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.SelectButton_OnClick
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &1968138179292348728
 MonoBehaviour:
@@ -235,6 +235,11 @@ PrefabInstance:
         type: 3}
       propertyPath: mLocalizeTarget
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1204052577529180608, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -700,6 +705,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OptionItemWithHighlightedText
       objectReference: {fileID: 0}
+    - target: {fileID: 7526532140252395449, guid: 291a84268bebc12438ed894c4279a612,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4036580451761995922, guid: 291a84268bebc12438ed894c4279a612, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 291a84268bebc12438ed894c4279a612, type: 3}
@@ -836,6 +846,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: OptionItemWithHighlightedText
       objectReference: {fileID: 0}
+    - target: {fileID: 7526532140252395449, guid: 291a84268bebc12438ed894c4279a612,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4036580451761995922, guid: 291a84268bebc12438ed894c4279a612, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 291a84268bebc12438ed894c4279a612, type: 3}
@@ -971,6 +986,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: OptionItemWithHighlightedText
+      objectReference: {fileID: 0}
+    - target: {fileID: 7526532140252395449, guid: 291a84268bebc12438ed894c4279a612,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4036580451761995922, guid: 291a84268bebc12438ed894c4279a612, type: 3}
