@@ -29,6 +29,11 @@ namespace Views.InteractiveWindows
             }
         }
 
+        private void OnEnable()
+        {
+            NumberAsString = "0";
+        }
+
         [Binding]
         public void ConfirmButton_OnClick()
         {
