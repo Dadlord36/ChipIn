@@ -22,7 +22,7 @@ namespace Views.ViewElements
             get => _isToggled;
             set
             {
-                if (value == _isToggled) return;
+                // if (value == _isToggled) return;
                 _isToggled = value;
                 OnPropertyChanged();
             }

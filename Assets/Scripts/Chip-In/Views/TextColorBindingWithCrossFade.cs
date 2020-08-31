@@ -23,7 +23,6 @@ namespace Views
             get => textField.color;
             set
             {
-                if (value == _selectedColor) return;
                 _selectedColor = value;
                 CrossFadeInstantly(value);
             }
