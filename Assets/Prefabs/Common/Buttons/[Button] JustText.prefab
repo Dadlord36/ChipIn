@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2116287327539446899}
   - component: {fileID: 6546831508456565064}
+  - component: {fileID: 1483731804765038907}
   - component: {fileID: 772713447687022741}
   m_Layer: 0
   m_Name: '[Button] JustText'
@@ -46,6 +47,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 307773157740667848}
   m_CullTransparentMesh: 0
+--- !u!114 &1483731804765038907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307773157740667848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51db53697a53f7a479b8570674dae649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &772713447687022741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +105,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 577633612520125185}
+  m_TargetGraphic: {fileID: 1483731804765038907}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
