@@ -7,17 +7,13 @@ using Utilities;
 
 namespace Repositories.Remote
 {
-    [CreateAssetMenu(fileName = nameof(OffersRemoteRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(OffersRemoteRepository), order = 0)]
     public class OffersRemoteRepository : BaseNotPaginatedListRepository<ChallengingOfferWithIdentifierModel>
     {
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-
         public override async Task LoadDataFromServer()
         {
             try
             {
-                var result = await OffersStaticRequestProcessor.TryGetListOfOffers(out TasksCancellationTokenSource, authorisationDataRepository);
+                var result = await OffersStaticRequestProcessor.TryGetListOfOffers(out TasksCancellationTokenSource, AuthorisationDataRepository);
                 ItemsLiveData.AddRange(result.ResponseModelInterface.Offers);
                 ConfirmDataLoading();
             }
@@ -25,6 +21,10 @@ namespace Repositories.Remote
             {
                 LogUtility.PrintLogException(e);
             }
+        }
+
+        public OffersRemoteRepository(IUserAuthorisationDataRepository authorisationDataRepositoryInterface) : base(authorisationDataRepositoryInterface)
+        {
         }
     }
 }

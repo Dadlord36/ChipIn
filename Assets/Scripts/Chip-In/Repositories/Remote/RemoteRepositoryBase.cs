@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Behaviours;
 using Repositories.Interfaces;
-using ScriptableObjects;
 
 namespace Repositories.Remote
 {
-    public abstract class RemoteRepositoryBase : AsyncOperationsScriptableObject, IDataSynchronization
+    public abstract class RemoteRepositoryBase : AsyncOperationsMonoBehaviour, IDataSynchronization
     {
+        protected readonly IUserAuthorisationDataRepository AuthorisationDataRepository;
+
+        public RemoteRepositoryBase(IUserAuthorisationDataRepository authorisationDataRepositoryInterface)
+        {
+            AuthorisationDataRepository = authorisationDataRepositoryInterface;
+        }
+        
         #region EventsDeclaration
         public event Action DataWasLoaded;
         public event Action DataWasSaved;

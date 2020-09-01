@@ -27,7 +27,7 @@ namespace Repositories.Remote.Paginated
         protected override Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-            return CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSource, authorisationDataRepository, SelectedCommunityId,
+            return CommunitiesInterestsStaticProcessor.GetClientsInterestPages(out cancellationTokenSource, AuthorisationDataRepository, SelectedCommunityId,
                 SelectedCategory, paginatedRequestData);
         }
 

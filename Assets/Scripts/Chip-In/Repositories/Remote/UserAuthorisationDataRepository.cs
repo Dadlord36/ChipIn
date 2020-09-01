@@ -6,6 +6,7 @@ using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using Encryption;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Utilities;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,11 +15,16 @@ using UnityEditor;
 
 namespace Repositories.Remote
 {
-    [CreateAssetMenu(fileName = nameof(UserAuthorisationDataRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserAuthorisationDataRepository),
-        order = 0)]
-    public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserProfileRequestHeadersProvider,
-        IClearable
+    public interface IUserAuthorisationDataRepository : IUserProfileRequestHeadersProvider, IClearable
+    {
+        string UserRole { get; }
+        void SetUserRole(string userRole);
+        void TrySaveDataLocally();
+        void TryLoadLocalData();
+        bool CheckIfUserWasLoggedInPreviously();
+    }
+    
+    public sealed class UserAuthorisationDataRepository : IUserAuthorisationDataRepository
     {
 #if UNITY_EDITOR
         // Add a menu item named "Do Something" to MyMenu in the menu bar.

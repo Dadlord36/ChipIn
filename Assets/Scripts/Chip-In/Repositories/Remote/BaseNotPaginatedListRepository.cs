@@ -16,5 +16,9 @@ namespace Repositories.Remote
             add => ItemsLiveData.CollectionChanged += value;
             remove => ItemsLiveData.CollectionChanged -= value;
         }
+
+        protected BaseNotPaginatedListRepository(IUserAuthorisationDataRepository authorisationDataRepositoryInterface) : base(authorisationDataRepositoryInterface)
+        {
+        }
     }
 }

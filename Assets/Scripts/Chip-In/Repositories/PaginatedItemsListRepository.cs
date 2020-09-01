@@ -14,8 +14,7 @@ using Utilities;
 namespace Repositories
 {
     public abstract class PaginatedItemsListRepository<TDataType, TRequestResponseDataModel,
-        TRequestResponseModelInterface> : RemoteRepositoryBase,
-        IPaginatedItemsListRepository<TDataType>
+        TRequestResponseModelInterface> : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
         where TDataType : class
         where TRequestResponseDataModel : class, TRequestResponseModelInterface
         where TRequestResponseModelInterface : class
@@ -23,7 +22,6 @@ namespace Repositories
         [Space(25f)] [SerializeField] protected int itemsPerPage;
         [SerializeField] protected byte maxCachedPagesCount;
         [SerializeField] protected byte pagesPortion;
-        [SerializeField] protected UserAuthorisationDataRepository authorisationDataRepository;
 
         [NonSerialized] private PaginatedList<TDataType> _paginatedData = new PaginatedList<TDataType>();
 
@@ -44,11 +42,9 @@ namespace Repositories
         public uint GetCorrespondingToIndexPage(uint pageItemIndex) => CalculatePageNumberForGivenIndex(pageItemIndex);
 
         #endregion
-
-        protected override void CancelOngoingTask()
+        
+        protected PaginatedItemsListRepository(IUserAuthorisationDataRepository authorisationDataRepositoryInterface) : base(authorisationDataRepositoryInterface)
         {
-            base.CancelOngoingTask();
-            CancelAllTasks();
         }
 
         #region Public Methods
@@ -368,5 +364,7 @@ namespace Repositories
         }
 
         #endregion
+
+ 
     }
 }

@@ -23,7 +23,7 @@ namespace Repositories.Remote.Paginated
         protected override Task<BaseRequestProcessor<object, CommunitiesBasicDataRequestResponse, ICommunitiesBasicDataRequestResponse>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-            return CommunitiesStaticRequestsProcessor.GetUserCommunitiesPaginatedList(out cancellationTokenSource, authorisationDataRepository,
+            return CommunitiesStaticRequestsProcessor.GetUserCommunitiesPaginatedList(out cancellationTokenSource, AuthorisationDataRepository,
                 paginatedRequestData);
         }
 
