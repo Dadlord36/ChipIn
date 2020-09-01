@@ -151,7 +151,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private Task StartPreFetchingAsync(uint additionalItems)
         {
-            // OnStartedFetching();
+            OnStartedFetching();
             return FetchItemModelsFromServerAsync(additionalItems);
         }
 
@@ -167,7 +167,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
 
             ItemsListIsEmpty = Data.Count == 0;
-            // OnEndedFetching();
+            OnEndedFetching();
         }
 
         private void OnStartedFetching()
