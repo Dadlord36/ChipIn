@@ -49,7 +49,7 @@ namespace Repositories
             return Task.FromResult<IReadOnlyList<TDataType>>(_dataList.GetRange((int) startIndex, (int) length));
         }
 
-        public Task<TDataType> CreateGetItemWithIndexTask(uint itemIndex)
+        public Task<TDataType> GetItemWithIndexAsync(uint itemIndex)
         {
             return Task.FromResult(_dataList[(int) itemIndex]);
         }

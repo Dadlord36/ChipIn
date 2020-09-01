@@ -16,7 +16,7 @@ namespace ViewModels.Basic
 
         [SerializeField] private BaseView view;
         protected readonly AsyncOperationCancellationController OperationCancellationController = new AsyncOperationCancellationController();
-        private static AwaitingProcessVisualizerController MainAwaitingProcessVisualizerController => GameManager.MainAwaitingProcessVisualizerController;
+        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
 
         private bool _awaitingProcess;
 
@@ -29,9 +29,9 @@ namespace ViewModels.Basic
                 if (value == _awaitingProcess) return;
                 _awaitingProcess = value;
                 if (value)
-                    MainAwaitingProcessVisualizerController.Show();
+                    MainAwaitingProcessVisualizerControllerScriptable.Show();
                 else
-                    MainAwaitingProcessVisualizerController.Hide();
+                    MainAwaitingProcessVisualizerControllerScriptable.Hide();
             }
         }
 

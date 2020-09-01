@@ -7,6 +7,7 @@ using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityWeld.Binding;
 using Utilities;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
@@ -32,8 +33,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         [SerializeField] private TRepository pagesPaginatedRepository;
 
 
-        public event Action StartedFetching;
-        public event Action EndedFetching;
+        public UnityEvent startedFetching;
+        public UnityEvent endedFetching;
 
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
@@ -49,7 +50,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             _retrievingItemsStartingIndex = 0;
         }
 
-        public Task ResetAsync()
+        public async Task ResetAsync()
         {
             ResetStateVariables();
 
@@ -59,7 +60,24 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
 
             pagesPaginatedRepository.Clear();
-            return pagesPaginatedRepository.LoadDataFromServer();
+            OnStartedFetching();
+            try
+            {
+                await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(true);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            finally
+            {
+                OnEndedFetching();
+            }
         }
 
         private void SetInteractivity(bool state)
@@ -110,7 +128,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 _fetching = true;
-                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
+                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -133,7 +151,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private Task StartPreFetchingAsync(uint additionalItems)
         {
-            StartedFetching?.Invoke();
+            // OnStartedFetching();
             return FetchItemModelsFromServerAsync(additionalItems);
         }
 
@@ -144,17 +162,22 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 .ConfigureAwait(true);
             _retrievingItemsStartingIndex += (uint) items.Count;
             _loadedAll = Data.Count == TotalCapacity;
-            OnPreFetchingFinished(items);
-        }
 
-        private void OnPreFetchingFinished(IReadOnlyCollection<TDataType> models)
-        {
-            if (models.Count > 0)
-                Data.InsertItemsAtEnd(models as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
+            if (items.Count > 0)
+                Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
 
             ItemsListIsEmpty = Data.Count == 0;
+            // OnEndedFetching();
+        }
 
-            EndedFetching?.Invoke();
+        private void OnStartedFetching()
+        {
+            startedFetching?.Invoke();
+        }
+
+        private void OnEndedFetching()
+        {
+            endedFetching?.Invoke();
         }
     }
 }

@@ -14,8 +14,7 @@ using Utilities;
 namespace Repositories
 {
     public abstract class PaginatedItemsListRepository<TDataType, TRequestResponseDataModel,
-        TRequestResponseModelInterface> : RemoteRepositoryBase,
-        IPaginatedItemsListRepository<TDataType>
+        TRequestResponseModelInterface> : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
         where TDataType : class
         where TRequestResponseDataModel : class, TRequestResponseModelInterface
         where TRequestResponseModelInterface : class
@@ -160,7 +159,7 @@ namespace Repositories
             return Task.FromResult(GetItemsFromPaginatedData());
         }
 
-        public Task<TDataType> CreateGetItemWithIndexTask(uint itemIndex)
+        public async Task<TDataType> GetItemWithIndexAsync(uint itemIndex)
         {
             var pageNumber = CalculatePageNumberForGivenIndex(itemIndex);
             if (!PageIsValid(pageNumber)) throw new ArgumentOutOfRangeException($"Page {itemIndex} is not valid");
@@ -172,28 +171,19 @@ namespace Repositories
                 return page[itemNumber];
             }
 
-            if (!_paginatedData.PageExists(pageNumber))
-            {
-                var cancellationSource = new DisposableCancellationTokenSource();
-                var taskToReturn = CreateLoadAndStorePageItemsTask(pageNumber).ContinueWith(delegate
-                    {
-                        if (!_paginatedData.PageExists(pageNumber))
-                            throw new ArgumentOutOfRangeException($"Page {itemIndex} is not exists");
-                        return GetPageItem(pageNumber, itemIndex);
-                    }, cancellationSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
-                RegisterAsyncTaskExecution(taskToReturn, cancellationSource);
-                return taskToReturn;
-            }
+            if (_paginatedData.PageExists(pageNumber)) return GetPageItem(pageNumber, itemIndex);
 
-            return Task.FromResult(GetPageItem(pageNumber, itemIndex));
+            await CreateLoadAndStorePageItemsTask(pageNumber).ConfigureAwait(false);
+            if (!_paginatedData.PageExists(pageNumber))
+                throw new ArgumentOutOfRangeException($"Page {itemIndex} is not exists");
+            return GetPageItem(pageNumber, itemIndex);
         }
 
         public override async Task LoadDataFromServer()
         {
             const int initialPage = 1;
             var firstPageResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(initialPage, itemsPerPage))
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             bool CheckIfRequestIsSuccessful(
                 BaseRequestProcessor<object, TRequestResponseDataModel, TRequestResponseModelInterface>.HttpResponse
@@ -312,14 +302,22 @@ namespace Repositories
         private Task CreateLoadAndStorePageItemsTask(uint pageNumber)
         {
             if (!PageIsValid(pageNumber)) throw new Exception("Impossible page");
-            
+
             var task = Task.Run(async () =>
             {
-                var httpResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage))
-                    .ConfigureAwait(false);
-                GetResponseItemsAndFillPaginatedData(httpResponse.ResponseModelInterface);
+                try
+                {
+                    var httpResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData((int) pageNumber, itemsPerPage))
+                        .ConfigureAwait(false);
+                    GetResponseItemsAndFillPaginatedData(httpResponse.ResponseModelInterface);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
+                    throw;
+                }
             });
-            
+
             return PagesLoadingTaskManager.RequestTask(pageNumber, task);
         }
 

@@ -59,7 +59,7 @@ namespace ViewModels
         {
             try
             {
-                var data = await sponsoredAdRepository.CreateGetItemWithIndexTask(index).ConfigureAwait(true);
+                var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(true);
 
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }

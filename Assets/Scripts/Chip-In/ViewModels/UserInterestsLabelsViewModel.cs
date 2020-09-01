@@ -61,7 +61,7 @@ namespace ViewModels
 
         private async Task<int> GetDataByIndex(uint index)
         {
-            var itemData = await interestsBasicDataPaginatedListRepository.CreateGetItemWithIndexTask(index);
+            var itemData = await interestsBasicDataPaginatedListRepository.GetItemWithIndexAsync(index);
             return (int) itemData.Id;
         }
 
