@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &3911729035503795068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6788881566732536367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f68a0ec7c4642ff8ff7699d808e2c62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainColor: {r: 1, g: 1, b: 1, a: 1}
-  alternativeColor: {r: 1, g: 0.5647059, b: 0.11372549, a: 1}
 --- !u!114 &6313126010590766195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,7 +15,53 @@ MonoBehaviour:
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.IsSelected
-  viewPropertyName: ViewModels.UI.Elements.Text.ColorSwitch.IsSwitched
+  viewPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.IsSwitched
+--- !u!114 &8747619569475109077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788881566732536367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.InitialState
+  viewPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.InitialState
+--- !u!114 &9194898257194601717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6788881566732536367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7add40cd16734f7993d09c5f12c2b598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorsPairParameter: {fileID: 11400000, guid: 0b63acb54d53cdd4dbbeffec8c6a7d1f,
+    type: 2}
+--- !u!114 &7757440342734889580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9113446888761572726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.InitialColor
+  viewPropertyName: TMPro.TextMeshProUGUI.color
 --- !u!114 &9203408477409445039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,8 +76,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.UI.Elements.Text.ColorSwitch.SelectedColor
+  viewModelPropertyName: ViewModels.UI.Elements.Text.ParametricColorSwitch.SelectedColor
   viewPropertyName: TMPro.TextMeshProUGUI.color
+--- !u!114 &6283420331121973584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569263519978699494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.InitialState
+  viewPropertyName: Controllers.ImageFadingController.InitialState
 --- !u!1001 &7610089305001695977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,6 +101,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 351773713331532264, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178338471660284910, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: viewAdapterTypeName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178338471660284910, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: viewModelPropertyName
+      value: Views.ViewElements.ListItems.OptionItemView.IsSelected
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178338471660284910, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: Controllers.ImageFadingController.IsShown
+      objectReference: {fileID: 0}
     - target: {fileID: 4011163794094575814, guid: 2e46b1e271eac16469b320234744b069,
         type: 3}
       propertyPath: m_Name
@@ -173,6 +241,41 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7960703607618871311, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6137733504376945946}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetToggleStateWithoutNotification
+      objectReference: {fileID: 0}
+    - target: {fileID: 8789161537159348869, guid: 2e46b1e271eac16469b320234744b069,
+        type: 3}
+      propertyPath: stateChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e46b1e271eac16469b320234744b069, type: 3}
 --- !u!1 &6788881566732536367 stripped
@@ -184,6 +287,24 @@ GameObject:
 --- !u!1 &9113446888761572726 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1721782768111036319, guid: 2e46b1e271eac16469b320234744b069,
+    type: 3}
+  m_PrefabInstance: {fileID: 7610089305001695977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6137733504376945946 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4373536186149808115, guid: 2e46b1e271eac16469b320234744b069,
+    type: 3}
+  m_PrefabInstance: {fileID: 7610089305001695977}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a39e77590c9943e799c4e08b06549b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &569263519978699494 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7960703607618871311, guid: 2e46b1e271eac16469b320234744b069,
     type: 3}
   m_PrefabInstance: {fileID: 7610089305001695977}
   m_PrefabAsset: {fileID: 0}
