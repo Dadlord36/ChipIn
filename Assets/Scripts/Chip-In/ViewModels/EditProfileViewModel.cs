@@ -163,6 +163,7 @@ namespace ViewModels
         [Binding]
         public void CancelButton_OnClick()
         {
+            SwitchToPreviousView();
         }
 
         private async Task UpdateUseProfileAsync()
