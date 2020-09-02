@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 5371232189139175027}
   - component: {fileID: 7480136123429348267}
   - component: {fileID: 1512391529663586873}
+  - component: {fileID: 915959973835789157}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -259,7 +260,23 @@ MonoBehaviour:
   m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
+  viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.Toggle.IsToggled
-  viewPropertyName: Controllers.ImageFadingController.IsFaded
+  viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.IsSelected
+  viewPropertyName: Controllers.ImageFadingController.IsShown
+--- !u!114 &915959973835789157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7700395932673616344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.InitialState
+  viewPropertyName: Controllers.ImageFadingController.InitialState
