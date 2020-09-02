@@ -28,6 +28,7 @@ namespace GlobalVariables
             public const string TokensBalance = "tokens_balance";
             public const string Currency = "currency";
             public const string Category = "category";
+            public const string Market = "market";
         }
 
         public enum InterestCategory
