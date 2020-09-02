@@ -194,7 +194,7 @@ namespace ViewModels.Settings
         {
             try
             {
-                await UserProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController.CancellationToken,
+                await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController.CancellationToken,
                     userAuthorisationDataRepository, new KeyValuePair<string, string>(propertyName, value));
             }
             catch (OperationCanceledException)

@@ -174,7 +174,7 @@ namespace ViewModels
                 if (!string.IsNullOrEmpty(_firstName) || !string.IsNullOrEmpty(_lastName))
                     AddChangedField($"{_firstName} {_lastName}", MainNames.ModelsPropertiesNames.Name);
 
-                var result = await UserProfileDataStaticRequestsProcessor.UpdateUserProfileData(_asyncOperationCancellationController
+                var result = await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(_asyncOperationCancellationController
                         .CancellationToken, authorisationDataRepository, _changedPropertiesCollection, NewAvatarImagePath)
                     .ConfigureAwait(true);
 

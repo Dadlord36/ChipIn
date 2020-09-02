@@ -157,7 +157,7 @@ namespace Repositories.Remote
             _isLoadingData = true;
             _cancellationController.CancelOngoingTask();
 
-            var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out _cancellationController.TasksCancellationTokenSource,
+            var response = await ProfileDataStaticRequestsProcessor.GetUserProfileData(out _cancellationController.TasksCancellationTokenSource,
                 authorisationDataRepository).ConfigureAwait(true);
             if (!response.Success) return;
 

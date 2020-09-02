@@ -18,9 +18,9 @@ using Utilities;
 
 namespace RequestsStaticProcessors
 {
-    public static class UserProfileDataStaticRequestsProcessor
+    public static class ProfileDataStaticRequestsProcessor
     {
-        private const string Tag = nameof(UserProfileDataStaticRequestsProcessor);
+        private const string Tag = nameof(ProfileDataStaticRequestsProcessor);
 
         public static Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.HttpResponse>
             GetUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
@@ -28,7 +28,7 @@ namespace RequestsStaticProcessors
             LogUtility.PrintLog(Tag, $"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");
 
             return new UserProfileDataGetProcessor(out cancellationTokenSource, requestHeaders).SendRequest(
-                "User profile data was retrieved");
+                "Profile data was retrieved");
         }
 
         public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
@@ -78,11 +78,11 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<IUserProfilePasswordChangeModel, UserProfileResponseModel, IUserProfileResponseModel>.HttpResponse>
-            TryChangeUserProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            TryChangeProfilePassword(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
                 IUserProfilePasswordChangeModel requestBodyModel)
         {
             return new UserProfilePasswordChangePutProcessor(out cancellationTokenSource, requestHeaders, requestBodyModel)
-                .SendRequest("User password was changed successfully");
+                .SendRequest("Profile password was changed successfully");
         }
 
         public static Task<BaseRequestProcessor<IUserGeoLocation, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
