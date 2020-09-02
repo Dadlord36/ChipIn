@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors.PutRequests;
 using JetBrains.Annotations;
 using Repositories.Remote;
@@ -54,7 +55,7 @@ namespace ViewModels
             {
                 IsBusy = true;
                 var result = await qrCodeReader.DecodeQRAsync().ConfigureAwait(true);
-                if (result!= null && !string.IsNullOrEmpty(result.Text))
+                if (result != null && !string.IsNullOrEmpty(result.Text))
                 {
                     ProcessDecodedString(result.Text);
                 }
@@ -83,24 +84,10 @@ namespace ViewModels
             DestroyPreviewObject();
         }
 
-        private async void ProcessDecodedString(string decodedString)
+        private void ProcessDecodedString(string decodedString)
         {
             Handheld.Vibrate();
-            try
-            {
-                IsBusy = true;
-                await ActivateProductAsync(decodedString).ConfigureAwait(false);
-                SwitchToView(nameof(RedeemedView));
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedString));
         }
 
         private void CreatePreviewObject()
