@@ -123,7 +123,8 @@ namespace HttpRequests.RequestsProcessors
                     _requestProcessorParameters.RequestHeaders).ConfigureAwait(false))
                 {
                     var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
-
+                    LogUtility.PrintLog(Tag, $"Response String: {contentAsString}");
+                    
                     var httpResponse = new HttpResponse
                     {
                         Headers = responseMessage.Headers,
