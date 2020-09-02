@@ -16,5 +16,10 @@ namespace Views
         {
             splineDiagram.VisualizePoints(radarData.Points, radarData.Max);
         }
+
+        public void SetRadarData(AngleAndDistancePercentage[] data)
+        {
+            splineDiagram.VisualizePoints(data);
+        }
     }
 }

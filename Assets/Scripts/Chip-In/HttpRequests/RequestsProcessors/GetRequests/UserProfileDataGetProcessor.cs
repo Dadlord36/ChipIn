@@ -7,10 +7,10 @@ using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public class UserProfileDataGetProcessor : BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>
+    public class UserProfileDataGetProcessor : RequestWithoutBodyProcessor<UserProfileResponseModel, IUserProfileDataWebModel>
     {
         public UserProfileDataGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
-            out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Get, requestHeaders, null)
+            out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Get, requestHeaders)
         {
         }
     }

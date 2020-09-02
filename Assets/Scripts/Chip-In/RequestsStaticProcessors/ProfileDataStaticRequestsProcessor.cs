@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
+using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using Factories;
 using GlobalVariables;
@@ -36,9 +36,9 @@ namespace RequestsStaticProcessors
         {
             var client = ApiHelper.DefaultRestClient;
             var request = RequestsFactory.MultipartRestRequest(requestHeaders);
-            
+
             request.AddParameter(property.Key, property.Value);
-            
+
             var result = request.ToString();
 
             LogUtility.PrintLog(Tag, result);
@@ -50,7 +50,7 @@ namespace RequestsStaticProcessors
         {
             var client = ApiHelper.DefaultRestClient;
             var request = RequestsFactory.MultipartRestRequest(requestHeaders);
-            
+
             if (!string.IsNullOrEmpty(newAvatarImagePath))
                 request.AddFile(MainNames.ModelsPropertiesNames.Avatar, newAvatarImagePath);
             FillRequestParametersWithNameValueCollection(request, fields);
@@ -91,6 +91,13 @@ namespace RequestsStaticProcessors
         {
             return new UserGeoLocationDataPutProcessor(out cancellationTokenSource, requestHeaders, userGeoLocation).SendRequest(
                 "User geo location was successfully sent to server");
+        }
+
+        public static Task<BaseRequestProcessor<object, MarketDiagramResponseDateModel, IMarketDiagramResponseModel>.HttpResponse> 
+            GetMarketDiagramDataAsync(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+        {
+            return new MarketDiagramDataGetProcessor(out cancellationTokenSource, requestHeaders)
+                .SendRequest("Market diagram data was retrieved successfully");
         }
     }
 }

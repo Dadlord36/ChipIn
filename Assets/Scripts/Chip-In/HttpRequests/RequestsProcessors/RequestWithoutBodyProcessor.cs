@@ -32,5 +32,11 @@ namespace HttpRequests.RequestsProcessors
                 null, null, paginatedRequestData.ConvertPaginationToNameValueCollection()))
         {
         }
+
+        protected RequestWithoutBodyProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders) : base(out cancellationTokenSource,
+            new BaseRequestProcessorParameters(requestSuffix, requestMethod, requestHeaders, null, null))
+        {
+        }
     }
 }

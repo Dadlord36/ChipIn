@@ -1,25 +1,23 @@
 ﻿using Newtonsoft.Json;
+using Views.ViewElements;
 
 namespace DataModels.Interfaces
 {
+    [JsonObject(MemberSerialization.OptIn)]
     public interface IMarketDiagramModel
     {
-        [JsonProperty("connection")]
-        public double Connection { get; set; }
+        [JsonProperty("connection")] float Connection { get; set; }
 
-        [JsonProperty("acceptance")]
-        public double Acceptance { get; set; }
+        [JsonProperty("acceptance")] float Acceptance { get; set; }
 
-        [JsonProperty("engagement")]
-        public double Engagement { get; set; }
+        [JsonProperty("engagement")] float Engagement { get; set; }
 
-        [JsonProperty("response")]
-        public double Response { get; set; }
+        [JsonProperty("response")] float Response { get; set; }
 
-        [JsonProperty("transaction")]
-        public double Transaction { get; set; }
+        [JsonProperty("transaction")] float Transaction { get; set; }
 
-        [JsonProperty("loyalty")]
-        public double Loyalty { get; set; }
+        [JsonProperty("loyalty")] float Loyalty { get; set; }
+
+        AngleAndDistancePercentage[] GetDiagramConsumableData { get; }
     }
 }

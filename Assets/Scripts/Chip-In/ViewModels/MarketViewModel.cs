@@ -1,6 +1,9 @@
-﻿using HttpRequests.RequestsProcessors.GetRequests;
+﻿using System;
 using Repositories.Remote;
+using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
+using Utilities;
 using Views;
 
 namespace ViewModels
@@ -9,33 +12,39 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        [SerializeField] private Vector2[] positions;
-        [SerializeField] private float max = 10f;
+        private const float MAX = 100f;
+
+
         private MarketView ThisView => View as MarketView;
 
         public MarketViewModel() : base(nameof(MarketViewModel))
         {
         }
 
-        private void DebugPoints()
+        protected override async void OnBecomingActiveView()
         {
-            if (positions == null || positions.Length == 0) return;
-
-            var array = new float[positions.Length, 2];
-
-            for (var index = 0; index < positions.Length; index++)
+            base.OnBecomingActiveView();
+            try
             {
-                var position = positions[index];
-                array[index, 0] = position.x;
-                array[index, 1] = position.y;
+                IsAwaitingProcess = true;
+                var response = await ProfileDataStaticRequestsProcessor.GetMarketDiagramDataAsync(out OperationCancellationController
+                    .TasksCancellationTokenSource, authorisationDataRepository).ConfigureAwait(false);
+
+                if (!response.Success) return;
+
+                var marketData = response.ResponseModelInterface.MarketDiagramData;
+                
+                TasksFactories.ExecuteOnMainThread(delegate { ThisView.SetRadarData(marketData.GetDiagramConsumableData); });
             }
-
-            ThisView.SetRadarData(new RadarData {Max = max, Points = array});
-        }
-
-        private void Start()
-        {
-            DebugPoints();
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            finally
+            {
+                IsAwaitingProcess = false;
+            }
         }
     }
 }

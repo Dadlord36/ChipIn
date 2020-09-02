@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
 namespace Views.ViewElements
@@ -19,7 +20,7 @@ namespace Views.ViewElements
 
         public Vector2 DotPosition { get; private set; }
 
-        private Vector2 CalculatePointOffset(UICircle circle, float widthScale)
+        private Vector2 CalculatePointOffset(Graphic circle, float widthScale)
         {
             return  CalculateVector2DotPosition(GetRadius(circle.rectTransform, widthScale));
         }

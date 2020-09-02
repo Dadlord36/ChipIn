@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using DataModels;
+using EasyButtons;
 using HttpRequests.RequestsProcessors.GetRequests;
+using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI.Extensions;
@@ -72,6 +75,23 @@ namespace Views.ViewElements
 
             return endPoints;
         }
+
+#if UNITY_EDITOR
+        [Button]
+        public void TestIt()
+        {
+            var marketData = new MarketDiagramDataModel();
+            TasksFactories.ExecuteOnMainThread(delegate
+            {
+                var dotes = Radar.CalculateWorldPositionsForGivenDistancePercentages(marketData.GetDiagramConsumableData,1f);
+
+                foreach (var dote in dotes)
+                {
+                    CreateDotAtPosition(dote);
+                }
+            });
+        }
+#endif
 
 
         public void SetDataToVisualize(RadarData radarData)
