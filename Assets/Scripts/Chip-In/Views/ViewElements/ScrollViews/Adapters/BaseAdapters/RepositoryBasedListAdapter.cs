@@ -6,6 +6,7 @@ using Com.TheFallenGames.OSA.Core;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityWeld.Binding;
@@ -60,10 +61,17 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
 
             pagesPaginatedRepository.Clear();
-            OnStartedFetching();
             try
             {
-                await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(true);
+                OnStartedFetching();
+                
+                await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
+                TasksFactories.ExecuteOnMainThread(delegate
+                {
+                    ItemsListIsEmpty = TotalCapacity == 0;
+                });
+                
+                OnEndedFetching();
             }
             catch (OperationCanceledException)
             {
@@ -73,10 +81,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
-            finally
-            {
-                OnEndedFetching();
             }
         }
 
@@ -120,7 +124,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             // If the number of items available below the last visible (i.e. the bottom-most one, in our case) is less than <adapterParams.preFetchedItemsCount>,
             // get more
             if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount) return;
-            uint newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
+            var newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
 
             newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
 
@@ -128,7 +132,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 _fetching = true;
-                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(true);
+                OnStartedFetching();
+                await FetchItemModelsFromServerAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -146,38 +151,34 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             finally
             {
                 _fetching = false;
+                OnEndedFetching();
             }
-        }
-
-        private Task StartPreFetchingAsync(uint additionalItems)
-        {
-            OnStartedFetching();
-            return FetchItemModelsFromServerAsync(additionalItems);
         }
 
         private async Task FetchItemModelsFromServerAsync(uint maxCount)
         {
             AsyncOperationCancellationController.CancelOngoingTask();
-            var items = await pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
-                .ConfigureAwait(true);
+            var items = await pagesPaginatedRepository.GetItemsRangeAsync(_retrievingItemsStartingIndex, maxCount)
+                .ConfigureAwait(false);
             _retrievingItemsStartingIndex += (uint) items.Count;
             _loadedAll = Data.Count == TotalCapacity;
 
             if (items.Count > 0)
-                Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
+            {
+                TasksFactories.ExecuteOnMainThread(delegate { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
+            }
 
-            ItemsListIsEmpty = Data.Count == 0;
             OnEndedFetching();
         }
 
         private void OnStartedFetching()
         {
-            startedFetching?.Invoke();
+            TasksFactories.ExecuteOnMainThread(delegate { startedFetching?.Invoke(); });
         }
 
         private void OnEndedFetching()
         {
-            endedFetching?.Invoke();
+            TasksFactories.ExecuteOnMainThread(delegate { endedFetching?.Invoke(); });
         }
     }
 }

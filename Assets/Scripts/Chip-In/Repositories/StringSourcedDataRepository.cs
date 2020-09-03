@@ -44,7 +44,7 @@ namespace Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<TDataType>> CreateGetItemsRangeTask(uint startIndex, uint length)
+        public Task<IReadOnlyList<TDataType>> GetItemsRangeAsync(uint startIndex, uint length)
         {
             return Task.FromResult<IReadOnlyList<TDataType>>(_dataList.GetRange((int) startIndex, (int) length));
         }

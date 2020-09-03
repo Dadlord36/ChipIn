@@ -9,6 +9,7 @@ using Repositories.Local;
 using Repositories.Remote;
 using Repositories.Remote.Paginated;
 using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -26,22 +27,18 @@ namespace ViewModels
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private MerchantInterestPagesPaginatedRepository merchantInterestPagesPaginatedRepository;
         [SerializeField] private MerchantInterestPagesListAdapter merchantInterestPagesListAdapter;
+        [SerializeField] private Sprite defaultLogo; //TODO: ViewsLogoController
 
 
         private string _interestName;
         private uint _selectedInterestId;
         private Sprite _logoSprite;
-        [SerializeField] private Sprite defaultLogo; //TODO: ViewsLogoController
-
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController
-            = new AsyncOperationCancellationController();
+        private bool _hasItemsToShow = true;
 
         private MarketInterestDetailsDataModel _selectedCommunityData;
 
         [Binding]
         public uint SelectedInterestId
-
         {
             get => _selectedInterestId;
             set
@@ -59,6 +56,18 @@ namespace ViewModels
             private set
             {
                 _interestName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Binding]
+        public bool HasItemsToShow
+        {
+            get => _hasItemsToShow;
+            set
+            {
+                if (value == _hasItemsToShow) return;
+                _hasItemsToShow = value;
                 OnPropertyChanged();
             }
         }
@@ -92,25 +101,26 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                if (RelatedView.FormTransitionBundle.TransitionData == null) return;
+                await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(false);
+
+                if (RelatedView.FormTransitionBundle.TransitionData == null)
+                {
+                    return;
+                }
 
                 var selectedCommunityId = (int) (uint) RelatedView.FormTransitionBundle.TransitionData;
 
                 merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
-
-                try
+                _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(false);
+                var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri, 
+                        OperationCancellationController.CancellationToken).ConfigureAwait(false);
+                
+                TasksFactories.ExecuteOnMainThread(delegate
                 {
-                    await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(true);
-                }
-                catch (OperationCanceledException)
-                {
-                    LogUtility.PrintDefaultOperationCancellationLog(Tag);
-                }
-
-                _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(true);
-
-                InterestName = _selectedCommunityData.Name;
-                await SetLogoFromUrlAsync(_selectedCommunityData.PosterUri).ConfigureAwait(true);
+                    HasItemsToShow = !merchantInterestPagesListAdapter.ItemsListIsEmpty;
+                    InterestName = _selectedCommunityData.Name;
+                    LogoSprite = sprite;
+                });
             }
             catch (OperationCanceledException)
             {
@@ -125,30 +135,15 @@ namespace ViewModels
 
         private async Task<MarketInterestDetailsDataModel> GetSelectedCommunityDetailsAsync(int selectedCommunityId)
         {
-            var response = await CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _asyncOperationCancellationController
-                .TasksCancellationTokenSource, authorisationDataRepository, selectedCommunityId).ConfigureAwait(false);
+            var response = await CommunitiesStaticRequestsProcessor.GetCommunityDetails(out OperationCancellationController.TasksCancellationTokenSource,
+                authorisationDataRepository, selectedCommunityId).ConfigureAwait(false);
             return response.ResponseModelInterface.LabelDetailsDataModel;
         }
 
         private void OnInterestIdSelected()
         {
             SwitchToView(nameof(MerchantInterestDetailsView),
-                new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds(
-                    (int) _selectedCommunityData.Id,
-                    (int) _selectedInterestId)));
-        }
-
-
-        private Task SetLogoFromUrlAsync(in string url)
-        {
-            _asyncOperationCancellationController.CancelOngoingTask();
-            return downloadedSpritesRepository
-                .CreateLoadSpriteTask(url, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(
-                    delegate(Task<Sprite> finishedTask) { LogoSprite = finishedTask.GetAwaiter().GetResult(); },
-                    scheduler: DownloadedSpritesRepository.MainThreadScheduler,
-                    continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion,
-                    cancellationToken: _asyncOperationCancellationController.CancellationToken);
+                new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds((int) _selectedCommunityData.Id, (int) _selectedInterestId)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

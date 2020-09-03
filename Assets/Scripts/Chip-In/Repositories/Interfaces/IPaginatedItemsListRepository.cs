@@ -7,7 +7,7 @@ namespace Repositories.Interfaces
         where TDataType : class
     {
         Task<IReadOnlyList<TDataType>> CreateGetPageItemsTask(uint pageNumber);
-        Task<IReadOnlyList<TDataType>> CreateGetItemsRangeTask(uint startIndex, uint length);
+        Task<IReadOnlyList<TDataType>> GetItemsRangeAsync(uint startIndex, uint length);
         Task<TDataType> GetItemWithIndexAsync(uint itemIndex);
         void Clear();
     }

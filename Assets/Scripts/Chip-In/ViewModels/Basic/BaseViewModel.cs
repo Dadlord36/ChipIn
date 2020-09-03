@@ -21,7 +21,7 @@ namespace ViewModels.Basic
         private bool _awaitingProcess;
 
         [Binding]
-        public bool IsAwaitingProcess
+        public virtual bool IsAwaitingProcess
         {
             get => _awaitingProcess;
             set
