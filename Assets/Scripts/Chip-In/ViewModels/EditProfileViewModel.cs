@@ -24,8 +24,6 @@ namespace ViewModels
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
 
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-
         private string _firstName;
         private string _lastName;
         private string _email;
@@ -152,6 +150,7 @@ namespace ViewModels
             try
             {
                 await UpdateUseProfileAsync();
+                SwitchToPreviousView();
             }
             catch (Exception e)
             {
@@ -174,7 +173,7 @@ namespace ViewModels
                 if (!string.IsNullOrEmpty(_firstName) || !string.IsNullOrEmpty(_lastName))
                     AddChangedField($"{_firstName} {_lastName}", MainNames.ModelsPropertiesNames.Name);
 
-                var result = await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(_asyncOperationCancellationController
+                var result = await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController
                         .CancellationToken, authorisationDataRepository, _changedPropertiesCollection, NewAvatarImagePath)
                     .ConfigureAwait(true);
 
