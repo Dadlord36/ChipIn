@@ -40,11 +40,12 @@ namespace ViewModels
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
+            ResetPropertiesState();
             QrString = RelatedView.FormTransitionBundle.TransitionData as string;
         }
 
         [Binding]
-        public async void OnButton_OnClick()
+        public async void OkButton_OnClick()
         {
             try
             {
@@ -72,6 +73,12 @@ namespace ViewModels
             SwitchToView(nameof(TransactView));
         }
 
+        private void ResetPropertiesState()
+        {
+            TotalBillNumber = "0";
+            QrString = string.Empty;
+        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
