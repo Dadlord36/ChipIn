@@ -41,14 +41,22 @@ namespace ViewModels
 
         private string _currentQuestion;
         private string _interestPageName;
-
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController =
-            new AsyncOperationCancellationController();
-
         private string _interestPageDescription;
         private Transform _selectedItemTransform;
         private bool _listIsFilled;
+        private bool _isAwaitingProcess;
+
+        [Binding]
+        public override bool IsAwaitingProcess
+        {
+            get => _isAwaitingProcess;
+            set
+            {
+                if (value == _isAwaitingProcess) return;
+                _isAwaitingProcess = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public bool ListIsFilled
@@ -126,7 +134,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await FillScrollsWithDataFromServerAsync().ConfigureAwait(true);
+                await FillScrollsWithDataFromServerAsync().ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -145,15 +153,35 @@ namespace ViewModels
             {
                 return;
             }
+
             var selectedCommunityInterest = (CommunityAndInterestIds) RelatedView.FormTransitionBundle.TransitionData;
-            
-            
-            await SetInterestPageReflectionDataAsync(selectedCommunityInterest).ConfigureAwait(false);
-            
+
+            TasksFactories.ExecuteOnMainThread(delegate
+            {
+                IsAwaitingProcess = true;
+            });
+
+            try
+            {
+                await SetInterestPageReflectionDataAsync(selectedCommunityInterest).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+            finally
+            {
+                TasksFactories.ExecuteOnMainThread(delegate
+                {
+                    IsAwaitingProcess = false;
+                });
+            }
+
             var result = await CommunitiesInterestsStaticProcessor.GetInterestQuestionsAnswers
-            (out _asyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
+            (out OperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository,
                 selectedCommunityInterest.InterestId).ConfigureAwait(false);
-            
+
             if (!result.Success)
             {
                 alertCardController.ShowAlertWithText(result.Error);
@@ -164,37 +192,37 @@ namespace ViewModels
                 var answers = result.ResponseModelInterface.Answers;
                 if (answers == null || answers.Count == 0)
                 {
-                    alertCardController.ShowAlertWithText("Nothing to show");
                     return;
                 }
             }
-                
+
             RefillAnswersDictionary(result.ResponseModelInterface);
         }
 
         private async Task SetInterestPageReflectionDataAsync(CommunityAndInterestIds communityAndInterestIds)
         {
-            var response = await CommunitiesInterestsStaticProcessor.GetMerchantInterestPages(out _asyncOperationCancellationController
-            .TasksCancellationTokenSource, authorisationDataRepository, communityAndInterestIds.CommunityId, null)
+            var response = await CommunitiesInterestsStaticProcessor.GetMerchantInterestPages(out OperationCancellationController
+                    .TasksCancellationTokenSource, authorisationDataRepository, communityAndInterestIds.CommunityId, null)
                 .ConfigureAwait(true);
 
             if (!response.Success)
             {
                 alertCardController.ShowAlertWithText(response.Error);
             }
+
             var interestData = response.ResponseModelInterface.Interests.First(model => model.Id == communityAndInterestIds.InterestId);
-            
+
             await TasksFactories.MainThreadTaskFactory.StartNew(delegate
             {
                 InterestPageName = interestData.Name;
                 InterestPageDescription = interestData.Message;
-            }).ConfigureAwait(true);
+            }).ConfigureAwait(false);
         }
 
         private void FillListAdapterWithCorrespondingData(string question)
         {
-            if(string.IsNullOrEmpty(question)) return;
-            
+            if (string.IsNullOrEmpty(question)) return;
+
             merchantInterestAnswersListAdapter.RefillWithData(_questionAnswersDictionary[question]);
         }
 
@@ -218,7 +246,7 @@ namespace ViewModels
         {
             ListIsFilled = _questionAnswersDictionary.Count > 0;
         }
-        
+
         private void RefillQuestionsList(IList<string> questions)
         {
             questionsCollectionChanged.Invoke(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
