@@ -12,9 +12,6 @@ namespace ViewModels
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
-        private const float MAX = 100f;
-
-
         private MarketView ThisView => View as MarketView;
 
         public MarketViewModel() : base(nameof(MarketViewModel))

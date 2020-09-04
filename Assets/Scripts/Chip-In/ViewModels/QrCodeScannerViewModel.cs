@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DataModels.Interfaces;
 using HttpRequests.RequestsProcessors.PutRequests;
 using JetBrains.Annotations;
 using Repositories.Remote;

@@ -86,11 +86,10 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<IUserGeoLocation, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
-            UpdateUserPosition(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-                IUserGeoLocation userGeoLocation)
+            UpdateUserPosition(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IUserGeoLocation userGeoLocation)
         {
-            return new UserGeoLocationDataPutProcessor(out cancellationTokenSource, requestHeaders, userGeoLocation).SendRequest(
-                "User geo location was successfully sent to server");
+            return new UserGeoLocationDataPutProcessor(out cancellationTokenSource, requestHeaders, userGeoLocation)
+                .SendRequest("User geo location was successfully sent to server");
         }
 
         public static Task<BaseRequestProcessor<object, MarketDiagramResponseDateModel, IMarketDiagramResponseModel>.HttpResponse> 
@@ -98,6 +97,13 @@ namespace RequestsStaticProcessors
         {
             return new MarketDiagramDataGetProcessor(out cancellationTokenSource, requestHeaders)
                 .SendRequest("Market diagram data was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, VerificationResponseDataModel, IVerificationResponseModel>.HttpResponse> 
+            GetVerificationData(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+        {
+            return new VerificationDataGetProcessor(out cancellationTokenSource, requestHeaders)
+                .SendRequest("Verification data vas retrieved successfully");
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using DataModels.Interfaces;
-using Views.Bars.BarItems;
+﻿using Views.Bars.BarItems;
 
-namespace HttpRequests.RequestsProcessors.GetRequests
+namespace DataModels.Interfaces
 {
     public interface IProductModel : IIdentifier, IQrData, ITitled, IDescription, IPosterImageUri
     {
