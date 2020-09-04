@@ -4,7 +4,7 @@ namespace DataModels.Interfaces
 {
     public interface ICommunitySpirit
     {
-        [JsonProperty("spirit")] string Spirit { get; set; }
+        [JsonProperty("market_spirit")] string Spirit { get; set; }
     }
 
     public interface IMarketCap
