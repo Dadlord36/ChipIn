@@ -101,26 +101,38 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(false);
-
                 if (RelatedView.FormTransitionBundle.TransitionData == null)
                 {
+                    LogUtility.PrintLog(Tag,"<color=red>TransitionData is NULL</color>");
                     return;
                 }
 
                 var selectedCommunityId = (int) (uint) RelatedView.FormTransitionBundle.TransitionData;
+                LogUtility.PrintLog(Tag, $"<color=blue>{nameof(selectedCommunityId)} is {selectedCommunityId.ToString()}</color>");
 
-                merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
-                _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(false);
-                var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri, 
-                        OperationCancellationController.CancellationToken).ConfigureAwait(false);
-                
-                TasksFactories.ExecuteOnMainThread(delegate
+                // merchantInterestPagesPaginatedRepository.SelectedCommunityId should be set first before requesting  merchantInterestPagesListAdapter ResetAsync
+                // so that requested data will be related to the selected previously CommunityId
                 {
-                    HasItemsToShow = !merchantInterestPagesListAdapter.ItemsListIsEmpty;
-                    InterestName = _selectedCommunityData.Name;
-                    LogoSprite = sprite;
-                });
+                    merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
+                    await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(false);
+                }
+                
+                {
+                    _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(false);
+
+                    TasksFactories.ExecuteOnMainThread(delegate
+                    {
+                        InterestName = _selectedCommunityData.Name;
+                    });
+                    
+                    var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri,
+                        OperationCancellationController.CancellationToken).ConfigureAwait(false);
+
+                    TasksFactories.ExecuteOnMainThread(delegate
+                    {
+                        LogoSprite = sprite;
+                    });
+                }
             }
             catch (OperationCanceledException)
             {

@@ -21,7 +21,6 @@ namespace Views.ViewElements.ScrollViews.Adapters
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
 
         private SimpleDataHelper<TDataType> Data { get; set; }
-        
 
         public void RefillWithData(IList<TDataType> data)
         {

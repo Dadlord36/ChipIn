@@ -39,7 +39,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
-
         private bool _fetching;
         private bool _loadedAll;
         private uint _retrievingItemsStartingIndex;
@@ -64,13 +63,13 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 OnStartedFetching();
-                
+
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
-                TasksFactories.ExecuteOnMainThread(delegate
+                ItemsListIsNotEmpty = TotalCapacity > 0;
+                /*if (ItemsListIsNotEmpty)
                 {
-                    ItemsListIsEmpty = TotalCapacity == 0;
-                });
-                
+                    await FetchItemsAndRefillTheList().ConfigureAwait(false);
+                }*/
                 OnEndedFetching();
             }
             catch (OperationCanceledException)
@@ -106,6 +105,23 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             if (Data == null)
                 return;
 
+            try
+            {
+                await FetchItemsAndRefillTheList();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private async Task FetchItemsAndRefillTheList()
+        {
             int lastVisibleItemItemIndex = -1;
             if (_VisibleItemsCount > 0)
             {
@@ -138,15 +154,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             catch (ArgumentOutOfRangeException e)
             {
                 LogUtility.PrintLog(Tag, e.Message);
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
             }
             finally
             {
