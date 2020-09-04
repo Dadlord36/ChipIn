@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 #import <MobileCoreServices/UTCoreTypes.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <ImageIO/ImageIO.h>
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -18,10 +19,12 @@ extern UIViewController* UnityGetGLViewController();
 + (int)canOpenSettings;
 + (void)openSettings;
 + (void)saveMedia:(NSString *)path albumName:(NSString *)album isImg:(BOOL)isImg;
-+ (void)pickMedia:(BOOL)imageMode savePath:(NSString *)mediaSavePath;
++ (void)pickMedia:(int)mediaType savePath:(NSString *)mediaSavePath;
 + (int)isMediaPickerBusy;
++ (int)getMediaTypeFromExtension:(NSString *)extension;
 + (char *)getImageProperties:(NSString *)path;
 + (char *)getVideoProperties:(NSString *)path;
++ (char *)getVideoThumbnail:(NSString *)path savePath:(NSString *)savePath maximumSize:(int)maximumSize captureTime:(double)captureTime;
 + (char *)loadImageAtPath:(NSString *)path tempFilePath:(NSString *)tempFilePath maximumSize:(int)maximumSize;
 @end
 
@@ -187,8 +190,9 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 	
 	if (!isImage && ![library videoAtPathIsCompatibleWithSavedPhotosAlbum:[NSURL fileURLWithPath:path]])
 	{
+		NSLog(@"Error saving video: Video format is not compatible with Photos");
 		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-		UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "Video format is not compatible with Photos");
+		UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 		return;
 	}
 	
@@ -202,12 +206,12 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 					UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveCompleted", "");
 				} failureBlock:^(NSError* error) {
 					NSLog(@"Error moving asset to album: %@", error);
-					UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
+					UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 				}];
 			}
 			else {
 				NSLog(@"Error creating asset: %@", error);
-				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
+				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 			}
 		};
 		
@@ -228,16 +232,16 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 			[library addAssetsGroupAlbumWithName:album resultBlock:^(ALAssetsGroup *group) {
 				saveBlock(group);
 			}
-									failureBlock:^(NSError *error) {
-										NSLog(@"Error creating album: %@", error);
-										[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-										UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
-									}];
+			failureBlock:^(NSError *error) {
+				NSLog(@"Error creating album: %@", error);
+				[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
+			}];
 		}
 	} failureBlock:^(NSError* error) {
 		NSLog(@"Error listing albums: %@", error);
 		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-		UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
+		UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 	}];
 #endif
 }
@@ -263,7 +267,7 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveCompleted", "");
 			else {
 				NSLog(@"Error creating asset: %@", error);
-				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
+				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 			}
 		}];
 	};
@@ -285,34 +289,42 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 				if (fetchResult.count > 0)
 					saveBlock(fetchResult.firstObject);
 				else {
+					NSLog(@"Error creating album: Album placeholder not found");
 					[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-					UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "Album placeholder not found" );
+					UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 				}
 			}
 			else {
 				NSLog(@"Error creating album: %@", error);
 				[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", [self getCString:[error localizedDescription]]);
+				UnitySendMessage("NGMediaSaveCallbackiOS", "OnMediaSaveFailed", "");
 			}
 		}];
 	}
 }
 
 // Credit: https://stackoverflow.com/a/10531752/2373034
-+ (void)pickMedia:(BOOL)imageMode savePath:(NSString *)mediaSavePath {
++ (void)pickMedia:(int)mediaType savePath:(NSString *)mediaSavePath {
 	imagePicker = [[UIImagePickerController alloc] init];
 	imagePicker.delegate = self;
 	imagePicker.allowsEditing = NO;
 	imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
 	
-	if (imageMode)
+	// mediaType is a bitmask:
+	// 1: image
+	// 2: video
+	// 4: audio (not supported)
+	if (mediaType == 1)
 		imagePicker.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeImage];
-	else
-	{
+	else if(mediaType == 2)
 		imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeMovie, (NSString *)kUTTypeVideo, nil];
-		
+	else
+		imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, (NSString *)kUTTypeMovie, (NSString *)kUTTypeVideo, nil];
+	
+	if (mediaType != 1)
+	{
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
-		// Don't compress the picked video if possible
+		// Don't compress picked videos if possible
 		if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] != NSOrderedAscending)
 			imagePicker.videoExportPreset = AVAssetExportPresetPassthrough;
 #endif
@@ -345,6 +357,27 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 	}
 	else
 		return 0;
+}
+
+// Credit: https://lists.apple.com/archives/cocoa-dev/2012/Jan/msg00052.html
++ (int)getMediaTypeFromExtension:(NSString *)extension {
+	CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef) extension, NULL);
+	
+	// mediaType is a bitmask:
+	// 1: image
+	// 2: video
+	// 4: audio (not supported)
+	int result = 0;
+	if (UTTypeConformsTo(fileUTI, kUTTypeImage))
+		result = 1;
+	else if (UTTypeConformsTo(fileUTI, kUTTypeMovie) || UTTypeConformsTo(fileUTI, kUTTypeVideo))
+		result = 2;
+	else if (UTTypeConformsTo(fileUTI, kUTTypeAudio))
+		result = 4;
+	
+	CFRelease(fileUTI);
+	
+	return result;
 }
 
 // Credit: https://stackoverflow.com/a/4170099/2373034
@@ -438,6 +471,50 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 	return [self getCString:[NSString stringWithFormat:@"%d>%d>%lld>%f", (int)roundf(size.width), (int)roundf(size.height), duration, rotation]];
 }
 
++ (char *)getVideoThumbnail:(NSString *)path savePath:(NSString *)savePath maximumSize:(int)maximumSize captureTime:(double)captureTime {
+	AVAssetImageGenerator *thumbnailGenerator = [[AVAssetImageGenerator alloc] initWithAsset:[[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:path] options:nil]];
+	thumbnailGenerator.appliesPreferredTrackTransform = YES;
+	thumbnailGenerator.maximumSize = CGSizeMake((CGFloat) maximumSize, (CGFloat) maximumSize);
+	thumbnailGenerator.requestedTimeToleranceBefore = kCMTimeZero;
+	thumbnailGenerator.requestedTimeToleranceAfter = kCMTimeZero;
+	
+	if (captureTime < 0.0)
+		captureTime = 0.0;
+	else {
+		AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+		if (asset != nil) {
+			double videoDuration = CMTimeGetSeconds([asset duration]);
+			if (videoDuration > 0.0 && captureTime >= videoDuration - 0.1) {
+				if (captureTime > videoDuration)
+					captureTime = videoDuration;
+				
+				thumbnailGenerator.requestedTimeToleranceBefore = CMTimeMakeWithSeconds(1.0, 600);
+			}
+		}
+	}
+	
+	NSError *error = nil;
+	CGImageRef image = [thumbnailGenerator copyCGImageAtTime:CMTimeMakeWithSeconds(captureTime, 600) actualTime:nil error:&error];
+	if (image == nil) {
+		if (error != nil)
+			NSLog(@"Error generating video thumbnail: %@", error);
+		else
+			NSLog(@"Error generating video thumbnail...");
+		
+		return "";
+	}
+	
+	UIImage *thumbnail = [[UIImage alloc] initWithCGImage:image];
+	CGImageRelease(image);
+	
+	if (![UIImagePNGRepresentation(thumbnail) writeToFile:savePath atomically:YES]) {
+		NSLog(@"Error saving thumbnail image");
+		return "";
+	}
+	
+	return [self getCString:savePath];
+}
+
 + (UIImage *)scaleImage:(UIImage *)image maxSize:(int)maxSize {
 	CGFloat width = image.size.width;
 	CGFloat height = image.size.height;
@@ -504,46 +581,73 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+	resultPath = nil;
+	
 	if ([info[UIImagePickerControllerMediaType] isEqualToString:(NSString *)kUTTypeImage]) { // image picked
 		// On iOS 8.0 or later, try to obtain the raw data of the image (which allows picking gifs properly or preserving metadata)
 		if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending) {
 			PHAsset *asset = nil;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110000
-			if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] != NSOrderedAscending)
-				asset = info[UIImagePickerControllerPHAsset];
-#endif
-			
-			if (asset == nil) {
-				NSURL *mediaUrl = info[UIImagePickerControllerReferenceURL] ?: info[UIImagePickerControllerMediaURL];
-				if (mediaUrl != nil)
-					asset = [[PHAsset fetchAssetsWithALAssetURLs:[NSArray arrayWithObject:mediaUrl] options:nil] firstObject];
-			}
-			
-			if (asset != nil) {
-				PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-				options.synchronous = YES;
-				options.version = PHImageRequestOptionsVersionCurrent;
+			if ([[[UIDevice currentDevice] systemVersion] compare:@"11.0" options:NSNumericSearch] != NSOrderedAscending) {
+				// Try fetching the source image via UIImagePickerControllerImageURL
+				NSURL *mediaUrl = info[UIImagePickerControllerImageURL];
+				if (mediaUrl != nil) {
+					NSString *imagePath = [mediaUrl path];
+					if (imagePath != nil && [[NSFileManager defaultManager] fileExistsAtPath:imagePath]) {
+						NSError *error;
+						NSString *newPath = [pickedMediaSavePath stringByAppendingPathExtension:[imagePath pathExtension]];
+						
+						if (![[NSFileManager defaultManager] fileExistsAtPath:newPath] || [[NSFileManager defaultManager] removeItemAtPath:newPath error:&error]) {
+							if ([[NSFileManager defaultManager] copyItemAtPath:imagePath toPath:newPath error:&error]) {
+								resultPath = newPath;
+								NSLog(@"Copied source image from UIImagePickerControllerImageURL");
+							}
+							else
+								NSLog(@"Error copying image: %@", error);
+						}
+						else
+							NSLog(@"Error deleting existing image: %@", error);
+					}
+				}
 				
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-				if ([[[UIDevice currentDevice] systemVersion] compare:@"13.0" options:NSNumericSearch] != NSOrderedAscending) {
-					[[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, CGImagePropertyOrientation orientation, NSDictionary *imageInfo) {
-						if (imageData != nil)
-							[self trySaveSourceImage:imageData withInfo:imageInfo];
-						else
-							NSLog(@"Couldn't fetch raw image data");
-					}];
-				}
-				else {
+				if (resultPath == nil)
+					asset = info[UIImagePickerControllerPHAsset];
+			}
 #endif
-					[[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *imageInfo) {
-						if (imageData != nil)
-							[self trySaveSourceImage:imageData withInfo:imageInfo];
-						else
-							NSLog(@"Couldn't fetch raw image data");
-					}];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			
+			if (resultPath == nil) {
+				if (asset == nil) {
+					NSURL *mediaUrl = info[UIImagePickerControllerReferenceURL] ?: info[UIImagePickerControllerMediaURL];
+					if (mediaUrl != nil)
+						asset = [[PHAsset fetchAssetsWithALAssetURLs:[NSArray arrayWithObject:mediaUrl] options:nil] firstObject];
 				}
+				
+				if (asset != nil) {
+					PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+					options.synchronous = YES;
+					options.version = PHImageRequestOptionsVersionCurrent;
+					
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+					if ([[[UIDevice currentDevice] systemVersion] compare:@"13.0" options:NSNumericSearch] != NSOrderedAscending) {
+						[[PHImageManager defaultManager] requestImageDataAndOrientationForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, CGImagePropertyOrientation orientation, NSDictionary *imageInfo) {
+							if (imageData != nil)
+								[self trySaveSourceImage:imageData withInfo:imageInfo];
+							else
+								NSLog(@"Couldn't fetch raw image data");
+						}];
+					}
+					else {
 #endif
+						[[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *imageInfo) {
+							if (imageData != nil)
+								[self trySaveSourceImage:imageData withInfo:imageInfo];
+							else
+								NSLog(@"Couldn't fetch raw image data");
+						}];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+					}
+#endif
+				}
 			}
 		}
 		
@@ -563,9 +667,7 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 	}
 	else { // video picked
 		NSURL *mediaUrl = info[UIImagePickerControllerMediaURL] ?: info[UIImagePickerControllerReferenceURL];
-		if (mediaUrl == nil)
-			resultPath = nil;
-		else {
+		if (mediaUrl != nil) {
 			resultPath = [mediaUrl path];
 			
 			// On iOS 13, picked file becomes unreachable as soon as the UIImagePickerController disappears,
@@ -682,16 +784,16 @@ extern "C" void _NativeGallery_VideoWriteToAlbum(const char* path, const char* a
 	[UNativeGallery saveMedia:[NSString stringWithUTF8String:path] albumName:[NSString stringWithUTF8String:album] isImg:NO];
 }
 
-extern "C" void _NativeGallery_PickImage(const char* imageSavePath) {
-	[UNativeGallery pickMedia:YES savePath:[NSString stringWithUTF8String:imageSavePath]];
-}
-
-extern "C" void _NativeGallery_PickVideo(const char* videoSavePath) {
-	[UNativeGallery pickMedia:NO savePath:[NSString stringWithUTF8String:videoSavePath]];
+extern "C" void _NativeGallery_PickMedia(const char* mediaSavePath, int mediaType) {
+	[UNativeGallery pickMedia:mediaType savePath:[NSString stringWithUTF8String:mediaSavePath]];
 }
 
 extern "C" int _NativeGallery_IsMediaPickerBusy() {
 	return [UNativeGallery isMediaPickerBusy];
+}
+
+extern "C" int _NativeGallery_GetMediaTypeFromExtension(const char* extension) {
+	return [UNativeGallery getMediaTypeFromExtension:[NSString stringWithUTF8String:extension]];
 }
 
 extern "C" char* _NativeGallery_GetImageProperties(const char* path) {
@@ -700,6 +802,10 @@ extern "C" char* _NativeGallery_GetImageProperties(const char* path) {
 
 extern "C" char* _NativeGallery_GetVideoProperties(const char* path) {
 	return [UNativeGallery getVideoProperties:[NSString stringWithUTF8String:path]];
+}
+
+extern "C" char* _NativeGallery_GetVideoThumbnail(const char* path, const char* thumbnailSavePath, int maxSize, double captureTimeInSeconds) {
+	return [UNativeGallery getVideoThumbnail:[NSString stringWithUTF8String:path] savePath:[NSString stringWithUTF8String:thumbnailSavePath] maximumSize:maxSize captureTime:captureTimeInSeconds];
 }
 
 extern "C" char* _NativeGallery_LoadImageAtPath(const char* path, const char* temporaryFilePath, int maxSize) {
