@@ -12,7 +12,7 @@ public static class BuildScript
     private const string AndroidExtension = ".apk";
     private const string ReleaseI2CPP_x64 = "_Release_IL2CPP_ARM64";
     private const string DevelopmentMono_x32 = "_Development_ARMv7";
-    private const string FolderRoot = @"D:\UnityProjects\chip-in\Builds\Android\";
+    private static readonly string FolderRoot = $@"{Environment.CurrentDirectory}\Builds\Android\";
 
 
     private const string KeyStorePassword = "TtZWc6#7TK@r";
@@ -104,7 +104,7 @@ public static class BuildScript
             {
                 Console.WriteLine(e);
             }
-        },  continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: scheduler, cancellationToken: CancellationToken.None);
+        }, continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: scheduler, cancellationToken: CancellationToken.None);
     }
 
     private static void SetKeyStorePasswords()
