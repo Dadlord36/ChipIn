@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -14,15 +15,12 @@ namespace Repositories.Remote
         string Email { get; set; }
     }
 
-    public interface IMerchantProfileSettingsModel : IUserProfile
+    public interface IMerchantProfileSettingsModel : IUserProfile, ISlogan
     {
         string PersonInChargeName { get; set; }
         bool SetReminderSAdCAdExpiring { get; set; }
         bool ShowAlerts { get; set; }
         bool ShowNotifications { get; set; }
-        string BranchCode1 { get; set; }
-        string BranchCode2 { get; set; }
-        string BranchCode3 { get; set; }
     }
 
     public class MerchantProfileSettingsDataModel : IMerchantProfileSettingsModel
@@ -34,9 +32,7 @@ namespace Repositories.Remote
         public bool SetReminderSAdCAdExpiring { get; set; }
         public bool ShowAlerts { get; set; }
         public bool ShowNotifications { get; set; }
-        public string BranchCode1 { get; set; }
-        public string BranchCode2 { get; set; }
-        public string BranchCode3 { get; set; }
+        public string Slogan { get; set; }
     }
 
     [CreateAssetMenu(fileName = nameof(MerchantProfileSettingsRepository),
@@ -44,14 +40,11 @@ namespace Repositories.Remote
     public sealed class MerchantProfileSettingsRepository : RemoteRepositoryBase, IMerchantProfileSettingsModel,
         INotifyPropertyChanged
     {
-        private readonly MerchantProfileSettingsDataModel _merchantProfileSettingsData =
+        private readonly IMerchantProfileSettingsModel _merchantProfileSettingsModel =
             new MerchantProfileSettingsDataModel
             {
-                BranchCode1 = "2361", BranchCode2 = "032", BranchCode3 = "6214", Name = "jhon Gremm",
-                Email = "gremm@gmail.com", PersonInChargeName = "maria smith"
+                Name = "jhon Gremm", Email = "gremm@gmail.com", PersonInChargeName = "maria smith", Slogan = "Some Slogan"
             };
-
-        private IMerchantProfileSettingsModel MerchantProfileSettingsModel => _merchantProfileSettingsData;
 
         public override async Task LoadDataFromServer()
         {
@@ -61,100 +54,80 @@ namespace Repositories.Remote
 
         public string Name
         {
-            get => MerchantProfileSettingsModel.Name;
+            get => _merchantProfileSettingsModel.Name;
             set
             {
-                MerchantProfileSettingsModel.Name = value;
+                _merchantProfileSettingsModel.Name = value;
                 OnPropertyChanged();
             }
         }
 
         public int Id
         {
-            get => MerchantProfileSettingsModel.Id;
+            get => _merchantProfileSettingsModel.Id;
             set
             {
-                MerchantProfileSettingsModel.Id = value;
+                _merchantProfileSettingsModel.Id = value;
                 OnPropertyChanged();
             }
         }
 
         public string Email
         {
-            get => MerchantProfileSettingsModel.Email;
+            get => _merchantProfileSettingsModel.Email;
             set
             {
-                MerchantProfileSettingsModel.Email = value;
+                _merchantProfileSettingsModel.Email = value;
                 OnPropertyChanged();
             }
         }
 
         public string PersonInChargeName
         {
-            get => MerchantProfileSettingsModel.PersonInChargeName;
+            get => _merchantProfileSettingsModel.PersonInChargeName;
             set
             {
-                MerchantProfileSettingsModel.PersonInChargeName = value;
+                _merchantProfileSettingsModel.PersonInChargeName = value;
                 OnPropertyChanged();
             }
         }
 
         public bool SetReminderSAdCAdExpiring
         {
-            get => MerchantProfileSettingsModel.SetReminderSAdCAdExpiring;
+            get => _merchantProfileSettingsModel.SetReminderSAdCAdExpiring;
             set
             {
-                MerchantProfileSettingsModel.SetReminderSAdCAdExpiring = value;
+                _merchantProfileSettingsModel.SetReminderSAdCAdExpiring = value;
                 OnPropertyChanged();
             }
         }
 
         public bool ShowAlerts
         {
-            get => MerchantProfileSettingsModel.ShowAlerts;
+            get => _merchantProfileSettingsModel.ShowAlerts;
             set
             {
-                MerchantProfileSettingsModel.ShowAlerts = value;
+                _merchantProfileSettingsModel.ShowAlerts = value;
                 OnPropertyChanged();
             }
         }
 
         public bool ShowNotifications
         {
-            get => MerchantProfileSettingsModel.ShowNotifications;
+            get => _merchantProfileSettingsModel.ShowNotifications;
             set
             {
-                MerchantProfileSettingsModel.ShowNotifications = value;
+                _merchantProfileSettingsModel.ShowNotifications = value;
                 OnPropertyChanged();
             }
         }
 
-        public string BranchCode1
+        public string Slogan
         {
-            get => MerchantProfileSettingsModel.BranchCode1;
+            get => _merchantProfileSettingsModel.Slogan;
             set
             {
-                MerchantProfileSettingsModel.BranchCode1 = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string BranchCode2
-        {
-            get => MerchantProfileSettingsModel.BranchCode2;
-            set
-            {
-                MerchantProfileSettingsModel.BranchCode2 = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string BranchCode3
-        {
-            get => MerchantProfileSettingsModel.BranchCode3;
-            set
-            {
-                MerchantProfileSettingsModel.BranchCode3 = value;
+                _merchantProfileSettingsModel.Slogan = value;
                 OnPropertyChanged();
             }
         }

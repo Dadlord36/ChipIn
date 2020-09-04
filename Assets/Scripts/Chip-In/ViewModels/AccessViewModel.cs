@@ -63,26 +63,12 @@ namespace ViewModels
         }
 
         [Binding]
-        public string BranchCode1
+        public string Slogan
         {
-            get => MerchantProfileSettingsModelImplementation.BranchCode1;
-            set => MerchantProfileSettingsModelImplementation.BranchCode1 = value;
+            get => merchantProfileSettingsRepository.Slogan;
+            set => merchantProfileSettingsRepository.Slogan = value;
         }
-
-        [Binding]
-        public string BranchCode2
-        {
-            get => MerchantProfileSettingsModelImplementation.BranchCode2;
-            set => MerchantProfileSettingsModelImplementation.BranchCode2 = value;
-        }
-
-        [Binding]
-        public string BranchCode3
-        {
-            get => MerchantProfileSettingsModelImplementation.BranchCode3;
-            set => MerchantProfileSettingsModelImplementation.BranchCode3 = value;
-        }
-
+        
         public AccessViewModel() : base(nameof(AccessViewModel))
         {
         }
@@ -103,5 +89,7 @@ namespace ViewModels
             add => merchantProfileSettingsRepository.PropertyChanged += value;
             remove => merchantProfileSettingsRepository.PropertyChanged -= value;
         }
+
+
     }
 }
