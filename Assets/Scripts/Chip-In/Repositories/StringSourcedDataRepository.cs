@@ -59,6 +59,17 @@ namespace Repositories
         public void AddItem(TDataType item)
         {
             _dataList.Add(item);
+            SyncItemsSourceData();
+        }
+
+        public void RemoveItem(TDataType item)
+        {
+            _dataList.Remove(item);
+            SyncItemsSourceData();
+        }
+
+        private void SyncItemsSourceData()
+        {
             sourceString = JsonConverterUtility.ConvertModelToJson(new TempRepoList<TDataType> {ListOfItems = _dataList});
         }
 

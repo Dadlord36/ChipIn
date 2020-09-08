@@ -1,8 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
+using DataModels;
 using Repositories.Temporary;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -13,21 +11,33 @@ using Views.ViewElements.ScrollViews.Adapters;
 namespace ViewModels
 {
     [Binding]
-    public sealed class ConnectViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
+    public sealed class ConnectViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
         [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
+        [SerializeField] private SponsoredAdRepository reservedSponsoredAdRepository;
 
         [SerializeField] private SponsoredAdListAdapter sponsoredAdListAdapter;
         [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
-        private uint _reservedSponsoredAd;
+
+
+        private uint selectedSponsoredAdId;
+        private uint selectedReservedAdId;
 
         [Binding]
-        public uint ReservedSponsoredAd
+        public uint SelectedSponsoredAdId
         {
-            get => _reservedSponsoredAd;
-            set { Task.Run(delegate { ReservedSponsoredAdListAdapterOnItemSelected(_reservedSponsoredAd = value); }); }
+            get => selectedSponsoredAdId;
+            set => SelectNewSponsoredAd(selectedSponsoredAdId = value);
         }
+
+        [Binding]
+        public uint SelectedReservedAdId
+        {
+            get => selectedReservedAdId;
+            set => SelectNewReservedAd(selectedReservedAdId = value);
+        }
+
 
         public ConnectViewModel() : base(nameof(ConnectViewModel))
         {
@@ -52,7 +62,7 @@ namespace ViewModels
             }
         }
 
-        private async void ReservedSponsoredAdListAdapterOnItemSelected(uint index)
+        private async void SelectNewSponsoredAd(uint index)
         {
             try
             {
@@ -70,19 +80,28 @@ namespace ViewModels
             }
         }
 
+        private async void SelectNewReservedAd(uint index)
+        {
+            try
+            {
+                SponsoredAdDataModel data = await reservedSponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
+
+                SwitchToView(nameof(ReservedSponsoredAdView), new FormsTransitionBundle(data));
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+            }
+        }
 
         [Binding]
         public void CreateAdButton_OnClick()
         {
             SwitchToView(nameof(CreateCompanyAdView));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

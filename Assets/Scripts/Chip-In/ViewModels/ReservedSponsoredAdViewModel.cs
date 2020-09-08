@@ -16,13 +16,14 @@ using Views;
 namespace ViewModels
 {
     [Binding]
-    public sealed class SponsoredAdViewModel : CorrespondingViewsSwitchingViewModel<SponsoredAdView>, INotifyPropertyChanged
+    public sealed class ReservedSponsoredAdViewModel : CorrespondingViewsSwitchingViewModel<ReservedSponsoredAdView>, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
+        [SerializeField] private SponsoredAdRepository reservedSponsoredAdRepository;
 
         private string _posterUri;
         private Sprite _backgroundPoster;
+        private SponsoredAdDataModel _sponsoredAdData;
 
         [Binding]
         public Sprite BackgroundPoster
@@ -36,7 +37,7 @@ namespace ViewModels
             }
         }
 
-        public SponsoredAdViewModel() : base(nameof(SponsoredAdViewModel))
+        public ReservedSponsoredAdViewModel() : base(nameof(ReservedSponsoredAdViewModel))
         {
         }
 
@@ -47,9 +48,9 @@ namespace ViewModels
         }
 
         [Binding]
-        public void ReserveButton_OnClick()
+        public void CancelReservationButton_OnClick()
         {
-            sponsoredAdRepository.AddItem(new SponsoredAdDataModel {PosterUri = _posterUri});
+            reservedSponsoredAdRepository.RemoveItem(_sponsoredAdData);
             SwitchToPreviousView();
         }
 
@@ -57,11 +58,16 @@ namespace ViewModels
         protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            var transitionData = RelatedView.FormTransitionBundle.TransitionData;
+            _sponsoredAdData = RelatedView.FormTransitionBundle.TransitionData as SponsoredAdDataModel;
+            if (_sponsoredAdData == null)
+            {
+                LogUtility.PrintLogError(Tag, "Transition data is null");
+                return;
+            }
 
             try
             {
-                _posterUri = ((IPosterImageUri) transitionData).PosterUri;
+                _posterUri = ((IPosterImageUri) _sponsoredAdData).PosterUri;
                 BackgroundPoster = await downloadedSpritesRepository.CreateLoadSpriteTask(_posterUri, OperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }

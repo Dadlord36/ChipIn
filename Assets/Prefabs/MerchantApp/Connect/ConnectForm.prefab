@@ -1076,6 +1076,8 @@ MonoBehaviour:
   companyAdListAdapter: {fileID: 8829972675888673257}
   sponsoredAdRepository: {fileID: 11400000, guid: 723bd13d49426ab40aa755256a1f2bdd,
     type: 2}
+  reservedSponsoredAdRepository: {fileID: 11400000, guid: fa35a01e15fccb74fb6d31b163bf772b,
+    type: 2}
   sponsoredAdListAdapter: {fileID: 8257733056766773181}
   reservedSponsoredAdListAdapter: {fileID: 9118189093073212135}
 --- !u!1 &5283428840123364536
@@ -1904,6 +1906,7 @@ GameObject:
   - component: {fileID: 3582520002248500835}
   - component: {fileID: 6889007962084783131}
   - component: {fileID: 9118189093073212135}
+  - component: {fileID: 4689588112244517388}
   m_Layer: 5
   m_Name: ReservedAdSponsorAdsList
   m_TagString: Untagged
@@ -2059,6 +2062,28 @@ MonoBehaviour:
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4689588112244517388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7570486946876965545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.ConnectViewModel.SelectedReservedAdId
+  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.itemSelected
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.SelectedIndex
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &7651203368508896842
 GameObject:
   m_ObjectHideFlags: 0
@@ -2392,7 +2417,7 @@ MonoBehaviour:
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.ConnectViewModel.ReservedSponsoredAd
+  viewModelPropertyName: ViewModels.ConnectViewModel.SelectedSponsoredAdId
   viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.itemSelected
   viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.SelectedIndex
   viewAdapterTypeName: 
@@ -2884,15 +2909,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad3b8cb7b52ed034686f27dace6e4105, type: 3}
---- !u!224 &7431066781830276185 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6791730666102170994, guid: ad3b8cb7b52ed034686f27dace6e4105,
-    type: 3}
-  m_PrefabInstance: {fileID: 4134692393768665387}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1010816286920413439 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3991953839598424532, guid: ad3b8cb7b52ed034686f27dace6e4105,
+    type: 3}
+  m_PrefabInstance: {fileID: 4134692393768665387}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7431066781830276185 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6791730666102170994, guid: ad3b8cb7b52ed034686f27dace6e4105,
     type: 3}
   m_PrefabInstance: {fileID: 4134692393768665387}
   m_PrefabAsset: {fileID: 0}
@@ -3342,6 +3367,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 894966714220921504, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
       propertyPath: m_Name
@@ -3426,6 +3456,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8194441565086863039, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8616911003513357529, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}

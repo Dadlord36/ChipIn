@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects.SwitchBindings;
+using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using ViewModels.Basic;
@@ -33,8 +34,11 @@ namespace ViewModels
 
         protected void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default)
         {
-            InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle);
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultSwitchingParameters);
+            TasksFactories.ExecuteOnMainThread(()=>
+            {
+                InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle);
+                viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultSwitchingParameters);
+            });
         }
 
         protected void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters,
