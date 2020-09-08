@@ -8,13 +8,17 @@ using Repositories.Interfaces;
 
 namespace HttpRequests.RequestsProcessors.PutRequests
 {
-    public class ProductQrCode : IQrData
+    
+    public class ProductQrCode : IQrData, ITotalBill
     {
         public string QrData { get; set; }
+        public uint TotalBill { get; set; }
 
-        public ProductQrCode(string qrData)
+
+        public ProductQrCode(string qrData, uint totalBill)
         {
             QrData = qrData;
+            TotalBill = totalBill;
         }
     }
 

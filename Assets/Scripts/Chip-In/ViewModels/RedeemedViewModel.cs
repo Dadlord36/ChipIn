@@ -17,21 +17,22 @@ namespace ViewModels
     public sealed class RedeemedViewModel : CorrespondingViewsSwitchingViewModel<RedeemedView>, INotifyPropertyChanged
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        private int _totalBillNumber;
 
         [Binding]
         public string TotalBillNumber
         {
-            get => _totalBillNumber.ToString();
+            get => TotalBillNumberAsUint.ToString();
             set
             {
                 if (string.IsNullOrEmpty(value) || value == TotalBillNumber) return;
-                _totalBillNumber = int.Parse(value);
+                TotalBillNumberAsUint = uint.Parse(value);
                 OnPropertyChanged();
             }
         }
 
         private string QrString { get; set; }
+
+        private uint TotalBillNumberAsUint { get; set; }
 
         public RedeemedViewModel() : base(nameof(RedeemedViewModel))
         {
@@ -51,7 +52,7 @@ namespace ViewModels
             {
                 IsAwaitingProcess = true;
                 await UserProductsStaticRequestsProcessor.ActivateProduct(out OperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, new ProductQrCode(QrString));
+                    authorisationDataRepository, new ProductQrCode(QrString,TotalBillNumberAsUint)).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

@@ -116,12 +116,6 @@ namespace ViewModels
             Initialize();
         }
 
-        private Task ActivateProductAsync(string decodedText)
-        {
-            return UserProductsStaticRequestsProcessor.ActivateProduct(out OperationCancellationController.TasksCancellationTokenSource,
-                authorisationDataRepository, new ProductQrCode(decodedText));
-        }
-
         private void TryAuthorizeWebCameraAndStartQrReader()
         {
             if (NativeCamera.CheckPermission() == NativeCamera.Permission.Granted)
