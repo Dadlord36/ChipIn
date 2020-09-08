@@ -22,7 +22,7 @@ namespace RequestsStaticProcessors
     {
         private const string Tag = nameof(ProfileDataStaticRequestsProcessor);
 
-        public static Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileDataWebModel>.HttpResponse>
+        public static Task<BaseRequestProcessor<object, UserProfileResponseModel, IUserProfileModel>.HttpResponse>
             GetUserProfileData(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             LogUtility.PrintLog(Tag, $"Request Headers: {requestHeaders.GetRequestHeadersAsString()}");
@@ -85,7 +85,7 @@ namespace RequestsStaticProcessors
                 .SendRequest("Profile password was changed successfully");
         }
 
-        public static Task<BaseRequestProcessor<IUserGeoLocation, UserProfileDataWebModel, IUserProfileDataWebModel>.HttpResponse>
+        public static Task<BaseRequestProcessor<IUserGeoLocation, UserProfileDataModel, IUserProfileModel>.HttpResponse>
             UpdateUserPosition(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, IUserGeoLocation userGeoLocation)
         {
             return new UserGeoLocationDataPutProcessor(out cancellationTokenSource, requestHeaders, userGeoLocation)

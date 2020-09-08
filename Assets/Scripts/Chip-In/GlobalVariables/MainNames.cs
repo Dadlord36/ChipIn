@@ -24,6 +24,7 @@ namespace GlobalVariables
             public const string Birthdate = "birthdate";
             public const string RadarRadius = "radar_radius";
             public const string Country = "country";
+            public const string CountryCode = "country_code";
             public const string Role = "role";
             public const string TokensBalance = "tokens_balance";
             public const string Currency = "currency";

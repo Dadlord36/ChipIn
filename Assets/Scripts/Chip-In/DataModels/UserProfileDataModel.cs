@@ -6,45 +6,56 @@ using DataModels.Interfaces;
 using GlobalVariables;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
-using UnityEngine;
+using Tasking;
 
 namespace DataModels
 {
     public interface IUserMainData : INamed
     {
-        [JsonProperty(MainNames.ModelsPropertiesNames.Role)] string Role { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.Email)] string Email { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.Gender)] string Gender { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.TokensBalance)] int TokensBalance { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Role)]
+        string Role { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.Email)]
+        string Email { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.Gender)]
+        string Gender { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.TokensBalance)]
+        int TokensBalance { get; set; }
     }
 
     public interface IUserGeoLocation
     {
-        [JsonProperty(MainNames.ModelsPropertiesNames.Location)] GeoLocation UserLocation { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Location)]
+        GeoLocation UserLocation { get; set; }
     }
 
     public interface IUserExtraData : IUserGeoLocation
     {
-        [JsonProperty(MainNames.ModelsPropertiesNames.Birthdate)] string Birthday { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Birthdate)]
+        string Birthday { get; set; }
     }
 
     public interface IUserPreferences
     {
-        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAds)] bool ShowAdsState { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAlerts)] bool ShowAlertsState { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.UserRadar)] bool UserRadarState { get; set; }
-        [JsonProperty(MainNames.ModelsPropertiesNames.ShowNotifications)] bool ShowNotificationsState { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAds)]
+        bool ShowAdsState { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowAlerts)]
+        bool ShowAlertsState { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.UserRadar)]
+        bool UserRadarState { get; set; }
+
+        [JsonProperty(MainNames.ModelsPropertiesNames.ShowNotifications)]
+        bool ShowNotificationsState { get; set; }
     }
 
     public interface ICountryCode
     {
-        [JsonProperty(MainNames.ModelsPropertiesNames.Country)] string CountryCode { get; set; }
-    }
-
-    [JsonObject(MemberSerialization.OptIn)]
-    public interface IUserProfileDataWebModel : IIdentifier, IUserMainData, IUserAvatarUrl, IUserExtraData,
-        IUserPreferences, ICountryCode, ICurrencyCode
-    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.Country)]
+        string CountryCode { get; set; }
     }
 
     public interface IDataLifeCycleModel : ICreatedAtTime
@@ -52,49 +63,24 @@ namespace DataModels
         [JsonProperty("updated_at")] DateTime UpdatedAt { get; set; }
     }
 
-
-    [Serializable]
-    public class UserProfileDataWebModel : IUserProfileDataWebModel, INotifyPropertyChanged
+    public class UserProfileDataModel : IUserProfileModel, INotifyPropertyChanged
     {
-        [SerializeField] private int? id;
-        [SerializeField] private string email;
-        [SerializeField] private string name;
-        [SerializeField] private string role;
-        [SerializeField] private int tokensBalance;
-        [SerializeField] private string gender;
-        [SerializeField] private bool showAdsState;
-        [SerializeField] private bool showAlertsState;
-        [SerializeField] private bool userRadarState;
-        [SerializeField] private bool showNotificationsState;
-        [SerializeField] private GeoLocation userLocation;
-        [SerializeField] private string avatarImageUrl;
-        [SerializeField] private string birthday;
-        [SerializeField] private string countryCode;
+        private int? id;
+        private string email;
+        private string name;
+        private string role;
+        private int tokensBalance;
+        private string gender;
+        private bool showAdsState;
+        private bool showAlertsState;
+        private bool userRadarState;
+        private bool showNotificationsState;
+        private GeoLocation userLocation;
+        private string avatarImageUrl;
+        private string birthday;
+        private string countryCode;
         private string _avatar;
         private string _currency;
-
-        public UserProfileDataWebModel(int id, string email, string name, string role, int tokensBalance,
-            string gender, bool showAdsState, bool showAlertsState, bool userRadarState, bool showNotificationsState,
-            GeoLocation userLocation, string avatarImageUrl, string birthday, string countryCode)
-        {
-            this.id = id;
-            this.email = email;
-            this.name = name;
-            this.role = role;
-            this.tokensBalance = tokensBalance;
-            this.gender = gender;
-            this.showAdsState = showAdsState;
-            this.showAlertsState = showAlertsState;
-            this.userRadarState = userRadarState;
-            this.showNotificationsState = showNotificationsState;
-            this.userLocation = userLocation;
-            this.avatarImageUrl = avatarImageUrl;
-            this.birthday = birthday;
-            this.countryCode = countryCode;
-        }
-
-        public static UserProfileDataWebModel Empty => new UserProfileDataWebModel(0, "", "", "", 0, "", false,
-            false, false, false, new GeoLocation(), "", "", "");
 
         public int? Id
         {
@@ -217,17 +203,6 @@ namespace DataModels
             }
         }
 
-        public string AvatarImageUrl
-        {
-            get => avatarImageUrl;
-            set
-            {
-                if (value == avatarImageUrl) return;
-                avatarImageUrl = value;
-                OnPropertyChanged();
-            }
-        }
-
         public string Birthday
         {
             get => birthday;
@@ -278,9 +253,7 @@ namespace DataModels
         [NotifyPropertyChangedInvocator]
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(delegate { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
-
-       
     }
 }

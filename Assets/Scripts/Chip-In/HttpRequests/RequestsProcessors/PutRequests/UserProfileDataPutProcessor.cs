@@ -2,17 +2,18 @@
 using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
+using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using GlobalVariables;
 using Newtonsoft.Json;
 
 namespace HttpRequests.RequestsProcessors.PutRequests
 {
-    public class UserProfileDataPutProcessor : BaseRequestProcessor<IUserProfileDataWebModel, UserProfileDataWebModel,
-        IUserProfileDataWebModel>
+    public class UserProfileDataPutProcessor : BaseRequestProcessor<IUserProfileModel, UserProfileDataModel,
+        IUserProfileModel>
     {
         public UserProfileDataPutProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-            IUserProfileDataWebModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Put,
+            IUserProfileModel requestBodyModel) : base(out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Put,
             requestHeaders, requestBodyModel)
         {
         }
