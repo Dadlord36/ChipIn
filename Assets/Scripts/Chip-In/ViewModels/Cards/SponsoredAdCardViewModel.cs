@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -43,23 +43,11 @@ namespace ViewModels.Cards
             }
         }
 
-        public Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
+        public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            /*return dataModel.LoadBackgroundTextureTask.ContinueWith(
-                delegate(Task<Texture2D> finishedTask) { BackgroundTexture = finishedTask.GetAwaiter().GetResult(); }
-                , CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, GameManager.MainThreadScheduler
-            );*/
-            return Task.CompletedTask;
+            BackgroundTexture = await dataModel.LoadBackgroundTextureTask.ConfigureAwait(false);
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        
         public void OnPointerClick(PointerEventData eventData)
         {
             OnItemSelected(IndexInOrder);
@@ -68,6 +56,17 @@ namespace ViewModels.Cards
         private void OnItemSelected(uint index)
         {
             ItemSelected?.Invoke(index);
+        }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            TasksFactories.ExecuteOnMainThread(()=>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            });
         }
     }
 }

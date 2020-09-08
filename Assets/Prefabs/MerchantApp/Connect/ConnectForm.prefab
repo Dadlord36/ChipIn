@@ -49,9 +49,9 @@ MonoBehaviour:
   m_Script: {fileID: -1613660816, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsEmpty
+  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsNotEmpty
 --- !u!1 &1108727584695980998
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,9 +475,9 @@ MonoBehaviour:
   m_Script: {fileID: -1613660816, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.CompanyAdListAdapter.ItemsListIsEmpty
+  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.CompanyAdListAdapter.ItemsListIsNotEmpty
 --- !u!1 &2499797052276317161
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,8 +998,17 @@ MonoBehaviour:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   pagesPaginatedRepository: {fileID: 11400000, guid: 6ee799f09793e0c499215375e658476a,
     type: 2}
+  startedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  endedFetching:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &3847586998877240754
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,9 +1819,9 @@ MonoBehaviour:
   m_Script: {fileID: -1613660816, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsEmpty
+  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsNotEmpty
 --- !u!1 &6291602569817173178
 GameObject:
   m_ObjectHideFlags: 0
@@ -2036,8 +2045,17 @@ MonoBehaviour:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   pagesPaginatedRepository: {fileID: 11400000, guid: fa35a01e15fccb74fb6d31b163bf772b,
     type: 2}
+  startedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  endedFetching:
+    m_PersistentCalls:
+      m_Calls: []
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
@@ -2206,6 +2224,7 @@ GameObject:
   - component: {fileID: 7071623432811075977}
   - component: {fileID: 2628343689820500541}
   - component: {fileID: 8257733056766773181}
+  - component: {fileID: 8187223575758562172}
   m_Layer: 5
   m_Name: AllSponsorAdsList
   m_TagString: Untagged
@@ -2347,11 +2366,42 @@ MonoBehaviour:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   pagesPaginatedRepository: {fileID: 11400000, guid: 723bd13d49426ab40aa755256a1f2bdd,
     type: 2}
+  startedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  endedFetching:
+    m_PersistentCalls:
+      m_Calls: []
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8187223575758562172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8006716879015166500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.ConnectViewModel.ReservedSponsoredAd
+  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.itemSelected
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.SelectedIndex
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &8392117418248941212
 GameObject:
   m_ObjectHideFlags: 0

@@ -31,10 +31,7 @@ namespace Repositories
         public int ItemsPerPage { get; }
         public int TotalPages { get; }
 
-        public uint TotalItemsNumber
-        {
-            get => (uint) _dataList.Count;
-        }
+        public uint TotalItemsNumber => (uint) _dataList.Count;
 
         public uint LastPageItemsNumber { get; }
 
@@ -62,6 +59,7 @@ namespace Repositories
         public void AddItem(TDataType item)
         {
             _dataList.Add(item);
+            sourceString = JsonConverterUtility.ConvertModelToJson(new TempRepoList<TDataType> {ListOfItems = _dataList});
         }
 
         public override Task LoadDataFromServer()

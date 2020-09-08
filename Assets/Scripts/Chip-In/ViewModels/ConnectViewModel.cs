@@ -2,9 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using DataModels;
 using JetBrains.Annotations;
-using Repositories.Remote.Paginated;
 using Repositories.Temporary;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -24,6 +22,7 @@ namespace ViewModels
         [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
         private uint _reservedSponsoredAd;
 
+        [Binding]
         public uint ReservedSponsoredAd
         {
             get => _reservedSponsoredAd;
@@ -34,15 +33,13 @@ namespace ViewModels
         {
         }
 
-
         protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsoredAdListAdapter.ResetAsync(),
-                        reservedSponsoredAdListAdapter.ResetAsync())
-                    .ConfigureAwait(true);
+                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsoredAdListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -59,7 +56,7 @@ namespace ViewModels
         {
             try
             {
-                var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(true);
+                var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
 
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
