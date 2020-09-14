@@ -20,28 +20,39 @@ namespace Repositories.Local
 
         private const string Tag = nameof(DownloadedSpritesRepository);
 
-        
-
 
         private sealed class DownloadHandleSprite
         {
             public readonly string Url;
             public Sprite LoadedSprite { get; private set; }
+            public Task<Sprite> LoadingTask { get; private set; }
 
             public bool IsLoaded => LoadedSprite;
+            public bool IsLoading => !IsLoaded && LoadingTask != null;
+            private readonly bool _isLocalFile;
 
-
-            public DownloadHandleSprite(string url)
+            public DownloadHandleSprite(string url, bool isLocalFile)
             {
                 Url = url;
+                _isLocalFile = isLocalFile;
             }
 
             public async Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskFactory mainThreadTaskFactory, Sprite defaultIcon)
             {
                 try
                 {
-                    return LoadedSprite = await ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, mainThreadTaskFactory, Url,
-                        cancellationToken).ConfigureAwait(false);
+                    if (_isLocalFile)
+                    {
+                        LoadingTask = SpritesUtility.CreateSpriteFromPathAsync(Url);
+                        LoadedSprite = await LoadingTask.ConfigureAwait(false);
+                        LoadingTask = null;
+                        return LoadedSprite;
+                    }
+
+                    LoadingTask = ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, mainThreadTaskFactory, Url, cancellationToken);
+                    await LoadingTask.ConfigureAwait(false);
+                    LoadingTask = null;
+                    return LoadedSprite;
                 }
                 catch (Exception e)
                 {
@@ -52,9 +63,7 @@ namespace Repositories.Local
         }
 
         private readonly List<DownloadHandleSprite> _spritesDownloadHandles = new List<DownloadHandleSprite>();
-
-        public static TaskScheduler MainThreadScheduler => GameManager.MainThreadScheduler;
-
+        
         private void OnEnable()
         {
             _spritesDownloadHandles.Clear();
@@ -62,59 +71,60 @@ namespace Repositories.Local
 
         private bool SpriteIsAlreadyLoaded(string url, out DownloadHandleSprite handleSprite)
         {
-            handleSprite = _spritesDownloadHandles.Find(downloadHandleSprite => downloadHandleSprite != null &&
-                                                                                downloadHandleSprite.Url == url);
+            handleSprite = _spritesDownloadHandles.Find(downloadHandleSprite => downloadHandleSprite != null && downloadHandleSprite.Url == url);
             return handleSprite != null;
         }
 
-        public async Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken)
+        public Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken, bool isLocalFile = false)
         {
             if (SpriteIsAlreadyLoaded(url, out var downloadHandleSprite))
             {
                 if (downloadHandleSprite.IsLoaded)
                 {
-                    return downloadHandleSprite.LoadedSprite;
+                    return Task.FromResult(downloadHandleSprite.LoadedSprite);
                 }
-                try
+
+                if (downloadHandleSprite.IsLoading)
                 {
-                    return await downloadHandleSprite.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory,
-                        IconPlaceholder).ConfigureAwait(false);
+                    return downloadHandleSprite.LoadingTask;
+                }
+
+
+                //TODO: If sprites are loading fine - remove comment below 
+                /*try
+                {
+                    return  downloadHandleSprite.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory, IconPlaceholder);
                 }
                 catch (Exception)
                 {
-                    return IconPlaceholder;
-                }
+                    return Task.FromResult(IconPlaceholder);
+                }*/
             }
 
-            var downloadHandle = new DownloadHandleSprite(url);
+            var downloadHandle = new DownloadHandleSprite(url, isLocalFile);
             _spritesDownloadHandles.Add(downloadHandle);
             try
             {
-                return await downloadHandle.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory,
-                    IconPlaceholder).ConfigureAwait(false);
+                return downloadHandle.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory, IconPlaceholder);
             }
             catch (Exception)
             {
-                return iconPlaceholder;
+                return Task.FromResult(iconPlaceholder);
             }
         }
 
-        public Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken)
+        public async Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken, bool isLocalFile = false)
         {
-            return CreateLoadSpriteTask(url, cancellationToken).ContinueWith(delegate(Task<Sprite> task)
-            {
-                if (!task.IsCompleted) return iconPlaceholder.texture;
-                var sprite = task.GetAwaiter().GetResult();
-                return sprite.texture;
-            }, cancellationToken, TaskContinuationOptions.NotOnCanceled, MainThreadScheduler);
+            var sprite = await CreateLoadSpriteTask(url, cancellationToken, isLocalFile).ConfigureAwait(false);
+            return TasksFactories.ExecuteOnMainThread(() => sprite.texture);
         }
 
-        private Task[] CreateLoadSpritesTasks(IReadOnlyList<string> parameters, in CancellationToken cancellationToken)
+        private Task[] CreateLoadSpritesTasks(IReadOnlyList<string> parameters, in CancellationToken cancellationToken, bool isLocalFile = false)
         {
             var tasks = new Task[parameters.Count];
             for (int i = 0; i < parameters.Count; i++)
             {
-                tasks[i] = CreateLoadSpriteTask(parameters[i], cancellationToken);
+                tasks[i] = CreateLoadSpriteTask(parameters[i], cancellationToken, isLocalFile);
             }
 
             return tasks;
