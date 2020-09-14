@@ -13,5 +13,10 @@ namespace Tasking
         {
             MainThreadTaskFactory.StartNew(action).GetAwaiter().GetResult();
         }
+
+        public static T ExecuteOnMainThread<T>(Func<T> func)
+        {
+            return MainThreadTaskFactory.StartNew(func).GetAwaiter().GetResult();
+        }
     }
 }
