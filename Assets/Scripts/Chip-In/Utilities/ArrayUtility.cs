@@ -34,45 +34,15 @@ namespace Utilities
             return new Vector2Int(index % arrayWidth, index / arrayWidth);
         }
 
-        public static T[] GetPartOfArray<T>(T[] array, int sourceArrayWidth, int sourceArrayHeight,
-            Vector2Int startCoordinate, int width, int height)
-        {
-            var resultArray = new List<T>(width * height);
-            var arrayLength = array.Length;
-            for (int y = sourceArrayHeight; y >= 0; y--)
-            {
-                for (int x = 0; x <= sourceArrayWidth; x++)
-                {
-                    if (x >= startCoordinate.x && x <= startCoordinate.x + width && y >= startCoordinate.y &&
-                        y <= startCoordinate.y + height)
-                    {
-                        var coordinate = GetAtIndex(y, x, arrayLength);
-                        resultArray.Add(array[coordinate]);
-                    }
-                }
-            }
-
-            return resultArray.ToArray();
-        }
-
         public static List<T> GetRemainArrayItemsStartingWithIndex<T>(List<T> items, int startingIndex,
             uint lengthLimit)
         {
             return items.GetRange(startingIndex, (int) Mathf.Clamp(items.Count - startingIndex, 0, lengthLimit));
         }
 
-        private static T[,] Make2DArray<T>(T[] input, int height, int width)
+        public static T GetMiddleElement<T>(IReadOnlyList<T> ia)
         {
-            T[,] output = new T[height, width];
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    output[i, j] = input[GetAtIndex(i, j, width)];
-                }
-            }
-
-            return output;
+            return ia[CalculationsUtility.GetMiddle(ia.Count)];
         }
     }
 }
