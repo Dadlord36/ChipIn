@@ -11,7 +11,7 @@ namespace Utilities
         {
             try
             {
-                using (var sourceStream = File.Open(filePath, FileMode.Open))
+                using (var sourceStream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                 {
                     var result = new byte[sourceStream.Length];
                     await sourceStream.ReadAsync(result, 0, (int) sourceStream.Length).ConfigureAwait(false);
@@ -29,7 +29,7 @@ namespace Utilities
         {
             try
             {
-                using (var sourceStream = File.Open(filePath, FileMode.Open))
+                using (var sourceStream = File.Open(filePath, FileMode.Open, FileAccess.Read))
                 {
                     var result = new byte[sourceStream.Length];
                     await sourceStream.ReadAsync(result, 0, (int) sourceStream.Length).ConfigureAwait(false);
