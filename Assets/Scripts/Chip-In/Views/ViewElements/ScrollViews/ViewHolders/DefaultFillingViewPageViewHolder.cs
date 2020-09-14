@@ -17,10 +17,10 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
 
             // GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
             // which infers the variable's component from its type, so you won't need to specify it yourself
-            if (!root.TryGetComponent(out _fillingViewImplementation))
-            {
+            if (root.TryGetComponent(out _fillingViewImplementation)) return;
+            _fillingViewImplementation = root.GetComponentInChildren<IFillingView<TDataType>>();
+            if (_fillingViewImplementation == null)
                 LogUtility.PrintLogError(Tag, $"{root.name} has no attached component of type {nameof(IFillingView<TDataType>)}");
-            }
         }
 
         public Task FillView(TDataType dataModel, uint dataBaseIndex)

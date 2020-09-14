@@ -52,6 +52,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         public async Task ResetAsync()
         {
+            if(!IsInitialized) return;
+            
             ResetStateVariables();
 
             if (Data.Count > 0)
@@ -63,7 +65,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 OnStartedFetching();
-
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
                 ItemsListIsNotEmpty = TotalCapacity > 0;
                 /*if (ItemsListIsNotEmpty)
@@ -83,16 +84,32 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
         }
 
+        protected override async void OnInitialized()
+        {
+            base.OnInitialized();
+            try
+            {
+                await ResetAsync();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         private void SetInteractivity(bool state)
         {
             Parameters.SetScrollInteractivity(state);
         }
 
-
         protected override async void Update()
         {
             base.Update();
-
             if (!IsInitialized)
                 return;
 
@@ -107,7 +124,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             try
             {
-                await FetchItemsAndRefillTheList();
+                await FetchItemsAndRefillTheList().ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -145,11 +162,14 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
 
             if (newPotentialNumberOfItems <= Data.Count) return;
+            
+            
             try
             {
                 _fetching = true;
                 OnStartedFetching();
                 await FetchItemModelsFromServerAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
+                LogUtility.PrintLog(Tag, "Fetching finished");
             }
             catch (ArgumentOutOfRangeException e)
             {

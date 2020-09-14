@@ -10,7 +10,8 @@ namespace Utilities
             var step = 1f / itemsNumber;
             for (int i = 0; i < itemsNumber; i++)
             {
-                Color.Lerp(a, b, step * i);
+                colors[i] = CreateColorFromHSV(Mathf.Lerp(startValue, endValue, step * i));
+                colors[i].a = alpha;
             }
 
             return colors;

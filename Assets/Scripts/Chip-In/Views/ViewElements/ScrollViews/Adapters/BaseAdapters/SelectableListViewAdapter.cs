@@ -23,7 +23,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
         {
             var viewHolder = base.CreateViewsHolder(itemIndex);
-            var selection = viewHolder.root.GetComponent<IIdentifiedSelection>();
+            var selection = viewHolder.root.GetComponentInChildren<IIdentifiedSelection>();
             selection.IndexInOrder = (uint) itemIndex;
             selection.ItemSelected += OnItemSelected;
             return viewHolder;

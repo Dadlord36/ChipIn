@@ -141,13 +141,13 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             Data.RemoveItems(index, count);
         }
 
-        public void SetItems(IList<TDataType> items)
+        public virtual void SetItems(IList<TDataType> items)
         {
             // Commented: the below 3 lines exemplify how you can use a plain list to manage the data, instead of a DataHelper, in case you need full control
             //YourList.Clear();
             //YourList.AddRange(items);
             //ResetItems(YourList.Count);
-
+            
             Data.ResetItems(items);
         }
 
