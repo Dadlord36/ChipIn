@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
+using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Utilities;
 
@@ -9,6 +10,7 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
     {
         private const string Tag = nameof(DefaultFillingViewPageViewHolder<TDataType>);
         private IFillingView<TDataType> _fillingViewImplementation;
+        private IIdentifiedSelection _identifiedSelection;
 
         // Retrieving the views from the item's root GameObject
         public override void CollectViews()
@@ -17,6 +19,8 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
 
             // GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
             // which infers the variable's component from its type, so you won't need to specify it yourself
+
+            _identifiedSelection = root.GetComponentInChildren<IIdentifiedSelection>();
             if (root.TryGetComponent(out _fillingViewImplementation)) return;
             _fillingViewImplementation = root.GetComponentInChildren<IFillingView<TDataType>>();
             if (_fillingViewImplementation == null)
@@ -26,6 +30,11 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
         public Task FillView(TDataType dataModel, uint dataBaseIndex)
         {
             return _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
+        }
+
+        public void SelectThisItem()
+        {
+            _identifiedSelection.Select();
         }
     }
 }

@@ -59,10 +59,10 @@ namespace ViewModels
         [Binding]
         public void PreviewButton_OnClick()
         {
-            if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
+            /*if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
             {
                 return;
-            }
+            }*/
 
             SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
                 GetComponentsInChildren<ICompanyAdFeatureModel>(), CompanyLogoImagePath, CompanyPosterImagePath)));

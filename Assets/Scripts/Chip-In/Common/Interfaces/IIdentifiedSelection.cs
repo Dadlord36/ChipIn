@@ -6,5 +6,6 @@ namespace Common.Interfaces
     {
         uint IndexInOrder { get; set; }
         event Action<uint> ItemSelected;
+        void Select();
     }
 }

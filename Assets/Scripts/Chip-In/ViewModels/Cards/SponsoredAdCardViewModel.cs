@@ -18,7 +18,8 @@ namespace ViewModels.Cards
     {
         public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
-        
+
+
         public class FieldFillingData
         {
             public readonly Task<Texture2D> LoadBackgroundTextureTask;
@@ -47,8 +48,13 @@ namespace ViewModels.Cards
         {
             BackgroundTexture = await dataModel.LoadBackgroundTextureTask.ConfigureAwait(false);
         }
-        
+
         public void OnPointerClick(PointerEventData eventData)
+        {
+            Select();
+        }
+
+        public void Select()
         {
             OnItemSelected(IndexInOrder);
         }
@@ -57,16 +63,13 @@ namespace ViewModels.Cards
         {
             ItemSelected?.Invoke(index);
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            TasksFactories.ExecuteOnMainThread(()=>
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            });
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

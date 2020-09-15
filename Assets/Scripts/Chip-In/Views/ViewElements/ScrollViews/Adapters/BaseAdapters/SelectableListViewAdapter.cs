@@ -18,20 +18,27 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     {
         public UnityEvent itemSelected;
 
-        [Binding] public uint SelectedIndex { get; set; }
+        [Binding]
+        public uint SelectedIndex { get; set; }
 
         protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
         {
             var viewHolder = base.CreateViewsHolder(itemIndex);
             var selection = viewHolder.root.GetComponentInChildren<IIdentifiedSelection>();
             selection.IndexInOrder = (uint) itemIndex;
-            selection.ItemSelected += OnItemSelected;
+            selection.ItemSelected += SelectNewItem;
             return viewHolder;
         }
 
-        private void OnItemSelected(uint index)
+        private void SelectNewItem(uint itemIndex)
         {
-            SelectedIndex = index;
+            if (itemIndex == SelectedIndex) return;
+            SelectedIndex = itemIndex;
+            OnItemSelected();
+        }
+
+        private void OnItemSelected()
+        {
             itemSelected?.Invoke();
         }
     }

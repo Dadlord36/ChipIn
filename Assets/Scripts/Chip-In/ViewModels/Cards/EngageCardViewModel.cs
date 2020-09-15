@@ -152,6 +152,11 @@ namespace ViewModels.Cards
 
         private void OnCardWasClicked()
         {
+            Select();
+        }
+        
+        public void Select()
+        {
             OnItemSelected((uint) Id);
         }
 

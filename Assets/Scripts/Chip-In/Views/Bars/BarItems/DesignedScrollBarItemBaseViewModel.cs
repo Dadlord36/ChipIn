@@ -80,7 +80,10 @@ namespace Views.Bars.BarItems
         }
 
         public event Action<uint> ItemSelected;
+
+
         public uint IndexInOrder { get; set; }
+        private uint _index;
 
         private Color _backgroundGradientColor1;
         private Color _backgroundGradientColor2;
@@ -128,6 +131,7 @@ namespace Views.Bars.BarItems
         public Task FillView(FieldFillingData data, uint dataBaseIndex)
         {
             Set(data);
+            _index = data.Id;
             return Task.CompletedTask;
         }
 
@@ -135,6 +139,16 @@ namespace Views.Bars.BarItems
         {
         }
 
+        public void Select()
+        {
+            OnItemSelected(_index);
+        }
+
+        protected void OnItemSelected(uint index)
+        {
+            ItemSelected?.Invoke(index);
+        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -142,5 +156,7 @@ namespace Views.Bars.BarItems
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
+
+
     }
 }

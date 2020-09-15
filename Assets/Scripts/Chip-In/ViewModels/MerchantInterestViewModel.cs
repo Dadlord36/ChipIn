@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Controllers;
 using DataModels;
 using JetBrains.Annotations;
 using Repositories.Local;
@@ -103,7 +102,7 @@ namespace ViewModels
             {
                 if (RelatedView.FormTransitionBundle.TransitionData == null)
                 {
-                    LogUtility.PrintLog(Tag,"<color=red>TransitionData is NULL</color>");
+                    LogUtility.PrintLog(Tag, "<color=red>TransitionData is NULL</color>");
                     return;
                 }
 
@@ -116,22 +115,16 @@ namespace ViewModels
                     merchantInterestPagesPaginatedRepository.SelectedCommunityId = selectedCommunityId;
                     await merchantInterestPagesListAdapter.ResetAsync().ConfigureAwait(false);
                 }
-                
+
                 {
                     _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(false);
 
-                    TasksFactories.ExecuteOnMainThread(delegate
-                    {
-                        InterestName = _selectedCommunityData.Name;
-                    });
-                    
+                    TasksFactories.ExecuteOnMainThread(delegate { InterestName = _selectedCommunityData.Name; });
+
                     var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri,
                         OperationCancellationController.CancellationToken).ConfigureAwait(false);
 
-                    TasksFactories.ExecuteOnMainThread(delegate
-                    {
-                        LogoSprite = sprite;
-                    });
+                    TasksFactories.ExecuteOnMainThread(delegate { LogoSprite = sprite; });
                 }
             }
             catch (OperationCanceledException)
@@ -144,6 +137,28 @@ namespace ViewModels
                 throw;
             }
         }
+        
+        /*public async void FundTheInterest(int tokensAmount)
+        {
+            if (tokensAmount <= 0) return;
+
+            try
+            {
+                var response = await CommunitiesInterestsStaticProcessor.FundInterest(out AsyncOperationCancellationController.TasksCancellationTokenSource,
+                    authorisationDataRepository, (int) InterestId, tokensAmount);
+
+                alertCardController.ShowAlertWithText(response.Success ? "Successfully fund this interest" : response.Error);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }*/
 
         private async Task<MarketInterestDetailsDataModel> GetSelectedCommunityDetailsAsync(int selectedCommunityId)
         {

@@ -17,8 +17,24 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         [SerializeField, Range(0f, 1f)] private float itemsBackgroundAlpha;
         private const int MINItemsToLoop = 10;
+        private int _selectedIndex;
+        private int _middleElementNumber;
+        private DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData> _middleItem;
 
-        public class FillingViewAdapterImplementation : FillingViewAdapter<DesignedScrollBarItemDefaultDataModel, DesignedScrollBarItemBaseViewModel.FieldFillingData>
+        private DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData> MiddleItem
+        {
+            get => _middleItem;
+            set
+            {
+                if (ReferenceEquals(_middleItem, value)) return;
+                _middleItem = value;
+                value.SelectThisItem();
+            }
+        }
+
+
+        public class FillingViewAdapterImplementation : FillingViewAdapter<DesignedScrollBarItemDefaultDataModel,
+            DesignedScrollBarItemBaseViewModel.FieldFillingData>
         {
             public override DesignedScrollBarItemBaseViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 DesignedScrollBarItemDefaultDataModel data, uint dataIndexInRepository)
@@ -30,9 +46,18 @@ namespace Views.ViewElements.ScrollViews.Adapters
         protected override void OnScrollPositionChanged(double normPos)
         {
             base.OnScrollPositionChanged(normPos);
-            ControlItemsOverlay();
+            if (!IsInitialized || VisibleItemsCount == 0)
+                return;
+            FindMiddleElementAndRefreshItemsOverlaying();
         }
 
+        private void FindMiddleElementAndRefreshItemsOverlaying()
+        {
+            _middleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
+            MiddleItem = _VisibleItems[_middleElementNumber];
+            ControlItemsOverlay();
+        }
+        
         public override void SetItems(IList<DesignedScrollBarItemDefaultDataModel> items)
         {
             SetColors(items);
@@ -52,9 +77,9 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 Data.ResetItems(itemsToSet);
                 return;
             }
-            
+
+            FindMiddleElementAndRefreshItemsOverlaying();
             base.SetItems(items);
-            
         }
 
         private void SetColors(IList<DesignedScrollBarItemDefaultDataModel> linearGradientColors)
@@ -70,31 +95,26 @@ namespace Views.ViewElements.ScrollViews.Adapters
 
         private void ControlItemsOverlay()
         {
-            if (!IsInitialized || VisibleItemsCount == 0) return;
-
-            var middleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
-
             void SetVisibleItemsSiblingIndexAsLast(int index)
             {
                 _VisibleItems[index].root.SetAsLastSibling();
             }
 
-            for (int i = 0; i < middleElementNumber; i++)
+            for (int i = 0; i < _middleElementNumber; i++)
             {
                 SetVisibleItemsSiblingIndexAsLast(i);
             }
 
-            for (int i = VisibleItemsCount - 1; i > middleElementNumber; i--)
+            for (int i = VisibleItemsCount - 1; i > _middleElementNumber; i--)
             {
                 SetVisibleItemsSiblingIndexAsLast(i);
             }
-
-            _VisibleItems[middleElementNumber].root.SetAsLastSibling();
+            _VisibleItems[_middleElementNumber].root.SetAsLastSibling();
         }
-        
+
         private void CalculateGradientColorsArrays(int shadesNumber, out Color[] startColors, out Color[] endColors)
         {
-            startColors = ColorsUtility.GenerateColorsBetweenTwoColors(0f,0.9f, itemsBackgroundAlpha, shadesNumber);
+            startColors = ColorsUtility.GenerateColorsBetweenTwoColors(0f, 0.9f, itemsBackgroundAlpha, shadesNumber);
             endColors = ColorsUtility.GenerateColorsBetweenTwoColors(0.1f, 1f, itemsBackgroundAlpha, shadesNumber);
         }
     }
