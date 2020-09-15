@@ -13,7 +13,7 @@ namespace Behaviours
         protected ref DisposableCancellationTokenSource TasksCancellationTokenSource =>
             ref AsyncOperationCancellationController.TasksCancellationTokenSource;
         
-        private static AwaitingProcessVisualizerController MainAwaitingProcessVisualizerController => GameManager.MainAwaitingProcessVisualizerController;
+        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
 
         private bool _awaitingProcess;
 
@@ -26,9 +26,9 @@ namespace Behaviours
                 if (value == _awaitingProcess) return;
                 _awaitingProcess = value;
                 if (value)
-                    MainAwaitingProcessVisualizerController.Show();
+                    MainAwaitingProcessVisualizerControllerScriptable.Show();
                 else
-                    MainAwaitingProcessVisualizerController.Hide();
+                    MainAwaitingProcessVisualizerControllerScriptable.Hide();
             }
         }
         

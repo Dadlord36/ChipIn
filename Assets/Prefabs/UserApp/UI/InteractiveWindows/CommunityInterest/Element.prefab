@@ -52,7 +52,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d6bb53815cf4078a9a3cc79c714d72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberTextField: {fileID: 106675796099569342}
 --- !u!1 &5128050291415552080
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,6 +137,7 @@ GameObject:
   - component: {fileID: 2842623539777204706}
   - component: {fileID: 6834882313043498664}
   - component: {fileID: 106675796099569342}
+  - component: {fileID: 5231810569951083370}
   m_Layer: 5
   m_Name: Number
   m_TagString: Untagged
@@ -261,6 +261,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5231810569951083370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5760088611490975931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.IntToStringAdapter
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.Cards.InterestCardElementViewModel.Count
+  viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1 &8782057361069505505
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using HttpRequests.RequestsProcessors.GetRequests;
+﻿using DataModels.Interfaces;
+using HttpRequests.RequestsProcessors.GetRequests;
 
 namespace DataModels
 {

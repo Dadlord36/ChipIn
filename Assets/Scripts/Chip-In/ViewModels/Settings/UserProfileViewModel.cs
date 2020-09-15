@@ -6,15 +6,17 @@ using GlobalVariables;
 using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using ScriptableObjects.SwitchBindings;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using ViewModels.Basic;
+using Views;
+using Views.OptionsSelectionViews;
 
 namespace ViewModels.Settings
 {
     [Binding]
-    public class UserProfileViewModel : BaseViewModel, INotifyPropertyChanged
+    public class UserProfileViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
         [SerializeField] private UserProfileRemoteRepository repository;
         [SerializeField] private GeoLocationRepository geoLocationRepository;
@@ -82,6 +84,7 @@ namespace ViewModels.Settings
 
         [Binding] public Sprite AvatarImageSprite => repository.UserAvatarSprite;
 
+
         [Binding]
         public string Name
         {
@@ -118,6 +121,7 @@ namespace ViewModels.Settings
             get => UserSettingsModel.CountryCode;
             set
             {
+                if(value == CountryCode) return;
                 UserSettingsModel.CountryCode = value;
                 SyncChangedPropertyWithServer(value, MainNames.ModelsPropertiesNames.Country);
             }
@@ -129,6 +133,7 @@ namespace ViewModels.Settings
             get => UserSettingsModel.CurrencyCode;
             set
             {
+                if(value == CurrencyCode) return;
                 UserSettingsModel.CurrencyCode = value;
                 SyncChangedPropertyWithServer(value, MainNames.ModelsPropertiesNames.Currency);
             }
@@ -141,6 +146,7 @@ namespace ViewModels.Settings
             get => UserSettingsModel.ShowAdsState;
             set
             {
+                if(value == ShowAdsState) return;
                 UserSettingsModel.ShowAdsState = value;
                 SyncChangedPropertyWithServer(PropertiesUtility.BoolToString(value), MainNames.ModelsPropertiesNames.ShowAds);
             }
@@ -152,6 +158,7 @@ namespace ViewModels.Settings
             get => UserSettingsModel.ShowAlertsState;
             set
             {
+                if(value == ShowAlertsState) return;
                 UserSettingsModel.ShowAlertsState = value;
                 SyncChangedPropertyWithServer(PropertiesUtility.BoolToString(value), MainNames.ModelsPropertiesNames.ShowAlerts);
             }
@@ -163,6 +170,7 @@ namespace ViewModels.Settings
             get => UserSettingsModel.UserRadarState;
             set
             {
+                if(value == UserRadarState) return;
                 UserSettingsModel.UserRadarState = value;
                 SyncChangedPropertyWithServer(PropertiesUtility.BoolToString(value), MainNames.ModelsPropertiesNames.UserRadar);
             }
@@ -174,15 +182,54 @@ namespace ViewModels.Settings
             get => UserSettingsModel.ShowNotificationsState;
             set
             {
+                if(value == ShowNotificationsState) return;
                 UserSettingsModel.ShowNotificationsState = value;
                 SyncChangedPropertyWithServer(PropertiesUtility.BoolToString(value), MainNames.ModelsPropertiesNames.ShowNotifications);
             }
         }
 
+
         public UserProfileViewModel() : base(nameof(UserProfileViewModel))
         {
         }
 
+        protected override async void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            try
+            {
+                await repository.LoadDataFromServer().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        [Binding]
+        public void CountryDropdown_OnClick()
+        {
+            SwitchToView(new ViewsPairInfo(nameof(SettingsView), nameof(CountrySelectionView)),
+                new FormsTransitionBundle(new Action<int>(SetSelectedCountryIndex)));
+        }
+
+        [Binding]
+        public void CurrencyDropdown_OnClick()
+        {
+            SwitchToView(new ViewsPairInfo(nameof(SettingsView), nameof(CurrencySelectionView)),
+                new FormsTransitionBundle(new Action<int>(SetSelectedCurrencyIndex)));
+        }
+
+        private void SetSelectedCountryIndex(int index)
+        {
+            SelectedCountryIndex = index;
+        }
+
+        private void SetSelectedCurrencyIndex(int index)
+        {
+            SelectedCurrencyIndex = index;
+        }
 
         [Binding]
         public void UserRadar_OnTryToTurnOn()
@@ -194,8 +241,8 @@ namespace ViewModels.Settings
         {
             try
             {
-                await UserProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController.CancellationToken,
-                    userAuthorisationDataRepository, new KeyValuePair<string, string>(propertyName, value));
+                await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController.CancellationToken,
+                    userAuthorisationDataRepository, new KeyValuePair<string, string>(propertyName, value)).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

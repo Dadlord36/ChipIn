@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
+using Common.UnityEvents;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -17,7 +18,8 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
-    public class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> : OSA<TParams, TItemViewHolder>,
+    [Binding]
+    public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> : OSA<TParams, TItemViewHolder>,
         INotifyPropertyChanged
         where TItemViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
         where TParams : BaseParamsWithPrefab
@@ -27,23 +29,29 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected readonly string Tag;
 
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        public BoolUnityEvent listFillingStateChanged;
 
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
         protected SimpleDataHelper<TDataType> Data;
-        private bool _itemsListIsEmpty = true;
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
 
+        private bool _itemsListIsNotEmpty;
+
+
         [Binding]
-        public bool ItemsListIsEmpty
+        public bool ItemsListIsNotEmpty
         {
-            get => _itemsListIsEmpty;
-            protected set
+            get => _itemsListIsNotEmpty;
+            set
             {
-                if (value == _itemsListIsEmpty) return;
-                _itemsListIsEmpty = value;
-                OnPropertyChanged();
+                TasksFactories.ExecuteOnMainThread(delegate
+                {
+                    _itemsListIsNotEmpty = value;
+                    OnPropertyChanged();
+                    OnListFillingStateChanged(value);
+                });
             }
         }
 
@@ -52,9 +60,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             Tag = GetType().Name;
         }
 
-        protected override void OnInitialized()
+        protected override void Awake()
         {
-            base.OnInitialized();
+            base.Awake();
             _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
             Data = new SimpleDataHelper<TDataType>(this);
         }
@@ -151,6 +159,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnListFillingStateChanged(bool obj)
+        {
+            listFillingStateChanged.Invoke(obj);
         }
     }
 }

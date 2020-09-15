@@ -25,10 +25,10 @@ namespace RequestsStaticProcessors
 
         public static Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
             GetClientsInterestPages(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-                int communityId, PaginatedRequestData paginatedRequestData)
+                int communityId, string categoryName, PaginatedRequestData paginatedRequestData)
         {
-            return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, paginatedRequestData)
-                .SendRequest("Community clients interests list was retrieved successfully");
+            return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, categoryName,
+                paginatedRequestData).SendRequest("Community clients interests list was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, MerchantInterestPageDataModel, IInterestPageModel>.HttpResponse>
@@ -55,10 +55,25 @@ namespace RequestsStaticProcessors
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
+            SupportInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
+        {
+            return new SupportInterestPostRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
+                $"Successfully supported the interest by index: {interestId.ToString()}");
+        }
+
+        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse> 
+            FundInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId, int tokensAmount)
+        {
+            return new FundInterestPostRequestProcessor(out cancellationTokenSource, requestHeaders, interestId, tokensAmount).SendRequest(
+                $"Successfully fund the interest by index: {interestId.ToString()}");
+        }
+
+
+        public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>
             LeaveAnInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int interestId)
         {
             return new LeaveAnInterestDeleteRequestProcessor(out cancellationTokenSource, requestHeaders, interestId).SendRequest(
-                $"Successfully leaved the interest by index: {interestId.ToString()}");
+                $"Successfully left the interest by index: {interestId.ToString()}");
         }
 
         public static Task<BaseRequestProcessor<object, InterestAnswersRequestDataModel, IInterestAnswersRequestModel>.HttpResponse>

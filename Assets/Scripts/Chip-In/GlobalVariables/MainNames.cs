@@ -1,4 +1,7 @@
-﻿namespace GlobalVariables
+﻿using System.Collections.Specialized;
+using System.ComponentModel;
+
+namespace GlobalVariables
 {
     public static class MainNames
     {
@@ -20,10 +23,20 @@
             public const string ShowAds = "show_ads";
             public const string Birthdate = "birthdate";
             public const string RadarRadius = "radar_radius";
-            public const string Country  = "country";
+            public const string Country = "country";
+            public const string CountryCode = "country_code";
             public const string Role = "role";
             public const string TokensBalance = "tokens_balance";
             public const string Currency = "currency";
+            public const string Category = "category";
+            public const string Market = "market";
+        }
+
+        public enum InterestCategory
+        {
+            all,
+            @join,
+            my
         }
 
         public static class UserRoles
@@ -71,8 +84,11 @@
 
         public static class CommonActions
         {
-            public const string Leave = "leave";
+            public const string Support = "support";
             public const string Join = "join";
+            public const string Fund = "fund";
+            public const string Watch = "watch";
+            public const string Leave = "leave";
         }
     }
 }

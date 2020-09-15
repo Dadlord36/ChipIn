@@ -11,19 +11,31 @@ namespace Controllers
     public sealed class ImageFadingController : UIBehaviour
     {
         [SerializeField] private FloatParameter fadingDurationParameter;
-        private bool _isFaded;
+        private bool _isShown;
 
         private float FadingDuration => fadingDurationParameter.value;
 
         [Binding]
-        public bool IsFaded
+        public bool IsShown
         {
-            get => _isFaded;
+            get => _isShown;
             set
             {
-                if (value == _isFaded) return;
-                _isFaded = value;
+                if (value == _isShown) return;
+                _isShown = value;
                 FadeImage(value);
+            }
+        }
+
+        [Binding]
+        public bool InitialState
+        {
+            get => _isShown;
+            set
+            {
+                if (value == _isShown) return;
+                _isShown = value;
+                FadeInstantly(value);
             }
         }
 
@@ -32,25 +44,19 @@ namespace Controllers
         protected override void OnEnable()
         {
             base.OnEnable();
-            FadeInstantly();
+            FadeInstantly(IsShown);
         }
 
-        private void FadeInstantly()
+        private void FadeInstantly(bool state)
         {
-            if (IsFaded)
-            {
-                FadeOutInstantly();
-            }
-            else
+            if (state)
             {
                 FadeInInstantly();
             }
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            FadeInstantly();
+            else
+            {
+                FadeOutInstantly();
+            }
         }
 
         private void FadeInInstantly()
@@ -63,12 +69,9 @@ namespace Controllers
             ControlledImage.CrossFadeAlpha(0f, 0f, true);
         }
 
-        private bool _isInitialized;
-
-        private void FadeImage(bool toInvisible)
+        private void FadeImage(bool toVisible)
         {
-            ControlledImage.CrossFadeAlpha(toInvisible ? 0f : 1f, _isInitialized ? FadingDuration : 0f, true);
-            _isInitialized = true;
+            ControlledImage.CrossFadeAlpha(toVisible ? 1f : 0f, FadingDuration, true);
         }
     }
 }

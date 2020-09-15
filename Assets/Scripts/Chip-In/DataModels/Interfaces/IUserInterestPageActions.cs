@@ -4,14 +4,14 @@ namespace DataModels.Interfaces
 {
     public interface IUserInterestPageActions
     {
-        [JsonProperty("watch")] bool Watch { get; set; }
+        [JsonProperty("watch", NullValueHandling = NullValueHandling.Ignore)] bool Watch { get; set; }
 
-        [JsonProperty("join")] bool Join { get; set; }
+        [JsonProperty("join", NullValueHandling = NullValueHandling.Ignore)] bool Join { get; set; }
 
-        [JsonProperty("support")] bool Support { get; set; }
+        [JsonProperty("support", NullValueHandling = NullValueHandling.Ignore)] bool Support { get; set; }
 
-        [JsonProperty("fund")] bool Fund { get; set; }
+        [JsonProperty("fund", NullValueHandling = NullValueHandling.Ignore)] bool Fund { get; set; }
 
-        [JsonProperty("suggest_survey")] bool SuggestSurvey { get; set; }
+        [JsonProperty("suggest_survey", NullValueHandling = NullValueHandling.Ignore)] bool SuggestSurvey { get; set; }
     }
 }

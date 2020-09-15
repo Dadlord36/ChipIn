@@ -8,33 +8,23 @@ using Repositories.Local;
 using UnityEngine;
 using Utilities;
 using Views.ViewElements.Fields;
+using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
-    public abstract class NameAndNumberSelectableFieldListAdapter<TDataType, TFillingViewAdapter> : OSA<BaseParamsWithPrefab,
-        DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>>
+    public abstract class NameAndNumberSelectableFieldListAdapter<TDataType, TFillingViewAdapter> : BasedListAdapter<BaseParamsWithPrefab,
+        DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>, TDataType, NameAndNumberSelectableFieldFillingData, TFillingViewAdapter>
         where TFillingViewAdapter : FillingViewAdapter<TDataType, NameAndNumberSelectableFieldFillingData>, new()
     {
-        private readonly string Tag;
-
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
-        private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
+
         private SimpleDataHelper<TDataType> Data { get; set; }
-
-
-        public NameAndNumberSelectableFieldListAdapter()
-        {
-            Tag = GetType().Name;
-        }
 
         public void RefillWithData(IList<TDataType> data)
         {
             ClearData();
-            _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
             if (!IsInitialized)
             {
                 Init();
@@ -75,7 +65,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await viewHolder.FillView(_fillingViewAdapter.Convert(_cancellationController.TasksCancellationTokenSource,
+                await viewHolder.FillView(_fillingViewAdapter.Convert(AsyncOperationCancellationController.TasksCancellationTokenSource,
                     Data[(int) index], index), index).ConfigureAwait(true);
             }
             catch (OperationCanceledException)

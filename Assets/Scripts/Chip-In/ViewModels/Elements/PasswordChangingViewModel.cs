@@ -92,7 +92,7 @@ namespace ViewModels.Elements
             try
             {
                 IsAwaitingProcess = true;
-                var response = await UserProfileDataStaticRequestsProcessor.TryChangeUserProfilePassword(out TasksCancellationTokenSource,
+                var response = await ProfileDataStaticRequestsProcessor.TryChangeProfilePassword(out TasksCancellationTokenSource,
                     authorisationDataRepository, new UserProfilePasswordChangingModel
                     {
                         CurrentPassword = CurrentPassword, Password = Password,

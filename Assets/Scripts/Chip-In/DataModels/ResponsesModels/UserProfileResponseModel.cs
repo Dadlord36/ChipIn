@@ -1,17 +1,18 @@
 ﻿using Common.Structures;
+using DataModels.Interfaces;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 
 namespace DataModels.ResponsesModels
 {
-    public interface IUserProfileResponseModel : IUserProfileDataWebModel, ISuccess
+    public interface IUserProfileResponseModel : IUserProfileModel, ISuccess
     {
     }
 
     public sealed class UserProfileResponseModel : IUserProfileResponseModel
     {
         public bool Success { get; set; }
-        [JsonProperty("user")] public UserProfileDataWebModel User { get; set; }
+        [JsonProperty("user")] public UserProfileDataModel User { get; set; }
         [JsonProperty("auth")] public AuthorisationModel Authorisation { get; set; }
 
         public int? Id
@@ -78,12 +79,6 @@ namespace DataModels.ResponsesModels
         {
             get => User.UserLocation;
             set => User.UserLocation = value;
-        }
-
-        public string AvatarImageUrl
-        {
-            get => User.AvatarImageUrl;
-            set => User.AvatarImageUrl = value;
         }
 
         public string Birthday

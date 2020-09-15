@@ -16,10 +16,14 @@
         public const string SingOut = "sign_out";
         public const string Radar = "radar";
         public const string FlashOffers = "flash_offers";
+       
 
         public static class Subcategories
         {
+            public const string Market = MainNames.ModelsPropertiesNames.Market;
             public const string Interests = "interests";
+            public const string Verification = "verification";
         }
+
     }
 }

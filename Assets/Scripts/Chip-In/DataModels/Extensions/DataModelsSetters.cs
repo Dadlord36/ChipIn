@@ -1,8 +1,10 @@
-﻿namespace DataModels.Extensions
+﻿using DataModels.Interfaces;
+
+namespace DataModels.Extensions
 {
     public static class DataModelsSetters
     {
-        public static void Set(this IUserProfileDataWebModel instance, IUserProfileDataWebModel source)
+        public static void Set(this IUserProfileModel instance, IUserProfileModel source)
         {
             instance.Avatar = source.Avatar;
             instance.Birthday = source.Birthday;
@@ -12,6 +14,7 @@
             instance.Name = source.Name;
             instance.Role = source.Role;
             instance.CountryCode = source.CountryCode;
+            instance.CurrencyCode = source.CurrencyCode;
             instance.TokensBalance = source.TokensBalance;
             instance.UserLocation = source.UserLocation;
             instance.ShowAdsState = source.ShowAdsState;

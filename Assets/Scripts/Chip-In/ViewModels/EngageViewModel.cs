@@ -28,17 +28,21 @@ namespace ViewModels
             var adapter = GetComponentInChildren<MerchantCommunitiesDetailsListAdapter>();
             try
             {
+                IsAwaitingProcess = true;
                 await adapter.ResetAsync().ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
                 LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
-
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
+            }
+            finally
+            {
+                IsAwaitingProcess = false;
             }
         }
 

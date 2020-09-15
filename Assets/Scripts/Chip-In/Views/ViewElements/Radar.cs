@@ -9,6 +9,7 @@ namespace Views.ViewElements
     {
         UICircle LargestCircle { get; }
         Vector2[] CalculateWorldPositionsForGivenRadarPoints(float[,] points, float maxPoint, float widthScale);
+        IEnumerable<Vector2> CalculateWorldPositionsForGivenDistancePercentages(AngleAndDistancePercentage[] data, float widthScale);
     }
 
     public class Radar : UIBehaviour, IRadar
@@ -47,7 +48,7 @@ namespace Views.ViewElements
         {
             var pointsCount = points.GetLength(0);
             var positions = new Vector2[pointsCount];
-
+            var circle = new DotInCircle();
             for (int i = 0; i < pointsCount; i++)
             {
                 var point = new Vector2(Mathf.Abs(points[i, 0]), Mathf.Abs(points[i, 1]));
@@ -55,8 +56,22 @@ namespace Views.ViewElements
                 var distance = Vector2.Distance(Vector2.zero, point);
                 var percentage = Mathf.InverseLerp(0, maxPoint, distance);
 
-                positions[i] = new DotInCircle().CalculatePointOffsetInWorldSpace(LargestCircle,
+                positions[i] = circle.CalculatePointOffsetInWorldSpace(LargestCircle,
                     CalculateAngleOfPointOnCircle(points[i, 0], points[i, 1]), percentage, widthScale);
+            }
+
+            return positions;
+        }
+
+        public IEnumerable<Vector2> CalculateWorldPositionsForGivenDistancePercentages(AngleAndDistancePercentage[] data, float widthScale)
+        {
+            var pointsCount = data.Length;
+            var positions = new Vector2[pointsCount];
+            var circle = new DotInCircle();
+
+            for (int i = 0; i < pointsCount; i++)
+            {
+                positions[i] = circle.CalculatePointOffsetInWorldSpace(LargestCircle, data[i].Angle, data[i].Percentage, widthScale);
             }
 
             return positions;

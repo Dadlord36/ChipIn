@@ -19,7 +19,7 @@ namespace Repositories.Remote
 
         protected override string Tag => nameof(UserProductsRepository);
         public int CurrentlySelectedIndex { get; set; }
-        public Task<ProductDataModel> GetCurrentlySelectedProductAsync => CreateGetItemWithIndexTask((uint) CurrentlySelectedIndex);
+        public Task<ProductDataModel> GetCurrentlySelectedProductAsync => GetItemWithIndexAsync((uint) CurrentlySelectedIndex);
 
 
         protected override Task<BaseRequestProcessor<object, UserProductsResponseDataModel, IUserProductsResponseModel>.HttpResponse>

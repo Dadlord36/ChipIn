@@ -1,11 +1,13 @@
-﻿using Tasking;
+﻿using System;
+using Tasking;
 using UnityEngine;
+using ViewModels.UI.Interfaces;
+using Object = UnityEngine.Object;
 
 namespace ScriptableObjects.CardsControllers
 {
-    [CreateAssetMenu(fileName = nameof(AwaitingProcessVisualizerController), menuName = nameof(CardsControllers) + "/" +
-                                                                                        nameof(AwaitingProcessVisualizerController), order = 0)]
-    public class AwaitingProcessVisualizerController : ScriptableObject
+    [Serializable]
+    public class AwaitingProcessVisualizerController : IViewable
     {
         [SerializeField] private Object visualizerPrefab;
         private GameObject _progressBarObject;
@@ -16,7 +18,7 @@ namespace ScriptableObjects.CardsControllers
             TasksFactories.ExecuteOnMainThread(delegate
             {
                 if (!_progressBarObject)
-                    _progressBarObject = Instantiate(visualizerPrefab, MainCanvasTransform) as GameObject;
+                    _progressBarObject = Object.Instantiate(visualizerPrefab, MainCanvasTransform) as GameObject;
             });
         }
 
@@ -25,7 +27,7 @@ namespace ScriptableObjects.CardsControllers
             TasksFactories.ExecuteOnMainThread(delegate
             {
                 if (_progressBarObject)
-                    Destroy(_progressBarObject);
+                    Object.Destroy(_progressBarObject);
             });
         }
     }

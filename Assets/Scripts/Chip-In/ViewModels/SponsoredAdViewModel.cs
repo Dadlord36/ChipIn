@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Controllers;
 using DataModels;
 using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Temporary;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -20,9 +20,6 @@ namespace ViewModels
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController
-            = new AsyncOperationCancellationController();
 
         private string _posterUri;
         private Sprite _backgroundPoster;
@@ -44,13 +41,13 @@ namespace ViewModels
         }
 
         [Binding]
-        public void CancelReservationButton_OnClick()
+        public void AdoptButton_OnClick()
         {
             SwitchToPreviousView();
         }
 
         [Binding]
-        public void AdoptButton_OnClick()
+        public void ReserveButton_OnClick()
         {
             sponsoredAdRepository.AddItem(new SponsoredAdDataModel {PosterUri = _posterUri});
             SwitchToPreviousView();
@@ -65,9 +62,8 @@ namespace ViewModels
             try
             {
                 _posterUri = ((IPosterImageUri) transitionData).PosterUri;
-                BackgroundPoster = await downloadedSpritesRepository
-                    .CreateLoadSpriteTask(_posterUri, _asyncOperationCancellationController.CancellationToken)
-                    .ConfigureAwait(true);
+                BackgroundPoster = await downloadedSpritesRepository.CreateLoadSpriteTask(_posterUri, OperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -85,7 +81,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

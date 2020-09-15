@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -57,7 +58,7 @@ namespace ViewModels.Cards
             Description = dataModel.Description;
             try
             {
-                AdIcon = await dataModel.AdIcon.ConfigureAwait(true);
+                AdIcon = await dataModel.AdIcon.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -75,7 +76,10 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(()=>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            });
         }
     }
 }

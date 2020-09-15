@@ -5,7 +5,7 @@ namespace Bindings
 {
     public class ProcessAwaitingVisualizerBinding : MonoBehaviour
     {
-        private static AwaitingProcessVisualizerController MainAwaitingProcessVisualizerController => GameManager.MainAwaitingProcessVisualizerController;
+        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
         private bool _isAwaiting;
 
         public bool IsAwaiting
@@ -22,10 +22,10 @@ namespace Bindings
         private void SwitchVisualizerActivity(bool visible)
         {
             if (visible)
-                MainAwaitingProcessVisualizerController.Show();
+                MainAwaitingProcessVisualizerControllerScriptable.Show();
             else
             {
-                MainAwaitingProcessVisualizerController.Hide();
+                MainAwaitingProcessVisualizerControllerScriptable.Hide();
             }
         }
     }

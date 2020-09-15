@@ -204,7 +204,7 @@ namespace Repositories.Local
         {
             try
             {
-                var result = await UserProfileDataStaticRequestsProcessor.UpdateUserPosition(out TasksCancellationTokenSource,
+                var result = await ProfileDataStaticRequestsProcessor.UpdateUserPosition(out TasksCancellationTokenSource,
                     authorisationDataRepository, _userGeoLocationData);
 
                 if (result.Success)

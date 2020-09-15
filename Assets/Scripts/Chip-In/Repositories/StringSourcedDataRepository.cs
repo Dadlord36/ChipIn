@@ -31,10 +31,7 @@ namespace Repositories
         public int ItemsPerPage { get; }
         public int TotalPages { get; }
 
-        public uint TotalItemsNumber
-        {
-            get => (uint) _dataList.Count;
-        }
+        public uint TotalItemsNumber => (uint) _dataList.Count;
 
         public uint LastPageItemsNumber { get; }
 
@@ -44,12 +41,12 @@ namespace Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<TDataType>> CreateGetItemsRangeTask(uint startIndex, uint length)
+        public Task<IReadOnlyList<TDataType>> GetItemsRangeAsync(uint startIndex, uint length)
         {
             return Task.FromResult<IReadOnlyList<TDataType>>(_dataList.GetRange((int) startIndex, (int) length));
         }
 
-        public Task<TDataType> CreateGetItemWithIndexTask(uint itemIndex)
+        public Task<TDataType> GetItemWithIndexAsync(uint itemIndex)
         {
             return Task.FromResult(_dataList[(int) itemIndex]);
         }
@@ -62,6 +59,18 @@ namespace Repositories
         public void AddItem(TDataType item)
         {
             _dataList.Add(item);
+            SyncItemsSourceData();
+        }
+
+        public void RemoveItem(TDataType item)
+        {
+            _dataList.Remove(item);
+            SyncItemsSourceData();
+        }
+
+        private void SyncItemsSourceData()
+        {
+            sourceString = JsonConverterUtility.ConvertModelToJson(new TempRepoList<TDataType> {ListOfItems = _dataList});
         }
 
         public override Task LoadDataFromServer()

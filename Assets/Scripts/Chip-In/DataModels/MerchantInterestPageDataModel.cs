@@ -11,7 +11,7 @@ namespace DataModels
         public uint WatchedCount { get; set; }
         public uint SupportedCount { get; set; }
         public string FoundedCount { get; set; }
-        public string TotalFound { get; set; }
+        public int TotalFound { get; set; }
         public string Message { get; set; }
         public string CreatedAt { get; set; }
         public DateTime StartedAt { get; set; }

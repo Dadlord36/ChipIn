@@ -8,6 +8,11 @@ using UnityEngine.Events;
 namespace Common.UnityEvents
 {
     [Serializable]
+    public sealed class BoolUnityEvent : UnityEvent<bool>
+    {
+    }
+    
+    [Serializable]
     public sealed class FloatUnityEvent : UnityEvent<float>
     {
     }

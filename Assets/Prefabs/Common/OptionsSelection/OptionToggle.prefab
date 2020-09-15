@@ -246,8 +246,7 @@ GameObject:
   - component: {fileID: 794566182131262814}
   - component: {fileID: 8639649354289055661}
   - component: {fileID: 3416726706811286686}
-  - component: {fileID: 3363773419182289965}
-  - component: {fileID: 3319384079261558089}
+  - component: {fileID: 946965267656080028}
   m_Layer: 5
   m_Name: '[TextOnlyToggle]'
   m_TagString: Untagged
@@ -296,23 +295,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a32dea1a524467b9bf1e4da341eb94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3363773419182289965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2331930767292592910}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a39e77590c9943e799c4e08b06549b32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canBeUntoggle: 0
-  toggleClicked:
+  stateChanged:
     m_PersistentCalls:
-      m_Calls: []
---- !u!114 &3319384079261558089
+      m_Calls:
+      - m_Target: {fileID: 8139339948584058029}
+        m_MethodName: SetToggleStateWithoutNotification
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &946965267656080028
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -321,19 +318,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2331930767292592910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: Views.ViewElements.ListItems.OptionItemView.IsSelected
-  viewEventName: Views.ViewElements.Toggle.toggleClicked
-  viewPropertyName: Views.ViewElements.Toggle.IsToggled
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
+  viewModelPropertyName: Views.ViewElements.Toggle.IsToggled
+  viewPropertyName: Views.ViewElements.ListItems.OptionItemView.IsSelected
 --- !u!1 &2408297736079344851
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,7 +564,7 @@ MonoBehaviour:
   pointerClicked:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3363773419182289965}
+      - m_Target: {fileID: 8139339948584058029}
         m_MethodName: ClickTheToggle
         m_Mode: 1
         m_Arguments:
@@ -593,6 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3347239159613224934}
+  - component: {fileID: 8139339948584058029}
   m_Layer: 5
   m_Name: OptionToggle
   m_TagString: Untagged
@@ -621,3 +613,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8139339948584058029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8083676070162639879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a39e77590c9943e799c4e08b06549b32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canBeUntoggle: 0
+  toggleClicked:
+    m_PersistentCalls:
+      m_Calls: []

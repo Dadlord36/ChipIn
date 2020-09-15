@@ -6,7 +6,9 @@ using Com.TheFallenGames.OSA.Core;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
+using Tasking;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityWeld.Binding;
 using Utilities;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
@@ -18,9 +20,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     {
         Task ResetAsync();
     }
-    
+
     [Binding]
-    public class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
+    public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
         TFillingViewAdapter> : BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>,
         IResettableAsync
         where TDataType : class
@@ -30,13 +32,12 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
         [SerializeField] private TRepository pagesPaginatedRepository;
-        
 
-        public event Action StartedFetching;
-        public event Action EndedFetching;
-        
+
+        public UnityEvent startedFetching;
+        public UnityEvent endedFetching;
+
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
-
 
         private bool _fetching;
         private bool _loadedAll;
@@ -49,17 +50,37 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             _retrievingItemsStartingIndex = 0;
         }
 
-        public Task ResetAsync()
+        public async Task ResetAsync()
         {
             ResetStateVariables();
-            
+
             if (Data.Count > 0)
             {
                 Data.RemoveItemsFromStart(Data.Count);
             }
 
             pagesPaginatedRepository.Clear();
-            return pagesPaginatedRepository.LoadDataFromServer();
+            try
+            {
+                OnStartedFetching();
+
+                await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
+                ItemsListIsNotEmpty = TotalCapacity > 0;
+                /*if (ItemsListIsNotEmpty)
+                {
+                    await FetchItemsAndRefillTheList().ConfigureAwait(false);
+                }*/
+                OnEndedFetching();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private void SetInteractivity(bool state)
@@ -84,6 +105,23 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             if (Data == null)
                 return;
 
+            try
+            {
+                await FetchItemsAndRefillTheList();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private async Task FetchItemsAndRefillTheList()
+        {
             int lastVisibleItemItemIndex = -1;
             if (_VisibleItemsCount > 0)
             {
@@ -102,7 +140,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             // If the number of items available below the last visible (i.e. the bottom-most one, in our case) is less than <adapterParams.preFetchedItemsCount>,
             // get more
             if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount) return;
-            uint newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
+            var newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
 
             newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
 
@@ -110,54 +148,44 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 _fetching = true;
-                await StartPreFetchingAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
+                OnStartedFetching();
+                await FetchItemModelsFromServerAsync((uint) (newPotentialNumberOfItems - Data.Count)).ConfigureAwait(false);
             }
             catch (ArgumentOutOfRangeException e)
             {
                 LogUtility.PrintLog(Tag, e.Message);
             }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
             finally
             {
                 _fetching = false;
+                OnEndedFetching();
             }
-        }
-
-        private Task StartPreFetchingAsync(uint additionalItems)
-        {
-            StartedFetching?.Invoke();
-            return FetchItemModelsFromServerAsync(additionalItems);
         }
 
         private async Task FetchItemModelsFromServerAsync(uint maxCount)
         {
             AsyncOperationCancellationController.CancelOngoingTask();
-            var items = await pagesPaginatedRepository.CreateGetItemsRangeTask(_retrievingItemsStartingIndex, maxCount)
-                .ConfigureAwait(true);
+            var items = await pagesPaginatedRepository.GetItemsRangeAsync(_retrievingItemsStartingIndex, maxCount)
+                .ConfigureAwait(false);
             _retrievingItemsStartingIndex += (uint) items.Count;
             _loadedAll = Data.Count == TotalCapacity;
-            OnPreFetchingFinished(items);
+
+            if (items.Count > 0)
+            {
+                TasksFactories.ExecuteOnMainThread(delegate { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
+            }
+
+            OnEndedFetching();
         }
 
-        private void OnPreFetchingFinished(IReadOnlyCollection<TDataType> models)
+        private void OnStartedFetching()
         {
-            if (models.Count > 0)
-                Data.InsertItemsAtEnd(models as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange);
-
-            ItemsListIsEmpty = Data.Count == 0;
-
-            EndedFetching?.Invoke();
+            TasksFactories.ExecuteOnMainThread(delegate { startedFetching?.Invoke(); });
         }
 
-
-        
+        private void OnEndedFetching()
+        {
+            TasksFactories.ExecuteOnMainThread(delegate { endedFetching?.Invoke(); });
+        }
     }
 }

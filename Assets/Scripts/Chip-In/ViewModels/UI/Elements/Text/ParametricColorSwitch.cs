@@ -21,7 +21,6 @@ namespace ViewModels.UI.Elements.Text
             get => _isSwitched;
             set
             {
-                if (value == _isSwitched) return;
                 _isSwitched = value;
                 SelectedColor = value ? colorsPairParameter.value2 : colorsPairParameter.value1;
             }
@@ -54,7 +53,6 @@ namespace ViewModels.UI.Elements.Text
             get => _selectedColor;
             set
             {
-                if (value == _selectedColor) return;
                 _selectedColor = value;
                 OnPropertyChanged();
             }

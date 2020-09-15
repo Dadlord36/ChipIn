@@ -54,7 +54,7 @@ namespace ViewModels
             {
                 IsBusy = true;
                 var result = await qrCodeReader.DecodeQRAsync().ConfigureAwait(true);
-                if (result!= null && !string.IsNullOrEmpty(result.Text))
+                if (result != null && !string.IsNullOrEmpty(result.Text))
                 {
                     ProcessDecodedString(result.Text);
                 }
@@ -83,24 +83,10 @@ namespace ViewModels
             DestroyPreviewObject();
         }
 
-        private async void ProcessDecodedString(string decodedString)
+        private void ProcessDecodedString(string decodedString)
         {
             Handheld.Vibrate();
-            try
-            {
-                IsBusy = true;
-                await ActivateProductAsync(decodedString).ConfigureAwait(false);
-                SwitchToView(nameof(RedeemedView));
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedString));
         }
 
         private void CreatePreviewObject()
@@ -130,31 +116,57 @@ namespace ViewModels
             Initialize();
         }
 
-        private Task ActivateProductAsync(string decodedText)
-        {
-            return UserProductsStaticRequestsProcessor.ActivateProduct(out OperationCancellationController.TasksCancellationTokenSource,
-                authorisationDataRepository, new ProductQrCode(decodedText));
-        }
-
         private void TryAuthorizeWebCameraAndStartQrReader()
         {
-            if (Application.HasUserAuthorization(UserAuthorization.WebCam))
+            if (NativeCamera.CheckPermission() == NativeCamera.Permission.Granted)
             {
                 ActivateQrScanning();
-                return;
             }
-
-            // When the app start, ask for the authorization to use the webcam
-            Application.RequestUserAuthorization(UserAuthorization.WebCam).completed += delegate
+            else
             {
-                if (!Application.HasUserAuthorization(UserAuthorization.WebCam))
-                {
-                    LogUtility.PrintLog(Tag, "This Webcam library can't work without the webcam authorization");
-                    return;
-                }
+                AskForCameraPermission();
+            }
+        }
 
-                ActivateQrScanning();
-            };
+        private bool _wentToAppSettings;
+
+        private void AskForCameraPermission()
+        {
+            switch (NativeCamera.RequestPermission())
+            {
+                case NativeCamera.Permission.Denied:
+                {
+                    if (NativeCamera.CanOpenSettings())
+                    {
+                        _wentToAppSettings = true;
+                        NativeCamera.OpenSettings();
+                    }
+                    else
+                    {
+                        LogUtility.PrintLog(Tag, "This Webcam library can't work without the webcam authorization");
+                    }
+                    break;
+                }
+                case NativeCamera.Permission.Granted:
+                {
+                    ActivateQrScanning();
+                    break;
+                }
+                case NativeCamera.Permission.ShouldAsk:
+                {
+                    AskForCameraPermission();
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if(!hasFocus || !_wentToAppSettings) return;
+            _wentToAppSettings = false;
+            TryAuthorizeWebCameraAndStartQrReader();
         }
 
 

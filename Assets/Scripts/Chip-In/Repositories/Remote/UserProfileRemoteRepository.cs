@@ -4,12 +4,12 @@ using Common.Structures;
 using Controllers;
 using DataModels;
 using DataModels.Extensions;
-using DataModels.Interfaces;
 using Newtonsoft.Json;
 using Repositories.Local;
 using RequestsStaticProcessors;
 using UnityEngine;
 using Utilities;
+using IUserProfileModel = DataModels.Interfaces.IUserProfileModel;
 
 namespace Repositories.Remote
 {
@@ -24,8 +24,8 @@ namespace Repositories.Remote
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
-        private UserProfileDataWebModel _userProfileDataWebModel = UserProfileDataWebModel.Empty;
-        private IUserProfileDataWebModel UserProfileDataRemote => _userProfileDataWebModel;
+        private UserProfileDataModel _userProfileDataModel = new UserProfileDataModel();
+        private IUserProfileModel UserProfileDataRemote => _userProfileDataModel;
 
         private bool _isLoadingData;
 
@@ -40,7 +40,7 @@ namespace Repositories.Remote
             set
             {
                 _userAvatarSprite = value;
-                _userProfileDataWebModel.OnPropertyChanged();
+                _userProfileDataModel.OnPropertyChanged();
             }
         }
 
@@ -157,22 +157,22 @@ namespace Repositories.Remote
             _isLoadingData = true;
             _cancellationController.CancelOngoingTask();
 
-            var response = await UserProfileDataStaticRequestsProcessor.GetUserProfileData(out _cancellationController.TasksCancellationTokenSource,
+            var response = await ProfileDataStaticRequestsProcessor.GetUserProfileData(out _cancellationController.TasksCancellationTokenSource,
                 authorisationDataRepository).ConfigureAwait(true);
             if (!response.Success) return;
 
             var responseInterface = response.ResponseModelInterface;
+            
             UserProfileDataRemote.Set(responseInterface);
             UserAvatarSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(Avatar, _cancellationController.CancellationToken)
-                .ConfigureAwait(true);
+                .ConfigureAwait(false);
         }
 
         protected override void ConfirmDataLoading()
         {
             base.ConfirmDataLoading();
             _isLoadingData = false;
-            LogUtility.PrintLog(Tag, "User profile data was loaded from server", this);
-            LogUtility.PrintLog(Tag, JsonConvert.SerializeObject(UserProfileDataRemote), this);
+            LogUtility.PrintLog(Tag, $"User profile data was loaded from server: {JsonConvert.SerializeObject(UserProfileDataRemote)}" , this);
         }
 
         protected override void ConfirmDataSaved()
@@ -183,13 +183,13 @@ namespace Repositories.Remote
 
         void IClearable.Clear()
         {
-            _userProfileDataWebModel = UserProfileDataWebModel.Empty;
+            _userProfileDataModel = new UserProfileDataModel();
         }
 
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add => _userProfileDataWebModel.PropertyChanged += value;
-            remove => _userProfileDataWebModel.PropertyChanged -= value;
+            add => _userProfileDataModel.PropertyChanged += value;
+            remove => _userProfileDataModel.PropertyChanged -= value;
         }
     }
 }

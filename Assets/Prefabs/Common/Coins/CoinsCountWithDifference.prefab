@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2629542735144581365}
   - component: {fileID: 1113412797752324467}
   - component: {fileID: 1032914670309847172}
+  - component: {fileID: 6319246224403870507}
   m_Layer: 0
   m_Name: '[Text] Difference'
   m_TagString: Untagged
@@ -147,6 +148,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfdbd179aed34250a77f02ab7ec649ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6319246224403870507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2960403130965782378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.UI.Elements.CoinsAmountWithDifferenceViewModel.Difference
+  viewPropertyName: TMPro.TextMeshProUGUI.text
+--- !u!114 &354465272108612491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087544201001981218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab26b807ae6485d9ae63aca83642fe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7011615814042585236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4793144963864590197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.IntToStringAdapter
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.UI.Elements.CoinsAmountWithDifferenceViewModel.CoinsAmount
+  viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &3689972443546498824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -279,6 +324,16 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1102869638538876457, guid: 6c44dc123edfb074fb0b5634237dcf1e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102869638538876457, guid: 6c44dc123edfb074fb0b5634237dcf1e,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4742700329637643859, guid: 6c44dc123edfb074fb0b5634237dcf1e,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -376,9 +431,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c44dc123edfb074fb0b5634237dcf1e, type: 3}
+--- !u!1 &9087544201001981218 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5559723626887111210, guid: 6c44dc123edfb074fb0b5634237dcf1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3689972443546498824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4182867174084947949 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 664824015422494949, guid: 6c44dc123edfb074fb0b5634237dcf1e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3689972443546498824}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4793144963864590197 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8192542021526241405, guid: 6c44dc123edfb074fb0b5634237dcf1e,
     type: 3}
   m_PrefabInstance: {fileID: 3689972443546498824}
   m_PrefabAsset: {fileID: 0}
