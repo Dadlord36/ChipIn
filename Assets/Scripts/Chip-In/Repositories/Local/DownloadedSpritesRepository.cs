@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HttpRequests;
 using Tasking;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Utilities;
 using WebOperationUtilities;
 
@@ -50,7 +51,7 @@ namespace Repositories.Local
                     }
 
                     LoadingTask = ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, mainThreadTaskFactory, Url, cancellationToken);
-                    await LoadingTask.ConfigureAwait(false);
+                    LoadedSprite = await LoadingTask.ConfigureAwait(false);
                     LoadingTask = null;
                     return LoadedSprite;
                 }
@@ -63,7 +64,7 @@ namespace Repositories.Local
         }
 
         private readonly List<DownloadHandleSprite> _spritesDownloadHandles = new List<DownloadHandleSprite>();
-        
+
         private void OnEnable()
         {
             _spritesDownloadHandles.Clear();
@@ -116,6 +117,16 @@ namespace Repositories.Local
         public async Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken, bool isLocalFile = false)
         {
             var sprite = await CreateLoadSpriteTask(url, cancellationToken, isLocalFile).ConfigureAwait(false);
+            try
+            {
+                Assert.IsNotNull(sprite);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
             return TasksFactories.ExecuteOnMainThread(() => sprite.texture);
         }
 
