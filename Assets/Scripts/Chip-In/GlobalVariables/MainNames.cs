@@ -1,13 +1,11 @@
-﻿using System.Collections.Specialized;
-using System.ComponentModel;
-
-namespace GlobalVariables
+﻿namespace GlobalVariables
 {
     public static class MainNames
     {
         public static class ModelsPropertiesNames
         {
             public const string Id = "id";
+            public const string OwnerId = "owner_id";
             public const string Email = "email";
             public const string Password = "password";
             public const string PasswordConfirmation = "password_confirmation";
