@@ -2,10 +2,10 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using HttpRequests.RequestsProcessors.PutRequests;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -25,6 +25,7 @@ namespace ViewModels
         [SerializeField] private CodeReader qrCodeReader;
         [SerializeField] private PreviewController qrPreviewController;
         [SerializeField] private Transform cameraViewContainer;
+        [SerializeField, Range(0, 600)] private int scanningRepeatFrequencyInMilliseconds;
 
         public UnityEvent scanningHasFailed;
 
@@ -47,26 +48,54 @@ namespace ViewModels
         {
         }
 
-        [Binding]
-        public async void ScanButton_OnClick()
+        private async void ActivateScanningRepeatedly()
         {
-            try
+            while (true)
             {
-                IsBusy = true;
-                var result = await qrCodeReader.DecodeQRAsync().ConfigureAwait(true);
-                if (result != null && !string.IsNullOrEmpty(result.Text))
+                try
                 {
-                    ProcessDecodedString(result.Text);
+                    IsBusy = true;
+                    if (OperationCancellationController.CancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    var result = await await TasksFactories.ExecuteOnMainThreadTaskAsync(qrCodeReader.DecodeQRAsync)
+                        .ConfigureAwait(false);
+                    if (result != null && !string.IsNullOrEmpty(result.Text))
+                    {
+                        IsBusy = false;
+                        FeedbackThatQrIsValid();
+                        if (await CheckIfQrCodeStringIsValid(result.Text).ConfigureAwait(false))
+                        {
+                            FeedbackThatQrIsValid();
+                            SwitchToRedeemView(result.Text);
+                            break;
+                        }
+
+                        OnScanningHasFailed();
+                    }
+
+                    await Task.Delay(scanningRepeatFrequencyInMilliseconds, OperationCancellationController.CancellationToken).ConfigureAwait(false);
                 }
-                else
+                catch (DivideByZeroException e)
                 {
-                    OnScanningHasFailed();
+                    LogUtility.PrintLogWarning(Tag,e.Message);
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    LogUtility.PrintLogWarning(Tag,e.Message);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
                 }
             }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+        }
+
+        private static void FeedbackThatQrIsValid()
+        {
+            TasksFactories.ExecuteOnMainThread(Handheld.Vibrate);
         }
 
         protected override void OnBecomingActiveView()
@@ -83,10 +112,24 @@ namespace ViewModels
             DestroyPreviewObject();
         }
 
-        private void ProcessDecodedString(string decodedString)
+        private async Task<bool> CheckIfQrCodeStringIsValid(string qrCode)
         {
-            Handheld.Vibrate();
-            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedString));
+            try
+            {
+                var response = await UserProductsStaticRequestsProcessor.GetUserProductByQr(out _, authorisationDataRepository, qrCode)
+                    .ConfigureAwait(false);
+                return response.Success;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private void SwitchToRedeemView(string decodedProductQr)
+        {
+            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedProductQr));
         }
 
         private void CreatePreviewObject()
@@ -114,6 +157,7 @@ namespace ViewModels
         {
             CreatePreviewObject();
             Initialize();
+            ActivateScanningRepeatedly();
         }
 
         private void TryAuthorizeWebCameraAndStartQrReader()
@@ -145,6 +189,7 @@ namespace ViewModels
                     {
                         LogUtility.PrintLog(Tag, "This Webcam library can't work without the webcam authorization");
                     }
+
                     break;
                 }
                 case NativeCamera.Permission.Granted:
@@ -164,7 +209,7 @@ namespace ViewModels
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            if(!hasFocus || !_wentToAppSettings) return;
+            if (!hasFocus || !_wentToAppSettings) return;
             _wentToAppSettings = false;
             TryAuthorizeWebCameraAndStartQrReader();
         }
@@ -172,7 +217,7 @@ namespace ViewModels
 
         private void OnScanningHasFailed()
         {
-            scanningHasFailed.Invoke();
+            TasksFactories.ExecuteOnMainThread(() => { scanningHasFailed.Invoke(); });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -180,7 +225,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }
