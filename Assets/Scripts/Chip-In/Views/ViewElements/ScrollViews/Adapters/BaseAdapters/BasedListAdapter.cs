@@ -36,7 +36,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected SimpleDataHelper<TDataType> Data;
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
-
         private bool _itemsListIsNotEmpty;
 
 
@@ -46,7 +45,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             get => _itemsListIsNotEmpty;
             set
             {
-                TasksFactories.ExecuteOnMainThread(delegate
+                TasksFactories.ExecuteOnMainThread(()=>
                 {
                     _itemsListIsNotEmpty = value;
                     OnPropertyChanged();
@@ -147,7 +146,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             //YourList.Clear();
             //YourList.AddRange(items);
             //ResetItems(YourList.Count);
-            
+
             Data.ResetItems(items);
         }
 
@@ -158,7 +157,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
 
         private void OnListFillingStateChanged(bool obj)
