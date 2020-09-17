@@ -18,7 +18,7 @@ namespace Controllers
             ResetElementSize();
 
             var image = GetComponent<Image>();
-            var parentRectTransform = GetComponent<Image>().transform.parent.GetComponent<RectTransform>();
+            var parentRectTransform = image.transform.parent.GetComponent<RectTransform>();
 
             var preferredWidth = image.preferredWidth;
             var preferredHeight = image.preferredHeight;
