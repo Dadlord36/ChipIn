@@ -118,9 +118,8 @@ namespace ViewModels
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            TryAuthorizeWebCameraAndStartQrReader();
+            ActivateQrScanning();
         }
-
 
         protected override void OnBecomingInactiveView()
         {
@@ -176,61 +175,6 @@ namespace ViewModels
             Initialize();
             ActivateScanningRepeatedly();
         }
-
-        private void TryAuthorizeWebCameraAndStartQrReader()
-        {
-            if (NativeCamera.CheckPermission() == NativeCamera.Permission.Granted)
-            {
-                ActivateQrScanning();
-            }
-            else
-            {
-                AskForCameraPermission();
-            }
-        }
-
-        private bool _wentToAppSettings;
-
-        private void AskForCameraPermission()
-        {
-            switch (NativeCamera.RequestPermission())
-            {
-                case NativeCamera.Permission.Denied:
-                {
-                    if (NativeCamera.CanOpenSettings())
-                    {
-                        _wentToAppSettings = true;
-                        NativeCamera.OpenSettings();
-                    }
-                    else
-                    {
-                        LogUtility.PrintLog(Tag, "This Webcam library can't work without the webcam authorization");
-                    }
-
-                    break;
-                }
-                case NativeCamera.Permission.Granted:
-                {
-                    ActivateQrScanning();
-                    break;
-                }
-                case NativeCamera.Permission.ShouldAsk:
-                {
-                    AskForCameraPermission();
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            if (!hasFocus || !_wentToAppSettings) return;
-            _wentToAppSettings = false;
-            TryAuthorizeWebCameraAndStartQrReader();
-        }
-
 
         private async Task OnScanningHasFailed()
         {
