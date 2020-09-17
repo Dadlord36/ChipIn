@@ -32,8 +32,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
         [SerializeField] private TRepository pagesPaginatedRepository;
-
-
+        
         public UnityEvent startedFetching;
         public UnityEvent endedFetching;
 
@@ -67,10 +66,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 OnStartedFetching();
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
                 ItemsListIsNotEmpty = TotalCapacity > 0;
-                /*if (ItemsListIsNotEmpty)
-                {
-                    await FetchItemsAndRefillTheList().ConfigureAwait(false);
-                }*/
                 OnEndedFetching();
             }
             catch (OperationCanceledException)
@@ -192,7 +187,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             if (items.Count > 0)
             {
-                TasksFactories.ExecuteOnMainThread(delegate { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
+                TasksFactories.ExecuteOnMainThread(()=> { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
             }
 
             OnEndedFetching();
@@ -200,12 +195,12 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private void OnStartedFetching()
         {
-            TasksFactories.ExecuteOnMainThread(delegate { startedFetching?.Invoke(); });
+            TasksFactories.ExecuteOnMainThread(()=> { startedFetching?.Invoke(); });
         }
 
         private void OnEndedFetching()
         {
-            TasksFactories.ExecuteOnMainThread(delegate { endedFetching?.Invoke(); });
+            TasksFactories.ExecuteOnMainThread(()=> { endedFetching?.Invoke(); });
         }
     }
 }
