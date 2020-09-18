@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using Common;
-using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
@@ -12,6 +11,14 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public UserProfileDataGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) : base(
             out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Get, requestHeaders)
+        {
+        }
+    }
+
+    public class MerchantProfileDataGetProcessor : RequestWithoutBodyProcessor<MerchantProfileResponseModel, IMerchantProfileResponseModel>
+    {
+        public MerchantProfileDataGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,  IRequestHeaders requestHeaders) 
+            : base(out cancellationTokenSource, ApiCategories.Profile, HttpMethod.Get, requestHeaders)
         {
         }
     }

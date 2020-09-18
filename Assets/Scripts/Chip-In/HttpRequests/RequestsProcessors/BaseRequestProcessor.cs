@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -23,7 +22,7 @@ namespace HttpRequests.RequestsProcessors
         private readonly DisposableCancellationTokenSource _requestCancellationTokenSource = new DisposableCancellationTokenSource();
         private CancellationToken RequestCancellationToken => _requestCancellationTokenSource.Token;
 
-        protected struct BaseRequestProcessorParameters
+        protected readonly struct BaseRequestProcessorParameters
         {
             public readonly string RequestSuffix;
             public readonly HttpMethod RequestMethod;

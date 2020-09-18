@@ -1,4 +1,5 @@
 ﻿using DataModels.Interfaces;
+using Repositories.Remote;
 
 namespace DataModels.Extensions
 {
@@ -21,6 +22,25 @@ namespace DataModels.Extensions
             instance.ShowAlertsState = source.ShowAlertsState;
             instance.ShowNotificationsState = source.ShowNotificationsState;
             instance.UserRadarState = source.UserRadarState;
+        }
+
+        public static void Set(this IMerchantProfileSettingsModel instance, IMerchantProfileSettingsModel source)
+        {
+            instance.Set(source as IUserProfileModel);
+            instance.SetReminderSAdCAdExpiring = source.SetReminderSAdCAdExpiring;
+            instance.CompanyName = source.CompanyName;
+            instance.CompanyEmail = source.CompanyEmail;
+            instance.LogoUrl = source.LogoUrl;
+            instance.Slogan = source.Slogan;
+        }
+
+        public static void Set(this IMerchantProfileSettings instance, IMerchantProfileSettings source)
+        {
+            instance.Set(source as IMerchantProfileSettingsModel);
+            instance.AvatarSprite = source.AvatarSprite;
+            instance.LogoSprite = source.LogoSprite;
+            instance.FirstName = source.FirstName;
+            instance.LastName = source.LastName;
         }
     }
 }

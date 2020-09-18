@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -56,7 +57,6 @@ namespace Views.ViewElements
             {
                 if (value == _iconIsSelected) return;
                 _iconIsSelected = value;
-                OnIconWasSelectedFromGallery();
                 OnPropertyChanged();
             }
         }
@@ -75,6 +75,10 @@ namespace Views.ViewElements
 
                 if (string.IsNullOrEmpty(SelectedImagePath)) return;
                 SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
+                if (SelectedImageSprite != null)
+                {
+                    OnIconWasSelectedFromGallery();
+                }
             });
         }
 
@@ -83,17 +87,17 @@ namespace Views.ViewElements
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
 
         private void OnIconWasSelectedFromGallery()
         {
-            iconWasSelectedFromGallery?.Invoke();
+            TasksFactories.ExecuteOnMainThread(() => { iconWasSelectedFromGallery?.Invoke(); });
         }
 
         private void OnIconWasChanged()
         {
-            iconWasChanged?.Invoke();
+            TasksFactories.ExecuteOnMainThread(() => { iconWasChanged?.Invoke(); });
         }
     }
 }

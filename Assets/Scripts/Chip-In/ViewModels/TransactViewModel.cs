@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -114,7 +115,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

@@ -12,6 +12,7 @@
             public const string CurrentPassword = "current_password";
             public const string Gender = "gender";
             public const string Avatar = "avatar";
+            public const string Logo = "logo";
             public const string Name = "name";
             public const string Location = "location";
             public const string ShowNotifications = "show_notifications";
@@ -28,6 +29,10 @@
             public const string Currency = "currency";
             public const string Category = "category";
             public const string Market = "market";
+            public const string CompanyName = "company_name";
+            public const string CompanyEmail = "company_email";
+            public const string SetReminderSAdCAdExpiring = "set_reminder";
+            public const string Offer = "offer";
         }
 
         public enum InterestCategory

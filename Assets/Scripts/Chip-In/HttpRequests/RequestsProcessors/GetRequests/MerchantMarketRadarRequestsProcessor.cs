@@ -27,8 +27,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     public class MerchantMarketRadarRequestsProcessor : BaseRequestProcessor<object, RadarDataModel, IRadarModel>
     {
         public MerchantMarketRadarRequestsProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders) :
-            base(out cancellationTokenSource,
-                new BaseRequestProcessorParameters(ApiCategories.Profile, HttpMethod.Get, requestHeaders, null, new[] {ApiCategories.Radar}))
+            base(out cancellationTokenSource, new BaseRequestProcessorParameters(ApiCategories.Profile, HttpMethod.Get, requestHeaders, null, new[] {ApiCategories.Radar}))
         {
         }
     }

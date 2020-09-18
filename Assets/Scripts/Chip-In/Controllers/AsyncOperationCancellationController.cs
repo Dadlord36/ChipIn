@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using Common;
 
 namespace Controllers
@@ -12,9 +13,11 @@ namespace Controllers
 
         public void CancelOngoingTask()
         {
-            if (TasksCancellationTokenSource == null || TasksCancellationTokenSource.IsDisposed) return;
-            TasksCancellationTokenSource.Cancel();
-            DisposeTokenSource();
+            if (!TasksCancellationTokenSource.IsDisposed)
+            {
+                TasksCancellationTokenSource.Cancel();
+                DisposeTokenSource();
+            }
             _cancellationTokenSource = new DisposableCancellationTokenSource();
         }
 
