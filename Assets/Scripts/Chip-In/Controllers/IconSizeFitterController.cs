@@ -44,6 +44,7 @@ namespace Controllers
             }
 
             rectTransform.sizeDelta = sizeDelta;
+            rectTransform.anchoredPosition = Vector2.zero;
         }
 
         private void ResetElementSize()
