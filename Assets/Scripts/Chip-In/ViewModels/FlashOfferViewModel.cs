@@ -2,15 +2,17 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Controllers;
 using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using DataModels.SimpleTypes;
+using GlobalVariables;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityWeld.Binding;
 using Utilities;
 
@@ -22,30 +24,30 @@ namespace ViewModels
         #region Serialized fields
 
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
-        [SerializeField] private AlertCardController _alertCardController;
+        [SerializeField] private AlertCardController alertCardController;
 
         #endregion
 
-        private readonly FlashOfferGetRequestDataModel _flashOfferGetRequestDataModel = new FlashOfferGetRequestDataModel();
-        private IFlashOfferGetRequestModel FlashOfferData => _flashOfferGetRequestDataModel;
+        private readonly FlashOfferGetRequestDataModel _flashOfferGetRequestData = new FlashOfferGetRequestDataModel();
+        private readonly FlashOfferCreationRequestDataModel _flashOfferCreationRequestDataModel = new FlashOfferCreationRequestDataModel();
 
-        private string _posterFilePath;
+        private IFlashOfferCreationRequestModel FlashOfferCreation => _flashOfferCreationRequestDataModel;
+        private IFlashOfferGetRequestModel FlashOfferData => FlashOfferCreation.FlashOffer;
+
         private bool _canCreateOffer;
         private DateTime _expireLocalDate;
 
-        private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
         private int _selectedCurrencyTypeIndex;
-        private int _selectedTypeOfOfferIndex;
-        private string _selectedCurrencyType;
-        private string _selectedTypeOfOffer;
+        private int _selectedOfferTypeIndex;
+
 
         #region IChallangeOffer implementatation
 
         [Binding]
         public string PosterFilePath
         {
-            get => _posterFilePath;
-            set => _posterFilePath = value;
+            get => FlashOfferCreation.PosterFilePath.Path;
+            set => FlashOfferCreation.PosterFilePath = new FilePath(value);
         }
 
         [Binding]
@@ -63,13 +65,6 @@ namespace ViewModels
         }
 
         [Binding]
-        public string Category
-        {
-            get => FlashOfferData.Category;
-            set => FlashOfferData.Category = value;
-        }
-
-        [Binding]
         public DateTime ExpireLocalDate
         {
             get => _expireLocalDate;
@@ -81,7 +76,6 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-
 
         public DateTime ExpireDate
         {
@@ -99,8 +93,8 @@ namespace ViewModels
 
         public string Radius
         {
-            get => _flashOfferGetRequestDataModel.Radius;
-            set => _flashOfferGetRequestDataModel.Radius = value;
+            get => FlashOfferData.Radius;
+            set => FlashOfferData.Radius = value;
         }
 
 
@@ -114,12 +108,11 @@ namespace ViewModels
         [Binding]
         public string Price
         {
-            get => FlashOfferData.TokensAmount.ToString();
-            set => FlashOfferData.TokensAmount = uint.Parse(value);
+            get => FlashOfferData.Price.ToString();
+            set => FlashOfferData.Price = uint.Parse(value);
         }
 
         #endregion
-
 
         [Binding]
         public bool CanCreateOffer
@@ -133,12 +126,66 @@ namespace ViewModels
             }
         }
 
-        public FlashOfferViewModel() : base(nameof(FlashOfferViewModel))
+        #region Offer Life Tipe
+
+        [Binding]
+        public int SelectedOfferTypeIndex
         {
-            _flashOfferGetRequestDataModel.PropertyChanged += PropertyChanged;
-            Radius = "2";
+            get => _selectedOfferTypeIndex;
+            set
+            {
+                _selectedOfferTypeIndex = value;
+                SelectedOfferType = MainNames.OfferLifeTypes.GetOfferLifeTypeName(value);
+            }
         }
 
+        [Binding]
+        public string SelectedOfferType
+        {
+            get => FlashOfferData.Period;
+            set
+            {
+                if (SelectedOfferType == value) return;
+                FlashOfferData.Period = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+
+        #region Currency Type
+
+        [Binding]
+        public int SelectedCurrencyTypeIndex
+        {
+            get => _selectedCurrencyTypeIndex;
+            set
+            {
+                _selectedCurrencyTypeIndex = value;
+                SelectedCurrencyType = MainNames.CurrencyNames.GetCurrencyName(value);
+            }
+        }
+
+        [Binding]
+        public string SelectedCurrencyType
+        {
+            get => FlashOfferData.PriceType;
+            set
+            {
+                FlashOfferData.PriceType = value;
+                OnPropertyChanged();
+            }
+        }
+
+        #endregion
+
+        public FlashOfferViewModel() : base(nameof(FlashOfferViewModel))
+        {
+            _flashOfferGetRequestData.PropertyChanged += PropertyChanged;
+            FlashOfferCreation.FlashOffer = _flashOfferGetRequestData;
+            Radius = "2";
+        }
 
         [Binding]
         public async void CreateOffer_OnClick()
@@ -151,6 +198,7 @@ namespace ViewModels
                 }
 
                 CanCreateOffer = false;
+                IsAwaitingProcess = true;
                 await SendCreateOfferRequestAsync().ConfigureAwait(false);
             }
             catch (Exception e)
@@ -160,83 +208,8 @@ namespace ViewModels
             }
             finally
             {
+                IsAwaitingProcess = false;
                 CanCreateOffer = true;
-            }
-        }
-
-        [Binding]
-        public string SelectedOfferType
-        {
-            get => _selectedTypeOfOffer;
-            set
-            {
-                if (_selectedTypeOfOffer == value) return;
-                _selectedTypeOfOffer = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        [Binding]
-        public int SelectedOfferTypeIndex
-        {
-            get => _selectedCurrencyTypeIndex;
-            set
-            {
-                _selectedTypeOfOfferIndex = value;
-
-                switch (value)
-                {
-                    case 0:
-                    {
-                        SelectedOfferType = "ShortTerm";
-                        return;
-                    }
-                    case 1:
-                    {
-                        SelectedOfferType = "LongTerm";
-                        return;
-                    }
-                }
-            }
-        }
-        
-        [Binding]
-        public string SelectedCurrencyType
-        {
-            get => _selectedCurrencyType;
-            set
-            {
-                _selectedCurrencyType = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Binding]
-        public int SelectedCurrencyTypeIndex
-        {
-            get => _selectedCurrencyTypeIndex;
-            set
-            {
-                _selectedCurrencyTypeIndex = value;
-                switch (value)
-                {
-                    case 0:
-                    {
-                        SelectedCurrencyType = "Cash";
-                        return;
-                    }
-                    case 1:
-                    {
-                        SelectedCurrencyType = "Tokens";
-                        return;
-                    }
-                    case 2:
-                    {
-                        SelectedCurrencyType = "Cash / Tokens";
-                        return;
-                    }
-                }
             }
         }
 
@@ -255,22 +228,12 @@ namespace ViewModels
         {
             try
             {
-                _cancellationController.CancelOngoingTask();
+                OperationCancellationController.CancelOngoingTask();
 
-                var response = await OffersStaticRequestProcessor.CreateFlashOffer(_cancellationController.TasksCancellationTokenSource,
-                    userAuthorisationDataRepository, new FlashOfferCreationRequestDataModel
-                    {
-                        FlashOffer = FlashOfferData, PosterFilePath = new FilePath(PosterFilePath)
-                    }).ConfigureAwait(false);
+                var response = await OffersStaticRequestProcessor.CreateFlashOffer(OperationCancellationController.TasksCancellationTokenSource,
+                    userAuthorisationDataRepository, FlashOfferCreation).ConfigureAwait(false);
 
-                if (response.IsSuccessful)
-                {
-                    _alertCardController.ShowAlertWithText("Offer was created");
-                }
-                else
-                {
-                    _alertCardController.ShowAlertWithText("Offer was not created");
-                }
+                alertCardController.ShowAlertWithText(response.IsSuccessful ? "Offer was created" : "Offer was not created");
             }
             catch (Exception e)
             {
@@ -284,7 +247,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

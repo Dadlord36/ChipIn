@@ -10,6 +10,7 @@ using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -44,7 +45,7 @@ namespace ViewModels
                 Title = string.Empty, Description = string.Empty, Category = MainNames.OfferCategories.BulkOffer
             }
         };
-        
+
         private ICreatedOfferModel ChallengingOfferDataModel => _offerDataModel.Offer;
 
         private CreateOfferView ThisView => View as CreateOfferView;
@@ -215,7 +216,7 @@ namespace ViewModels
         public CreateOfferViewModel() : base(nameof(CreateOfferViewModel))
         {
         }
-        
+
         private void Start()
         {
             Initialize();
@@ -296,7 +297,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

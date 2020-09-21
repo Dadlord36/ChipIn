@@ -1,4 +1,6 @@
-﻿namespace GlobalVariables
+﻿using System;
+
+namespace GlobalVariables
 {
     public static class MainNames
     {
@@ -40,6 +42,79 @@
             all,
             @join,
             my
+        }
+
+        public static class OfferLifeTypes
+        {
+            public const string ShortTerm = "short";
+            public const string LongTerm = "long";
+
+            public static string GetOfferLifeTypeName(int value)
+            {
+                switch (value)
+                {
+                    case 0:
+                    {
+                        return ShortTerm;
+                    }
+                    case 1:
+                    {
+                        return LongTerm;
+                    }
+                }
+                throw new ArgumentOutOfRangeException($"Number {value.ToString()} is out of range");
+            }
+        }
+
+        public static class CurrencyNames
+        {
+            public const string Cash = "cash";
+            public const string Tokens = "tokens";
+            public const string Cash_Tokens = "cash/tokens";
+
+            public static string GetCurrencyName(int number)
+            {
+                switch(number)
+                { 
+                    case 0:
+                    {
+                        return Cash;
+                    }
+                    case 1:
+                    {
+                        return Tokens;
+                    }
+                    case 2:
+                    {
+                        return Cash_Tokens;
+                    }
+                }
+
+                throw new ArgumentOutOfRangeException($"Number {number.ToString()} is out of range");
+            }
+        }
+
+        public static class FlashOfferCategories
+        {
+            public const string FivePlayersChallenge = "players_challenge";
+            public const string FreeItem = "free_item";
+
+            public static string GetFlashOfferCategoryName(int number)
+            {
+                switch(number)
+                { 
+                    case 0:
+                    {
+                        return FivePlayersChallenge;
+                    }
+                    case 1:
+                    {
+                        return FreeItem;
+                    }
+                }
+
+                throw new ArgumentOutOfRangeException($"Number {number.ToString()} is out of range");
+            } 
         }
 
         public static class UserRoles

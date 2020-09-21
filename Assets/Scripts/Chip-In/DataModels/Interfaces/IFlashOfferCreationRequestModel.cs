@@ -1,10 +1,11 @@
-﻿using DataModels.RequestsModels;
+﻿using DataModels.SimpleTypes;
 using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IFlashOfferCreationRequestModel : IPosterImageFile
+    public interface IFlashOfferCreationRequestModel
     {
         [JsonProperty("flash_offer")] IFlashOfferGetRequestModel FlashOffer { get; set; }
+        FilePath PosterFilePath { get; set; }
     }
 }

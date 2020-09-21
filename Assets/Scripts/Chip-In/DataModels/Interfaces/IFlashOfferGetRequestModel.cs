@@ -3,7 +3,17 @@ using Views.Bars.BarItems;
 
 namespace DataModels.Interfaces
 {
-    public interface IFlashOfferGetRequestModel : ICategory, ITitled, IDescription, IQuantity, IRadius, ITokensAmount, IExpireDate
+    public interface IPriceType
+    {
+        [JsonProperty("price_type")] string PriceType { get; set; }
+    }
+
+    public interface IPeriod
+    {
+        [JsonProperty("period")] string Period { get; set; }
+    }
+
+    public interface IFlashOfferGetRequestModel : ITitled, IDescription, IQuantity, IRadius, IPrice, IExpireDate, IPriceType, IPeriod
     {
     }
 }
