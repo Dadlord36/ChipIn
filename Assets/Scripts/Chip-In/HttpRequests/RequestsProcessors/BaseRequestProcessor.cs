@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Common;
+using Controllers;
 using DataModels.HttpRequestsHeadersModels;
+using Factories;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Utilities;
@@ -139,6 +142,10 @@ namespace HttpRequests.RequestsProcessors
                     }
                     else
                     {
+                        if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            await SimpleAutofac.GetInstance<ISessionController>().SignOut().ConfigureAwait(false);
+                        }
                         try
                         {
                             httpResponse.Error = CollectErrors(contentAsString);

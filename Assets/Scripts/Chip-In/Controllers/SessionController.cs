@@ -18,9 +18,18 @@ using Views;
 
 namespace Controllers
 {
+    public interface ISessionController
+    {
+        event Action<SessionController.SessionMode> SwitchingToMode;
+        Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel);
+        Task TryRegisterAndLoginAsGuest();
+        Task SignOut();
+        void ProcessAppLaunching();
+    }
+
     [CreateAssetMenu(fileName = nameof(SessionController),
         menuName = nameof(Controllers) + "/" + nameof(SessionController), order = 0)]
-    public sealed class SessionController : AsyncOperationsScriptableObject
+    public sealed class SessionController : AsyncOperationsScriptableObject, ISessionController
     {
         public enum SessionMode
         {
@@ -194,8 +203,7 @@ namespace Controllers
         {
             viewsSwitchingController.RequestSwitchToView(null, toViewName);
         }
-
-
+        
         private void OnSwitchingToMode(SessionMode obj)
         {
             SwitchingToMode?.Invoke(obj);
