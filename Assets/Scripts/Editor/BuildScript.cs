@@ -50,13 +50,31 @@ public static class BuildScript
             return;
         }
 
-
         SetKeyStorePasswords();
         PerformBuild(BuildTarget.Android, BuildTargetGroup.Android, ScriptingImplementation.Mono2x, AndroidArchitecture.ARMv7,
-            BuildOptions.Development | BuildOptions.AllowDebugging, $"{AppName}{DevelopmentMono_x32}{AndroidExtension}",
-            sceneAsArray);
+            BuildOptions.Development | BuildOptions.AllowDebugging, $"{AppName}{DevelopmentMono_x32}{AndroidExtension}", sceneAsArray);
 
         DeployToAndroid_Mono_Development_ARMv7();
+    }
+
+    [MenuItem("Builds/Remove App from Device", false, 100)]
+    public static async void RemoveAppFromDevice()
+    {
+        var process = CreateProcessForAdbTask("uninstall", PlayerSettings.applicationIdentifier);
+        process.Start();
+        var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        await Task.Run(process.WaitForExit).ContinueWith(delegate
+        {
+            try
+            {
+                EditorUtility.DisplayDialog("App removing", $"App was removed successfully", "OK");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }, continuationOptions: TaskContinuationOptions.OnlyOnRanToCompletion, scheduler: scheduler, cancellationToken: CancellationToken.None);
+        
     }
 
     [MenuItem("Builds/Build For Android_IL2CPP_Release")]
@@ -81,17 +99,27 @@ public static class BuildScript
         DeployToAndroid_Mono_Development_ARMv7();
     }
 
+    private static Process CreateProcessForAdbTask(string actionType, string arguments)
+    {
+        var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Normal,
+                FileName = "adb.exe",
+                Arguments = $"{actionType} {arguments}"
+            }
+        };
+        return process;
+    }
+
     private static async void DeployToAndroid(string appTypeName)
     {
-        Process process = new Process();
-        ProcessStartInfo startInfo = new ProcessStartInfo
+        var process = CreateProcessForAdbTask("install", $"{FolderRoot}{appTypeName}{AndroidExtension}");
+        process.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs args)
         {
-            WindowStyle = ProcessWindowStyle.Normal,
-            FileName = "adb.exe",
-            Arguments = $"install {FolderRoot}{appTypeName}{AndroidExtension}"
+            EditorUtility.DisplayDialog("Deployment Result", $"Deployment of {appTypeName} is failed to finish. Reason: {args.Data}", "OK");
         };
-        process.StartInfo = startInfo;
-        process.ErrorDataReceived += delegate(object sender, DataReceivedEventArgs args) { EditorUtility.DisplayDialog("Deployment Result", $"Deployment of {appTypeName} is failed to finish. Reason: {args.Data}", "OK"); };
         process.Start();
         var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
         await Task.Run(process.WaitForExit).ContinueWith(delegate
