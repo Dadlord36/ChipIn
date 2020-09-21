@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using pingak9;
+using Tasking;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -22,7 +23,6 @@ namespace ViewModels.UI.Elements
             get => _dateIsPicked;
             set
             {
-                if (value == _dateIsPicked) return;
                 _dateIsPicked = value;
                 OnPropertyChanged();
             }
@@ -78,6 +78,12 @@ namespace ViewModels.UI.Elements
             MobileNative.showDatePicker(now.Year, now.Month, now.Day);
         }
 
+        public void Clear()
+        {
+            DateIsPicked = false;
+            LocalDateAsString = string.Empty;
+        }
+        
         private void OnDateChanged(DateTime dateTime)
         {
             PickedDateTime = dateTime;
@@ -94,7 +100,10 @@ namespace ViewModels.UI.Elements
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            });
         }
     }
 }

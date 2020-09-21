@@ -42,5 +42,17 @@ namespace DataModels.Extensions
             instance.FirstName = source.FirstName;
             instance.LastName = source.LastName;
         }
+
+        public static void Set(this IFlashOfferGetRequestModel instance, IFlashOfferGetRequestModel source)
+        {
+            instance.Description = source.Description;
+            instance.Period = source.Period;
+            instance.Price = source.Price;
+            instance.Quantity = source.Quantity;
+            instance.Radius = source.Radius;
+            instance.Title = source.Title;
+            instance.ExpireDate = source.ExpireDate;
+            instance.PriceType = source.PriceType;
+        }
     }
 }

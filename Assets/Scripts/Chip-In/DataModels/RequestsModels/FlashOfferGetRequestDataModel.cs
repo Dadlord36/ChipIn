@@ -90,6 +90,7 @@ namespace DataModels.RequestsModels
             {
                 if(_period == value) return;
                 _period = value;
+                OnPropertyChanged();
             }
         }
         
