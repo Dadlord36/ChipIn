@@ -14,6 +14,7 @@ using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.UI.Elements;
 using Views;
 
 namespace ViewModels
@@ -85,8 +86,6 @@ namespace ViewModels
             }
         }
 
-        public bool AllFieldsAreValid { get; set; }
-
         [Binding]
         public string Category
         {
@@ -148,7 +147,12 @@ namespace ViewModels
         public int QuantityAsInt
         {
             get => (int) Quantity;
-            set => Quantity = (uint) value;
+            set
+            {
+                if (Quantity == value) return;
+                Quantity = (uint) value;
+                OnPropertyChanged();
+            }
         }
 
         [Binding]
@@ -180,24 +184,8 @@ namespace ViewModels
             set
             {
                 _selectedCurrencyTypeIndex = value;
-                switch (value)
-                {
-                    case 0:
-                    {
-                        SelectedCurrencyType = "Cash";
-                        return;
-                    }
-                    case 1:
-                    {
-                        SelectedCurrencyType = "Tokens";
-                        return;
-                    }
-                    case 2:
-                    {
-                        SelectedCurrencyType = "Cash / Tokens";
-                        return;
-                    }
-                }
+                OnPropertyChanged();
+                SelectedCurrencyType = MainNames.CurrencyNames.GetCurrencyName(value);
             }
         }
 
@@ -222,6 +210,13 @@ namespace ViewModels
             Initialize();
         }
 
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            ClearAllFields();
+            Segment = offerCreationRepository.OfferSegmentName;
+        }
+
         private void Initialize()
         {
             SelectedCurrencyTypeIndex = 0;
@@ -238,18 +233,21 @@ namespace ViewModels
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
         }
-
-
-        protected override void OnBecomingActiveView()
-        {
-            base.OnBecomingActiveView();
-            Segment = offerCreationRepository.OfferSegmentName;
-        }
-
-
+        
         private void SetCategoryName(string categoryName)
         {
             Segment = categoryName;
+        }
+
+        private void ClearAllFields()
+        {
+            Description = string.Empty;
+            Price = "0";
+            QuantityAsInt = 0;
+            Title = string.Empty;
+            ExpireLocalDate = DateTime.Now;
+            SelectedCurrencyTypeIndex = 0;
+            transform.GetComponentInChildren<TimePickerAreaViewModel>()?.Clear();
         }
 
         [Binding]

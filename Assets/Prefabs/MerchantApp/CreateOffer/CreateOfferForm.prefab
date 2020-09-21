@@ -36,6 +36,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 128}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3712749695997176764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505935176263033381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.CreateOfferViewModel.CreateOffer_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &4892256087999473358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58,6 +72,40 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &3022720748681832644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 6200066423486263298}
+  viewsSwitchingController: {fileID: 0}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+    type: 2}
+  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  offerCreationRepository: {fileID: 11400000, guid: 7edb64470af4c8c43a1320925f905d3c,
+    type: 2}
+  _alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
+    type: 2}
+--- !u!114 &6200066423486263298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913045233336732432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1651350354093625800
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,42 +279,6 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
---- !u!114 &3712749695997176764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 505935176263033381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.CreateOfferViewModel.CreateOffer_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &5550428002221265236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3369433219794952513}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Price
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &2366344079214948103
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,106 +388,6 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6186063044437571272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7011353780675817451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.QuantityAsInt
-  viewEventName: UnityEngine.UI.Extensions.Stepper.onValueChanged
-  viewPropertyName: Views.ViewElements.SignedNumberView.SignedNumberValue
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &7613915999253317337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8557986605968699733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.ExpireLocalDate
-  viewEventName: ViewModels.UI.Elements.TimePickerAreaViewModel.datePicked
-  viewPropertyName: ViewModels.UI.Elements.TimePickerAreaViewModel.PickedDateTime
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &3022720748681832644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aee0dcade9848e68b7689c43f85f04e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 6200066423486263298}
-  viewsSwitchingController: {fileID: 0}
-  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
-    type: 2}
-  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
-    type: 2}
-  offerCreationRepository: {fileID: 11400000, guid: 7edb64470af4c8c43a1320925f905d3c,
-    type: 2}
-  _alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
-    type: 2}
---- !u!114 &6200066423486263298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913045233336732432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9197fc49a87c4b17a1d60228e6606373, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1727062543488919176
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7101355146683214584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Description
-  viewEventName: TMPro.TMP_InputField.onSubmit
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &6266406395105984202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +403,110 @@ MonoBehaviour:
   viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyTypeIndex
   viewEventName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.newItemSelected
   viewPropertyName: ViewModels.UI.Elements.OptionsSelectors.OptionsSelectorViewModel.SelectedItemIndex
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &5550428002221265236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3369433219794952513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Price
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &1943820292472229797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5468602636126563618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Title
+  viewEventName: TMPro.TMP_InputField.onSubmit
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &160062543955178324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011353780675817451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.QuantityAsInt
+  viewPropertyName: Views.ViewElements.SignedNumberView.SignedNumberValue
+--- !u!114 &6477191410448407962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011353780675817451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.QuantityAsInt
+  viewEventName: UnityEngine.UI.Extensions.Stepper.onValueChanged
+  viewPropertyName: UnityEngine.UI.Extensions.Stepper.value
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &1727062543488919176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7101355146683214584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.Description
+  viewEventName: TMPro.TMP_InputField.onSubmit
+  viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -535,6 +551,28 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -442}
   m_SizeDelta: {x: 0, y: 72.93}
   m_Pivot: {x: 0, y: 1}
+--- !u!114 &7613915999253317337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8557986605968699733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.CreateOfferViewModel.ExpireLocalDate
+  viewEventName: ViewModels.UI.Elements.TimePickerAreaViewModel.datePicked
+  viewPropertyName: ViewModels.UI.Elements.TimePickerAreaViewModel.PickedDateTime
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &7595036130554183877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,28 +589,6 @@ MonoBehaviour:
   viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: ViewModels.CreateOfferViewModel.SelectedCurrencyType
   viewPropertyName: TMPro.TextMeshProUGUI.text
---- !u!114 &1943820292472229797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5468602636126563618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.CreateOfferViewModel.Title
-  viewEventName: TMPro.TMP_InputField.onSubmit
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!1001 &910307731702385496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1626,35 +1642,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 851787142716642173}
     m_Modifications:
-    - target: {fileID: 1111787077441418198, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_padding
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350489351588186962, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1350489351588186962, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1396805830379936763, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
       propertyPath: m_Name
       value: QuantityContainer
-      objectReference: {fileID: 0}
-    - target: {fileID: 1620414526995411393, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_padding
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1837588691715747565, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2190342351980187977, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1676,77 +1667,15 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4988115390736154727, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -5219021190251119313, guid: 243d59ba55ac4a34d85f51cbf3652abc,
-        type: 2}
-    - target: {fileID: 4988115390736154727, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4988115390736154727, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 4988115390736154727, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 4988115390736154727, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_textAlignment
-      value: 65535
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543261516685325353, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5543261516685325353, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173299544019144, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
-        type: 2}
-    - target: {fileID: 6189173299544019144, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - target: {fileID: 6189173299544019144, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173299544019144, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_textInfo.materialCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173299544019144, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
     - target: {fileID: 6189173299544019145, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299544019145, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299544019145, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1756,7 +1685,7 @@ PrefabInstance:
     - target: {fileID: 6189173299544019145, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299544019145, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1767,11 +1696,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173299621688991, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299669826666, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1790,18 +1714,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299669826666, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -25
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173299669826666, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
       propertyPath: m_SizeDelta.x
       value: 68.3
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299669826666, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299669826666, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
       propertyPath: m_SizeDelta.y
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 3022720748681832644}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: set_QuantityAsInt
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189173299699310868, guid: e0698f0d39adc8d49b63740c50f36a9e,
+        type: 3}
+      propertyPath: _onValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6189173299699310874, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1817,42 +1771,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
-        type: 2}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_textInfo.materialCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_VerticalAlignment
-      value: 512
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6189173300240665621, guid: e0698f0d39adc8d49b63740c50f36a9e,
-        type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
       objectReference: {fileID: 0}
     - target: {fileID: 6189173301398732057, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
@@ -1871,13 +1789,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6189173301398732057, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -25
+      propertyPath: m_SizeDelta.x
+      value: 68.3
       objectReference: {fileID: 0}
     - target: {fileID: 6189173301398732057, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 68.3
+      propertyPath: m_AnchoredPosition.y
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 6189173301398732057, guid: e0698f0d39adc8d49b63740c50f36a9e,
         type: 3}
