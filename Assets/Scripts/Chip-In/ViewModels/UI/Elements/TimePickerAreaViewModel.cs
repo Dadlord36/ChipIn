@@ -13,9 +13,13 @@ namespace ViewModels.UI.Elements
     [Binding]
     public sealed class TimePickerAreaViewModel : UIBehaviour, IPointerClickHandler, INotifyPropertyChanged
     {
+        public UnityEvent datePicked;
+        
         private MobileDateTimePicker _timeDataPicker;
         private DateTime _pickedDateTime;
         private bool _dateIsPicked;
+        private string _localDateAsString;
+
 
         [Binding]
         public bool DateIsPicked
@@ -27,11 +31,7 @@ namespace ViewModels.UI.Elements
                 OnPropertyChanged();
             }
         }
-
-        public UnityEvent datePicked;
-        private string _localDateAsString;
-
-
+        
         [Binding]
         public DateTime PickedDateTime
         {
