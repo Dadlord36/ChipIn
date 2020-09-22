@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Controllers;
 using JetBrains.Annotations;
 using Tasking;
 using UnityEngine;
@@ -11,7 +12,7 @@ using WebOperationUtilities;
 namespace Views.ViewElements
 {
     [Binding]
-    public sealed class SettableIconView : UIBehaviour, INotifyPropertyChanged
+    public sealed class SettableIconView : UIBehaviour, IClearable, INotifyPropertyChanged
     {
         public UnityEvent iconWasSelectedFromGallery;
         public UnityEvent iconWasChanged;

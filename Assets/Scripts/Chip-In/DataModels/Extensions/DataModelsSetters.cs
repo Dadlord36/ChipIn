@@ -1,5 +1,6 @@
 ﻿using DataModels.Interfaces;
 using Repositories.Remote;
+using ViewModels.Interfaces;
 
 namespace DataModels.Extensions
 {
@@ -53,6 +54,13 @@ namespace DataModels.Extensions
             instance.Title = source.Title;
             instance.ExpireDate = source.ExpireDate;
             instance.PriceType = source.PriceType;
+        }
+
+        public static void Set(this ICompanyAdFeatureModel instance, ICompanyAdFeatureModel source)
+        {
+            instance.Description = source.Description;
+            instance.PosterImagePath = source.PosterImagePath;
+            instance.TokensRewardAmount = source.TokensRewardAmount;
         }
     }
 }

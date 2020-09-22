@@ -33,11 +33,23 @@ namespace ViewModels
             this.posterImagePath = posterImagePath;
         }
 
-        public int TokensRewardAmount => tokensRewardAmount;
+        public int TokensRewardAmount
+        {
+            get => tokensRewardAmount;
+            set => tokensRewardAmount = value;
+        }
 
-        public string Description => description;
+        public string Description
+        {
+            get => description;
+            set => description = value;
+        }
 
-        public string PosterImagePath => posterImagePath;
+        public string PosterImagePath
+        {
+            get => posterImagePath;
+            set => posterImagePath = value;
+        }
     }
 
     [Binding]

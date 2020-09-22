@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Tasking;
@@ -175,13 +176,7 @@ namespace ViewModels.Cards
         {
             OperationCancellationController.CancelOngoingTask();
             ClearIcon();
-            Description = dataModel.Description;
-            Age = dataModel.Age;
-            Size = dataModel.Size;
-            Spirit = dataModel.Spirit;
-            MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
-            Id = dataModel.Id;
-            Name = dataModel.Name;
+            SetViewModelFields(dataModel);
             try
             {
                 Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
@@ -198,6 +193,17 @@ namespace ViewModels.Cards
             }
         }
 
+        private void SetViewModelFields(IMarketInterestDetailsDataModel dataModel)
+        {
+            Description = dataModel.Description;
+            Age = dataModel.Age;
+            Size = dataModel.Size;
+            Spirit = dataModel.Spirit;
+            MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
+            Id = dataModel.Id;
+            Name = dataModel.Name;
+        }
+
         private void OnItemSelected(uint index)
         {
             ItemSelected?.Invoke(index);
@@ -210,5 +216,7 @@ namespace ViewModels.Cards
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
+
+
     }
 }

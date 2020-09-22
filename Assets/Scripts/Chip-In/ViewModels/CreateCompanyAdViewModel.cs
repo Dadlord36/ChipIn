@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Controllers;
 using JetBrains.Annotations;
 using UnityWeld.Binding;
 using Utilities;
@@ -56,13 +57,30 @@ namespace ViewModels
         {
         }
 
+        protected override void OnBecomingActiveView()
+        {
+            base.OnBecomingActiveView();
+            Clear();
+        }
+
+        private void Clear()
+        {
+            CompanyLogoImagePath = string.Empty;
+            CompanyPosterImagePath = string.Empty;
+
+            foreach (var clearable in GetComponentsInChildren<IClearable>())
+            {
+                clearable.Clear();
+            }
+        }
+
         [Binding]
         public void PreviewButton_OnClick()
         {
-            /*if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
+            if (!ValidationHelper.CheckIfAllFieldsAreValid(this))
             {
                 return;
-            }*/
+            }
 
             SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
                 GetComponentsInChildren<ICompanyAdFeatureModel>(), CompanyLogoImagePath, CompanyPosterImagePath)));

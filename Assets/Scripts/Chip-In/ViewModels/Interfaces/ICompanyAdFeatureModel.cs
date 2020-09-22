@@ -2,8 +2,8 @@
 {
     public interface ICompanyAdFeatureModel
     {
-        int TokensRewardAmount { get; }
-        string Description { get; }
-        string PosterImagePath { get; }
+        int TokensRewardAmount { get; set; }
+        string Description { get; set; }
+        string PosterImagePath { get; set; }
     }
 }

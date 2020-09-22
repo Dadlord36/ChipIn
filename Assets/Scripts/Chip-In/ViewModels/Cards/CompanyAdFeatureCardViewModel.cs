@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Controllers;
+using DataModels.Extensions;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using ViewModels.Interfaces;
@@ -8,7 +11,7 @@ using ViewModels.Interfaces;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class CompanyAdFeatureCardViewModel : MonoBehaviour, INotifyPropertyChanged, ICompanyAdFeatureModel
+    public sealed class CompanyAdFeatureCardViewModel : MonoBehaviour, INotifyPropertyChanged, ICompanyAdFeatureModel, IClearable
     {
         private string _posterImagePath;
         private string _description;
@@ -54,12 +57,18 @@ namespace ViewModels.Cards
             }
         }
 
+        public void Clear()
+        {
+            this.Set(new CompanyAdFeatureCardViewModel());
+        }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }
