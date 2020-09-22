@@ -14,6 +14,7 @@ using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views.ViewElements;
 using WebOperationUtilities;
 
 namespace ViewModels
@@ -53,8 +54,8 @@ namespace ViewModels
         private string _logoUrl;
         private string _firstName;
         private string _lastName;
-        
-        
+
+
         [Binding]
         public string FirstName
         {
@@ -130,7 +131,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         public string Name
         {
             get => _name;
@@ -142,7 +143,7 @@ namespace ViewModels
                 changedPropertiesCollector.AddChangedField(value, MainNames.ModelsPropertiesNames.Name);
             }
         }
-        
+
         public string Email
         {
             get => _email;
@@ -375,6 +376,17 @@ namespace ViewModels
         {
         }
 
+        private void ClearViewModelFields()
+        {
+            LastName = FirstName = Name = string.Empty;
+            foreach (var settableIcon in GetComponentsInChildren<SettableIconView>())
+            {
+                settableIcon.Clear();
+            }
+            changedPropertiesCollector.ClearCollectedFields();
+            this.Set(new MerchantProfileSettingsDataModel());
+        }
+
 
         [Binding]
         public async void ConfirmButton_OnClick()
@@ -398,18 +410,17 @@ namespace ViewModels
                 IsAwaitingProcess = false;
             }
         }
-        
+
         private void CombineFirstAndLastName()
         {
             Name = $"{FirstName} {LastName}";
         }
-        
-        
+
+
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            this.Set(merchantProfileSettingsRepository);
-            changedPropertiesCollector.ClearCollectedFields();
+            ClearViewModelFields();
         }
 
 
@@ -423,7 +434,7 @@ namespace ViewModels
                 changedPropertiesCollector.ClearCollectedFields();
                 await merchantProfileSettingsRepository.LoadDataFromServer().ConfigureAwait(false);
             }
-            
+
             alertCardController.ShowAlertWithText(response.IsSuccessful ? "Profile data was update successfully" : "Failed to update profile data");
         }
 

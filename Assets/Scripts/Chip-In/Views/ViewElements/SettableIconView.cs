@@ -28,7 +28,6 @@ namespace Views.ViewElements
             {
                 if (value == _selectedImagePath) return;
                 _selectedImagePath = value;
-
                 OnPropertyChanged();
             }
         }
@@ -65,6 +64,12 @@ namespace Views.ViewElements
         public void IconPlaceholder_OnClick()
         {
             FillIconWithImageFromGallery();
+        }
+
+        public void Clear()
+        {
+            IconIsSelected = false;
+            SelectedImagePath = string.Empty;
         }
 
         private void FillIconWithImageFromGallery()
