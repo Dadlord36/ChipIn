@@ -38,7 +38,7 @@ namespace Repositories.Local
                 _isLocalFile = isLocalFile;
             }
 
-            public async Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskFactory mainThreadTaskFactory, Sprite defaultIcon)
+            public async Task<Sprite> InvokeDownloading(CancellationToken cancellationToken, TaskFactory mainThreadTaskFactory)
             {
                 try
                 {
@@ -55,10 +55,15 @@ namespace Repositories.Local
                     LoadingTask = null;
                     return LoadedSprite;
                 }
+                catch (OperationCanceledException)
+                {
+                    LoadingTask = null;
+                    throw;
+                }
                 catch (Exception e)
                 {
                     LogUtility.PrintLog(Tag, e.Message);
-                    return defaultIcon;
+                    return null;
                 }
             }
         }
@@ -70,7 +75,7 @@ namespace Repositories.Local
             _spritesDownloadHandles.Clear();
         }
 
-        private bool SpriteIsAlreadyLoaded(string url, out DownloadHandleSprite handleSprite)
+        private bool SpriteLoadingHandleAlreadyExist(string url, out DownloadHandleSprite handleSprite)
         {
             handleSprite = _spritesDownloadHandles.Find(downloadHandleSprite => downloadHandleSprite != null && downloadHandleSprite.Url == url);
             return handleSprite != null;
@@ -78,16 +83,16 @@ namespace Repositories.Local
 
         public Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken, bool isLocalFile = false)
         {
-            if (SpriteIsAlreadyLoaded(url, out var downloadHandleSprite))
+            if (SpriteLoadingHandleAlreadyExist(url, out var downloadHandleSprite))
             {
-                if (downloadHandleSprite.IsLoaded)
-                {
-                    return Task.FromResult(downloadHandleSprite.LoadedSprite);
-                }
-
                 if (downloadHandleSprite.IsLoading)
                 {
                     return downloadHandleSprite.LoadingTask;
+                }
+                
+                if (downloadHandleSprite.IsLoaded)
+                {
+                    return Task.FromResult(downloadHandleSprite.LoadedSprite);
                 }
 
 
@@ -106,11 +111,12 @@ namespace Repositories.Local
             _spritesDownloadHandles.Add(downloadHandle);
             try
             {
-                return downloadHandle.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory, IconPlaceholder);
+                return downloadHandle.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Task.FromResult(iconPlaceholder);
+                LogUtility.PrintLogException(e);
+                throw;
             }
         }
 

@@ -7,6 +7,7 @@ using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using JetBrains.Annotations;
 using Repositories.Local;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -32,7 +33,7 @@ namespace ViewModels.Cards
         private string _description = EmptyFieldText;
         private Sprite _icon;
         private string _spirit = EmptyFieldText;
-        
+
 
         #region IEngageModel implementation
 
@@ -154,7 +155,7 @@ namespace ViewModels.Cards
         {
             Select();
         }
-        
+
         public void Select()
         {
             OnItemSelected((uint) Id);
@@ -184,7 +185,7 @@ namespace ViewModels.Cards
             try
             {
                 Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
-                    .ConfigureAwait(true);
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -207,7 +208,7 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }
