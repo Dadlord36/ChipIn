@@ -144,7 +144,7 @@ namespace HttpRequests.RequestsProcessors
                     {
                         if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
                         {
-                            await SimpleAutofac.GetInstance<ISessionController>().SignOut().ConfigureAwait(false);
+                            await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
                         }
                         try
                         {

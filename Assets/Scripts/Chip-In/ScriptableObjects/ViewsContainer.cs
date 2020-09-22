@@ -1,4 +1,5 @@
 ﻿using System;
+using Tasking;
 using UnityEngine;
 using Views;
 using Object = UnityEngine.Object;
@@ -19,8 +20,7 @@ namespace ScriptableObjects
             }
 
             protected bool InstanceIsValid => Instance != null;
-            public T GetInstance => Instance == null ? Instance = Instantiate(Prefab) : Instance;
-            
+            public T GetInstance => Instance == null ? Instance = TasksFactories.ExecuteOnMainThread(() => Instantiate(Prefab)) : Instance;
         }
 
         [Serializable]
@@ -31,15 +31,18 @@ namespace ScriptableObjects
             public ViewModelContainerItem(BaseView prefab) : base(prefab)
             {
             }
-            
+
             public void RemoveInstance()
             {
                 if (!InstanceIsValid) return;
-                Destroy(Instance.gameObject);
-                Instance = null;
+                TasksFactories.ExecuteOnMainThread(() =>
+                {
+                    Destroy(Instance.gameObject);
+                    Instance = null;
+                });
             }
         }
-        
+
         private void OnEnable()
         {
             Initialize();
@@ -52,6 +55,7 @@ namespace ScriptableObjects
                 Debug.LogWarning($"There is no views in ViewsContainer {name}");
                 return;
             }
+
             _viewsContainer = new ViewModelContainerItem[containingViews.Length];
             for (int i = 0; i < containingViews.Length; i++)
             {
@@ -71,6 +75,7 @@ namespace ScriptableObjects
                     return _viewsContainer[i].GetInstance;
                 }
             }
+
             throw new Exception($"There is no view with given ID: {viewName} in {name} views container");
         }
 
@@ -84,6 +89,7 @@ namespace ScriptableObjects
                     return;
                 }
             }
+
             throw new Exception($"There is no view with given ID: {viewName} in {name} views container");
         }
     }

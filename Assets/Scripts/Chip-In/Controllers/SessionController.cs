@@ -11,6 +11,7 @@ using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects;
 using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
 using Utilities;
 using ViewModels.SwitchingControllers;
@@ -21,9 +22,12 @@ namespace Controllers
     public interface ISessionController
     {
         event Action<SessionController.SessionMode> SwitchingToMode;
+        bool IsSignedIn { get; set; }
         Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel);
         Task TryRegisterAndLoginAsGuest();
         Task SignOut();
+        Task ProcessTokenInvalidationCase();
+
         void ProcessAppLaunching();
     }
 
@@ -47,19 +51,32 @@ namespace Controllers
         [SerializeField] private CachingController cachingController;
         [SerializeField] private SessionStateRepository sessionStateRepository;
 
+        private bool _processingAppRestarting;
         public event Action<SessionMode> SwitchingToMode;
+
+        public bool IsSignedIn { get; set; }
+        private bool RestartAppIfUnauthorizedRequestHappens { get; set; } = true;
+
+        private void OnEnable()
+        {
+            _processingAppRestarting = false;
+        }
 
         public async Task TryToSignIn(IUserLoginRequestModel userLoginRequestModel)
         {
             try
             {
+                RestartAppIfUnauthorizedRequestHappens = false;
                 var response = await SessionStaticProcessor.TryLogin(out TasksCancellationTokenSource, userLoginRequestModel)
-                    .ConfigureAwait(true);
+                    .ConfigureAwait(false);
+                RestartAppIfUnauthorizedRequestHappens = true;
+
                 var responseInterface = response.ResponseModelInterface;
                 if (responseInterface == null)
                 {
                     LogUtility.PrintLog(Tag, "SignIn response model is null");
                     alertCardController.ShowAlertWithText(response.Error);
+
                     return;
                 }
 
@@ -83,8 +100,10 @@ namespace Controllers
         {
             try
             {
+                RestartAppIfUnauthorizedRequestHappens = false;
                 var result = await GuestRegistrationStaticProcessor.TryRegisterUserAsGuest(out TasksCancellationTokenSource)
-                    .ConfigureAwait(true);
+                    .ConfigureAwait(false);
+                RestartAppIfUnauthorizedRequestHappens = true;
 
                 if (!result.Success)
                 {
@@ -105,12 +124,15 @@ namespace Controllers
 
         private void ProceedWithGivenAuthorisationData(ILoginResponseModel loginResponseModel, string role)
         {
+            IsSignedIn = true;
             repositoriesController.SetAuthorisationDataAndInvokeRepositoriesLoading(loginResponseModel);
             SaveRoAndInvokeSwitchingToCorrespondingView(role);
         }
 
+
         private void ProceedWithGivenAuthorisationData(IAuthorisationModel authorisationModel, string role)
         {
+            IsSignedIn = true;
             repositoriesController.SetGuestAuthorisationDataAndInvokeRepositoriesLoading(authorisationModel);
             SaveRoAndInvokeSwitchingToCorrespondingView(role);
         }
@@ -121,16 +143,46 @@ namespace Controllers
             SwitchToViewCorrespondingToUseRole();
             sessionStateRepository.ConfirmSingingIn();
         }
-        
-        public Task SignOut()
+
+
+        public async Task SignOut()
         {
+            InvokeAppRestartingProcess();
+
+            //TODO: figure out should app sing-out if it was logged in as guest
+            if (sessionStateRepository.UserRole != MainNames.UserRoles.Guest)
+            {
+                await sessionStateRepository.SignOut().ConfigureAwait(false);
+            }
+
+            ClearUserAuthentication();
+        }
+
+        private void InvokeAppRestartingProcess()
+        {
+            IsSignedIn = false;
+
             ApiHelper.StopAllOngoingRequests();
             viewsSwitchingController.ClearSwitchingHistory(nameof(WelcomeView));
             DestroyView(nameof(CoinsGameView));
             SwitchToWelcomeView();
+        }
 
-            //TODO: figure out should app sing-out if it was logged in as guest
-            return sessionStateRepository.UserRole != MainNames.UserRoles.Guest ? sessionStateRepository.SignOut() : Task.CompletedTask;
+
+        public async Task ProcessTokenInvalidationCase()
+        {
+            if (!RestartAppIfUnauthorizedRequestHappens || _processingAppRestarting) return;
+            _processingAppRestarting = true;
+            ApiHelper.StopAllOngoingRequests();
+            if (IsSignedIn)
+            {
+                await SignOut().ConfigureAwait(false);
+                ClearUserAuthentication();
+            }
+
+            InvokeAppRestartingProcess();
+            ClearUserAuthentication();
+            _processingAppRestarting = false;
         }
 
         private void DestroyView(string coinsGameViewName)
@@ -162,6 +214,11 @@ namespace Controllers
             authorisationDataRepository.SetUserRole(role);
             //Save authentication data, so that it will be used on next app launch and user won't have to sign in again
             authorisationDataRepository.TrySaveDataLocally();
+        }
+
+        private void ClearUserAuthentication()
+        {
+            authorisationDataRepository.Clear();
         }
 
         public void ProcessAppLaunching()
@@ -203,10 +260,10 @@ namespace Controllers
         {
             viewsSwitchingController.RequestSwitchToView(null, toViewName);
         }
-        
+
         private void OnSwitchingToMode(SessionMode obj)
         {
-            SwitchingToMode?.Invoke(obj);
+            TasksFactories.ExecuteOnMainThread(() => { SwitchingToMode?.Invoke(obj); });
         }
     }
 }

@@ -7,8 +7,6 @@ using RequestsStaticProcessors;
 using ScriptableObjects;
 using UnityEngine;
 using Utilities;
-using ViewModels.SwitchingControllers;
-using Views;
 
 namespace Repositories.Local
 {
@@ -21,6 +19,8 @@ namespace Repositories.Local
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SessionStateRepository), order = 0)]
     public sealed class SessionStateRepository : AsyncOperationsScriptableObject, ILoginState
     {
+        private const string Tag = nameof(SessionStateRepository);
+        
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private CachingController cachingController;
 
@@ -44,9 +44,13 @@ namespace Repositories.Local
             try
             {
                 await SessionStaticProcessor.TryLogOut(out TasksCancellationTokenSource, authorisationDataRepository, DeviceUtility.BaseDeviceData);
-                
+
                 cachingController.ClearCache();
                 OnSigningOut();
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

@@ -5,6 +5,7 @@ using Controllers;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
 using Encryption;
+using Tasking;
 using UnityEngine;
 using Utilities;
 #if UNITY_EDITOR
@@ -43,7 +44,7 @@ namespace Repositories.Remote
 
         private const string EncryptionKey = "crowdcrowdcrowdcrowdcrowdcrowdSD";
         private const string SaveFileName = "Player.dat";
-        private static string FileName => Path.Combine(Application.persistentDataPath, SaveFileName);
+        private static string FileName => TasksFactories.ExecuteOnMainThread(() => Path.Combine(Application.persistentDataPath, SaveFileName));
 
         private UserProfileRequestHeadersProvider _authorisationModel = new UserProfileRequestHeadersProvider();
 
