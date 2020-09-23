@@ -1,49 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &380996196676688465
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2799871206825264875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b026a6c55f734808b037f147ab24e537, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3746927124023112866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2799871206825264875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.Bars.BarItems.WithTitleAndIconView.BackgroundGradientColor1
-  viewPropertyName: ViewModels.UI.Elements.ShapesLinearGradientColorsViewModel.StartColor
---- !u!114 &8000690324721614524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2799871206825264875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.Bars.BarItems.WithTitleAndIconView.BackgroundGradientColor2
-  viewPropertyName: ViewModels.UI.Elements.ShapesLinearGradientColorsViewModel.EndColor
 --- !u!1 &5698229598307540832
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +208,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 340797946783773208, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 340797946783773211, guid: 13d6ba9b42a6d494c8c75125702f0df9,
         type: 3}
       propertyPath: settings._fillType
@@ -287,18 +248,42 @@ PrefabInstance:
       propertyPath: settings._fillColor.a
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _gradientMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _gradientDir
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _overwriteAllColor
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _vertex1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _vertex1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4899537267754014094, guid: 13d6ba9b42a6d494c8c75125702f0df9,
+        type: 3}
+      propertyPath: _vertex1.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7390607904692243030, guid: 13d6ba9b42a6d494c8c75125702f0df9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 13d6ba9b42a6d494c8c75125702f0df9, type: 3}
 --- !u!224 &2799871206969453627 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 340797946307188933, guid: 13d6ba9b42a6d494c8c75125702f0df9,
-    type: 3}
-  m_PrefabInstance: {fileID: 2477514065188009214}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &2799871206825264875 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 340797946783773205, guid: 13d6ba9b42a6d494c8c75125702f0df9,
     type: 3}
   m_PrefabInstance: {fileID: 2477514065188009214}
   m_PrefabAsset: {fileID: 0}

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using EasyButtons;
+#endif
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -13,6 +16,9 @@ namespace Controllers
             ResetElementSize();
         }
 
+#if UNITY_EDITOR
+      [Button]  
+#endif
         public void FitImage()
         {
             ResetElementSize();

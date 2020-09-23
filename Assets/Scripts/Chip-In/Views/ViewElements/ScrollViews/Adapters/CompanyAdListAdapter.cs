@@ -26,7 +26,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 try
                 {
-                    return new AdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadTexture2DTask(data.PosterUri,
+                    return new AdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
                         cancellationTokenSource.Token), data.Slogan);
                 }
                 catch (OperationCanceledException)

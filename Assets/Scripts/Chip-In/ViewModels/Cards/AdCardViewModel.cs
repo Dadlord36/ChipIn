@@ -16,21 +16,21 @@ namespace ViewModels.Cards
     {
         public class FieldFillingData
         {
-            public readonly Task<Texture2D> AdIcon;
+            public readonly Task<Sprite> AdIcon;
             public readonly string Description;
 
-            public FieldFillingData(Task<Texture2D> adIcon, string description)
+            public FieldFillingData(Task<Sprite> adIcon, string description)
             {
                 AdIcon = adIcon;
                 Description = description;
             }
         }
 
-        private Texture2D _adIcon;
+        private Sprite _adIcon;
         private string _description;
 
         [Binding]
-        public Texture2D AdIcon
+        public Sprite AdIcon
         {
             get => _adIcon;
             set

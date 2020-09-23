@@ -22,31 +22,31 @@ namespace ViewModels.Cards
 
         public class FieldFillingData
         {
-            public readonly Task<Texture2D> LoadBackgroundTextureTask;
+            public readonly Task<Sprite> LoadBackgroundSpriteTask;
 
-            public FieldFillingData(Task<Texture2D> loadBackgroundTextureTask)
+            public FieldFillingData(Task<Sprite> loadBackgroundSpriteTask)
             {
-                LoadBackgroundTextureTask = loadBackgroundTextureTask;
+                LoadBackgroundSpriteTask = loadBackgroundSpriteTask;
             }
         }
 
-        private Texture2D _backgroundTexture;
+        private Sprite _backgroundSprite;
 
         [Binding]
-        public Texture2D BackgroundTexture
+        public Sprite BackgroundTexture
         {
-            get => _backgroundTexture;
+            get => _backgroundSprite;
             private set
             {
-                if (Equals(value, _backgroundTexture)) return;
-                _backgroundTexture = value;
+                if (Equals(value, _backgroundSprite)) return;
+                _backgroundSprite = value;
                 OnPropertyChanged();
             }
         }
 
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            BackgroundTexture = await dataModel.LoadBackgroundTextureTask.ConfigureAwait(false);
+            BackgroundTexture = await dataModel.LoadBackgroundSpriteTask.ConfigureAwait(false);
         }
 
         public void OnPointerClick(PointerEventData eventData)
