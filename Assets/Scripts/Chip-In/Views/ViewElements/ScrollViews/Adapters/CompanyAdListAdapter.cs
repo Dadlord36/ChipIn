@@ -12,7 +12,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class CompanyAdListAdapter : RepositoryBasedListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
+    public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
         DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData,
         CompanyAdListAdapter.CompanyAdFillingViewAdapter>
     {

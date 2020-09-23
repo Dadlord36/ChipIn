@@ -75,7 +75,7 @@ namespace Views.ViewElements
 
         private void FillIconWithImageFromGallery()
         {
-            NativeGallery.GetImageFromGallery(delegate(string path)
+            NativeGallery.GetImageFromGallery(path=>
             {
                 SelectedImagePath = path;
 

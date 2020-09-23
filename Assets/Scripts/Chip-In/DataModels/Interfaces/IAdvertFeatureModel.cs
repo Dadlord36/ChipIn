@@ -1,6 +1,10 @@
 ﻿namespace DataModels.Interfaces
 {
-    public interface IAdvertFeatureModel : IIdentifier, IDescription, ITokensAmount, IIconUrl, IWatched
+    public interface IAdvertFeatureBaseModel : IDescription, ITokensAmount, IIconUrl
+    {
+    }
+    
+    public interface IAdvertFeatureModel : IAdvertFeatureBaseModel, IIdentifier , IWatched
     {
     }
 }

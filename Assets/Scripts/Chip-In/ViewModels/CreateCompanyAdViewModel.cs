@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Controllers;
+using DataModels;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using UnityWeld.Binding;
 using Utilities;
-using ViewModels.Interfaces;
 using Views;
 
 namespace ViewModels
@@ -13,13 +15,20 @@ namespace ViewModels
     {
         public readonly string CompanyLogoImagePath;
         public readonly string CompanyPosterImagePath;
-        public readonly ICompanyAdFeatureModel[] FeatureModelsToPreview;
+        public readonly IReadOnlyList<IAdvertFeatureBaseModel> FeatureModelsToPreview;
 
-        public CompanyAdFeaturesPreviewData(ICompanyAdFeatureModel[] featureModelsToPreview, string companyLogoImagePath, string companyPosterImagePath)
+        public CompanyAdFeaturesPreviewData(IReadOnlyList<IAdvertFeatureBaseModel> featureModelsToPreview, string companyLogoImagePath, string companyPosterImagePath)
         {
             FeatureModelsToPreview = featureModelsToPreview;
             CompanyLogoImagePath = companyLogoImagePath;
             CompanyPosterImagePath = companyPosterImagePath;
+        }
+
+        public CompanyAdFeaturesPreviewData(IAdvertItemModel advertItemDataModel)
+        {
+            FeatureModelsToPreview = advertItemDataModel.AdvertFeatures as IReadOnlyList<IAdvertFeatureBaseModel>;
+            CompanyLogoImagePath = advertItemDataModel.LogoUrl;
+            CompanyPosterImagePath = advertItemDataModel.PosterUri;
         }
     }
 
@@ -83,7 +92,7 @@ namespace ViewModels
             }
 
             SwitchToView(nameof(CompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(
-                GetComponentsInChildren<ICompanyAdFeatureModel>(), CompanyLogoImagePath, CompanyPosterImagePath)));
+                GetComponentsInChildren<IAdvertFeatureBaseModel>(), CompanyLogoImagePath, CompanyPosterImagePath)));
         }
 
 

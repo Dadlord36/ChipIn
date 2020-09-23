@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Controllers;
+using Factories;
 using RestSharp;
 using UnityEngine.Assertions;
 using Utilities;
@@ -83,6 +86,18 @@ namespace HttpRequests
             {
                 requestMessage.Headers.Add(pair.Key, pair.Value);
             }
+        }
+
+        public static async Task<IRestResponse> ExecuteRequestWithDefaultRestClient(RestRequest restRequest)
+        {
+            var response = await DefaultRestClient.ExecuteAsync(restRequest).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
+            }
+            LogUtility.PrintLog(Tag, response.ToString());
+            return response;
         }
 
         public static Task<HttpResponseMessage> MakeAsyncRequest(CancellationToken cancellationToken,

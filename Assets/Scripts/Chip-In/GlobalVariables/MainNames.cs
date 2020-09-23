@@ -6,6 +6,10 @@ namespace GlobalVariables
     {
         public static class ModelsPropertiesNames
         {
+            public const string InterestId = "interest_id";
+            public const string Icon = "icon";
+            public const string Description = "description";
+            public const string Poster = "poster";
             public const string Id = "id";
             public const string OwnerId = "owner_id";
             public const string Email = "email";
@@ -28,6 +32,7 @@ namespace GlobalVariables
             public const string CountryCode = "country_code";
             public const string Role = "role";
             public const string TokensBalance = "tokens_balance";
+            public const string TokensAmount = "tokens_amount";
             public const string Currency = "currency";
             public const string Category = "category";
             public const string Market = "market";
@@ -62,6 +67,7 @@ namespace GlobalVariables
                         return LongTerm;
                     }
                 }
+
                 throw new ArgumentOutOfRangeException($"Number {value.ToString()} is out of range");
             }
         }
@@ -74,8 +80,8 @@ namespace GlobalVariables
 
             public static string GetCurrencyName(int number)
             {
-                switch(number)
-                { 
+                switch (number)
+                {
                     case 0:
                     {
                         return Cash;
@@ -101,8 +107,8 @@ namespace GlobalVariables
 
             public static string GetFlashOfferCategoryName(int number)
             {
-                switch(number)
-                { 
+                switch (number)
+                {
                     case 0:
                     {
                         return FivePlayersChallenge;
@@ -114,7 +120,7 @@ namespace GlobalVariables
                 }
 
                 throw new ArgumentOutOfRangeException($"Number {number.ToString()} is out of range");
-            } 
+            }
         }
 
         public static class UserRoles

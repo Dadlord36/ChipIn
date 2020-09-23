@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Remote;
@@ -12,14 +13,14 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using ViewModels.Basic;
-using ViewModels.Interfaces;
 using Views;
 using Views.Bars.BarItems;
 using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
-    [Serializable]
+    //For testing purposes only
+    /*[Serializable]
     public class CompanyAdFeatureDataModel : ICompanyAdFeatureModel
     {
         [SerializeField] private int tokensRewardAmount;
@@ -50,17 +51,18 @@ namespace ViewModels
             get => posterImagePath;
             set => posterImagePath = value;
         }
-    }
+    }*/
 
     [Binding]
-    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<CompanyAdPreviewView>, INotifyPropertyChanged
+    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<SelectedCompanyAdPreviewView>, INotifyPropertyChanged
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         [SerializeField] private DesignedListViewAdapter featuresListViewAdapter;
-        
+        [SerializeField] private bool listIconsAreLocalPaths = true;
+
         //For testing purposes only
         /*[SerializeField] private CompanyAdFeatureDataModel[] dataItems;
         [SerializeField] private string backgroundImagePath;*/
@@ -83,7 +85,7 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-        
+
         [Binding]
         public uint SelectedItemIndex
         {
@@ -91,7 +93,7 @@ namespace ViewModels
             set
             {
                 _selectedItemIndex = value;
-                SelectedFeatureDescription = GetItemDescription(value);
+                SelectedFeatureDescription = GetItemDescription((int) value);
             }
         }
 
@@ -122,7 +124,7 @@ namespace ViewModels
         {
         }
 
-        private string GetItemDescription(uint index)
+        private string GetItemDescription(int index)
         {
             return _companyAdFeaturesPreviewData.FeatureModelsToPreview[index].Description;
         }
@@ -138,9 +140,12 @@ namespace ViewModels
             try
             {
                 IsSendingRequest = true;
+                IsAwaitingProcess = true;
                 var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository, _companyAdFeaturesPreviewData)
                     .ConfigureAwait(false);
-                alertCardController.ShowAlertWithText(result.IsSuccessful ? "Advert created successfully" : result.ErrorMessage);
+                alertCardController.ShowAlertWithText(result.IsSuccessful
+                    ? "Advert created successfully"
+                    : ErrorsHandlingUtility.CollectErrors(result.Content));
                 SwitchToView(nameof(ConnectView));
             }
             catch (OperationCanceledException)
@@ -154,6 +159,7 @@ namespace ViewModels
             }
             finally
             {
+                IsAwaitingProcess = false;
                 IsSendingRequest = false;
             }
         }
@@ -170,7 +176,7 @@ namespace ViewModels
                 if (_companyAdFeaturesPreviewData.CompanyPosterImagePath != null)
                 {
                     BackgroundSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_companyAdFeaturesPreviewData.CompanyPosterImagePath,
-                            OperationCancellationController.CancellationToken, true)
+                            OperationCancellationController.CancellationToken, listIconsAreLocalPaths)
                         .ConfigureAwait(false);
                 }
             }
@@ -204,7 +210,7 @@ namespace ViewModels
             }
         }*/
 
-        private void RefillList(IReadOnlyList<ICompanyAdFeatureModel> featureModelsToPreview)
+        private void RefillList(IReadOnlyList<IAdvertFeatureBaseModel> featureModelsToPreview)
         {
             var itemsNumber = featureModelsToPreview.Count;
             var items = new List<DesignedScrollBarItemDefaultDataModel>(itemsNumber);
@@ -212,8 +218,8 @@ namespace ViewModels
             for (var index = 0; index < itemsNumber; index++)
             {
                 var dataModel = featureModelsToPreview[index];
-                var loadIconTask = downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterImagePath,
-                    OperationCancellationController.CancellationToken, true);
+                var loadIconTask = downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.Icon,
+                    OperationCancellationController.CancellationToken, listIconsAreLocalPaths);
                 items.Add(new DesignedScrollBarItemDefaultDataModel(loadIconTask, (uint) index));
             }
 

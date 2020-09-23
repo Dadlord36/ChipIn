@@ -5,6 +5,8 @@ using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
 using DataModels.ResponsesModels;
+using Factories;
+using GlobalVariables;
 using HttpRequests;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
@@ -28,26 +30,19 @@ namespace RequestsStaticProcessors
 
         public static Task<IRestResponse> CreateAnAdvert(IRequestHeaders requestHeaders, CompanyAdFeaturesPreviewData companyAdFeaturesPreviewData)
         {
-            var client = new RestClient("http://chip-in-dev.herokuapp.com/api/v1/adverts") {Timeout = -1};
-            client.ClearHandlers();
-
-            var request = new RestRequest(Method.POST);
-
-
-            request.AddHeader(HttpRequestHeader.Accept.ToString(), ApiHelper.JsonMediaTypeHeader);
-            request.AddHeader(HttpRequestHeader.ContentType.ToString(), ApiHelper.MultipartFormData);
-            request.AddHeaders(requestHeaders.GetRequestHeaders());
-
-            AddAdvertFileParam("poster", companyAdFeaturesPreviewData.CompanyLogoImagePath);
-            AddAdvertFileParam("logo", companyAdFeaturesPreviewData.CompanyPosterImagePath);
-
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders,Method.POST, ApiCategories.Adverts);
+            AddAdvertFileParam(MainNames.ModelsPropertiesNames.Poster, companyAdFeaturesPreviewData.CompanyLogoImagePath);
+            AddAdvertFileParam(MainNames.ModelsPropertiesNames.Logo, companyAdFeaturesPreviewData.CompanyPosterImagePath);
+            
+            AddAdvertParam(MainNames.ModelsPropertiesNames.InterestId, "425");
+            
             {
                 var featureModels = companyAdFeaturesPreviewData.FeatureModelsToPreview;
-                for (int i = 0; i < featureModels.Length; i++)
+                for (int i = 0; i < featureModels.Count; i++)
                 {
-                    AddAdvertFeaturesAttributeParameter("description", i, featureModels[i].Description);
-                    AddAdvertFeaturesAttributeParameter("tokens_amount", i, featureModels[i].TokensRewardAmount.ToString());
-                    AddAdvertFeaturesAttributeFile("icon", i, featureModels[i].PosterImagePath);
+                    AddAdvertFeaturesAttributeParameter(MainNames.ModelsPropertiesNames.Description, i, featureModels[i].Description);
+                    AddAdvertFeaturesAttributeParameter(MainNames.ModelsPropertiesNames.TokensAmount, i, featureModels[i].TokensAmount.ToString());
+                    AddAdvertFeaturesAttributeFile(MainNames.ModelsPropertiesNames.Icon, i, featureModels[i].Icon);
                 }
             }
 
@@ -88,10 +83,7 @@ namespace RequestsStaticProcessors
             {
                 return $"{advert}[advert_features_attributes][{index}][{parameterName}]";
             }
-
-            var result = request.ToString();
-            LogUtility.PrintLog(Tag, result);
-            return client.ExecuteAsync(request);
+            return ApiHelper.ExecuteRequestWithDefaultRestClient(request);
         }
     }
 }

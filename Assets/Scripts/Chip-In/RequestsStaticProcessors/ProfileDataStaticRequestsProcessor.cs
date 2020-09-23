@@ -34,16 +34,16 @@ namespace RequestsStaticProcessors
         public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
             ChangedPropertiesCollector changedPropertiesCollector)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
-            FillRequestParametersWithNameValueCollection(request,changedPropertiesCollector.ChangedPropertiesCollection);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.PUT, ApiCategories.Profile);
+            FillRequestParametersWithNameValueCollection(request, changedPropertiesCollector.ChangedPropertiesCollection);
             FillRequestFilesWithNameValueCollection(request, changedPropertiesCollector.ChangedPropertiesWithFileDataCollection);
             return SendRestRequest(request, cancellationToken);
         }
-        
+
         public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
             KeyValuePair<string, string> property)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.PUT, ApiCategories.Profile);
             request.AddParameter(property.Key, property.Value);
 
             return SendRestRequest(request, cancellationToken);
@@ -52,7 +52,7 @@ namespace RequestsStaticProcessors
         public static Task<IRestResponse> UpdateUserProfileWithDataFile(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
             KeyValuePair<string, string> property)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.PUT, ApiCategories.Profile);
             request.AddFile(property.Key, property.Value);
 
             return SendRestRequest(request, cancellationToken);
@@ -61,7 +61,7 @@ namespace RequestsStaticProcessors
         public static Task<IRestResponse> UpdateUserProfileWithDataFiles(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
             IReadOnlyDictionary<string, string> fields)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.PUT, ApiCategories.Profile);
             FillRequestFilesWithNameValueCollection(request, fields);
             return SendRestRequest(request, cancellationToken);
         }
@@ -69,7 +69,7 @@ namespace RequestsStaticProcessors
         public static Task<IRestResponse> UpdateUserProfileData(CancellationToken cancellationToken, IRequestHeaders requestHeaders,
             IReadOnlyDictionary<string, string> fields, string newAvatarImagePath)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.PUT, ApiCategories.Profile);
             if (!string.IsNullOrEmpty(newAvatarImagePath))
                 request.AddFile(MainNames.ModelsPropertiesNames.Avatar, newAvatarImagePath);
             FillRequestParametersWithNameValueCollection(request, fields);
@@ -108,8 +108,8 @@ namespace RequestsStaticProcessors
                 .SendRequest("Verification data vas retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<object, MerchantProfileResponseModel, IMerchantProfileResponseModel>.HttpResponse> GetMerchantProfileData(
-            out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
+        public static Task<BaseRequestProcessor<object, MerchantProfileResponseModel, IMerchantProfileResponseModel>.HttpResponse>
+            GetMerchantProfileData(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             return new MerchantProfileDataGetProcessor(out cancellationTokenSource, requestHeaders)
                 .SendRequest("Merchant profile data was retrieved successfully");
@@ -121,7 +121,8 @@ namespace RequestsStaticProcessors
             {
                 request.AddParameter(field.Key, field.Value);
             }
-        }      
+        }
+
         private static void FillRequestFilesWithNameValueCollection(IRestRequest request, IReadOnlyDictionary<string, string> collection)
         {
             foreach (var field in collection)

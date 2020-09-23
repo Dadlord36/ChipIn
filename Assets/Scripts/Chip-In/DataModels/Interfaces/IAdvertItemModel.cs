@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
-    public interface IAdvertItemModel : IIdentifier, ISlogan, IPosterImageUri
+    public interface IAdvertItemModel : IIdentifier, ISlogan, ILogoImageUrl, IPosterImageUri
     {
         [JsonProperty("advert_features")] IList<AdvertFeatureDataModel> AdvertFeatures { get; set; }
     }

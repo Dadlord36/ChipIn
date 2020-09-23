@@ -56,11 +56,11 @@ namespace DataModels.Extensions
             instance.PriceType = source.PriceType;
         }
 
-        public static void Set(this ICompanyAdFeatureModel instance, ICompanyAdFeatureModel source)
+        public static void Set(this IAdvertFeatureBaseModel instance, IAdvertFeatureBaseModel source)
         {
             instance.Description = source.Description;
-            instance.PosterImagePath = source.PosterImagePath;
-            instance.TokensRewardAmount = source.TokensRewardAmount;
+            instance.Icon = source.Icon;
+            instance.TokensAmount = source.TokensAmount;
         }
     }
 }
