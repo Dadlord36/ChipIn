@@ -63,12 +63,12 @@ namespace ViewModels.UI.Elements
 
         private void SubscribeOnPointClickRetranslator()
         {
-            clickRetranslator.pointerClicked.AddListener(OnPointerClick);
+            clickRetranslator.AddOnClickListener(OnPointerClick);
         }
 
         private void UnsubscribeFromPointClickRetranslator()
         {
-            clickRetranslator.pointerClicked.RemoveListener(OnPointerClick);
+            clickRetranslator.RemoveOnClickListener(OnPointerClick);
         }
 
         private void OnPointerClick()

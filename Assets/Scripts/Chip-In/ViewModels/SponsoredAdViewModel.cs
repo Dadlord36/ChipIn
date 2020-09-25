@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DataModels;
-using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Temporary;
@@ -12,6 +11,7 @@ using UnityWeld.Binding;
 using Utilities;
 using ViewModels.Basic;
 using Views;
+using Views.ViewElements.ScrollViews.Adapters;
 
 namespace ViewModels
 {
@@ -20,19 +20,18 @@ namespace ViewModels
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
+        [SerializeField] private SponsoredAdFullListAdapter sponsoredAdFullListAdapter;
 
-        private string _posterUri;
-        private Sprite _backgroundPoster;
-
+        private uint _selectedItemIndex;
+        
         [Binding]
-        public Sprite BackgroundPoster
+        public uint SelectedItemIndex
         {
-            get => _backgroundPoster;
-            private set
+            get => _selectedItemIndex;
+            set
             {
-                if (Equals(value, _backgroundPoster)) return;
-                _backgroundPoster = value;
-                OnPropertyChanged();
+                _selectedItemIndex = value;
+                LogUtility.PrintLog(Tag, value.ToString());
             }
         }
 
@@ -40,6 +39,7 @@ namespace ViewModels
         {
         }
 
+        
         [Binding]
         public void AdoptButton_OnClick()
         {
@@ -49,10 +49,8 @@ namespace ViewModels
         [Binding]
         public void ReserveButton_OnClick()
         {
-            sponsoredAdRepository.AddItem(new SponsoredAdDataModel {PosterUri = _posterUri});
             SwitchToPreviousView();
         }
-
 
         protected override async void OnBecomingActiveView()
         {
@@ -61,9 +59,7 @@ namespace ViewModels
 
             try
             {
-                _posterUri = ((IPosterImageUri) transitionData).PosterUri;
-                BackgroundPoster = await downloadedSpritesRepository.CreateLoadSpriteTask(_posterUri, OperationCancellationController.CancellationToken)
-                    .ConfigureAwait(false);
+                await sponsoredAdFullListAdapter.ResetAsync().ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

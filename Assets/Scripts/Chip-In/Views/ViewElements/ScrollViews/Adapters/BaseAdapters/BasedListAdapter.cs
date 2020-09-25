@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
+using Common.Interfaces;
 using Common.UnityEvents;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
@@ -19,7 +20,8 @@ using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
-    public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> : OSA<TParams, TItemViewHolder>,
+    public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> :
+        OSA<TParams, BaseItemViewsHolder>,
         INotifyPropertyChanged
         where TItemViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
         where TParams : BaseParamsWithPrefab
@@ -37,6 +39,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
         private bool _itemsListIsNotEmpty;
+        protected int MiddleElementNumber;
+        private BaseItemViewsHolder _middleItem;
 
 
         [Binding]
@@ -45,12 +49,26 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             get => _itemsListIsNotEmpty;
             set
             {
-                TasksFactories.ExecuteOnMainThread(()=>
+                TasksFactories.ExecuteOnMainThread(() =>
                 {
                     _itemsListIsNotEmpty = value;
                     OnPropertyChanged();
                     OnListFillingStateChanged(value);
                 });
+            }
+        }
+
+        /// <summary>
+        /// Middle item in scroll viewport. Will also call Select() on new middle item sets
+        /// </summary>
+        protected BaseItemViewsHolder MiddleItem
+        {
+            get => _middleItem;
+            set
+            {
+                if (ReferenceEquals(_middleItem, value)) return;
+                _middleItem = value;
+                (value as IIdentifiedSelection).Select();
             }
         }
 
@@ -66,11 +84,15 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             Data = new SimpleDataHelper<TDataType>(this);
         }
 
+        protected virtual void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
+        {
+        }
+
         // This is called initially, as many times as needed to fill the viewport, 
         // and anytime the viewport's size grows, thus allowing more items to be displayed
         // Here you create the "ViewsHolder" instance whose views will be re-used
         // *For the method's full description check the base implementation
-        protected override TItemViewHolder CreateViewsHolder(int itemIndex)
+        protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
         {
             var instance = new TItemViewHolder();
 
@@ -80,7 +102,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             // - setting its index 
             // - calling its CollectViews()
             instance.Init(_Params.ItemPrefab, _Params.Content, itemIndex);
-
+            AdditionItemProcessing(instance, itemIndex);
             return instance;
         }
 
@@ -88,7 +110,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         // or when anything that requires a refresh happens
         // Here you bind the data from the model to the item's views
         // *For the method's full description check the base implementation
-        protected override async void UpdateViewsHolder(TItemViewHolder viewHolder)
+        protected override async void UpdateViewsHolder(BaseItemViewsHolder viewHolder)
         {
             // In this callback, "newOrRecycled.ItemIndex" is guaranteed to always reflect the
             // index of item that should be represented by this views holder. You'll use this index
@@ -102,7 +124,10 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                     Data[(int) index],
                     index
                 );
-                await viewHolder.FillView(data, index).ConfigureAwait(false);
+                if (viewHolder is IFillingView<TViewConsumableData> fillingView)
+                {
+                    await fillingView.FillView(data, index).ConfigureAwait(false);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -128,7 +153,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             //YourList.InsertRange(index, items);
             //InsertItems(index, items.Length);
 
-            Data.InsertItems(index, items);
+            TasksFactories.ExecuteOnMainThread(() => Data.InsertItems(index, items));
         }
 
         public void RemoveItemsFrom(int index, int count)
@@ -137,7 +162,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             //YourList.RemoveRange(index, count);
             //RemoveItems(index, count);
 
-            Data.RemoveItems(index, count);
+            TasksFactories.ExecuteOnMainThread(() => Data.RemoveItems(index, count));
         }
 
         public virtual void SetItems(IList<TDataType> items)
@@ -147,10 +172,21 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             //YourList.AddRange(items);
             //ResetItems(YourList.Count);
 
-            Data.ResetItems(items);
+            TasksFactories.ExecuteOnMainThread(() => Data.ResetItems(items));
         }
 
         #endregion
+
+        private void OnListFillingStateChanged(bool obj)
+        {
+            listFillingStateChanged.Invoke(obj);
+        }
+
+        protected void FindMiddleElement()
+        {
+            MiddleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
+            MiddleItem = _VisibleItems[MiddleElementNumber];
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -158,11 +194,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
-        }
-
-        private void OnListFillingStateChanged(bool obj)
-        {
-            listFillingStateChanged.Invoke(obj);
         }
     }
 }

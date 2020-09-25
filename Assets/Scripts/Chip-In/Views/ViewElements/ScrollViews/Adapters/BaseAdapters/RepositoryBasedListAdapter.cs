@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
+using Common;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
@@ -23,36 +24,83 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
     [Binding]
     public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
-        TFillingViewAdapter> : BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>,
-        IResettableAsync
+        TFillingViewAdapter> :
+        BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>, IResettableAsync
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
+        public class SpecialItemViewHolder : BaseItemViewsHolder
+        {
+        }
+
         [SerializeField] private TRepository pagesPaginatedRepository;
-        
+        [SerializeField] private uint amountOfItemsAllowedToFetch;
+        [SerializeField] private bool allowedToFetchAllItems = true;
+
         public UnityEvent startedFetching;
         public UnityEvent endedFetching;
+        public UnityEvent showAllWasClicked;
+
+        
+        private bool _fetching;
+        private bool _allItemsAreFetched;
+        private uint _retrievingItemsStartingIndex;
 
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
-        private bool _fetching;
-        private bool _loadedAll;
-        private uint _retrievingItemsStartingIndex;
+        public int SpecialItemIndex { get; set; }
 
+        private uint AmountOfItemsAllowedToFetch
+        {
+            get => Math.Min(amountOfItemsAllowedToFetch, TotalCapacity);
+            set => amountOfItemsAllowedToFetch = value;
+        }
+
+        [Binding]
+        public bool AllItemsAreFetched
+        {
+            get => _allItemsAreFetched;
+            set
+            {
+                if (value == _allItemsAreFetched) return;
+                _allItemsAreFetched = value;
+                OnPropertyChanged();
+            }
+        }
 
         private void ResetStateVariables()
         {
-            _fetching = _loadedAll = false;
+            _fetching = _allItemsAreFetched = false;
             _retrievingItemsStartingIndex = 0;
+        }
+
+        protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
+        {
+            if (Data[itemIndex] != null) return base.CreateViewsHolder(itemIndex);
+            BaseItemViewsHolder instance = new SpecialItemViewHolder();
+            instance.Init(Parameters.FetchingLimitUnlockButtonPrefab, _Params.Content, itemIndex);
+            GameObjectsUtility.GetFromRootOrChildren<IClickable>(instance.root).AddOnClickListener(OnShowAllWasClicked);
+            return instance;
+        }
+
+        protected override void UpdateViewsHolder(BaseItemViewsHolder viewHolder)
+        {
+            if (Data[viewHolder.ItemIndex] == null) return;
+            base.UpdateViewsHolder(viewHolder);
+        }
+
+        private void EqualizeAllowedItemsAmountToTotalCapacity()
+        {
+            AmountOfItemsAllowedToFetch = TotalCapacity;
         }
 
         public async Task ResetAsync()
         {
-            if(!IsInitialized) return;
-            
+            if (!IsInitialized) return;
+
             ResetStateVariables();
 
             if (Data.Count > 0)
@@ -66,6 +114,12 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 OnStartedFetching();
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
                 ItemsListIsNotEmpty = TotalCapacity > 0;
+
+                if (ItemsListIsNotEmpty && allowedToFetchAllItems)
+                {
+                    EqualizeAllowedItemsAmountToTotalCapacity();
+                }
+
                 OnEndedFetching();
             }
             catch (OperationCanceledException)
@@ -101,9 +155,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             Parameters.SetScrollInteractivity(state);
         }
-
+        
         protected override async void Update()
         {
+            DecideScrollingIsAllowedOrNot();
+
             base.Update();
             if (!IsInitialized)
                 return;
@@ -111,7 +167,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             if (_fetching)
                 return;
 
-            if (_loadedAll)
+            if (_allItemsAreFetched)
                 return;
 
             if (Data == null)
@@ -132,18 +188,18 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
         }
 
+        private void DecideScrollingIsAllowedOrNot()
+        {
+            if (_VisibleItemsCount <= 0) return;
+            SetInteractivity(TotalCapacity > _VisibleItems.Count);
+        }
+
         private async Task FetchItemsAndRefillTheList()
         {
             int lastVisibleItemItemIndex = -1;
+
             if (_VisibleItemsCount > 0)
             {
-                SetInteractivity(CheckIfShouldAllowScrolling());
-
-                bool CheckIfShouldAllowScrolling()
-                {
-                    return TotalCapacity > _VisibleItems.Count;
-                }
-
                 lastVisibleItemItemIndex = _VisibleItems.Last().ItemIndex;
             }
 
@@ -154,11 +210,10 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount) return;
             var newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
 
-            newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, TotalCapacity);
+            newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, AmountOfItemsAllowedToFetch);
 
             if (newPotentialNumberOfItems <= Data.Count) return;
-            
-            
+
             try
             {
                 _fetching = true;
@@ -183,24 +238,52 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             var items = await pagesPaginatedRepository.GetItemsRangeAsync(_retrievingItemsStartingIndex, maxCount)
                 .ConfigureAwait(false);
             _retrievingItemsStartingIndex += (uint) items.Count;
-            _loadedAll = Data.Count == TotalCapacity;
+            AllItemsAreFetched = Data.Count == TotalCapacity;
 
             if (items.Count > 0)
             {
-                TasksFactories.ExecuteOnMainThread(()=> { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
+                AddItemsAtTheEnd(items);
             }
 
             OnEndedFetching();
         }
 
+        private void AddItemsAtTheEnd(IEnumerable<TDataType> items)
+        {
+            TasksFactories.ExecuteOnMainThread(() => { Data.InsertItemsAtEnd(items as IList<TDataType>, _Params.FreezeContentEndEdgeOnCountChange); });
+        }
+
+        /// <summary>
+        /// Adds null item at the and, later to be used as marker for inserting special items at the end of list
+        /// </summary>
+        /// <returns>Index of null item in data array</returns>
+        private int AddNullItemAtTheEnd()
+        {
+            TasksFactories.ExecuteOnMainThread(() => { Data.InsertOneAtEnd(null, _Params.FreezeContentEndEdgeOnCountChange); });
+            return Data.Count;
+        }
+
         private void OnStartedFetching()
         {
-            TasksFactories.ExecuteOnMainThread(()=> { startedFetching?.Invoke(); });
+            TasksFactories.ExecuteOnMainThread(() => { startedFetching?.Invoke(); });
         }
 
         private void OnEndedFetching()
         {
-            TasksFactories.ExecuteOnMainThread(()=> { endedFetching?.Invoke(); });
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                if (Data.Count == AmountOfItemsAllowedToFetch && AmountOfItemsAllowedToFetch < TotalCapacity)
+                {
+                    SpecialItemIndex = AddNullItemAtTheEnd();
+                }
+
+                endedFetching?.Invoke();
+            });
+        }
+        
+        private void OnShowAllWasClicked()
+        {
+            showAllWasClicked.Invoke();
         }
     }
 }

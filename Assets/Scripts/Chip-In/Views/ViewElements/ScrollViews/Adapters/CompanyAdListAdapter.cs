@@ -13,8 +13,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
-        DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData,
-        CompanyAdListAdapter.CompanyAdFillingViewAdapter>
+        DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData, CompanyAdListAdapter.CompanyAdFillingViewAdapter>
     {
 
         public class CompanyAdFillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>

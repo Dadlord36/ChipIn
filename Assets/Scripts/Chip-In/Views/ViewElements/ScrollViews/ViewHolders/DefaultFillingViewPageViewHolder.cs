@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
@@ -6,7 +7,7 @@ using Utilities;
 
 namespace Views.ViewElements.ScrollViews.ViewHolders
 {
-    public class DefaultFillingViewPageViewHolder<TDataType> : BaseItemViewsHolder, IFillingView<TDataType> where TDataType : class
+    public class DefaultFillingViewPageViewHolder<TDataType> : BaseItemViewsHolder, IIdentifiedSelection,IFillingView<TDataType> where TDataType : class
     {
         private const string Tag = nameof(DefaultFillingViewPageViewHolder<TDataType>);
         private IFillingView<TDataType> _fillingViewImplementation;
@@ -32,7 +33,15 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
             return _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
         }
 
-        public void SelectThisItem()
+        public uint IndexInOrder => _identifiedSelection.IndexInOrder;
+
+        public event Action<uint> ItemSelected
+        {
+            add => _identifiedSelection.ItemSelected += value;
+            remove => _identifiedSelection.ItemSelected -= value;
+        }
+
+        public void Select()
         {
             _identifiedSelection.Select();
         }

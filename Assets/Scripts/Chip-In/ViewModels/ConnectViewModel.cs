@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DataModels;
-using DataModels.Interfaces;
 using Repositories.Remote.Paginated;
 using Repositories.Temporary;
 using UnityEngine;
@@ -48,9 +46,14 @@ namespace ViewModels
             set => SelectNewReservedAd(_selectedReservedAdId = value);
         }
 
-
         public ConnectViewModel() : base(nameof(ConnectViewModel))
         {
+        }
+
+        [Binding]
+        public void SeeAllSponsoredAdButton_OnClick()
+        {
+            SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(SelectedSponsoredAdId));
         }
 
         protected override async void OnBecomingActiveView()
@@ -77,7 +80,6 @@ namespace ViewModels
             try
             {
                 var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
-
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
             catch (OperationCanceledException)

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
-using Controllers;
-using Repositories.Local;
-using UnityEngine;
+using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Utilities;
 using Views.ViewElements.Fields;
 using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
@@ -46,7 +44,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             }
         }
 
-        protected override DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData> CreateViewsHolder(int itemIndex)
+        protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
         {
             var instance = new DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>();
 
@@ -60,12 +58,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
             return instance;
         }
 
-        protected override async void UpdateViewsHolder(DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData> viewHolder)
+        protected override async void UpdateViewsHolder(BaseItemViewsHolder viewHolder)
         {
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await viewHolder.FillView(_fillingViewAdapter.Convert(AsyncOperationCancellationController.TasksCancellationTokenSource,
+                await (viewHolder as IFillingView<NameAndNumberSelectableFieldFillingData>)
+                    .FillView(_fillingViewAdapter.Convert(AsyncOperationCancellationController.TasksCancellationTokenSource,
                     Data[(int) index], index), index).ConfigureAwait(true);
             }
             catch (OperationCanceledException)

@@ -216,7 +216,5 @@ namespace ViewModels.Cards
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
-
-
     }
 }

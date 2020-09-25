@@ -46,6 +46,7 @@ namespace ViewModels.Cards
 
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
+            IndexInOrder = dataBaseIndex;
             BackgroundTexture = await dataModel.LoadBackgroundSpriteTask.ConfigureAwait(false);
         }
 

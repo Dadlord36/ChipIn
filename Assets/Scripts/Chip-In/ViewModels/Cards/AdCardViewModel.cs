@@ -63,6 +63,7 @@ namespace ViewModels.Cards
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
             //ToDo: replace with description
+            IndexInOrder = dataBaseIndex;
             Description = dataBaseIndex.ToString();
             try
             {
@@ -86,12 +87,12 @@ namespace ViewModels.Cards
         
         public void Select()
         {
-            OnItemSelected(IndexInOrder);
+            OnItemSelected();
         }
 
-        private void OnItemSelected(uint obj)
+        private void OnItemSelected()
         {
-            ItemSelected?.Invoke(obj);
+            ItemSelected?.Invoke(IndexInOrder);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

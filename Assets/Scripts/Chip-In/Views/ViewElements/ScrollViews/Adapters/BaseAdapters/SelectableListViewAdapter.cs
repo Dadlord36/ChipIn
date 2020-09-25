@@ -20,14 +20,12 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         [Binding]
         public uint SelectedIndex { get; set; }
+        
 
-        protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
+        protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
         {
-            var viewHolder = base.CreateViewsHolder(itemIndex);
             var selection = viewHolder.root.GetComponentInChildren<IIdentifiedSelection>();
-            selection.IndexInOrder = (uint) itemIndex;
             selection.ItemSelected += SelectNewItem;
-            return viewHolder;
         }
 
         private void SelectNewItem(uint itemIndex)

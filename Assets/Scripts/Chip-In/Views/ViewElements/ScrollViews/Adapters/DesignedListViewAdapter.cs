@@ -17,22 +17,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         [SerializeField, Range(0f, 1f)] private float itemsBackgroundAlpha;
         private const int MINItemsToLoop = 10;
-        private int _selectedIndex;
-        private int _middleElementNumber;
-        private DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData> _middleItem;
-
-        private DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData> MiddleItem
-        {
-            get => _middleItem;
-            set
-            {
-                if (ReferenceEquals(_middleItem, value)) return;
-                _middleItem = value;
-                value.SelectThisItem();
-            }
-        }
-
-
+        
         public class FillingViewAdapterImplementation : FillingViewAdapter<DesignedScrollBarItemDefaultDataModel,
             DesignedScrollBarItemBaseViewModel.FieldFillingData>
         {
@@ -53,11 +38,10 @@ namespace Views.ViewElements.ScrollViews.Adapters
 
         private void FindMiddleElementAndRefreshItemsOverlaying()
         {
-            _middleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
-            MiddleItem = _VisibleItems[_middleElementNumber];
+            FindMiddleElement();
             ControlItemsOverlay();
         }
-        
+
         public override void SetItems(IList<DesignedScrollBarItemDefaultDataModel> items)
         {
             SetColors(items);
@@ -100,16 +84,16 @@ namespace Views.ViewElements.ScrollViews.Adapters
                 _VisibleItems[index].root.SetAsLastSibling();
             }
 
-            for (int i = 0; i < _middleElementNumber; i++)
+            for (int i = 0; i < MiddleElementNumber; i++)
             {
                 SetVisibleItemsSiblingIndexAsLast(i);
             }
 
-            for (int i = VisibleItemsCount - 1; i > _middleElementNumber; i--)
+            for (int i = VisibleItemsCount - 1; i > MiddleElementNumber; i--)
             {
                 SetVisibleItemsSiblingIndexAsLast(i);
             }
-            _VisibleItems[_middleElementNumber].root.SetAsLastSibling();
+            _VisibleItems[MiddleElementNumber].root.SetAsLastSibling();
         }
 
         private void CalculateGradientColorsArrays(int shadesNumber, out Color[] startColors, out Color[] endColors)
