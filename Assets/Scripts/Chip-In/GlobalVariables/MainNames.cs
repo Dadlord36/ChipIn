@@ -38,7 +38,7 @@ namespace GlobalVariables
             public const string Market = "market";
             public const string CompanyName = "company_name";
             public const string CompanyEmail = "company_email";
-            public const string SetReminderSAdCAdExpiring = "set_reminder";
+            public const string SetReminderSAdCAdExpiring = "expiration_reminder";
             public const string Offer = "offer";
         }
 
