@@ -7,6 +7,5 @@ namespace Views.ViewElements.ScrollViews.Adapters.Parameters.Interfaces
         int PreFetchedItemsCount { get; } 
         bool FreezeContentEndEdgeOnCountChange { get; } 
         void SetScrollInteractivity(bool activity);
-        RectTransform FetchingLimitUnlockButtonPrefab { get; }
     }
 }

@@ -13,12 +13,12 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
-        DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData, CompanyAdListAdapter.CompanyAdFillingViewAdapter>
+        DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData,
+        CompanyAdListAdapter.FillingViewAdapter>
     {
-
-        public class CompanyAdFillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>
+        public class FillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>
         {
-            private const string Tag = nameof(CompanyAdFillingViewAdapter);
+            private const string Tag = nameof(FillingViewAdapter);
 
             public override AdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 AdvertItemDataModel data, uint dataIndexInRepository)

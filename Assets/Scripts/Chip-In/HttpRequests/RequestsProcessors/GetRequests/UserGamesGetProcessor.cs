@@ -34,11 +34,6 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         }
     }
 
-    public interface IIconsBackgroundUrl
-    {
-        [JsonProperty("background")] string BackgroundUrl { get; set; }
-    }
-
     public interface ISlotGameIconsSet
     {
         [JsonProperty("icons")] IndexedUrl[] Icons { get; set; }
@@ -49,7 +44,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         [JsonProperty("game")] GameBoardData GameBoard { get; set; }
     }
 
-    public class GameBoardData : IIconsBackgroundUrl, ISlotGameIconsSet
+    public class GameBoardData : IBackgroundUrl, ISlotGameIconsSet
     {
         public string BackgroundUrl { get; set; }
         public IndexedUrl[] Icons { get; set; }

@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Common;
 using DataModels.Common;
@@ -11,7 +11,6 @@ using HttpRequests;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.GetRequests;
 using RestSharp;
-using Utilities;
 using ViewModels;
 
 namespace RequestsStaticProcessors
@@ -24,18 +23,19 @@ namespace RequestsStaticProcessors
             ListAdverts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, PaginatedRequestData
                 paginatedRequestData)
         {
-            return new AdvertsListGetRequestProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData).SendRequest(
-                "Adverts list was retrieved successfully");
+            return new AdvertsListGetRequestProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+                .SendRequest("Adverts list was retrieved successfully");
         }
 
         public static Task<IRestResponse> CreateAnAdvert(IRequestHeaders requestHeaders, CompanyAdFeaturesPreviewData companyAdFeaturesPreviewData)
         {
-            var request = RequestsFactory.MultipartRestRequest(requestHeaders,Method.POST, ApiCategories.Adverts);
+            var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.POST, ApiCategories.Adverts);
             AddAdvertFileParam(MainNames.ModelsPropertiesNames.Poster, companyAdFeaturesPreviewData.CompanyLogoImagePath);
             AddAdvertFileParam(MainNames.ModelsPropertiesNames.Logo, companyAdFeaturesPreviewData.CompanyPosterImagePath);
-            
+
+            //ToDo: Check REST API Docs if this parameter was removed as it should be.
             AddAdvertParam(MainNames.ModelsPropertiesNames.InterestId, "425");
-            
+
             {
                 var featureModels = companyAdFeaturesPreviewData.FeatureModelsToPreview;
                 for (int i = 0; i < featureModels.Count; i++)
@@ -83,7 +83,48 @@ namespace RequestsStaticProcessors
             {
                 return $"{advert}[advert_features_attributes][{index}][{parameterName}]";
             }
+
             return ApiHelper.ExecuteRequestWithDefaultRestClient(request);
+        }
+
+        public static Task<BaseRequestProcessor<object, SponsoredAdvertsResponseDataModel, ISponsoredAdvertsResponseModel>.HttpResponse>
+            GetListOfSponsoredAdverts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new SponsoredAdvertsGetRequestProcessor(out cancellationTokenSource, ApiCategories.SponsoredAd, HttpMethod.Get, requestHeaders,
+                paginatedRequestData).SendRequest("Sponsored adverts was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, SponsorsPostersResponseDataModel, ISponsorsPostersResponseModel>.HttpResponse>
+            GetListOfSponsorsPosters(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData, bool sad, bool reserve)
+        {
+            return new SponsoredPostersGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData, sad, reserve)
+                .SendRequest("Sponsors posters retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, SponsorsPostersResponseDataModel, ISponsorsPostersResponseModel>.HttpResponse>
+            GetAllSponsoredAdPosters(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new SponsoredPostersGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData, true, false)
+                .SendRequest("Sponsored Adverts posters retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, SponsorsPostersResponseDataModel, ISponsorsPostersResponseModel>.HttpResponse>
+            GetAllReservedAdPosters(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new SponsoredPostersGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData, false, true)
+                .SendRequest("Sponsored Adverts posters retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, SponsorsPostersResponseDataModel, ISponsorsPostersResponseModel>.HttpResponse>
+            GetAllGreetingsPosters(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new SponsoredPostersGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData, false, false)
+                .SendRequest("Sponsored Adverts posters retrieved successfully");
         }
     }
 }

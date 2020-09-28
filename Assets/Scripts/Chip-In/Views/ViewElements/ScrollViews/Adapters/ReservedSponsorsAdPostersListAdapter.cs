@@ -10,16 +10,16 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class SponsoredAdFullListAdapter : SelectableElementsPagesListAdapter<SponsorsAdPostersRepository, SponsoredPosterDataModel,
-        DefaultFillingViewPageViewHolder<SponsoredAdFullCardViewModel.FieldFillingData>, SponsoredAdFullCardViewModel.FieldFillingData,
-        SponsoredAdFullListAdapter.FillingViewAdapter>
+    public class ReservedSponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<ReservedSponsorsAdPostersRepository, SponsoredPosterDataModel,
+        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
+        ReservedSponsorsAdPostersListAdapter.FillingViewAdapter>
     {
-        public class FillingViewAdapter : FillingViewAdapter<SponsoredPosterDataModel, SponsoredAdFullCardViewModel.FieldFillingData>
+        public class FillingViewAdapter : FillingViewAdapter<SponsoredPosterDataModel, SponsoredAdCardViewModel.FieldFillingData>
         {
-            public override SponsoredAdFullCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
+            public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 SponsoredPosterDataModel data, uint dataIndexInRepository)
             {
-                return new SponsoredAdFullCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
+                return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
                     cancellationTokenSource.Token), DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl, cancellationTokenSource.Token));
             }
         }

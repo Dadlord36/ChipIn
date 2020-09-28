@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using DataModels;
 using JetBrains.Annotations;
 using Repositories.Local;
-using Repositories.Temporary;
+using Repositories.Remote.Paginated;
 using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -18,8 +17,6 @@ namespace ViewModels
     [Binding]
     public sealed class SponsoredAdViewModel : CorrespondingViewsSwitchingViewModel<SponsoredAdView>, INotifyPropertyChanged
     {
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
         [SerializeField] private SponsoredAdFullListAdapter sponsoredAdFullListAdapter;
 
         private uint _selectedItemIndex;

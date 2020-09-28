@@ -12,21 +12,21 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class SponsoredAdListAdapter : SelectableElementsPagesListAdapter<SponsoredAdRepository, SponsoredAdDataModel,
+    public class SponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<SponsorsAdPostersRepository, SponsoredPosterDataModel,
         DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
-        SponsoredAdListAdapter.SponsoredAdFillingViewAdapter>
+        SponsorsAdPostersListAdapter.SponsoredAdFillingViewAdapter>
     {
-        public class SponsoredAdFillingViewAdapter : FillingViewAdapter<SponsoredAdDataModel, SponsoredAdCardViewModel.FieldFillingData>
+        public class SponsoredAdFillingViewAdapter : FillingViewAdapter<SponsoredPosterDataModel, SponsoredAdCardViewModel.FieldFillingData>
         {
             private const string Tag = nameof(SponsoredAdFillingViewAdapter);
 
             public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
-                SponsoredAdDataModel data, uint dataIndexInRepository)
+                SponsoredPosterDataModel data, uint dataIndexInRepository)
             {
                 try
                 {
-                    return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
-                        cancellationTokenSource.Token),DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl, cancellationTokenSource.Token));
+                    return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
+                        cancellationTokenSource.Token), DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl, cancellationTokenSource.Token));
                 }
                 catch (OperationCanceledException)
                 {

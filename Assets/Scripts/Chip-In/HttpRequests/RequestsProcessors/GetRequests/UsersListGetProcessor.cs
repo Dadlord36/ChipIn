@@ -11,7 +11,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public UsersListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
             PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, ApiCategories.Users, HttpMethod.Get,
-            requestHeaders, null, paginatedRequestData.ConvertPaginationToNameValueCollection())
+            requestHeaders, paginatedRequestData)
         {
         }
     }

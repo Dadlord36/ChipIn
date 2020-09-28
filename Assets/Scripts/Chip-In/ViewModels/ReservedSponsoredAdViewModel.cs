@@ -5,7 +5,8 @@ using DataModels;
 using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
-using Repositories.Temporary;
+using Repositories.Remote;
+using Repositories.Remote.Paginated;
 using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -50,7 +51,7 @@ namespace ViewModels
         [Binding]
         public void CancelReservationButton_OnClick()
         {
-            reservedSponsoredAdRepository.RemoveItem(_sponsoredAdData);
+            /*reservedSponsoredAdRepository.RemoveItem(_sponsoredAdData);*/
             SwitchToPreviousView();
         }
 

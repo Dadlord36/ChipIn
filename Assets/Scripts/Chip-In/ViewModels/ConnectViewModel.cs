@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Repositories.Remote.Paginated;
-using Repositories.Temporary;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -15,11 +14,12 @@ namespace ViewModels
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
         [SerializeField] private AdvertsPaginatedListRepository advertsPaginatedListRepository;
-        [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
-        [SerializeField] private SponsoredAdRepository reservedSponsoredAdRepository;
+        
+        [SerializeField] private SponsorsAdPostersRepository sponsoredAdPostersRepository;
+        [SerializeField] private ReservedSponsorsAdPostersRepository reservedSponsoredAdRepository;
 
-        [SerializeField] private SponsoredAdListAdapter sponsoredAdListAdapter;
-        [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
+        [SerializeField] private SponsorsAdPostersListAdapter sponsorsAdPostersListAdapter;
+        [SerializeField] private ReservedSponsorsAdPostersListAdapter reservedSponsoredAdListAdapter;
 
         private uint _selectedSponsoredAdId;
         private uint _selectedReservedAdId;
@@ -61,7 +61,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsoredAdListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
+                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsorsAdPostersListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -77,9 +77,10 @@ namespace ViewModels
 
         private async void SelectNewSponsoredAd(uint index)
         {
+            return;
             try
             {
-                var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
+                var data = await sponsoredAdPostersRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
             catch (OperationCanceledException)
@@ -94,6 +95,7 @@ namespace ViewModels
 
         private async void SelectNewCompanyAd(uint selectedCompanyAdId)
         {
+            return;
             try
             {
                 var advertData = await advertsPaginatedListRepository.GetItemWithIndexAsync(selectedCompanyAdId)
@@ -109,6 +111,7 @@ namespace ViewModels
 
         private async void SelectNewReservedAd(uint index)
         {
+            return;
             try
             {
                 var data = await reservedSponsoredAdRepository.GetItemWithIndexAsync(index)

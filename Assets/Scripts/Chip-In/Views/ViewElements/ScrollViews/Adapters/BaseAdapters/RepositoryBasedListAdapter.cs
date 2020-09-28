@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
-using Common;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
@@ -12,6 +11,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.Cards;
+using ViewModels.Elements;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
@@ -32,10 +33,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
-        public class SpecialItemViewHolder : BaseItemViewsHolder
-        {
-        }
-
         [SerializeField] private TRepository pagesPaginatedRepository;
         [SerializeField] private uint amountOfItemsAllowedToFetch;
         [SerializeField] private bool allowedToFetchAllItems = true;
@@ -44,7 +41,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         public UnityEvent endedFetching;
         public UnityEvent showAllWasClicked;
 
-        
+
         private bool _fetching;
         private bool _allItemsAreFetched;
         private uint _retrievingItemsStartingIndex;
@@ -77,18 +74,39 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             _retrievingItemsStartingIndex = 0;
         }
 
+
+        private bool DecideIfAlternativeFormShouldBeUsed(AbstractViewsHolder baseItemViewsHolder)
+        {
+            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm>(baseItemViewsHolder.root);
+            return switchableForm && DecideIfAlternativeFormShouldBeUsed(switchableForm, baseItemViewsHolder);
+        }
+
+        private bool DecideIfAlternativeFormShouldBeUsed(SwitchableForm switchableForm, AbstractViewsHolder baseItemViewsHolder)
+        {
+            var state = Data[baseItemViewsHolder.ItemIndex] == null;
+            switchableForm.AlternativeFormUsed = state;
+            return state;
+        }
+
         protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
         {
-            if (Data[itemIndex] != null) return base.CreateViewsHolder(itemIndex);
-            BaseItemViewsHolder instance = new SpecialItemViewHolder();
-            instance.Init(Parameters.FetchingLimitUnlockButtonPrefab, _Params.Content, itemIndex);
-            GameObjectsUtility.GetFromRootOrChildren<IClickable>(instance.root).AddOnClickListener(OnShowAllWasClicked);
+            DecideScrollingIsAllowedOrNot();
+            var instance = base.CreateViewsHolder(itemIndex);
+            instance.Init(Parameters.ItemPrefab, _Params.Content, itemIndex);
+            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm>(instance.root);
+
+            if (!switchableForm) return instance;
+
+            GameObjectsUtility.GetFromRootOrChildren<ShowAllItemsCallbackComponent>(instance.root).ShowAllItemsClicked += OnShowAllWasClicked;
+            GameObjectsUtility.GetFromRootOrChildren<ItemsLeftViewModel>(instance.root).ItemsLeftNumber = TotalCapacity - AmountOfItemsAllowedToFetch;
+            DecideIfAlternativeFormShouldBeUsed(switchableForm, instance);
+
             return instance;
         }
 
         protected override void UpdateViewsHolder(BaseItemViewsHolder viewHolder)
         {
-            if (Data[viewHolder.ItemIndex] == null) return;
+            if (DecideIfAlternativeFormShouldBeUsed(viewHolder)) return;
             base.UpdateViewsHolder(viewHolder);
         }
 
@@ -155,7 +173,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             Parameters.SetScrollInteractivity(state);
         }
-        
+
         protected override async void Update()
         {
             DecideScrollingIsAllowedOrNot();
@@ -238,7 +256,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             var items = await pagesPaginatedRepository.GetItemsRangeAsync(_retrievingItemsStartingIndex, maxCount)
                 .ConfigureAwait(false);
             _retrievingItemsStartingIndex += (uint) items.Count;
-            AllItemsAreFetched = Data.Count == TotalCapacity;
+            AllItemsAreFetched = Data.Count == AmountOfItemsAllowedToFetch;
 
             if (items.Count > 0)
             {
@@ -270,17 +288,24 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private void OnEndedFetching()
         {
-            TasksFactories.ExecuteOnMainThread(() =>
+            if (allowedToFetchAllItems)
             {
-                if (Data.Count == AmountOfItemsAllowedToFetch && AmountOfItemsAllowedToFetch < TotalCapacity)
+                TasksFactories.ExecuteOnMainThread(() => endedFetching?.Invoke());
+            }
+            else
+            {
+                TasksFactories.ExecuteOnMainThread(() =>
                 {
-                    SpecialItemIndex = AddNullItemAtTheEnd();
-                }
+                    if (Data.Count == AmountOfItemsAllowedToFetch && AmountOfItemsAllowedToFetch < TotalCapacity)
+                    {
+                        SpecialItemIndex = AddNullItemAtTheEnd();
+                    }
 
-                endedFetching?.Invoke();
-            });
+                    endedFetching?.Invoke();
+                });
+            }
         }
-        
+
         private void OnShowAllWasClicked()
         {
             showAllWasClicked.Invoke();

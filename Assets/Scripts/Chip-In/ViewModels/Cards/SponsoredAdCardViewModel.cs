@@ -1,11 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using JetBrains.Annotations;
-using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -13,22 +9,43 @@ using UnityWeld.Binding;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsoredAdCardViewModel : MonoBehaviour, INotifyPropertyChanged, IPointerClickHandler,
-        IFillingView<SponsoredAdCardViewModel.FieldFillingData>, IIdentifiedSelection
+    public sealed class SponsoredAdCardViewModel : SwitchableForm, IPointerClickHandler, IFillingView<SponsoredAdCardViewModel.FieldFillingData>,
+        IIdentifiedSelection
     {
-        public uint IndexInOrder { get; set; }
+        public uint IndexInOrder { get; private set; }
         public event Action<uint> ItemSelected;
-
 
         public class FieldFillingData
         {
             public readonly Task<Sprite> LoadBackgroundSpriteTask;
+            public readonly Task<Sprite> LoadLogoSpriteTask;
+
+            public FieldFillingData(Task<Sprite> loadBackgroundSpriteTask, Task<Sprite> createLoadSpriteTask)
+            {
+                LoadBackgroundSpriteTask = loadBackgroundSpriteTask;
+                LoadLogoSpriteTask = createLoadSpriteTask;
+            }
 
             public FieldFillingData(Task<Sprite> loadBackgroundSpriteTask)
             {
                 LoadBackgroundSpriteTask = loadBackgroundSpriteTask;
             }
         }
+
+        private Sprite _logoSprite;
+
+        [Binding]
+        public Sprite LogoSprite
+        {
+            get => _logoSprite;
+            set
+            {
+                if (Equals(value, _logoSprite)) return;
+                _logoSprite = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private Sprite _backgroundSprite;
 
@@ -47,6 +64,9 @@ namespace ViewModels.Cards
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
             IndexInOrder = dataBaseIndex;
+            if (dataModel.LoadLogoSpriteTask != null)
+                LogoSprite = await dataModel.LoadLogoSpriteTask.ConfigureAwait(false);
+
             BackgroundTexture = await dataModel.LoadBackgroundSpriteTask.ConfigureAwait(false);
         }
 
@@ -63,14 +83,6 @@ namespace ViewModels.Cards
         private void OnItemSelected(uint index)
         {
             ItemSelected?.Invoke(index);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

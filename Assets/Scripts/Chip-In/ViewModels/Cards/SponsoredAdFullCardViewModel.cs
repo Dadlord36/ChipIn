@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -16,31 +17,45 @@ namespace ViewModels.Cards
         INotifyPropertyChanged
     {
         private const string Tag = nameof(SponsoredAdFullCardViewModel);
-        
+
         public class FieldFillingData
         {
-            public readonly Task<Sprite> SpriteDownloadingTask;
+            public readonly Task<Sprite> DownloadBackgroundTask;
+            public readonly Task<Sprite> DownloadLogoTask;
 
-            public FieldFillingData(Task<Sprite> spriteDownloadingTask)
+            public FieldFillingData(Task<Sprite> downloadBackgroundTask, Task<Sprite> createLoadSpriteTask)
             {
-                SpriteDownloadingTask = spriteDownloadingTask;
+                DownloadBackgroundTask = downloadBackgroundTask;
+                DownloadLogoTask = createLoadSpriteTask;
             }
         }
 
         public event Action<uint> ItemSelected;
-        
-        private Sprite _sprite;
-        public uint IndexInOrder { get; set; }
 
         private uint _dataBaseIndex;
+        private Sprite _background;
+        private Sprite _logo;
+
+        public uint IndexInOrder { get; private set; }
 
         [Binding]
-        public Sprite Sprite
+        public Sprite Background
         {
-            get => _sprite;
+            get => _background;
             set
             {
-                _sprite = value;
+                _background = value;
+                OnPropertyChanged();
+            }
+        }
+
+        [Binding]
+        public Sprite Logo
+        {
+            get => _logo;
+            set
+            {
+                _logo = value;
                 OnPropertyChanged();
             }
         }
@@ -49,13 +64,15 @@ namespace ViewModels.Cards
         {
             OnItemSelected();
         }
-        
+
         public async Task FillView(FieldFillingData data, uint dataBaseIndex)
         {
             try
             {
                 _dataBaseIndex = dataBaseIndex;
-                Sprite = await data.SpriteDownloadingTask;
+                Background = await data.DownloadBackgroundTask.ConfigureAwait(false);
+                if (data.DownloadLogoTask != null)
+                    Logo = await data.DownloadLogoTask.ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -68,17 +85,17 @@ namespace ViewModels.Cards
             }
         }
 
+        private void OnItemSelected()
+        {
+            ItemSelected?.Invoke(_dataBaseIndex);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void OnItemSelected()
-        {
-            ItemSelected?.Invoke(_dataBaseIndex);
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

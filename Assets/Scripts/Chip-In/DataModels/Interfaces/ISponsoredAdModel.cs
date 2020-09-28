@@ -1,6 +1,7 @@
 ﻿namespace DataModels.Interfaces
 {
-    public interface ISponsoredAdModel : IPosterImageUri
+    public interface ISponsoredAdModel : IPosterImageUri, ILogoImageUrl
     {
+        
     }
 }

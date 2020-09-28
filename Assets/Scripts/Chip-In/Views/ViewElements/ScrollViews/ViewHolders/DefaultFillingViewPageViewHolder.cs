@@ -7,7 +7,7 @@ using Utilities;
 
 namespace Views.ViewElements.ScrollViews.ViewHolders
 {
-    public class DefaultFillingViewPageViewHolder<TDataType> : BaseItemViewsHolder, IIdentifiedSelection,IFillingView<TDataType> where TDataType : class
+    public class DefaultFillingViewPageViewHolder<TDataType> : BaseItemViewsHolder, IIdentifiedSelection, IFillingView<TDataType> where TDataType : class
     {
         private const string Tag = nameof(DefaultFillingViewPageViewHolder<TDataType>);
         private IFillingView<TDataType> _fillingViewImplementation;
@@ -20,10 +20,8 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
 
             // GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
             // which infers the variable's component from its type, so you won't need to specify it yourself
-
-            _identifiedSelection = root.GetComponentInChildren<IIdentifiedSelection>();
-            if (root.TryGetComponent(out _fillingViewImplementation)) return;
-            _fillingViewImplementation = root.GetComponentInChildren<IFillingView<TDataType>>();
+            _fillingViewImplementation = GameObjectsUtility.GetFromRootOrChildren<IFillingView<TDataType>>(root);
+            _identifiedSelection = GameObjectsUtility.GetFromRootOrChildren<IIdentifiedSelection>(root);
             if (_fillingViewImplementation == null)
                 LogUtility.PrintLogError(Tag, $"{root.name} has no attached component of type {nameof(IFillingView<TDataType>)}");
         }
