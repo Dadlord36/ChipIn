@@ -30,8 +30,12 @@ namespace ViewModels
                 if (!response.Success) return;
 
                 var marketData = response.ResponseModelInterface.MarketDiagramData;
-                
+
                 TasksFactories.ExecuteOnMainThread(delegate { ThisView.SetRadarData(marketData.GetDiagramConsumableData); });
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {

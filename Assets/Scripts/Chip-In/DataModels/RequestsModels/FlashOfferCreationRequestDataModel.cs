@@ -5,8 +5,8 @@ namespace DataModels.RequestsModels
 {
     public class FlashOfferCreationRequestDataModel : IFlashOfferCreationRequestModel
     {
-        public FilePath PosterFilePath { get; set; }
-
         public IFlashOfferGetRequestModel FlashOffer { get; set; }
+
+        public FilePath PosterFilePath { get; set; } = new FilePath(string.Empty);
     }
 }

@@ -19,7 +19,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource, ProductDataModel data,
                 uint dataIndexInRepository)
             {
-                return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadTexture2DTask(data.PosterUri,
+                return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
                     cancellationTokenSource.Token));
             }
         }

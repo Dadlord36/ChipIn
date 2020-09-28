@@ -14,10 +14,19 @@ namespace RequestsStaticProcessors
     public static class UserProductsStaticRequestsProcessor
     {
         public static Task<BaseRequestProcessor<object, UserProductsResponseDataModel, IUserProductsResponseModel>.HttpResponse>
-            GetUserProducts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, PaginatedRequestData paginatedRequestData)
+            GetUserProducts(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
         {
             return new UserProductsGetRequestProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
                 .SendRequest("User products was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, UserProductResponseDataModel, IUserProductResponseModel>.HttpResponse>
+            GetUserProductByQr(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                string qrCodeString)
+        {
+            return new UserProductByQrGetRequestProcessor(out cancellationTokenSource, requestHeaders, qrCodeString)
+                .SendRequest("User product data was retrieved successfully");
         }
 
         public static Task<BaseRequestProcessor<IQrData, SuccessConfirmationModel, ISuccess>.HttpResponse> ActivateProduct(

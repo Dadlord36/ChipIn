@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
@@ -39,12 +40,19 @@ namespace WebOperationUtilities
                     texture.LoadImage(bytesArray);
                     texture.Apply();
                     return SpritesUtility.CreateSpriteWithDefaultParameters(texture);
-                }, cancellationToken).ConfigureAwait(true);
+                }, cancellationToken).ConfigureAwait(false);
             }
-            catch (Exception e)
+            catch (OperationCanceledException)
             {
-                Console.WriteLine(e);
-                throw;
+                return null;
+            }
+            catch (SocketException)
+            {
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 

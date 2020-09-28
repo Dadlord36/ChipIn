@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -55,7 +56,7 @@ namespace ViewModels
         [Binding]
         public void Redemption_OnClick()
         {
-            SwitchToQrCodeForm();
+            CameraPermissionUtility.AskForCameraPermissionAndActivateScanner(null, SwitchToQrCodeForm, null);
         }
 
         private void SwitchToQrCodeForm()
@@ -73,6 +74,16 @@ namespace ViewModels
         public void CreateFlashOfferButton_OnClick()
         {
             SwitchToView(nameof(FlashOfferView));
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus) return;
+
+            if (!CameraPermissionUtility.WentToAppSettings) return;
+            CameraPermissionUtility.WentToAppSettings = false;
+
+            if (NativeCamera.RequestPermission() == NativeCamera.Permission.Granted) SwitchToQrCodeForm();
         }
 
         private async Task TryUpdateRadarViewData()
@@ -104,7 +115,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

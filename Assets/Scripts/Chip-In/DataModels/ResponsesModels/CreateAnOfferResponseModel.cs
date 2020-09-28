@@ -1,9 +1,12 @@
-﻿using Repositories.Interfaces;
+﻿using GlobalVariables;
+using Newtonsoft.Json;
+using Repositories.Interfaces;
 
 namespace DataModels.ResponsesModels
 {
     public interface ICreateAnOfferResponseModel : ISuccess
     {
+        [JsonProperty(MainNames.ModelsPropertiesNames.Offer)]
         ChallengingOfferWithIdentifierModel Offer { get; set; }
     }
 

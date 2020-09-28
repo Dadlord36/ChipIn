@@ -214,12 +214,27 @@ MonoBehaviour:
       _KeepItemsSortedInHierarchy: 0
     _ItemPrefab: {fileID: 8488931208789286007}
     _AlsoControlItemTransversalSize: 0
+    fetchingLimitUnlockButtonPrefab: {fileID: 0}
     repositoryAdapterParameters:
       preFetchedItemsCount: 5
-  pagesPaginatedRepository: {fileID: 11400000, guid: 5841c042eb5e76e48952d07d1039e90e,
-    type: 2}
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  pagesPaginatedRepository: {fileID: 11400000, guid: 5841c042eb5e76e48952d07d1039e90e,
+    type: 2}
+  amountOfItemsAllowedToFetch: 5
+  allowedToFetchAllItems: 1
+  startedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  endedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  showAllWasClicked:
+    m_PersistentCalls:
+      m_Calls: []
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
@@ -294,7 +309,7 @@ RectTransform:
   m_Children:
   - {fileID: 2118671754113949971}
   m_Father: {fileID: 2666261745147872790}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -397,6 +412,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 894966714220921504, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1742822635755822640, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
       propertyPath: m_Name

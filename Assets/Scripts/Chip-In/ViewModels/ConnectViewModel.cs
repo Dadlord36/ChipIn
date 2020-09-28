@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DataModels;
-using Repositories.Temporary;
+using Repositories.Remote.Paginated;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -14,33 +13,47 @@ namespace ViewModels
     public sealed class ConnectViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
-        [SerializeField] private SponsoredAdRepository sponsoredAdRepository;
-        [SerializeField] private SponsoredAdRepository reservedSponsoredAdRepository;
+        [SerializeField] private AdvertsPaginatedListRepository advertsPaginatedListRepository;
+        
+        [SerializeField] private SponsorsAdPostersRepository sponsoredAdPostersRepository;
+        [SerializeField] private ReservedSponsorsAdPostersRepository reservedSponsoredAdRepository;
 
-        [SerializeField] private SponsoredAdListAdapter sponsoredAdListAdapter;
-        [SerializeField] private SponsoredAdListAdapter reservedSponsoredAdListAdapter;
+        [SerializeField] private SponsorsAdPostersListAdapter sponsorsAdPostersListAdapter;
+        [SerializeField] private ReservedSponsorsAdPostersListAdapter reservedSponsoredAdListAdapter;
 
+        private uint _selectedSponsoredAdId;
+        private uint _selectedReservedAdId;
+        private uint _selectedCompanyAdId;
 
-        private uint selectedSponsoredAdId;
-        private uint selectedReservedAdId;
+        [Binding]
+        public uint SelectedCompanyAdId
+        {
+            get => _selectedCompanyAdId;
+            set => SelectNewCompanyAd(_selectedCompanyAdId = value);
+        }
 
         [Binding]
         public uint SelectedSponsoredAdId
         {
-            get => selectedSponsoredAdId;
-            set => SelectNewSponsoredAd(selectedSponsoredAdId = value);
+            get => _selectedSponsoredAdId;
+            set => SelectNewSponsoredAd(_selectedSponsoredAdId = value);
         }
 
         [Binding]
         public uint SelectedReservedAdId
         {
-            get => selectedReservedAdId;
-            set => SelectNewReservedAd(selectedReservedAdId = value);
+            get => _selectedReservedAdId;
+            set => SelectNewReservedAd(_selectedReservedAdId = value);
         }
-
 
         public ConnectViewModel() : base(nameof(ConnectViewModel))
         {
+        }
+
+        [Binding]
+        public void SeeAllSponsoredAdButton_OnClick()
+        {
+            SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(SelectedSponsoredAdId));
         }
 
         protected override async void OnBecomingActiveView()
@@ -48,7 +61,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsoredAdListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
+                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsorsAdPostersListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -64,10 +77,10 @@ namespace ViewModels
 
         private async void SelectNewSponsoredAd(uint index)
         {
+            return;
             try
             {
-                var data = await sponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
-
+                var data = await sponsoredAdPostersRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
             catch (OperationCanceledException)
@@ -80,11 +93,29 @@ namespace ViewModels
             }
         }
 
-        private async void SelectNewReservedAd(uint index)
+        private async void SelectNewCompanyAd(uint selectedCompanyAdId)
         {
+            return;
             try
             {
-                SponsoredAdDataModel data = await reservedSponsoredAdRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
+                var advertData = await advertsPaginatedListRepository.GetItemWithIndexAsync(selectedCompanyAdId)
+                    .ConfigureAwait(false);
+                SwitchToView(nameof(SelectedCompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(advertData)));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private async void SelectNewReservedAd(uint index)
+        {
+            return;
+            try
+            {
+                var data = await reservedSponsoredAdRepository.GetItemWithIndexAsync(index)
+                    .ConfigureAwait(false);
 
                 SwitchToView(nameof(ReservedSponsoredAdView), new FormsTransitionBundle(data));
             }

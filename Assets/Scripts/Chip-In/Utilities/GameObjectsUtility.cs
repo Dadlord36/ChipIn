@@ -60,5 +60,10 @@ namespace Utilities
                 }
             }
         }
+
+        public static T GetFromRootOrChildren<T>(RectTransform instanceRoot) where T : class
+        {
+            return instanceRoot.GetComponent<T>() ?? instanceRoot.GetComponentInChildren<T>();
+        }
     }
 }

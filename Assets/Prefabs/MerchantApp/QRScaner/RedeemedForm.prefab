@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 64057167615100710}
   - component: {fileID: 3061337520967262309}
   - component: {fileID: 7977839990140501236}
-  - component: {fileID: 1584967266275570310}
+  - component: {fileID: 4725519569122418278}
+  - component: {fileID: 7381128746844690760}
   m_Layer: 5
   m_Name: Shapes2D Panel
   m_TagString: Untagged
@@ -75,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1584967266275570310
+--- !u!114 &4725519569122418278
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,14 +85,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 200164576554998704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 409a53c2fc720400bb482962c5563548, type: 3}
+  m_Script: {fileID: 11500000, guid: 623654a08706483f93362966af353a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
     _blur: 0
     _endAngle: 360
-    _fillColor: {r: 0.5568628, g: 0.26666668, b: 0.6784314, a: 1}
-    _fillColor2: {r: 0.94509804, g: 0.76862746, b: 0.05882353, a: 0.5019608}
+    _fillColor: {r: 1, g: 1, b: 1, a: 1}
+    _fillColor2: {r: 0, g: 0, b: 0, a: 1}
     _fillOffset: {x: 0, y: 0}
     _fillPathLoops: 0
     _fillRotation: 0
@@ -101,26 +102,25 @@ MonoBehaviour:
     _gradientAxis: 0
     _gradientStart: 0
     _gradientType: 0
-    _gridSize: 50
+    _gridSize: 0.2
     _innerCutout: {x: 0, y: 0}
     _invertArc: 0
-    _lineSize: 4
+    _lineSize: 0.05
     _obsoleteNumSides: -1
-    _outlineColor: {r: 1, g: 1, b: 1, a: 1}
+    _outlineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     _outlineSize: 0
     _pathSegments:
     - p0: {x: -0.3, y: 0, z: 0}
       p1: {x: 0, y: 0, z: 0}
       p2: {x: 0.3, y: 0, z: 0}
     _pathThickness: 0.1
-    _polygonPreset: 4
+    _polygonPreset: 3
     _polyVertices:
     - {x: -0.000000021855694, y: 0.5}
-    - {x: -0.4330127, y: 0.25000003}
-    - {x: -0.43301263, y: -0.2500001}
-    - {x: 0.0000000059624403, y: -0.5}
-    - {x: 0.43301278, y: -0.24999988}
-    - {x: 0.4330127, y: 0.25000003}
+    - {x: -0.4755283, y: 0.1545084}
+    - {x: -0.29389253, y: -0.40450856}
+    - {x: 0.29389274, y: -0.4045084}
+    - {x: 0.4755282, y: 0.15450864}
     _roundness: 100
     _roundnessBottomLeft: 100
     _roundnessBottomRight: 100
@@ -133,6 +133,22 @@ MonoBehaviour:
     _usePolygonMap: 0
   wasConverted: 0
   preConvertedScale: {x: 0, y: 0, z: 0}
+--- !u!114 &7381128746844690760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200164576554998704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.RedeemedViewModel.IconSprite
+  viewPropertyName: Shapes2D.ShapeWithBindableTexture.FillTexture
 --- !u!1 &454431180971805532
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,7 +566,12 @@ MonoBehaviour:
     type: 2}
   viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
     type: 2}
-  authorisationDataRepository: {fileID: 0}
+  authorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
+    type: 2}
+  alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
+    type: 2}
 --- !u!114 &8655840192953670468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1237,7 +1258,7 @@ MonoBehaviour:
   m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.RedeemedViewModel.OnButton_OnClick
+  viewModelMethodName: ViewModels.RedeemedViewModel.OkButton_OnClick
   viewEventName: UnityEngine.UI.Button.onClick
 --- !u!114 &6994282481119388445
 MonoBehaviour:
@@ -1272,8 +1293,9 @@ GameObject:
   - component: {fileID: 1541132975624740434}
   - component: {fileID: 2832437298400682697}
   - component: {fileID: 5147806775381056014}
+  - component: {fileID: 1068091020831813262}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: '[Text] Description'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1395,6 +1417,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1068091020831813262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8970624560867241912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.RedeemedViewModel.ProductDescription
+  viewPropertyName: TMPro.TextMeshProUGUI.text
 --- !u!1001 &5887116156102878954
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1456,6 +1494,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8194441565086863039, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8503739243100714422, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
@@ -1569,12 +1612,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2225de59284c0a9468cf8240f53725dc, type: 3}
---- !u!1 &5685070148969259191 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 5887116156102878954}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8710731939707794353 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2977302115176093019, guid: 2225de59284c0a9468cf8240f53725dc,
@@ -1584,6 +1621,12 @@ RectTransform:
 --- !u!224 &715896749820916298 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6367065948319847584, guid: 2225de59284c0a9468cf8240f53725dc,
+    type: 3}
+  m_PrefabInstance: {fileID: 5887116156102878954}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5685070148969259191 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
     type: 3}
   m_PrefabInstance: {fileID: 5887116156102878954}
   m_PrefabAsset: {fileID: 0}

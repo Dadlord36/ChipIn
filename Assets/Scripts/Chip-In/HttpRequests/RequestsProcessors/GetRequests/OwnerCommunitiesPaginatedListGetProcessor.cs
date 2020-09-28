@@ -13,8 +13,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
     {
         public OwnerCommunitiesPaginatedListGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, 
             IRequestHeaders requestHeaders,PaginatedRequestData paginatedRequestData) 
-            : base(out cancellationTokenSource, ApiCategories.Communities, HttpMethod.Get, requestHeaders, null,
-                paginatedRequestData.ConvertPaginationToNameValueCollection())
+            : base(out cancellationTokenSource, ApiCategories.Communities, HttpMethod.Get, requestHeaders, paginatedRequestData)
         {
         }
     }

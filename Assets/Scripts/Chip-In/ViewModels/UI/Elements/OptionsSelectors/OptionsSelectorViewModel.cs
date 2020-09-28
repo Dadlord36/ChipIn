@@ -2,12 +2,12 @@
 using System.Runtime.CompilerServices;
 using EasyButtons;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityWeld.Binding;
 using Utilities;
-using Views.ViewElements.ListItems;
 
 namespace ViewModels.UI.Elements.OptionsSelectors
 {
@@ -15,7 +15,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
     public sealed class OptionsSelectorViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         public UnityEvent newItemSelected;
-        
+
         private int _selectedItemIndex;
 
         [Binding]
@@ -50,10 +50,9 @@ namespace ViewModels.UI.Elements.OptionsSelectors
             {
                 PrefabUtility.InstantiatePrefab(prefab, container);
             }
-            
         }
 #endif
-        
+
         private void OnNewItemSelected()
         {
             newItemSelected?.Invoke();
@@ -65,7 +64,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

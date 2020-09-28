@@ -48,6 +48,7 @@ namespace Views
             ItemImageSprite = icon;
         }
 
+
         public void SetItemImageAndText(IIndexedAndNamed gridItemData, Sprite icon)
         {
             SetItemText(gridItemData);
@@ -67,6 +68,11 @@ namespace Views
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
+            Select();
+        }
+
+        public void Select()
+        {
             OnItemSelected();
         }
 
@@ -83,10 +89,7 @@ namespace Views
             _asyncOperationCancellationController.CancelOngoingTask();
 
             return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> task)
-                    {
-                        ItemImageSprite = task.GetAwaiter().GetResult();
-                    },
+                .ContinueWith(delegate(Task<Sprite> task) { ItemImageSprite = task.GetAwaiter().GetResult(); },
                     _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
                     TaskScheduler.FromCurrentSynchronizationContext());
         }

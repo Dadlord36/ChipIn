@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
+using DataModels.Interfaces;
 using JetBrains.Annotations;
 using Repositories.Local;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -32,7 +34,7 @@ namespace ViewModels.Cards
         private string _description = EmptyFieldText;
         private Sprite _icon;
         private string _spirit = EmptyFieldText;
-        
+
 
         #region IEngageModel implementation
 
@@ -152,6 +154,11 @@ namespace ViewModels.Cards
 
         private void OnCardWasClicked()
         {
+            Select();
+        }
+
+        public void Select()
+        {
             OnItemSelected((uint) Id);
         }
 
@@ -169,17 +176,11 @@ namespace ViewModels.Cards
         {
             OperationCancellationController.CancelOngoingTask();
             ClearIcon();
-            Description = dataModel.Description;
-            Age = dataModel.Age;
-            Size = dataModel.Size;
-            Spirit = dataModel.Spirit;
-            MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
-            Id = dataModel.Id;
-            Name = dataModel.Name;
+            SetViewModelFields(dataModel);
             try
             {
                 Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
-                    .ConfigureAwait(true);
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -192,6 +193,17 @@ namespace ViewModels.Cards
             }
         }
 
+        private void SetViewModelFields(IMarketInterestDetailsDataModel dataModel)
+        {
+            Description = dataModel.Description;
+            Age = dataModel.Age;
+            Size = dataModel.Size;
+            Spirit = dataModel.Spirit;
+            MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
+            Id = dataModel.Id;
+            Name = dataModel.Name;
+        }
+
         private void OnItemSelected(uint index)
         {
             ItemSelected?.Invoke(index);
@@ -202,7 +214,7 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

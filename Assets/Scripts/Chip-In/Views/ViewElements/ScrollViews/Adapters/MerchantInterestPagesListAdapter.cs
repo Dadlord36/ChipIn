@@ -3,6 +3,7 @@ using DataModels;
 using Repositories.Remote.Paginated;
 using UnityWeld.Binding;
 using Views.ViewElements.Fields;
+using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 using Views.ViewElements.ScrollViews.ViewHolders;
 

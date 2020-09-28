@@ -12,21 +12,20 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class CompanyAdListAdapter : RepositoryBasedListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
+    public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
         DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData>, AdCardViewModel.FieldFillingData,
-        CompanyAdListAdapter.CompanyAdFillingViewAdapter>
+        CompanyAdListAdapter.FillingViewAdapter>
     {
-
-        public class CompanyAdFillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>
+        public class FillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>
         {
-            private const string Tag = nameof(CompanyAdFillingViewAdapter);
+            private const string Tag = nameof(FillingViewAdapter);
 
             public override AdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 AdvertItemDataModel data, uint dataIndexInRepository)
             {
                 try
                 {
-                    return new AdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadTexture2DTask(data.PosterUri,
+                    return new AdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
                         cancellationTokenSource.Token), data.Slogan);
                 }
                 catch (OperationCanceledException)

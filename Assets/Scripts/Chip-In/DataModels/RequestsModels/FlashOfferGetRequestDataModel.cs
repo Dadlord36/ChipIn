@@ -2,40 +2,28 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DataModels.Interfaces;
-using DataModels.SimpleTypes;
 using JetBrains.Annotations;
 
 namespace DataModels.RequestsModels
 {
     public sealed class FlashOfferGetRequestDataModel : IFlashOfferGetRequestModel, INotifyPropertyChanged
     {
-        private FilePath _posterFilePath;
-        private string _category;
         private string _title;
         private string _description;
         private uint _quantity;
         private string _radius;
-        private uint _tokensAmount = 1;
         private DateTime _expireDate;
+        private string _priceType;
+        private string _period;
+        private uint _price;
 
-        public FilePath PosterFilePath
+        public uint Price
         {
-            get => _posterFilePath;
+            get => _price;
             set
             {
-                if (Equals(value, _posterFilePath)) return;
-                _posterFilePath = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Category
-        {
-            get => _category;
-            set
-            {
-                if (value == _category) return;
-                _category = value;
+                if (value == _price) return;
+                _price = value;
                 OnPropertyChanged();
             }
         }
@@ -83,17 +71,29 @@ namespace DataModels.RequestsModels
                 OnPropertyChanged();
             }
         }
-
-        public uint TokensAmount
+        
+        public string PriceType
         {
-            get => _tokensAmount;
+            get => _priceType;
             set
             {
-                if (value == _tokensAmount) return;
-                _tokensAmount = value;
+                if (value == _priceType) return;
+                _priceType = value;
                 OnPropertyChanged();
             }
         }
+
+        public string Period
+        {
+            get => _period;
+            set
+            {
+                if(_period == value) return;
+                _period = value;
+                OnPropertyChanged();
+            }
+        }
+        
 
         public DateTime ExpireDate
         {
@@ -114,5 +114,8 @@ namespace DataModels.RequestsModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+
+
     }
 }

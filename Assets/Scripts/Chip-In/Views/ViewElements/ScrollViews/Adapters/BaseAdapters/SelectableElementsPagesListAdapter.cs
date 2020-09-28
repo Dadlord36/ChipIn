@@ -5,10 +5,9 @@ using Repositories.Interfaces;
 using Repositories.Remote;
 using UnityEngine.Events;
 using UnityWeld.Binding;
-using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
-namespace Views.ViewElements.ScrollViews.Adapters
+namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
     public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
@@ -21,15 +20,13 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         public UnityEvent itemSelected;
 
-        [Binding] public uint SelectedIndex { get; set; }
+        [Binding] public uint SelectedIndex { get;  set; }
+        
 
-        protected override TViewPageViewHolder CreateViewsHolder(int itemIndex)
+        protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder,int itemIndex)
         {
-            var viewHolder = base.CreateViewsHolder(itemIndex);
             var selection = viewHolder.root.GetComponent<IIdentifiedSelection>();
-            selection.IndexInOrder = (uint) itemIndex;
             selection.ItemSelected += OnItemSelected;
-            return viewHolder;
         }
 
         private void OnItemSelected(uint index)

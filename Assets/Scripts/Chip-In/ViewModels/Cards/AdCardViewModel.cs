@@ -2,35 +2,42 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using JetBrains.Annotations;
 using Tasking;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using Utilities;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class AdCardViewModel : MonoBehaviour, INotifyPropertyChanged, IFillingView<AdCardViewModel.FieldFillingData>
+    public sealed class AdCardViewModel : MonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+        IFillingView<AdCardViewModel.FieldFillingData>
     {
+        public event Action<uint> ItemSelected;
+        
+        public uint IndexInOrder { get; set; }
+
         public class FieldFillingData
         {
-            public readonly Task<Texture2D> AdIcon;
+            public readonly Task<Sprite> AdIcon;
             public readonly string Description;
 
-            public FieldFillingData(Task<Texture2D> adIcon, string description)
+            public FieldFillingData(Task<Sprite> adIcon, string description)
             {
                 AdIcon = adIcon;
                 Description = description;
             }
         }
 
-        private Texture2D _adIcon;
+        private Sprite _adIcon;
         private string _description;
 
         [Binding]
-        public Texture2D AdIcon
+        public Sprite AdIcon
         {
             get => _adIcon;
             set
@@ -55,7 +62,9 @@ namespace ViewModels.Cards
 
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
-            Description = dataModel.Description;
+            //ToDo: replace with description
+            IndexInOrder = dataBaseIndex;
+            Description = dataBaseIndex.ToString();
             try
             {
                 AdIcon = await dataModel.AdIcon.ConfigureAwait(false);
@@ -71,15 +80,29 @@ namespace ViewModels.Cards
             }
         }
 
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Select();
+        }
+        
+        public void Select()
+        {
+            OnItemSelected();
+        }
+
+        private void OnItemSelected()
+        {
+            ItemSelected?.Invoke(IndexInOrder);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            TasksFactories.ExecuteOnMainThread(()=>
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            });
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
+        
+
     }
 }

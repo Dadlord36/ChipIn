@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
+using Tasking;
 using UnityEngine;
 using Utilities;
 
@@ -41,11 +41,16 @@ namespace WebOperationUtilities
             return CreateSpriteWithDefaultParameters(CreateNonReadableTextureFromData(rawData));
         }
 
-        public static Task<Texture2D> CreateTexture2DFromPathAsync(string pathToImage, TaskScheduler mainThreadTaskScheduler)
+        public static async Task<Texture2D> CreateTexture2DFromPathAsync(string pathToImage)
         {
-            return FilesUtility.ReadFileBytesAsync(pathToImage).ContinueWith(finishedTask => 
-                CreateNonReadableTextureFromData(finishedTask.GetAwaiter().GetResult()), 
-                CancellationToken.None,TaskContinuationOptions.OnlyOnRanToCompletion, mainThreadTaskScheduler);
+            var bytes = await FilesUtility.ReadFileBytesAsync(pathToImage).ConfigureAwait(false);
+            return TasksFactories.ExecuteOnMainThread(() => CreateNonReadableTextureFromData(bytes));
+        }
+
+        public static async Task<Sprite> CreateSpriteFromPathAsync(string pathToImage)
+        {
+            var bytes = await FilesUtility.ReadFileBytesAsync(pathToImage).ConfigureAwait(false);
+            return TasksFactories.ExecuteOnMainThread(() => CreateSpriteWithDefaultParameters(bytes));
         }
 
         private static void PrintLog(string message)

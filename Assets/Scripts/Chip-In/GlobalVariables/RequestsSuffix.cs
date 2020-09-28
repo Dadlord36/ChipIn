@@ -2,6 +2,7 @@
 {
     public static class ApiCategories
     {
+        public const string Posters = "posters";
         public const string Adverts = "adverts";
         public const string Users = "users";
         public const string Coins = "coins";
@@ -16,8 +17,8 @@
         public const string SingOut = "sign_out";
         public const string Radar = "radar";
         public const string FlashOffers = "flash_offers";
-       
-
+        public const string SponsoredAd = "sponsored_adverts";
+        
         public static class Subcategories
         {
             public const string Market = MainNames.ModelsPropertiesNames.Market;

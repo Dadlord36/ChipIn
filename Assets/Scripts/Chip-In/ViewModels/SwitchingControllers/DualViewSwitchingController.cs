@@ -1,4 +1,5 @@
 ﻿using ScriptableObjects.SwitchBindings;
+using Tasking;
 using UnityEngine;
 
 namespace ViewModels.SwitchingControllers
@@ -10,7 +11,12 @@ namespace ViewModels.SwitchingControllers
         protected override void ProcessViewsSwitching(in string fromViewName, in string toViewName, 
             FormsTransitionBundle formsTransitionBundle)
         {
-            viewsSwitchingBindingObject.SwitchViews(new ViewsPairInfo(fromViewName, toViewName),formsTransitionBundle);
+            var toSwitchForm = fromViewName;
+            var toName = toViewName;
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                viewsSwitchingBindingObject.SwitchViews(new ViewsPairInfo(toSwitchForm, toName),formsTransitionBundle);
+            });
         }
     }
 }

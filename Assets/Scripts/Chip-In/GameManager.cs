@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ActionsTranslators;
 using Controllers;
+using Factories;
 using HttpRequests;
 using Notifications;
 using ScriptableObjects.CardsControllers;
@@ -41,7 +42,8 @@ public class GameManager : MonoBehaviour
         MainCanvas = mainCanvas;
         MainAwaitingProcessVisualizerControllerScriptable = awaitingProcessVisualizerControllerScriptable;
         ScreenResolutionScale = OriginalResolution / ScreenUtility.GetScreenSize();
-
+        SimpleAutofac.AddObjectInstance(sessionController);
+        
         try
         {
             await Initialize();

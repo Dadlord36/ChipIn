@@ -19,6 +19,8 @@ namespace ViewModels.Cards
         IFillingView<InterestItemViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;
+
+
         public uint IndexInOrder { get; set; }
         public uint InterestIndex { get; private set; }
 
@@ -91,9 +93,14 @@ namespace ViewModels.Cards
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnItemSelected();
+            Select();
         }
 
+        public void Select()
+        {
+            OnItemSelected();
+        }
+        
         private void OnItemSelected()
         {
             ItemSelected?.Invoke(InterestIndex);

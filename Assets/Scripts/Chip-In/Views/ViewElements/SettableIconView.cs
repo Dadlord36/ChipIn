@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Controllers;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -10,7 +12,7 @@ using WebOperationUtilities;
 namespace Views.ViewElements
 {
     [Binding]
-    public sealed class SettableIconView : UIBehaviour, INotifyPropertyChanged
+    public sealed class SettableIconView : UIBehaviour, IClearable, INotifyPropertyChanged
     {
         public UnityEvent iconWasSelectedFromGallery;
         public UnityEvent iconWasChanged;
@@ -27,7 +29,6 @@ namespace Views.ViewElements
             {
                 if (value == _selectedImagePath) return;
                 _selectedImagePath = value;
-
                 OnPropertyChanged();
             }
         }
@@ -56,7 +57,6 @@ namespace Views.ViewElements
             {
                 if (value == _iconIsSelected) return;
                 _iconIsSelected = value;
-                OnIconWasSelectedFromGallery();
                 OnPropertyChanged();
             }
         }
@@ -67,14 +67,24 @@ namespace Views.ViewElements
             FillIconWithImageFromGallery();
         }
 
+        public void Clear()
+        {
+            IconIsSelected = false;
+            SelectedImagePath = string.Empty;
+        }
+
         private void FillIconWithImageFromGallery()
         {
-            NativeGallery.GetImageFromGallery(delegate(string path)
+            NativeGallery.GetImageFromGallery(path=>
             {
                 SelectedImagePath = path;
 
                 if (string.IsNullOrEmpty(SelectedImagePath)) return;
                 SelectedImageSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(_selectedImagePath));
+                if (SelectedImageSprite != null)
+                {
+                    OnIconWasSelectedFromGallery();
+                }
             });
         }
 
@@ -83,17 +93,17 @@ namespace Views.ViewElements
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
 
         private void OnIconWasSelectedFromGallery()
         {
-            iconWasSelectedFromGallery?.Invoke();
+            TasksFactories.ExecuteOnMainThread(() => { iconWasSelectedFromGallery?.Invoke(); });
         }
 
         private void OnIconWasChanged()
         {
-            iconWasChanged?.Invoke();
+            TasksFactories.ExecuteOnMainThread(() => { iconWasChanged?.Invoke(); });
         }
     }
 }

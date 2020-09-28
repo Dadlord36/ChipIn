@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Tasking;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using Utilities;
 using RectTransformUtility = Utilities.RectTransformUtility;
@@ -54,14 +55,17 @@ namespace Views.ViewElements
         public void AttachView(BaseView view)
         {
             _view = view;
-            var viewRectTransform = _view.ViewRootRectTransform;
-            viewRectTransform.SetParent(transform,false);
-            FormatView(viewRectTransform);
-            LogUtility.PrintLog(Tag, viewRectTransform.localScale.ToString());
-            _view.Show();
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                var viewRectTransform = _view.ViewRootRectTransform;
+                viewRectTransform.SetParent(transform,false);
+                FormatView(viewRectTransform);
+                LogUtility.PrintLog(Tag, viewRectTransform.localScale.ToString());
+                _view.Show();
+            });
         }
 
-        private void FormatView(RectTransform viewRectTransform)
+        private static void FormatView(RectTransform viewRectTransform)
         {
             ResetTransform(viewRectTransform);
             RectTransformUtility.Stretch(viewRectTransform);
@@ -69,7 +73,10 @@ namespace Views.ViewElements
 
         public BaseView DetachView()
         {
-            transform.DetachChildren();
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                transform.DetachChildren();
+            });
             return _view;
         }
     }

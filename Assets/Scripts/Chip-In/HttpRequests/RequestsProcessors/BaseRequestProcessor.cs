@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Common;
+using Controllers;
 using DataModels.HttpRequestsHeadersModels;
+using Factories;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Utilities;
@@ -23,7 +25,7 @@ namespace HttpRequests.RequestsProcessors
         private readonly DisposableCancellationTokenSource _requestCancellationTokenSource = new DisposableCancellationTokenSource();
         private CancellationToken RequestCancellationToken => _requestCancellationTokenSource.Token;
 
-        protected struct BaseRequestProcessorParameters
+        protected readonly struct BaseRequestProcessorParameters
         {
             public readonly string RequestSuffix;
             public readonly HttpMethod RequestMethod;
@@ -103,7 +105,7 @@ namespace HttpRequests.RequestsProcessors
                 _requestProcessorParameters.QueryStringParameters, requestHeaders?.GetRequestHeaders(), requestBodyModel,
                 SendBodyAsQueryStringFormat);
         }
-        
+
 
         public struct HttpResponse : ISuccess
         {
@@ -124,7 +126,7 @@ namespace HttpRequests.RequestsProcessors
                 {
                     var contentAsString = await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
                     LogUtility.PrintLog(Tag, $"Response String: {contentAsString}");
-                    
+
                     var httpResponse = new HttpResponse
                     {
                         Headers = responseMessage.Headers,
@@ -136,13 +138,17 @@ namespace HttpRequests.RequestsProcessors
                     if (responseMessage.IsSuccessStatusCode)
                     {
                         LogUtility.PrintLog(Tag, successfulResponseMassage);
-                        httpResponse.ResponseModelInterface= JsonConverterUtility.ConvertJsonString<TResponseModel>(contentAsString);
+                        httpResponse.ResponseModelInterface = JsonConverterUtility.ConvertJsonString<TResponseModel>(contentAsString);
                     }
                     else
                     {
+                        if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
+                        {
+                            await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
+                        }
                         try
                         {
-                            httpResponse.Error = CollectErrors(contentAsString);
+                            httpResponse.Error = ErrorsHandlingUtility.CollectErrors(contentAsString);
                         }
                         catch (Exception)
                         {
@@ -167,111 +173,6 @@ namespace HttpRequests.RequestsProcessors
                 throw;
             }
         }
-
-        private class ApiSimpleErrors
-        {
-            [JsonProperty("errors")] public string[] ErrorsArray;
-        }
-
-        private class ApiStructuredErrors
-        {
-            public class ErrorModel
-            {
-                [JsonProperty("key")] public string Key;
-                [JsonProperty("messages")] public string Message;
-            }
-
-            [JsonProperty("errors")] public ErrorModel[] ErrorData;
-        }
-
-        private class ApiDeepStructuredErrors
-        {
-            public class DeepStructuredError
-            {
-                [JsonProperty("key")] public string Key;
-                [JsonProperty("messages")] public string[] Messages;
-            }
-
-            [JsonProperty("errors")] public DeepStructuredError[] ErrorData;
-        }
-
-        private static string CollectErrors(string contentAsString)
-        {
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiDeepStructuredErrors>(contentAsString,
-                out var deepStructuredErrors))
-            {
-                return BuildErrorStringFromDeepStructuredErrors(deepStructuredErrors.ErrorData);
-            }
-
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiSimpleErrors>(contentAsString,
-                out var simpleErrorsData))
-            {
-                return BuildErrorString(simpleErrorsData.ErrorsArray);
-            }
-
-            if (JsonConverterUtility.TryParseJsonEveryExistingMember<ApiStructuredErrors>(contentAsString,
-                out var structuredErrorsData))
-            {
-                return BuildErrorStringFromStructuredErrors(structuredErrorsData.ErrorData);
-            }
-
-
-            string BuildErrorString(string[] errors)
-            {
-                var stringBuilder = new StringBuilder(errors[0]);
-                for (int i = 1; i < errors.Length; i++)
-                {
-                    stringBuilder.Append($" {errors[i]}");
-                }
-
-                return stringBuilder.ToString();
-            }
-
-            string BuildErrorStringFromStructuredErrors(ApiStructuredErrors.ErrorModel[] errors)
-            {
-                var stringBuilder = new StringBuilder(BuildElement(errors[0]));
-                for (int i = 1; i < errors.Length; i++)
-                {
-                    stringBuilder.Append(BuildElement(errors[i]));
-                }
-
-                string BuildElement(ApiStructuredErrors.ErrorModel errorElementData)
-                {
-                    return $"{errorElementData.Key} {errorElementData.Message}";
-                }
-
-                return stringBuilder.ToString();
-            }
-
-            string BuildErrorStringFromDeepStructuredErrors(ApiDeepStructuredErrors.DeepStructuredError[] errors)
-            {
-                var stringBuilder = new StringBuilder(BuildElement(errors[0]));
-                for (int i = 1; i < errors.Length; i++)
-                {
-                    stringBuilder.Append(BuildElement(errors[i]));
-                }
-
-                string BuildElement(ApiDeepStructuredErrors.DeepStructuredError errorElementData)
-                {
-                    return $"{errorElementData.Key} {BuildMessageString(errorElementData.Messages)}";
-
-                    string BuildMessageString(string[] messageStrings)
-                    {
-                        var messageStringBuilder = new StringBuilder(messageStrings[0]);
-                        for (int i = 1; i < messageStrings.Length; i++)
-                        {
-                            messageStringBuilder.Append($" {messageStrings[i]}");
-                        }
-
-                        return messageStringBuilder.ToString();
-                    }
-                }
-
-                return stringBuilder.ToString();
-            }
-
-            LogUtility.PrintLogError(Tag, "Given content has no errors");
-            return null;
-        }
+        
     }
 }

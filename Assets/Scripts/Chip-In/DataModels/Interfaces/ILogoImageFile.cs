@@ -1,10 +1,11 @@
 ﻿using DataModels.SimpleTypes;
+using GlobalVariables;
 using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
     public interface ILogoImageFile
     {
-        [JsonProperty("logo")] FilePath LogoFilePath { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Logo)] FilePath LogoFilePath { get; set; }
     }
 }

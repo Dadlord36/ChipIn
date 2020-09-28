@@ -8,6 +8,7 @@ namespace DataModels
         public int? Id { get; set; }
         public string Slogan { get; set; }
         public string PosterUri { get; set; }
+        public string LogoUrl { get; set; }
         public IList<AdvertFeatureDataModel> AdvertFeatures { get; set; }
     }
 }

@@ -75,9 +75,14 @@ namespace Views.ViewElements.Fields
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            OnItemSelected(_id);
+            Select();
         }
 
+        public void Select()
+        {
+            OnItemSelected(_id);
+        }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

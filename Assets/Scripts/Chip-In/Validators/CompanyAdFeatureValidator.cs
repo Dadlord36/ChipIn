@@ -1,4 +1,4 @@
-﻿using ViewModels.Interfaces;
+﻿using DataModels.Interfaces;
 
 namespace Validators
 {
@@ -6,14 +6,14 @@ namespace Validators
     {
         public readonly bool IsValid;
 
-        public CompanyAdFeatureValidator(ICompanyAdFeatureModel model)
+        public CompanyAdFeatureValidator(IAdvertFeatureBaseModel model)
         {
             IsValid = CheckIsValid(model);
         }
 
-        private static bool CheckIsValid(ICompanyAdFeatureModel model)
+        private static bool CheckIsValid(IAdvertFeatureBaseModel model)
         {
-            return !string.IsNullOrEmpty(model.Description) && !string.IsNullOrEmpty(model.PosterImagePath);
+            return !string.IsNullOrEmpty(model.Description) && !string.IsNullOrEmpty(model.Icon);
         }
     }
 }

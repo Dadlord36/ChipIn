@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views;
-using Views.OptionsSelectionViews;
 
 namespace ViewModels
 {
@@ -17,45 +16,8 @@ namespace ViewModels
     {
         [SerializeField] private SessionController sessionController;
 
-        private int _selectedCountryIndex;
-        private int _selectedCurrencyIndex;
-
         public SettingsViewModel() : base(nameof(SettingsViewModel))
         {
-        }
-
-        [Binding]
-        public int SelectedCountryIndex
-        {
-            get => _selectedCountryIndex;
-            set
-            {
-                if (value == _selectedCountryIndex) return;
-                _selectedCountryIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Binding]
-        public int SelectedCurrencyIndex
-        {
-            get => _selectedCurrencyIndex;
-            set
-            {
-                if (value == _selectedCurrencyIndex) return;
-                _selectedCurrencyIndex = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private void SetSelectedCountryIndex(int index)
-        {
-            SelectedCountryIndex = index;
-        }
-
-        private void SetSelectedCurrencyIndex(int index)
-        {
-            SelectedCurrencyIndex = index;
         }
 
 
@@ -81,19 +43,6 @@ namespace ViewModels
         public void EditProfileButton_OnClick()
         {
             SwitchToView(nameof(EditProfileView));
-        }
-        
-        
-        [Binding]
-        public void CountryDropdown_OnClick()
-        {
-            SwitchToView(nameof(CountrySelectionView), new FormsTransitionBundle(new Action<int>(SetSelectedCountryIndex)));
-        }
-
-        [Binding]
-        public void CurrencyDropdown_OnClick()
-        {
-            SwitchToView(nameof(CurrencySelectionView), new FormsTransitionBundle(new Action<int>(SetSelectedCurrencyIndex)));
         }
 
         [Binding]

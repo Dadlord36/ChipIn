@@ -1,12 +1,14 @@
 ﻿using Common;
 using DataModels;
 using Repositories.Remote;
+using UnityWeld.Binding;
 using ViewModels.Cards;
 using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
 {
+    [Binding]
     public class VerificationDataListAdapter : RepositoryBasedListAdapter<MerchantVerificationRepository, VerificationDataModel,
         DefaultFillingViewPageViewHolder<VerificationItemViewModel.FieldFillingData>, VerificationItemViewModel.FieldFillingData, 
         VerificationDataListAdapter.VerificationDataFillingViewAdapter>

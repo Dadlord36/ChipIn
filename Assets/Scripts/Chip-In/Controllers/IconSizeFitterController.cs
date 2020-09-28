@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using EasyButtons;
+#endif
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -13,12 +16,15 @@ namespace Controllers
             ResetElementSize();
         }
 
+#if UNITY_EDITOR
+      [Button]  
+#endif
         public void FitImage()
         {
             ResetElementSize();
 
             var image = GetComponent<Image>();
-            var parentRectTransform = GetComponent<Image>().transform.parent.GetComponent<RectTransform>();
+            var parentRectTransform = image.transform.parent.GetComponent<RectTransform>();
 
             var preferredWidth = image.preferredWidth;
             var preferredHeight = image.preferredHeight;
@@ -44,6 +50,7 @@ namespace Controllers
             }
 
             rectTransform.sizeDelta = sizeDelta;
+            rectTransform.anchoredPosition = Vector2.zero;
         }
 
         private void ResetElementSize()

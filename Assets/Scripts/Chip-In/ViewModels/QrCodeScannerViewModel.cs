@@ -2,12 +2,11 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using HttpRequests.RequestsProcessors.PutRequests;
 using JetBrains.Annotations;
 using Repositories.Remote;
 using RequestsStaticProcessors;
+using Tasking;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityWeld.Binding;
 using Utilities;
@@ -26,10 +25,28 @@ namespace ViewModels
         [SerializeField] private PreviewController qrPreviewController;
         [SerializeField] private Transform cameraViewContainer;
 
-        public UnityEvent scanningHasFailed;
+        [SerializeField, Range(0, 10), Tooltip("In seconds")]
+        private int scanningRepeatFrequency;
+
+        [SerializeField, Range(0, 10), Tooltip("In seconds")]
+        private int errorAlertVisibilityTime;
+
 
         private GameObject _qrPreviewRoot;
         private bool _isBusy;
+        private bool _showErrorMessage;
+
+        [Binding]
+        public bool ShowErrorMessage
+        {
+            get => _showErrorMessage;
+            set
+            {
+                if (value == _showErrorMessage) return;
+                _showErrorMessage = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public bool IsBusy
@@ -47,34 +64,62 @@ namespace ViewModels
         {
         }
 
-        [Binding]
-        public async void ScanButton_OnClick()
+        private async void ActivateScanningRepeatedly()
         {
-            try
+            while (true)
             {
-                IsBusy = true;
-                var result = await qrCodeReader.DecodeQRAsync().ConfigureAwait(true);
-                if (result != null && !string.IsNullOrEmpty(result.Text))
+                try
                 {
-                    ProcessDecodedString(result.Text);
+                    IsBusy = true;
+                    if (OperationCancellationController.CancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
+                    var result = await await TasksFactories.ExecuteOnMainThreadTaskAsync(qrCodeReader.DecodeQRAsync)
+                        .ConfigureAwait(false);
+                    if (result != null && !string.IsNullOrEmpty(result.Text))
+                    {
+                        IsBusy = false;
+                        FeedbackThatQrIsValid();
+                        if (await CheckIfQrCodeStringIsValid(result.Text).ConfigureAwait(false))
+                        {
+                            FeedbackThatQrIsValid();
+                            SwitchToRedeemView(result.Text);
+                            break;
+                        }
+
+                        await OnScanningHasFailed().ConfigureAwait(false);
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(scanningRepeatFrequency), OperationCancellationController.CancellationToken)
+                        .ConfigureAwait(false);
                 }
-                else
+                catch (DivideByZeroException e)
                 {
-                    OnScanningHasFailed();
+                    LogUtility.PrintLogWarning(Tag, e.Message);
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    LogUtility.PrintLogWarning(Tag, e.Message);
+                }
+                catch (Exception e)
+                {
+                    LogUtility.PrintLogException(e);
                 }
             }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-            }
+        }
+
+        private static void FeedbackThatQrIsValid()
+        {
+            TasksFactories.ExecuteOnMainThread(Handheld.Vibrate);
         }
 
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            TryAuthorizeWebCameraAndStartQrReader();
+            ActivateQrScanning();
         }
-
 
         protected override void OnBecomingInactiveView()
         {
@@ -83,10 +128,24 @@ namespace ViewModels
             DestroyPreviewObject();
         }
 
-        private void ProcessDecodedString(string decodedString)
+        private async Task<bool> CheckIfQrCodeStringIsValid(string qrCode)
         {
-            Handheld.Vibrate();
-            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedString));
+            try
+            {
+                var response = await UserProductsStaticRequestsProcessor.GetUserProductByQr(out _, authorisationDataRepository, qrCode)
+                    .ConfigureAwait(false);
+                return response.Success;
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private void SwitchToRedeemView(string decodedProductQr)
+        {
+            SwitchToView(nameof(RedeemedView), new FormsTransitionBundle(decodedProductQr));
         }
 
         private void CreatePreviewObject()
@@ -114,65 +173,14 @@ namespace ViewModels
         {
             CreatePreviewObject();
             Initialize();
+            ActivateScanningRepeatedly();
         }
 
-        private void TryAuthorizeWebCameraAndStartQrReader()
+        private async Task OnScanningHasFailed()
         {
-            if (NativeCamera.CheckPermission() == NativeCamera.Permission.Granted)
-            {
-                ActivateQrScanning();
-            }
-            else
-            {
-                AskForCameraPermission();
-            }
-        }
-
-        private bool _wentToAppSettings;
-
-        private void AskForCameraPermission()
-        {
-            switch (NativeCamera.RequestPermission())
-            {
-                case NativeCamera.Permission.Denied:
-                {
-                    if (NativeCamera.CanOpenSettings())
-                    {
-                        _wentToAppSettings = true;
-                        NativeCamera.OpenSettings();
-                    }
-                    else
-                    {
-                        LogUtility.PrintLog(Tag, "This Webcam library can't work without the webcam authorization");
-                    }
-                    break;
-                }
-                case NativeCamera.Permission.Granted:
-                {
-                    ActivateQrScanning();
-                    break;
-                }
-                case NativeCamera.Permission.ShouldAsk:
-                {
-                    AskForCameraPermission();
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void OnApplicationFocus(bool hasFocus)
-        {
-            if(!hasFocus || !_wentToAppSettings) return;
-            _wentToAppSettings = false;
-            TryAuthorizeWebCameraAndStartQrReader();
-        }
-
-
-        private void OnScanningHasFailed()
-        {
-            scanningHasFailed.Invoke();
+            ShowErrorMessage = true;
+            await Task.Delay(TimeSpan.FromSeconds(errorAlertVisibilityTime));
+            ShowErrorMessage = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -180,7 +188,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

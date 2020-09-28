@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Controllers;
+using Common;
 using GlobalVariables;
 using JetBrains.Annotations;
 using Repositories.Remote;
@@ -29,10 +28,9 @@ namespace ViewModels
         private string _email;
         private string _birthdate;
         private string _newAvatarImagePath;
-
-        private readonly Dictionary<string, string> _changedPropertiesCollection = new Dictionary<string, string>();
         private DateTime _birthDateTime;
 
+        private readonly ChangedPropertiesCollector changedPropertiesCollector = new ChangedPropertiesCollector();
 
         /// <summary>
         /// Should be named same as delegated property
@@ -53,15 +51,8 @@ namespace ViewModels
             {
                 if (value == _newAvatarImagePath) return;
                 _newAvatarImagePath = value;
+                UserAvatarSprite = SpritesUtility.CreateSpriteWithDefaultParameters(NativeGallery.LoadImageAtPath(value));
                 OnPropertyChanged();
-                try
-                {
-                    UpdateAvatarIconAsync().Start();
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                }
             }
         }
 
@@ -109,7 +100,7 @@ namespace ViewModels
                 if (value == _email) return;
                 _email = value;
                 OnPropertyChanged();
-                AddChangedField(value, MainNames.ModelsPropertiesNames.Email);
+                changedPropertiesCollector.AddChangedField(value, MainNames.ModelsPropertiesNames.Email);
             }
         }
 
@@ -122,7 +113,7 @@ namespace ViewModels
                 if (value == _birthdate) return;
                 _birthdate = value;
                 OnPropertyChanged();
-                AddChangedField(value, MainNames.ModelsPropertiesNames.Birthdate);
+                changedPropertiesCollector.AddChangedField(value, MainNames.ModelsPropertiesNames.Birthdate);
             }
         }
 
@@ -171,18 +162,17 @@ namespace ViewModels
             {
                 IsAwaitingProcess = true;
                 if (!string.IsNullOrEmpty(_firstName) || !string.IsNullOrEmpty(_lastName))
-                    AddChangedField($"{_firstName} {_lastName}", MainNames.ModelsPropertiesNames.Name);
+                    changedPropertiesCollector.AddChangedField($"{_firstName} {_lastName}", MainNames.ModelsPropertiesNames.Name);
 
                 var result = await ProfileDataStaticRequestsProcessor.UpdateUserProfileData(OperationCancellationController
-                        .CancellationToken, authorisationDataRepository, _changedPropertiesCollection, NewAvatarImagePath)
+                        .CancellationToken, authorisationDataRepository, changedPropertiesCollector.ChangedPropertiesCollection, NewAvatarImagePath)
                     .ConfigureAwait(true);
-
 
                 if (result.IsSuccessful)
                 {
                     await userProfileRemoteRepository.LoadDataFromServer().ConfigureAwait(true);
                     alertCardController.ShowAlertWithText("User profile was successfully updated");
-                    _changedPropertiesCollection.Clear();
+                    changedPropertiesCollector.ClearCollectedFields();
                     ClearFields();
                 }
                 else
@@ -207,37 +197,12 @@ namespace ViewModels
             Email = string.Empty;
         }
 
-        private async Task UpdateAvatarIconAsync()
-        {
-            try
-            {
-                var texture = NativeGallery.LoadImageAtPath(NewAvatarImagePath);
-                await TasksFactories.MainThreadTaskFactory.StartNew(delegate { UserAvatarSprite = SpritesUtility.CreateSpriteWithDefaultParameters(texture); });
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }
-
-        private void AddChangedField(in string value, string propertyName)
-        {
-            if (string.IsNullOrEmpty(value)) return;
-            _changedPropertiesCollection.AddOrUpdate(value, propertyName);
-        }
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }
