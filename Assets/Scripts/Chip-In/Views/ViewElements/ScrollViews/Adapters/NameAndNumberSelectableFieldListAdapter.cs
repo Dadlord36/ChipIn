@@ -44,28 +44,14 @@ namespace Views.ViewElements.ScrollViews.Adapters
             }
         }
 
-        protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
-        {
-            var instance = new DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>();
-
-            // Using this shortcut spares you from:
-            // - instantiating the prefab yourself
-            // - enabling the instance game object
-            // - setting its index 
-            // - calling its CollectViews()
-            instance.Init(_Params.ItemPrefab, _Params.Content, itemIndex);
-
-            return instance;
-        }
-
         protected override async void UpdateViewsHolder(BaseItemViewsHolder viewHolder)
         {
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await (viewHolder as IFillingView<NameAndNumberSelectableFieldFillingData>)
-                    .FillView(_fillingViewAdapter.Convert(AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    Data[(int) index], index), index).ConfigureAwait(true);
+                await (viewHolder as IFillingView<NameAndNumberSelectableFieldFillingData>).FillView(_fillingViewAdapter.Convert(
+                    AsyncOperationCancellationController.TasksCancellationTokenSource, Data[(int) index], index), index)
+                    .ConfigureAwait(true);
             }
             catch (OperationCanceledException)
             {
