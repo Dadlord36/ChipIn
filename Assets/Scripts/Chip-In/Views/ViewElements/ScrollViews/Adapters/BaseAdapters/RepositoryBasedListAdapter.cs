@@ -92,7 +92,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             DecideScrollingIsAllowedOrNot();
             var instance = base.CreateViewsHolder(itemIndex);
-            instance.Init(Parameters.ItemPrefab, _Params.Content, itemIndex);
             var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm>(instance.root);
 
             if (!switchableForm) return instance;
@@ -115,22 +114,31 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             AmountOfItemsAllowedToFetch = TotalCapacity;
         }
 
-        public async Task ResetAsync()
+        private void ClearRemainListItems()
         {
-            if (!IsInitialized) return;
-
-            ResetStateVariables();
-
+            pagesPaginatedRepository.Clear();
             if (Data.Count > 0)
             {
                 Data.RemoveItemsFromStart(Data.Count);
             }
+            Refresh();
+        }
 
-            pagesPaginatedRepository.Clear();
+        public async Task ResetAsync()
+        {
+            if (!IsInitialized)
+            {
+                Init();
+            }
+
+            ResetStateVariables();
+            ClearRemainListItems();
+            
             try
             {
                 OnStartedFetching();
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
+                LogUtility.PrintLog(Tag, $"List Items Total Capacity: {TotalCapacity.ToString()}");
                 ItemsListIsNotEmpty = TotalCapacity > 0;
 
                 if (ItemsListIsNotEmpty && allowedToFetchAllItems)
@@ -138,6 +146,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                     EqualizeAllowedItemsAmountToTotalCapacity();
                 }
 
+                await FetchItemsAndRefillTheList().ConfigureAwait(false);
                 OnEndedFetching();
             }
             catch (OperationCanceledException)
@@ -151,7 +160,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
         }
 
-        protected override async void OnInitialized()
+        /*protected override async void OnInitialized()
         {
             base.OnInitialized();
             try
@@ -167,18 +176,31 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 Console.WriteLine(e);
                 throw;
             }
-        }
+        }*/
 
         private void SetInteractivity(bool state)
         {
             Parameters.SetScrollInteractivity(state);
         }
 
-        protected override async void Update()
+        protected override async void OnScrollPositionChanged(double normPos)
+        {
+            base.OnScrollPositionChanged(normPos);
+            try
+            {
+                await UpdateList().ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        private async Task UpdateList()
         {
             DecideScrollingIsAllowedOrNot();
 
-            base.Update();
             if (!IsInitialized)
                 return;
 
@@ -225,12 +247,14 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             // If the number of items available below the last visible (i.e. the bottom-most one, in our case) is less than <adapterParams.preFetchedItemsCount>,
             // get more
-            if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount) return;
+            if (numberOfItemsBelowLastVisible >= _Params.PreFetchedItemsCount)
+                return;
             var newPotentialNumberOfItems = (uint) (Data.Count + _Params.PreFetchedItemsCount);
 
             newPotentialNumberOfItems = Math.Min(newPotentialNumberOfItems, AmountOfItemsAllowedToFetch);
 
-            if (newPotentialNumberOfItems <= Data.Count) return;
+            if (newPotentialNumberOfItems <= Data.Count)
+                return;
 
             try
             {
