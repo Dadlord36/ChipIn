@@ -47,14 +47,14 @@ namespace Views.TabsContentSwitching
             ResetProgressiveOperationsController();
 
             GetCanvasGroups(index, out var tabCanvasGroup, out var otherCanvasGroups);
-
-            tabCanvasGroup.alpha = CanvasGroupFading.MinAlpha;
+            
+            tabCanvasGroup.transform.SetAsLastSibling();
+            
             tabCanvasGroup.blocksRaycasts = true;
             tabCanvasGroup.interactable = true;
 
             foreach (var canvasGroup in otherCanvasGroups)
             {
-                canvasGroup.alpha = CanvasGroupFading.MaxAlpha;
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.interactable = false;
             }
