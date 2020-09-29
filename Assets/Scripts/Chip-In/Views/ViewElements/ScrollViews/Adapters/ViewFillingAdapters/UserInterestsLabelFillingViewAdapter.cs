@@ -9,8 +9,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
         public override InterestItemViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource, InterestBasicDataModel data,
             uint dataIndexInRepository)
         {
-            return new InterestItemViewModel.FieldFillingData(DownloadedSpritesRepository
-                .CreateLoadSpriteTask(data.PosterUri, cancellationTokenSource.Token), data.Name, (int) data.Id);
+            return new InterestItemViewModel.FieldFillingData(data.PosterUri, data.Name, (int) data.Id);
         }
     }
 }

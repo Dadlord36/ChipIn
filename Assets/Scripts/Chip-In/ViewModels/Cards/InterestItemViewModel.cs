@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using Factories;
 using JetBrains.Annotations;
+using Repositories.Local;
 using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,20 +21,19 @@ namespace ViewModels.Cards
         IFillingView<InterestItemViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;
-
-
         public uint IndexInOrder { get; set; }
         public uint InterestIndex { get; private set; }
+        
 
         public class FieldFillingData
         {
-            public readonly Task<Sprite> LoadIconTask;
+            public readonly string IconUrl;
             public readonly string Description;
             public readonly int InterestIndex;
 
-            public FieldFillingData(Task<Sprite> loadLoadIconTaskTask, string description, int interestIndex)
+            public FieldFillingData(in string iconUrl, string description, int interestIndex)
             {
-                LoadIconTask = loadLoadIconTaskTask;
+                IconUrl = iconUrl;
                 Description = description;
                 InterestIndex = interestIndex;
             }
@@ -72,13 +73,14 @@ namespace ViewModels.Cards
         {
             try
             {
+                var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
                 _asyncOperationCancellationController.CancelOngoingTask();
+                
+                Icon = downloadedSpritesRepository.IconPlaceholder;
                 InterestIndex = (uint) data.InterestIndex;
                 Text = data.Description;
-
-                var iconSprite = await data.LoadIconTask;
-
-                TasksFactories.ExecuteOnMainThread(delegate { Icon = iconSprite; });
+                Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(data.IconUrl, _asyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -100,7 +102,7 @@ namespace ViewModels.Cards
         {
             OnItemSelected();
         }
-        
+
         private void OnItemSelected()
         {
             ItemSelected?.Invoke(InterestIndex);
@@ -111,7 +113,7 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

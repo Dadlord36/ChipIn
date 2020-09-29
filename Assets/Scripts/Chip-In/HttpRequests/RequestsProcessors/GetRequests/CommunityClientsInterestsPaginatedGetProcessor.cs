@@ -13,13 +13,12 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         IUserInterestPagesResponseModel>
     {
         public CommunityClientsInterestsPaginatedGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
-            IRequestHeaders requestHeaders, int communityId, string categoryName, PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource,
-            ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[]
-            {
-                communityId.ToString(),
-                ApiCategories.Subcategories.Interests
-            }, CreateNameValueCollection(categoryName, paginatedRequestData)
-        )
+            IRequestHeaders requestHeaders, int communityId, string categoryName, PaginatedRequestData paginatedRequestData)
+            : base(out cancellationTokenSource, ApiCategories.Communities, HttpMethod.Get, requestHeaders, new[]
+                {
+                    communityId.ToString(),
+                    ApiCategories.Subcategories.Interests
+                }, CreateNameValueCollection(categoryName, paginatedRequestData))
         {
         }
 

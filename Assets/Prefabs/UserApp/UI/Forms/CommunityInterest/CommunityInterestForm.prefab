@@ -104,7 +104,7 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     _Gravity: 1
-    _ContentSpacing: 0
+    _ContentSpacing: 11
     _DefaultItemSize: 60
     _ForwardDragToParents: 0
     _ForwardDragSameDirectionAtBoundary: 0
@@ -155,8 +155,22 @@ MonoBehaviour:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   pagesPaginatedRepository: {fileID: 11400000, guid: e750426a03afb9d4c86dfa53b20bce6f,
     type: 2}
+  amountOfItemsAllowedToFetch: 0
+  allowedToFetchAllItems: 1
+  startedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  endedFetching:
+    m_PersistentCalls:
+      m_Calls: []
+  showAllWasClicked:
+    m_PersistentCalls:
+      m_Calls: []
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
@@ -1701,6 +1715,9 @@ MonoBehaviour:
     _AlsoControlItemTransversalSize: 0
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
     type: 2}
+  listFillingStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
@@ -2712,6 +2729,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 455440652653555373, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: mTerm
+      value: community interest
+      objectReference: {fileID: 0}
+    - target: {fileID: 455440652653555373, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1074923068701846918, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -2731,7 +2758,7 @@ PrefabInstance:
     - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
       propertyPath: m_text
-      value: My Settings
+      value: community interest
       objectReference: {fileID: 0}
     - target: {fileID: 1266082749238653119, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}
@@ -2893,6 +2920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6614780429716396531, guid: 536657986c77fee48ab69e6895bcce73,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6680392857935348126, guid: 536657986c77fee48ab69e6895bcce73,
         type: 3}

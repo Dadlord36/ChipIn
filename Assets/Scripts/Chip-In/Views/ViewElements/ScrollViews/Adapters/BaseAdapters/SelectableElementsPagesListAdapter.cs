@@ -1,4 +1,5 @@
-﻿using Com.TheFallenGames.OSA.Core;
+﻿using System.Diagnostics;
+using Com.TheFallenGames.OSA.Core;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
@@ -15,24 +16,25 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TDataType : class
         where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
-        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
+        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>,IIdentifiedSelection,  new()
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
     {
         public UnityEvent itemSelected;
 
-        [Binding] public uint SelectedIndex { get;  set; }
-        
+        [Binding] public uint SelectedIndex { get; set; }
 
-        protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder,int itemIndex)
+
+        protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
         {
-            var selection = viewHolder.root.GetComponent<IIdentifiedSelection>();
-            selection.ItemSelected += OnItemSelected;
+            var defaultFillingViewPageViewHolder = viewHolder as TViewPageViewHolder;
+            Debug.Assert(defaultFillingViewPageViewHolder != null, nameof(defaultFillingViewPageViewHolder) + " != null");
+            defaultFillingViewPageViewHolder.ItemSelected += OnItemSelected;
         }
 
         private void OnItemSelected(uint index)
         {
             SelectedIndex = index;
-            itemSelected?.Invoke();
+            itemSelected.Invoke();
         }
     }
 }

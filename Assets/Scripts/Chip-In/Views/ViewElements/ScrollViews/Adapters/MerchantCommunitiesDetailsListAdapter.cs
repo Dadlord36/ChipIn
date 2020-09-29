@@ -8,13 +8,9 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class MerchantCommunitiesDetailsListAdapter : SelectableElementsPagesListAdapter
-    <
-        MarketInterestsPaginatedListRepository,
-        MarketInterestDetailsDataModel,
-        EngageCardViewHolder, MarketInterestDetailsDataModel,
-        DefaultFillingViewAdapter<MarketInterestDetailsDataModel>
-    >
+    public class MerchantCommunitiesDetailsListAdapter : SelectableElementsPagesListAdapter<MarketInterestsPaginatedListRepository,
+        MarketInterestDetailsDataModel, DefaultFillingViewPageViewHolder<MarketInterestDetailsDataModel>, MarketInterestDetailsDataModel,
+        DefaultFillingViewAdapter<MarketInterestDetailsDataModel>>
     {
     }
 }
