@@ -54,7 +54,7 @@ namespace ViewModels
     }*/
 
     [Binding]
-    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<SelectedCompanyAdPreviewView>, INotifyPropertyChanged
+    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<CompanyAdPreviewView>, INotifyPropertyChanged
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
