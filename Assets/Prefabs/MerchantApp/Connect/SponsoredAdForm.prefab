@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4748653656002980573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2353489279633954221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.SponsoredAdViewModel.ReserveButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &1313356793947192646
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,7 +45,7 @@ RectTransform:
   - {fileID: 4336216783868213177}
   - {fileID: 5656212431103151449}
   m_Father: {fileID: 5261197468501714412}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -318,20 +332,6 @@ MonoBehaviour:
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4748653656002980573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2353489279633954221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.SponsoredAdViewModel.ReserveButton_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &2812073975766976094
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,13 +364,13 @@ RectTransform:
   m_Children:
   - {fileID: 8716660288383699447}
   - {fileID: 6139862073452739850}
-  m_Father: {fileID: 1809592776064885535}
-  m_RootOrder: 3
+  m_Father: {fileID: 5261197468501714412}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 44, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2853124927583363162
 CanvasRenderer:
@@ -718,20 +718,6 @@ MonoBehaviour:
   viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
     type: 2}
   sponsoredAdFullListAdapter: {fileID: 2031473300054602405}
---- !u!114 &8380996304181858979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5979363086111731533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.SponsoredAdViewModel.AdoptButton_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &6675408231947994765
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,13 +836,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7981477108610854269}
-  m_Father: {fileID: 1809592776064885535}
-  m_RootOrder: 4
+  m_Father: {fileID: 5261197468501714412}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 44, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7324013461622304923
 GameObject:
@@ -1100,6 +1086,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8380996304181858979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5979363086111731533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.SponsoredAdViewModel.AdoptButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1001 &791044190453096136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1257,6 +1257,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 620660619560118355, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 894966714220921504, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
@@ -1464,12 +1469,6 @@ RectTransform:
 --- !u!1 &5654947804221685121 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 5849112468991179740}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &1809592776064885535 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5201886019878852803, guid: 2225de59284c0a9468cf8240f53725dc,
     type: 3}
   m_PrefabInstance: {fileID: 5849112468991179740}
   m_PrefabAsset: {fileID: 0}
