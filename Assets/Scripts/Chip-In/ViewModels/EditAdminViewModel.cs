@@ -14,6 +14,7 @@ using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using ViewModels.UI.Elements;
 using Views.ViewElements;
 using WebOperationUtilities;
 
@@ -25,6 +26,7 @@ namespace ViewModels
         [SerializeField] private MerchantProfileSettingsRepository merchantProfileSettingsRepository;
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
+        [SerializeField] private ReturnButton returnButton;
 
         private readonly ChangedPropertiesCollector changedPropertiesCollector = new ChangedPropertiesCollector();
         private string _newAvatarImagePath;
@@ -433,9 +435,16 @@ namespace ViewModels
             {
                 changedPropertiesCollector.ClearCollectedFields();
                 await merchantProfileSettingsRepository.LoadDataFromServer().ConfigureAwait(false);
+                alertCardController.ShowAlertWithText("Profile data was update successfully");
+                TasksFactories.ExecuteOnMainThread(() =>
+                {
+                    returnButton.SwitchToPreviousView();
+                });
             }
-
-            alertCardController.ShowAlertWithText(response.IsSuccessful ? "Profile data was update successfully" : "Failed to update profile data");
+            else
+            {
+                alertCardController.ShowAlertWithText("Failed to update profile data");
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
