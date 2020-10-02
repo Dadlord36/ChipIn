@@ -16,11 +16,10 @@ namespace Views.ViewElements.ScrollViews.Adapters
     {
         public class UserProductFillingViewAdapter : FillingViewAdapter<ProductDataModel, SponsoredAdCardViewModel.FieldFillingData>
         {
-            public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource, ProductDataModel data,
-                uint dataIndexInRepository)
+            public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
+                ProductDataModel data, uint dataIndexInRepository)
             {
-                return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
-                    cancellationTokenSource.Token));
+                return new SponsoredAdCardViewModel.FieldFillingData(data.PosterUri);
             }
         }
     }

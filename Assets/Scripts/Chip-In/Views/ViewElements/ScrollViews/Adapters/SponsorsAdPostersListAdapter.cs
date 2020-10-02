@@ -25,8 +25,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 try
                 {
-                    return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
-                        cancellationTokenSource.Token), DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl, cancellationTokenSource.Token));
+                    return new SponsoredAdCardViewModel.FieldFillingData(data.BackgroundUrl, data.LogoUrl);
                 }
                 catch (OperationCanceledException)
                 {

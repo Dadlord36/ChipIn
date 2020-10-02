@@ -2,9 +2,12 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Behaviours;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using Factories;
 using JetBrains.Annotations;
+using Repositories.Local;
 using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,21 +17,21 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class AdCardViewModel : MonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+    public sealed class AdCardViewModel : AsyncOperationsMonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
         IFillingView<AdCardViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;
-        
+
         public uint IndexInOrder { get; set; }
 
         public class FieldFillingData
         {
-            public readonly Task<Sprite> AdIcon;
+            public readonly string AdIconUrl;
             public readonly string Description;
 
-            public FieldFillingData(Task<Sprite> adIcon, string description)
+            public FieldFillingData(in string adIconUrl, in string description)
             {
-                AdIcon = adIcon;
+                AdIconUrl = adIconUrl;
                 Description = description;
             }
         }
@@ -62,12 +65,15 @@ namespace ViewModels.Cards
 
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
+            AsyncOperationCancellationController.CancelOngoingTask();
             //ToDo: replace with description
             IndexInOrder = dataBaseIndex;
             Description = dataBaseIndex.ToString();
             try
             {
-                AdIcon = await dataModel.AdIcon.ConfigureAwait(false);
+                AdIcon = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>()
+                    .CreateLoadSpriteTask(dataModel.AdIconUrl, AsyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -84,7 +90,7 @@ namespace ViewModels.Cards
         {
             Select();
         }
-        
+
         public void Select()
         {
             OnItemSelected();
@@ -102,7 +108,5 @@ namespace ViewModels.Cards
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
-        
-
     }
 }

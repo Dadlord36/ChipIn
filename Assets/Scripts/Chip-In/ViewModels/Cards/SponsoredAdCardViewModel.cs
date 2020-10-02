@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using Factories;
+using Repositories.Local;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
@@ -17,18 +19,18 @@ namespace ViewModels.Cards
 
         public class FieldFillingData
         {
-            public readonly Task<Sprite> LoadBackgroundSpriteTask;
-            public readonly Task<Sprite> LoadLogoSpriteTask;
+            public readonly string BackgroundSpriteUrl;
+            public readonly string LogoSpriteUrl;
 
-            public FieldFillingData(Task<Sprite> loadBackgroundSpriteTask, Task<Sprite> createLoadSpriteTask)
+            public FieldFillingData(in string backgroundSpriteUrl, in string logoSpriteUrl)
             {
-                LoadBackgroundSpriteTask = loadBackgroundSpriteTask;
-                LoadLogoSpriteTask = createLoadSpriteTask;
+                BackgroundSpriteUrl = backgroundSpriteUrl;
+                LogoSpriteUrl = logoSpriteUrl;
             }
 
-            public FieldFillingData(Task<Sprite> loadBackgroundSpriteTask)
+            public FieldFillingData(in string backgroundSpriteUrl)
             {
-                LoadBackgroundSpriteTask = loadBackgroundSpriteTask;
+                BackgroundSpriteUrl = backgroundSpriteUrl;
             }
         }
 
@@ -45,7 +47,6 @@ namespace ViewModels.Cards
                 OnPropertyChanged();
             }
         }
-
 
         private Sprite _backgroundSprite;
 
@@ -64,10 +65,14 @@ namespace ViewModels.Cards
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
             IndexInOrder = dataBaseIndex;
-            if (dataModel.LoadLogoSpriteTask != null)
-                LogoSprite = await dataModel.LoadLogoSpriteTask.ConfigureAwait(false);
+            var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
+            if (dataModel.LogoSpriteUrl != null)
+                LogoSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.LogoSpriteUrl,
+                    AsyncOperationCancellationController.CancellationToken).ConfigureAwait(false);
 
-            BackgroundTexture = await dataModel.LoadBackgroundSpriteTask.ConfigureAwait(false);
+            BackgroundTexture = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.BackgroundSpriteUrl,
+                    AsyncOperationCancellationController.CancellationToken)
+                .ConfigureAwait(false);
         }
 
         public void OnPointerClick(PointerEventData eventData)

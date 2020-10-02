@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Behaviours;
 using JetBrains.Annotations;
 using Tasking;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityWeld.Binding;
 namespace ViewModels.Cards
 {
     [Binding]
-    public class SwitchableForm : MonoBehaviour,INotifyPropertyChanged
+    public class SwitchableForm : AsyncOperationsMonoBehaviour, INotifyPropertyChanged
     {
         private bool _alternativeFormUsed;
 
