@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TwoSlotsViewsPlacer viewsPlacer;
     [SerializeField] private DataRestorationController restorationController;
     [SerializeField] private ApplicationClosingEventTranslator applicationClosingEventTranslator;
-    [SerializeField] private ViewsLogoController viewsLogoController;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Canvas mainCanvas;
     [SerializeField] private AwaitingProcessVisualizerControllerScriptable awaitingProcessVisualizerControllerScriptable;
@@ -57,7 +56,6 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
         FireBaseNotificationsController.Initialize();
-        viewsLogoController.SetDefaultLogo();
     }
 
     private async Task Initialize()

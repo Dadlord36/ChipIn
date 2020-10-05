@@ -863,7 +863,6 @@ MonoBehaviour:
       _KeepItemsSortedInHierarchy: 0
     _ItemPrefab: {fileID: 2825058659793123501}
     _AlsoControlItemTransversalSize: 0
-    fetchingLimitUnlockButtonPrefab: {fileID: 0}
     repositoryAdapterParameters:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
@@ -1719,12 +1718,10 @@ MonoBehaviour:
   companyAdListAdapter: {fileID: 8829972675888673257}
   advertsPaginatedListRepository: {fileID: 11400000, guid: 6ee799f09793e0c499215375e658476a,
     type: 2}
-  sponsoredAdRepository: {fileID: 11400000, guid: 723bd13d49426ab40aa755256a1f2bdd,
-    type: 2}
-  reservedSponsoredAdRepository: {fileID: 11400000, guid: fa35a01e15fccb74fb6d31b163bf772b,
-    type: 2}
-  sponsoredAdListAdapter: {fileID: 8257733056766773181}
-  reservedSponsoredAdListAdapter: {fileID: 9118189093073212135}
+  sponsoredAdPostersRepository: {fileID: 0}
+  reservedSponsoredAdRepository: {fileID: 0}
+  sponsorsAdPostersListAdapter: {fileID: 0}
+  reservedSponsoredAdListAdapter: {fileID: 0}
 --- !u!1 &6916754360856086178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1910,7 +1907,6 @@ MonoBehaviour:
       _KeepItemsSortedInHierarchy: 0
     _ItemPrefab: {fileID: 2509930834612516921}
     _AlsoControlItemTransversalSize: 0
-    fetchingLimitUnlockButtonPrefab: {fileID: 0}
     repositoryAdapterParameters:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
@@ -1918,8 +1914,7 @@ MonoBehaviour:
   listFillingStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  pagesPaginatedRepository: {fileID: 11400000, guid: fa35a01e15fccb74fb6d31b163bf772b,
-    type: 2}
+  pagesPaginatedRepository: {fileID: 0}
   amountOfItemsAllowedToFetch: 10
   allowedToFetchAllItems: 0
   startedFetching:
@@ -2259,7 +2254,6 @@ MonoBehaviour:
       _KeepItemsSortedInHierarchy: 0
     _ItemPrefab: {fileID: 2509930834612516921}
     _AlsoControlItemTransversalSize: 0
-    fetchingLimitUnlockButtonPrefab: {fileID: 322222622102753037}
     repositoryAdapterParameters:
       preFetchedItemsCount: 5
   downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
