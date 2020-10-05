@@ -26,6 +26,11 @@
                 Container.AddObjectInstance(objectInstance);
             }
 
+            public static void CreateObjectInstance<T>() where T : class, new()
+            {
+                Container.AddObjectInstance(new T());
+            }
+
             public static T GetObjectInstance<T>() where T : class
             {
                 return Container.GetObjectInstance<T>();

@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
+using Factories.ReferencesContainers;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace Repositories.Remote
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [SerializeField] private ScriptableUserProfileRemoteRepository userProfileRemoteRepository;
+        private IUserProfileRemoteRepository userProfileRemoteRepository => DataRepositoriesReferencesContainer.GetObjectInstance<IUserProfileRemoteRepository>();
         private uint _amount;
 
 

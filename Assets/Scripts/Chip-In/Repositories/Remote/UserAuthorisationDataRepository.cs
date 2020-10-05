@@ -18,32 +18,13 @@ namespace Repositories.Remote
     public interface IUserAuthorisationDataRepository : IUserProfileRequestHeadersProvider, IClearable
     {
         string UserRole { get; }
-        string AccessToken { get; set; }
-        string Client { get; set; }
-        string TokenType { get; set; }
-        string Uid { get; set; }
-        int Expiry { get; set; }
-        string name { get; set; }
-        HideFlags hideFlags { get; set; }
-        void Set(IAuthorisationModel source);
-        void Set(IUserProfileRequestHeadersProvider source);
         void SetUserRole(string userRole);
-        List<KeyValuePair<string, string>> GetRequestHeaders();
-        string GetRequestHeadersAsString();
-        void Clear();
         void TrySaveDataLocally();
         void TryLoadLocalData();
         bool CheckIfUserWasLoggedInPreviously();
-        void SetDirty();
-        int GetInstanceID();
-        int GetHashCode();
-        bool Equals(object other);
-        string ToString();
     }
-
-    [CreateAssetMenu(fileName = nameof(UserAuthorisationDataRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserAuthorisationDataRepository), order = 0)]
-    public sealed class UserAuthorisationDataRepository : ScriptableObject, IUserAuthorisationDataRepository
+    
+    public sealed class UserAuthorisationDataRepository :  IUserAuthorisationDataRepository
     {
 #if UNITY_EDITOR
         // Add a menu item named "Do Something" to MyMenu in the menu bar.

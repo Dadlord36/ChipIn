@@ -5,12 +5,15 @@ using UnityEngine;
 
 public class DataRepositoriesReferencesContainerInitializer : MonoBehaviour
 {
-    [SerializeField] private ScriptableUserProfileRemoteRepository userProfileRemoteRepository;
     [SerializeField] private GeoLocationRepository geoLocationRepository;
 
     private void Start()
     {
-        DataRepositoriesReferencesContainer.AddObjectInstance(userProfileRemoteRepository);
+        DataRepositoriesReferencesContainer.CreateObjectInstance<UserCoinsAmountRepository>();
+        DataRepositoriesReferencesContainer.CreateObjectInstance<UserProfileRemoteRepository>();
+        
+        DataRepositoriesReferencesContainer.CreateObjectInstance<>();
+        
         DataRepositoriesReferencesContainer.AddObjectInstance(geoLocationRepository);
     }
 }
