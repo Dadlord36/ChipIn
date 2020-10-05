@@ -24,7 +24,7 @@ namespace ViewModels
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private MerchantInterestPagesPaginatedRepository merchantInterestPagesPaginatedRepository;
+        [SerializeField] private ScriptableMerchantInterestPagesPaginatedRepository merchantInterestPagesPaginatedRepository;
         [SerializeField] private MerchantInterestPagesListAdapter merchantInterestPagesListAdapter;
         [SerializeField] private Sprite defaultLogo; //TODO: ViewsLogoController
 
@@ -93,7 +93,6 @@ namespace ViewModels
         public MerchantInterestViewModel() : base(nameof(MerchantInterestViewModel))
         {
         }
-
 
         protected override async void OnBecomingActiveView()
         {

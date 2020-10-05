@@ -11,7 +11,7 @@ namespace Views
     {
         [SerializeField] private Image qrImage;
         [SerializeField] private QrCodeEncodingParameters qrCodeParameters;
-        [SerializeField] private UserProductsRepository userProductsRepository;
+        [SerializeField] private ScriptableUserProductsRepository userProductsRepository;
 
         [SerializeField] private CodeWriter codeWriter;
 

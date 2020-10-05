@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Factories;
+using Factories.ReferencesContainers;
 using Repositories.Local;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -65,7 +66,7 @@ namespace ViewModels.Cards
         public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
         {
             IndexInOrder = dataBaseIndex;
-            var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
+            var downloadedSpritesRepository = MainObjectsReferencesContainer.GetObjectInstance<IDownloadedSpritesRepository>();
             if (dataModel.LogoSpriteUrl != null)
                 LogoSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.LogoSpriteUrl,
                     AsyncOperationCancellationController.CancellationToken).ConfigureAwait(false);

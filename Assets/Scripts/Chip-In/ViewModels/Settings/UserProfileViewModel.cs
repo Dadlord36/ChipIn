@@ -18,7 +18,7 @@ namespace ViewModels.Settings
     [Binding]
     public class UserProfileViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private UserProfileRemoteRepository repository;
+        [SerializeField] private ScriptableUserProfileRemoteRepository repository;
         [SerializeField] private GeoLocationRepository geoLocationRepository;
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Behaviours.Games;
 using DataModels;
@@ -9,21 +8,20 @@ using DataModels.MatchModels;
 using UnityEngine;
 using Utilities;
 
-namespace Repositories.Local
+namespace Repositories.Local.SingleItem
 {
     [CreateAssetMenu(fileName = nameof(SelectedGameRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SelectedGameRepository), order = 0)]
     public sealed class SelectedGameRepository : ScriptableObject, IGameWinnerIdentifier
     {
-        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         public event Action<IReadOnlyList<MatchUserDownloadingData>> UsersDataUpdated;
         private const string Tag = nameof(SelectedGameRepository);
         private int _selectedGameId;
         private MatchUserDownloadingData[] _matchUsersData;
 
 
-        public GameDataModel SelectedGameData =>
-            userGamesRemoteRepository.ItemsData.First(gameData => gameData.Id == GameId);
+        //ToDo: Replace with final data source
+        public GameDataModel SelectedGameData => null;
 
         public bool GameHasStarted => DateTime.UtcNow >= SelectedGameData.StartedAt;
         public TimeSpan TimeTillGameStarts => SelectedGameData.StartedAt - DateTime.UtcNow;

@@ -5,7 +5,8 @@ using Common;
 
 namespace Repositories.Remote
 {
-    public abstract class BaseNotPaginatedListRepository<TDataType> : BaseItemsListRemoteRepository<TDataType>, INotifyCollectionChanged
+    public abstract class BaseNotPaginatedListRepository<TDataType, TRemoteRepository> : BaseItemsListRemoteRepository<TDataType, TRemoteRepository>,
+        INotifyCollectionChanged where TRemoteRepository : class, IRemoteRepositoryBase, new()
     {
         [NonSerialized] protected LiveData<TDataType> ItemsLiveData = new LiveData<TDataType>();
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -8,8 +7,6 @@ using DataModels.Extensions;
 using DataModels.Interfaces;
 using GlobalVariables;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
-using Repositories.Local;
 using RequestsStaticProcessors;
 using Tasking;
 using UnityEngine;
@@ -17,69 +14,16 @@ using Utilities;
 
 namespace Repositories.Remote
 {
-    public interface ISetReminderSAdCadExpiring
-    {
-        [JsonProperty(MainNames.ModelsPropertiesNames.SetReminderSAdCAdExpiring)]
-        bool SetReminderSAdCAdExpiring { get; set; }
-    }
-
-    public interface ICompanyName
-    {
-        [JsonProperty(MainNames.ModelsPropertiesNames.CompanyName)]
-        string CompanyName { get; set; }
-    }
-
-    public interface ICompanyEmail
-    {
-        [JsonProperty(MainNames.ModelsPropertiesNames.CompanyEmail)]
-        string CompanyEmail { get; set; }
-    }
-
     public interface IMerchantProfileSettingsModel : IUserProfileModel, ICompanyName, ICompanyEmail, ISlogan, ISetReminderSAdCadExpiring,
         ILogoImageUrl
     {
     }
-
-    public class MerchantProfileSettingsDataModel : IMerchantProfileSettingsModel
+    
+    public class MerchantProfileSettingsRepository : RemoteRepositoryBase, IMerchantProfileSettingsModel
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public int? Id { get; set; }
-        public string Role { get; set; }
-        public string Gender { get; set; }
-        public string Birthday { get; set; }
-        public string CountryCode { get; set; }
-        public string CurrencyCode { get; set; }
-        public int TokensBalance { get; set; }
-        public bool ShowAdsState { get; set; }
-        public bool ShowAlertsState { get; set; }
-        public bool ShowNotificationsState { get; set; }
-        public GeoLocation UserLocation { get; set; }
-        public string Avatar { get; set; }
-        public bool UserRadarState { get; set; }
-        public string CompanyName { get; set; }
-        public string CompanyEmail { get; set; }
-        public string Slogan { get; set; }
-        public bool SetReminderSAdCAdExpiring { get; set; }
-        public string LogoUrl { get; set; }
-    }
-
-    public interface IMerchantProfileSettings : IMerchantProfileSettingsModel
-    {
-        Sprite AvatarSprite { get; set; }
-        Sprite LogoSprite { get; set; }
-        string FirstName { get; set; }
-        string LastName { get; set; }
-    }
-
-    [CreateAssetMenu(fileName = nameof(MerchantProfileSettingsRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(MerchantProfileSettingsRepository), order = 0)]
-    public sealed class MerchantProfileSettingsRepository : RemoteRepositoryBase, INotifyPropertyChanged, IMerchantProfileSettings
-    {
-        private const string Tag = nameof(MerchantProfileSettingsRepository);
-
-        [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        public MerchantProfileSettingsRepository() : base(nameof(MerchantProfileSettingsRepository))
+        {
+        }
 
         private string _name;
         private string _email;
@@ -125,7 +69,7 @@ namespace Repositories.Remote
                         LastName = parts[1];
                     }
                 }
-               
+
                 OnPropertyChanged();
             }
         }
@@ -359,16 +303,16 @@ namespace Repositories.Remote
             }
         }
 
-        public string FirstName {  set; get; }
-        public string LastName {  set; get; }
+        public string FirstName { set; get; }
+        public string LastName { set; get; }
 
         public override async Task LoadDataFromServer()
         {
             CancelOngoingTask();
-            if (userAuthorisationDataRepository.UserRole != MainNames.UserRoles.BusinessOwner) return;
+            if (AuthorisationDataRepository.UserRole != MainNames.UserRoles.BusinessOwner) return;
             try
             {
-                var response = await ProfileDataStaticRequestsProcessor.GetMerchantProfileData(out _, userAuthorisationDataRepository);
+                var response = await ProfileDataStaticRequestsProcessor.GetMerchantProfileData(out _, AuthorisationDataRepository);
 
                 if (!response.Success) return;
 
@@ -376,9 +320,9 @@ namespace Repositories.Remote
                 this.Set(responseInterface.User);
 
                 if (!string.IsNullOrEmpty(LogoUrl))
-                    LogoSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(LogoUrl, TasksCancellationTokenSource.Token);
+                    LogoSprite = await DownloadedSpritesRepository.CreateLoadSpriteTask(LogoUrl, TasksCancellationTokenSource.Token);
                 if (!string.IsNullOrEmpty(Avatar))
-                    AvatarSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(Avatar, TasksCancellationTokenSource.Token);
+                    AvatarSprite = await DownloadedSpritesRepository.CreateLoadSpriteTask(Avatar, TasksCancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {

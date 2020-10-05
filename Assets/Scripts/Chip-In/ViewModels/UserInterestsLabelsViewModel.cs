@@ -14,7 +14,7 @@ namespace ViewModels
     public sealed class UserInterestsLabelsViewModel : CorrespondingViewsSwitchingViewModel<UserInterestsLabelsView>
     {
         [SerializeField] private InterestsBasicDataPaginatedListRepository interestsBasicDataPaginatedListRepository;
-        [SerializeField] private UserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
+        [SerializeField] private ScriptableUserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
         [SerializeField] private UserInterestsListAdapter userInterestsListAdapter;
 
         private int _selectedIndex;

@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.AsyncTasksManagement;
 using Controllers;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
@@ -9,29 +10,18 @@ namespace Behaviours
     [Binding]
     public abstract class AsyncOperationsMonoBehaviour : MonoBehaviour
     {
-        protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
-        protected ref DisposableCancellationTokenSource TasksCancellationTokenSource =>
-            ref AsyncOperationCancellationController.TasksCancellationTokenSource;
-        
-        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
+        private readonly AsyncOperationsBase _asyncOperationsBase = new AsyncOperationsBase();
 
-        private bool _awaitingProcess;
+        protected AsyncOperationCancellationController AsyncOperationCancellationController => _asyncOperationsBase.AsyncOperationCancellationController;
 
-        
-        public bool IsAwaitingProcess
+        protected ref DisposableCancellationTokenSource TasksCancellationTokenSource => ref AsyncOperationCancellationController.TasksCancellationTokenSource;
+
+        protected bool IsAwaitingProcess
         {
-            get => _awaitingProcess;
-            set
-            {
-                if (value == _awaitingProcess) return;
-                _awaitingProcess = value;
-                if (value)
-                    MainAwaitingProcessVisualizerControllerScriptable.Show();
-                else
-                    MainAwaitingProcessVisualizerControllerScriptable.Hide();
-            }
+            get => _asyncOperationsBase.IsAwaitingProcess;
+            set => _asyncOperationsBase.IsAwaitingProcess = value;
         }
-        
+
         private void OnDisable()
         {
             AsyncOperationCancellationController.CancelOngoingTask();

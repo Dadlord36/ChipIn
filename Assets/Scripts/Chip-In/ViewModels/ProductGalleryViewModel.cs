@@ -24,7 +24,7 @@ namespace ViewModels
         #region SerielizedFields
 
         [SerializeField] private InfoCardController infoCardController;
-        [SerializeField] private OffersRemoteRepository offersRemoteRepository;
+        [SerializeField] private ScriptableOffersRemoteRepository offersRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private GameIconsRepository gameIconsRepository;
@@ -137,7 +137,7 @@ namespace ViewModels
             base.OnEnable();
             ViewAsProductGalleryView.NewCategorySelected += OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected += OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded += OffersRemoteRepositoryOnCollectionChanged;
+            /*offersRemoteRepository.DataWasLoaded += OffersRemoteRepositoryOnCollectionChanged;*/
         }
 
 
@@ -146,7 +146,7 @@ namespace ViewModels
             base.OnDisable();
             ViewAsProductGalleryView.NewCategorySelected -= OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected -= OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded -= OffersRemoteRepositoryOnCollectionChanged;
+            /*offersRemoteRepository.DataWasLoaded -= OffersRemoteRepositoryOnCollectionChanged;*/
         }
 
         private void OffersRemoteRepositoryOnCollectionChanged()
@@ -166,7 +166,7 @@ namespace ViewModels
 
         private void FillDropdownListWithItemsOfCurrentCategory(string selectedCategory)
         {
-            var items = (from offerWithIdentifierData in offersRemoteRepository.ItemsData
+            /*var items = (from offerWithIdentifierData in offersRemoteRepository.ItemsData
                 where string.Equals(selectedCategory, offerWithIdentifierData.Segment, StringComparison.OrdinalIgnoreCase)
                 select new {offerWithIdentifierData.Id, offerWithIdentifierData.Title}).ToDictionary(arg => arg.Id, arg => arg.Title);
 
@@ -175,7 +175,7 @@ namespace ViewModels
                 LogUtility.PrintLog(Tag, $"There is no items of offers category \"{selectedCategory}\"");
             }
 
-            ViewAsProductGalleryView.FillDropdownList(items);
+            ViewAsProductGalleryView.FillDropdownList(items);*/
         }
 
         protected override async void OnBecomingActiveView()
@@ -183,7 +183,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await offersRemoteRepository.LoadDataFromServer();
+                /*await offersRemoteRepository.LoadDataFromServer();*/
             }
             catch (Exception e)
             {

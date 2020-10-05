@@ -15,9 +15,19 @@ namespace Repositories.Local
         bool IsLoggedIn { get; }
     }
 
+    public interface ISessionStateRepository : ILoginState
+    {
+        event Action SigningOut;
+        event Action SignedIn;
+        string UserRole { get; }
+        void SetLoginState(in string loginAsRole);
+        Task SignOut();
+        void ConfirmSingingIn();
+    }
+
     [CreateAssetMenu(fileName = nameof(SessionStateRepository),
         menuName = nameof(Repositories) + "/" + nameof(Local) + "/" + nameof(SessionStateRepository), order = 0)]
-    public sealed class SessionStateRepository : AsyncOperationsScriptableObject, ILoginState
+    public sealed class SessionStateRepository : AsyncOperationsScriptableObject, ISessionStateRepository
     {
         private const string Tag = nameof(SessionStateRepository);
         

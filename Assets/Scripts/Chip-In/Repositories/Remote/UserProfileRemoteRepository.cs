@@ -1,28 +1,38 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Common.Structures;
 using Controllers;
 using DataModels;
 using DataModels.Extensions;
+using DataModels.Interfaces;
+using Factories.ReferencesContainers;
 using Newtonsoft.Json;
 using Repositories.Local;
 using RequestsStaticProcessors;
 using UnityEngine;
 using Utilities;
-using IUserProfileModel = DataModels.Interfaces.IUserProfileModel;
 
 namespace Repositories.Remote
 {
-    [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
-        INotifyPropertyChanged
+    public interface IUserProfileRemoteRepository : IUserProfileModel, IClearable, INotifyPropertyChanged
     {
-        private const string Tag = nameof(UserProfileRemoteRepository);
+        Sprite UserAvatarSprite { get; set; }
+        bool DataIsLoaded { get; }
+        void SubscribeOnEvents();
+        void UnsubscribeFromEvents();
+        Task LoadDataFromServer();
+        event Action DataWasLoaded;
+        event Action DataWasSaved;
+        void OnDataWasLoaded();
+        void OnDataWasSaved();
+    }
 
-        [SerializeField] private GeoLocationRepository geoLocationRepository;
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+    public class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileRemoteRepository
+    {
+        public UserProfileRemoteRepository() : base(nameof(UserProfileRemoteRepository))
+        {
+        }
 
         private UserProfileDataModel _userProfileDataModel = new UserProfileDataModel();
         private IUserProfileModel UserProfileDataRemote => _userProfileDataModel;
@@ -141,15 +151,14 @@ namespace Repositories.Remote
             UserRadarState = value;
         }
 
-        private void OnEnable()
+        public void SubscribeOnEvents()
         {
-            geoLocationRepository.LocationServiceActivityChanged += SetRadarActivityState;
+            DataRepositoriesReferencesContainer.GetObjectInstance<IGeoLocationRepository>().LocationServiceActivityChanged += SetRadarActivityState;
         }
 
-
-        private void OnDisable()
+        public void UnsubscribeFromEvents()
         {
-            geoLocationRepository.LocationServiceActivityChanged -= SetRadarActivityState;
+            DataRepositoriesReferencesContainer.GetObjectInstance<IGeoLocationRepository>().LocationServiceActivityChanged -= SetRadarActivityState;
         }
 
         public override async Task LoadDataFromServer()
@@ -158,13 +167,14 @@ namespace Repositories.Remote
             _cancellationController.CancelOngoingTask();
 
             var response = await ProfileDataStaticRequestsProcessor.GetUserProfileData(out _cancellationController.TasksCancellationTokenSource,
-                authorisationDataRepository).ConfigureAwait(true);
+                AuthorisationDataRepository).ConfigureAwait(true);
             if (!response.Success) return;
 
             var responseInterface = response.ResponseModelInterface;
-            
+
             UserProfileDataRemote.Set(responseInterface);
-            UserAvatarSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(Avatar, _cancellationController.CancellationToken)
+            UserAvatarSprite = await MainObjectsReferencesContainer.GetObjectInstance<IDownloadedSpritesRepository>()
+                .CreateLoadSpriteTask(Avatar, _cancellationController.CancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -172,13 +182,13 @@ namespace Repositories.Remote
         {
             base.ConfirmDataLoading();
             _isLoadingData = false;
-            LogUtility.PrintLog(Tag, $"User profile data was loaded from server: {JsonConvert.SerializeObject(UserProfileDataRemote)}" , this);
+            LogUtility.PrintLog(Tag, $"User profile data was loaded from server: {JsonConvert.SerializeObject(UserProfileDataRemote)}");
         }
 
         protected override void ConfirmDataSaved()
         {
             base.ConfirmDataSaved();
-            LogUtility.PrintLog(Tag, "User profile data was saved to server", this);
+            LogUtility.PrintLog(Tag, "User profile data was saved to server");
         }
 
         void IClearable.Clear()

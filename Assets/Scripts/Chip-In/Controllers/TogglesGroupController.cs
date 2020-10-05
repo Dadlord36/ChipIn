@@ -59,7 +59,6 @@ namespace Controllers
             }
         }
 
-
         private void SwitchOffOtherToggles(INotifySelectionWithIdentifier option)
         {
             SelectedItemIndex = option.Index;

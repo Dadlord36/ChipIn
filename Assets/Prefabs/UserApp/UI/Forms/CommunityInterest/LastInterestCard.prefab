@@ -529,6 +529,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5063549054449450526}
+  - component: {fileID: 9103749071739346118}
+  - component: {fileID: 7256148622475441583}
+  - component: {fileID: 2379764377374930563}
   m_Layer: 5
   m_Name: LastInterestCard
   m_TagString: Untagged
@@ -557,6 +560,73 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 302, y: 541}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9103749071739346118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7711425458313850153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e48c530cfdd6488dac901a236d1b7d61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonClicked:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!223 &7256148622475441583
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7711425458313850153}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &2379764377374930563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7711425458313850153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &4935661793599558901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8897211565662945112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelMethodName: ViewModels.Cards.NoInterestsCardViewModel.CreateInterestButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1001 &7756973917227083599
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -701,6 +771,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7efec85f9a5601d46afabc244efa5b4c, type: 3}
+--- !u!1 &8897211565662945112 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1215814027039234071, guid: 7efec85f9a5601d46afabc244efa5b4c,
+    type: 3}
+  m_PrefabInstance: {fileID: 7756973917227083599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7493196965725773132 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 890411305936419331, guid: 7efec85f9a5601d46afabc244efa5b4c,

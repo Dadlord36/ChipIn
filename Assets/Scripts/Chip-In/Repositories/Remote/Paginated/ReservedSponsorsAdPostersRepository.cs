@@ -7,21 +7,21 @@ using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using RequestsStaticProcessors;
-using UnityEngine;
 
 namespace Repositories.Remote.Paginated
 {
-    [CreateAssetMenu(fileName = nameof(ReservedSponsorsAdPostersRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(Paginated) + "/" + nameof(ReservedSponsorsAdPostersRepository), order = 0)]
     public class ReservedSponsorsAdPostersRepository : PaginatedItemsListRepository<SponsoredPosterDataModel, SponsorsPostersResponseDataModel,
         ISponsorsPostersResponseModel>
     {
-        protected override string Tag => nameof(ReservedSponsorsAdPostersRepository);
+        public ReservedSponsorsAdPostersRepository() : base(nameof(ReservedSponsorsAdPostersRepository))
+        {
+        }
 
         protected override Task<BaseRequestProcessor<object, SponsorsPostersResponseDataModel, ISponsorsPostersResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
         {
-            return AdvertStaticRequestsProcessor.GetAllReservedAdPosters(out cancellationTokenSource, authorisationDataRepository, paginatedRequestData);
+            return AdvertStaticRequestsProcessor.GetAllReservedAdPosters(out cancellationTokenSource, AuthorisationDataRepositoryHeaders,
+                paginatedRequestData);
         }
 
         protected override List<SponsoredPosterDataModel> GetItemsFromResponseModelInterface(ISponsorsPostersResponseModel responseModelInterface)

@@ -14,7 +14,7 @@ namespace ViewModels
     [Binding]
     public class UserInterestPagesViewModel : CorrespondingViewsSwitchingViewModel<UserInterestPagesView>
     {
-        [SerializeField] private UserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
+        [SerializeField] private ScriptableUserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
 
         #region Controlled List Adapters
 
@@ -46,6 +46,13 @@ namespace ViewModels
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
+
+        [Binding]
+        public void SwitchToStartAnInterestForm()
+        {
+            SwitchToView(nameof(StartAnInterestView));
+        }
+        
 
         protected override async void OnBecomingActiveView()
         {

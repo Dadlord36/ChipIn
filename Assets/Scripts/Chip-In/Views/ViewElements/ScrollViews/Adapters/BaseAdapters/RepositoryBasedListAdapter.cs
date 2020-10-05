@@ -23,13 +23,13 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         Task ResetAsync();
     }
 
+
     [Binding]
-    public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
-        TFillingViewAdapter> :
+    public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter> :
         BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>, IResettableAsync
         where TDataType : class
         where TViewConsumableData : class
-        where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
+        where TRepository : class, IPaginatedItemsListRepository<TDataType>, ISyncData
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
@@ -72,8 +72,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             _fetching = _allItemsAreFetched = false;
             _retrievingItemsStartingIndex = 0;
+            ItemsListIsNotEmpty = true;
         }
-
 
         private bool DecideIfAlternativeFormShouldBeUsed(AbstractViewsHolder baseItemViewsHolder)
         {
@@ -121,6 +121,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             {
                 Data.RemoveItemsFromStart(Data.Count);
             }
+
             Refresh();
         }
 
@@ -133,13 +134,19 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             ResetStateVariables();
             ClearRemainListItems();
-            
+
             try
             {
                 OnStartedFetching();
                 await pagesPaginatedRepository.LoadDataFromServer().ConfigureAwait(false);
                 LogUtility.PrintLog(Tag, $"List Items Total Capacity: {TotalCapacity.ToString()}");
-                ItemsListIsNotEmpty = TotalCapacity > 0;
+
+                void CheckIfItemsListIsNotEmpty()
+                {
+                    ItemsListIsNotEmpty = TotalCapacity > 0;
+                }
+
+                CheckIfItemsListIsNotEmpty();
 
                 if (ItemsListIsNotEmpty && allowedToFetchAllItems)
                 {
@@ -159,24 +166,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 throw;
             }
         }
-
-        /*protected override async void OnInitialized()
-        {
-            base.OnInitialized();
-            try
-            {
-                await ResetAsync();
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }*/
 
         private void SetInteractivity(bool state)
         {

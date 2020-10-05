@@ -6,6 +6,7 @@ using Behaviours;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Factories;
+using Factories.ReferencesContainers;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Tasking;
@@ -71,7 +72,7 @@ namespace ViewModels.Cards
             Description = dataBaseIndex.ToString();
             try
             {
-                AdIcon = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>()
+                AdIcon = await MainObjectsReferencesContainer.GetObjectInstance<IDownloadedSpritesRepository>()
                     .CreateLoadSpriteTask(dataModel.AdIconUrl, AsyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }

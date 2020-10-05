@@ -19,7 +19,7 @@ namespace Repositories.Remote
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
+        [SerializeField] private ScriptableUserProfileRemoteRepository userProfileRemoteRepository;
         private uint _amount;
 
 

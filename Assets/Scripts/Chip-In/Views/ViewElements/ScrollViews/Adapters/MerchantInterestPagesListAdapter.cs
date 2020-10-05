@@ -10,7 +10,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public sealed class MerchantInterestPagesListAdapter : SelectableElementsPagesListAdapter<MerchantInterestPagesPaginatedRepository,
+    public sealed class MerchantInterestPagesListAdapter : SelectableElementsPagesListAdapter<ScriptableMerchantInterestPagesPaginatedRepository,
         MerchantInterestPageDataModel, DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>,
         NameAndNumberSelectableFieldFillingData,MerchantInterestPagesListAdapter.MerchantInterestPageDataAdapter>
     {

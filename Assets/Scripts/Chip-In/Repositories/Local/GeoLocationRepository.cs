@@ -4,6 +4,8 @@ using ActionsTranslators;
 using Common.Structures;
 using Common.Timers;
 using DataModels;
+using DataModels.HttpRequestsHeadersModels;
+using Factories.ReferencesContainers;
 using GlobalVariables;
 using PermissionsGainers;
 using Repositories.Remote;
@@ -14,10 +16,19 @@ using Utilities;
 
 namespace Repositories.Local
 {
+    public interface IGeoLocationRepository : IUpdatable
+    {
+        event Action<bool> LocationServiceActivityChanged;
+        bool UseGeoLocation { get; }
+        void SetLocationServiceActivity(bool activity);
+    }
+
     [CreateAssetMenu(fileName = nameof(GeoLocationRepository), menuName = nameof(Repositories) + "/" + nameof(Local) +
                                                                           "/" + nameof(GeoLocationRepository), order = 0)]
-    public sealed class GeoLocationRepository : AsyncOperationsScriptableObject, IUpdatable
+    public sealed class GeoLocationRepository : AsyncOperationsScriptableObject, IGeoLocationRepository
     {
+        private const string Tag = nameof(GeoLocationRepository);
+
         #region Private classes
 
         private class UserGeoLocationDataModel : IUserGeoLocation
@@ -27,25 +38,26 @@ namespace Repositories.Local
 
         #endregion
 
-        private const string Tag = nameof(GeoLocationRepository);
-
         #region Serialized fields
 
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
-        [SerializeField] private SessionStateRepository sessionStateRepository;
         [SerializeField] private float locationSaveInterval = 20f;
 
         #endregion
 
-        private readonly TimerController _timerController = new TimerController();
         private bool _shouldUpdateTimer;
-        private readonly UserGeoLocationDataModel _userGeoLocationData = new UserGeoLocationDataModel();
-
-
-        private static LocationInfo LastLocationData => Input.location.lastData;
-        private static bool UseOfDeviceLocationServiceIsAllowed => Input.location.isEnabledByUser;
         private bool _useGeoLocation;
+        private readonly TimerController _timerController = new TimerController();
+        private readonly UserGeoLocationDataModel _userGeoLocationData = new UserGeoLocationDataModel();
+        private static bool UseOfDeviceLocationServiceIsAllowed => Input.location.isEnabledByUser;
+        private static LocationInfo LastLocationData => Input.location.lastData;
+
+        private static IRequestHeaders UserAuthorizationRequestHeaders =>
+            MainObjectsReferencesContainer.GetObjectInstance<IUserAuthorisationDataRepository>();
+
+        private static IUserProfileRemoteRepository UserProfileRemoteRepository =>
+            DataRepositoriesReferencesContainer.GetObjectInstance<IUserProfileRemoteRepository>();
+
+        private static ISessionStateRepository SessionStateRepository => DataRepositoriesReferencesContainer.GetObjectInstance<ISessionStateRepository>();
 
         public event Action<bool> LocationServiceActivityChanged;
 
@@ -74,16 +86,16 @@ namespace Repositories.Local
 
         private void OnUserProfileDataWasLoaded()
         {
-            if (userProfileRemoteRepository.Role == MainNames.UserRoles.BusinessOwner) return;
-            if (!userProfileRemoteRepository.UserRadarState) return;
+            if (UserProfileRemoteRepository.Role == MainNames.UserRoles.BusinessOwner) return;
+            if (!UserProfileRemoteRepository.UserRadarState) return;
 
             if (!UseOfDeviceLocationServiceIsAllowed)
             {
-                userProfileRemoteRepository.UserRadarState = false;
+                UserProfileRemoteRepository.UserRadarState = false;
                 return;
             }
 
-            SetLocationServiceActivity(userProfileRemoteRepository.UserRadarState);
+            SetLocationServiceActivity(UserProfileRemoteRepository.UserRadarState);
         }
 
         private void InitializeLocationService()
@@ -95,18 +107,39 @@ namespace Repositories.Local
 
         private void OnEnable()
         {
-            _timerController.Elapsed += OnTimerElapsed;
-            sessionStateRepository.SigningOut += DisableLocationService;
-            userProfileRemoteRepository.DataWasLoaded += OnUserProfileDataWasLoaded;
+            Activate();
         }
 
         private void OnDisable()
         {
-            _timerController.Elapsed -= OnTimerElapsed;
-            sessionStateRepository.SigningOut -= DisableLocationService;
-            userProfileRemoteRepository.DataWasLoaded -= OnUserProfileDataWasLoaded;
+            Deactivate();
+        }
+
+        private void Activate()
+        {
+            SubscribeOnEvents();
+        }
+
+        private void Deactivate()
+        {
+            UnsubscribeFromEvents();
             DisableLocationService();
         }
+
+        private void SubscribeOnEvents()
+        {
+            _timerController.Elapsed += OnTimerElapsed;
+            SessionStateRepository.SigningOut += DisableLocationService;
+            UserProfileRemoteRepository.DataWasLoaded += OnUserProfileDataWasLoaded;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            _timerController.Elapsed -= OnTimerElapsed;
+            SessionStateRepository.SigningOut -= DisableLocationService;
+            UserProfileRemoteRepository.DataWasLoaded -= OnUserProfileDataWasLoaded;
+        }
+
 
         private void TryToStartLocationService()
         {
@@ -179,6 +212,7 @@ namespace Repositories.Local
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             RestartTimer();
         }
 
@@ -205,7 +239,7 @@ namespace Repositories.Local
             try
             {
                 var result = await ProfileDataStaticRequestsProcessor.UpdateUserPosition(out TasksCancellationTokenSource,
-                    authorisationDataRepository, _userGeoLocationData);
+                    UserAuthorizationRequestHeaders, _userGeoLocationData);
 
                 if (result.Success)
                     LogUtility.PrintLog(Tag, $"New  geolocation {_userGeoLocationData.UserLocation} was saved to server");

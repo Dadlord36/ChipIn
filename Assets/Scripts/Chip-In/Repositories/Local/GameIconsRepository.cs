@@ -20,14 +20,12 @@ namespace Repositories.Local
         Task Restore();
     }
 
-    [CreateAssetMenu(fileName = nameof(GameIconsRepository), menuName =
-        nameof(Repositories) + "/" + nameof(Local) + "/" +
-        nameof(GameIconsRepository), order = 0)]
+    [CreateAssetMenu(fileName = nameof(GameIconsRepository), menuName = nameof(Repositories) + "/" + nameof(Local) + "/" +
+                                                                        nameof(GameIconsRepository), order = 0)]
     public sealed class GameIconsRepository : ScriptableObject, IRestorable
     {
         #region Serialized fields
-
-        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+        
 
         #endregion
 
@@ -131,12 +129,12 @@ namespace Repositories.Local
 
         private void OnEnable()
         {
-            userGamesRemoteRepository.DataWasLoaded += UserGamesRemoteRepositoryOnDataWasLoaded;
+          
         }
 
         private void OnDisable()
         {
-            userGamesRemoteRepository.DataWasLoaded -= UserGamesRemoteRepositoryOnDataWasLoaded;
+         
         }
 
         #endregion
@@ -149,7 +147,8 @@ namespace Repositories.Local
 
         private void RemoveUnneededIconsSets()
         {
-            var userGamesInRepository = userGamesRemoteRepository.ItemsData;
+            /*var userGamesInRepository = userGamesRemoteRepository.ItemsData;
+            
             var userSavedGames = _boardIconsSetsContainer.BoardIconsSets;
             for (int i = 0; i < userSavedGames.Count; i++)
             {
@@ -170,7 +169,7 @@ namespace Repositories.Local
                 }
 
                 return false;
-            }
+            }*/
         }
 
         public async Task StoreNewGameIconsSet(int gameId, IReadOnlyList<IndexedUrl> indexedUrls)

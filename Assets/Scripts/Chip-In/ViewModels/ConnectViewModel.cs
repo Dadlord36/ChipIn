@@ -13,10 +13,10 @@ namespace ViewModels
     public sealed class ConnectViewModel : ViewsSwitchingViewModel
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
-        [SerializeField] private AdvertsPaginatedListRepository advertsPaginatedListRepository;
+        [SerializeField] private ScriptableAdvertsPaginatedListRepository advertsPaginatedListRepository;
         
-        [SerializeField] private SponsorsAdPostersRepository sponsoredAdPostersRepository;
-        [SerializeField] private ReservedSponsorsAdPostersRepository reservedSponsoredAdRepository;
+        [SerializeField] private ScriptableSponsorsAdPostersRepository sponsoredAdPostersRepository;
+        [SerializeField] private ScriptableReservedSponsorsAdPostersRepository reservedSponsoredAdRepository;
 
         [SerializeField] private SponsorsAdPostersListAdapter sponsorsAdPostersListAdapter;
         [SerializeField] private ReservedSponsorsAdPostersListAdapter reservedSponsoredAdListAdapter;

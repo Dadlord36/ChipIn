@@ -12,7 +12,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class SponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<SponsorsAdPostersRepository, SponsoredPosterDataModel,
+    public class SponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<ScriptableSponsorsAdPostersRepository, SponsoredPosterDataModel,
         DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
         SponsorsAdPostersListAdapter.SponsoredAdFillingViewAdapter>
     {

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Controllers;
 using Factories;
+using Factories.ReferencesContainers;
 using RestSharp;
 using UnityEngine.Assertions;
 using Utilities;
@@ -94,7 +95,7 @@ namespace HttpRequests
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
+                await MainObjectsReferencesContainer.GetObjectInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
             }
             LogUtility.PrintLog(Tag, response.ToString());
             return response;

@@ -5,6 +5,7 @@ using DataModels.Interfaces;
 using DataModels.ResponsesModels;
 using HttpRequests.RequestsProcessors;
 using Repositories.Local;
+using Repositories.Local.SingleItem;
 using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
@@ -19,7 +20,6 @@ namespace ViewModels
     public sealed class MyChallengeViewModel : BaseItemsListViewModel<MyChallengeView>
     {
         [SerializeField] private SelectedGameRepository selectedGameRepository;
-        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         [SerializeField] private InfoCardController infoCardController;
 
 
@@ -68,13 +68,13 @@ namespace ViewModels
 
         protected override void OnItemsListUpdated()
         {
-            var itemsList = userGamesRemoteRepository.ItemsData;
+            /*var itemsList = userGamesRemoteRepository.ItemsData;
             //Set first game id as selected in list
             if (itemsList.Count > 0)
             {
                 SelectedGameId = itemsList[0].Id;
                 ItemIsSelected = true;
-            }
+            }*/
         }
 
         protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
@@ -87,9 +87,9 @@ namespace ViewModels
         {
             try
             {
-                var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
+                /*var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
                 var offer = responseModel.ResponseModelInterface.Offer;
-                await infoCardController.ShowCard(offer, offer, offer, offer);
+                await infoCardController.ShowCard(offer, offer, offer, offer);*/
             }
             catch (Exception e)
             {
@@ -100,7 +100,8 @@ namespace ViewModels
 
         private Task LoadGamesList()
         {
-            return userGamesRemoteRepository.LoadDataFromServer();
+            /*return userGamesRemoteRepository.LoadDataFromServer();*/
+            return Task.CompletedTask;
         }
 
         protected override async Task LoadDataAndFillTheList()
@@ -121,7 +122,7 @@ namespace ViewModels
         {
             try
             {
-                var itemsList = userGamesRemoteRepository.ItemsData;
+                /*var itemsList = userGamesRemoteRepository.ItemsData;
 
                 var tasks = new List<Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>>(itemsList.Count);
 
@@ -138,7 +139,7 @@ namespace ViewModels
                     itemsNamesDictionary.Add(itemsList[i].Id, correspondingOffers[i].ResponseModelInterface.Offer.Title);
                 }
 
-                FillDropdownList(itemsNamesDictionary);
+                FillDropdownList(itemsNamesDictionary);*/
             }
             catch (Exception e)
             {

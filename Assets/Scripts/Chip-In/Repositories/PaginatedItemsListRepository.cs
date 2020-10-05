@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using Common;
 using Common.AsyncTasksManagement;
 using DataModels.Common;
+using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
+using Factories.ReferencesContainers;
 using HttpRequests.RequestsProcessors;
 using Repositories.Interfaces;
 using Repositories.Remote;
@@ -13,8 +15,26 @@ using Utilities;
 
 namespace Repositories
 {
-    public abstract class PaginatedItemsListRepository<TDataType, TRequestResponseDataModel,
-        TRequestResponseModelInterface> : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
+    public interface
+        IPaginatedItemsListRepositoryBase<TDataType> : IPaginatedItemsListRepository<TDataType>,ISyncData
+        where TDataType : class
+    {
+        void CancelAllTasks();
+    }
+
+    public abstract class NonPaginatedListRepository<TDataType, TRequestResponseDataModel, TRequestResponseModelInterface> : RemoteRepositoryBase
+        where TDataType : class
+        where TRequestResponseDataModel : class, TRequestResponseModelInterface
+        where TRequestResponseModelInterface : class
+    {
+        protected NonPaginatedListRepository(in string tag) : base(tag)
+        {
+        }
+    }
+
+    [Serializable]
+    public abstract class PaginatedItemsListRepository<TDataType, TRequestResponseDataModel, TRequestResponseModelInterface> :
+        RemoteRepositoryBase, IPaginatedItemsListRepositoryBase<TDataType>
         where TDataType : class
         where TRequestResponseDataModel : class, TRequestResponseModelInterface
         where TRequestResponseModelInterface : class
@@ -22,13 +42,17 @@ namespace Repositories
         [Space(25f)] [SerializeField] protected int itemsPerPage;
         [SerializeField] protected byte maxCachedPagesCount;
         [SerializeField] protected byte pagesPortion;
-        [SerializeField] protected UserAuthorisationDataRepository authorisationDataRepository;
 
         [NonSerialized] private PaginatedList<TDataType> _paginatedData = new PaginatedList<TDataType>();
 
+        protected IRequestHeaders AuthorisationDataRepositoryHeaders =>
+            MainObjectsReferencesContainer.GetObjectInstance<IUserAuthorisationDataRepository>();
+
         private TaskManager<uint> PagesLoadingTaskManager { get; set; } = new TaskManager<uint>();
 
-        protected abstract string Tag { get; }
+        protected PaginatedItemsListRepository(in string tag) : base(tag)
+        {
+        }
 
         private List<DisposableCancellationTokenSource> GoingTasksCancellationTokenSources { get; } =
             new List<DisposableCancellationTokenSource>();
@@ -204,7 +228,7 @@ namespace Repositories
             TotalPages = paginatedResponseInterface.Paginated.Total;
 
             var lastPageResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(TotalPages, itemsPerPage))
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             if (!CheckIfRequestIsSuccessful(lastPageResponse))
             {
@@ -223,7 +247,7 @@ namespace Repositories
             LastPageItemsNumber = (uint) latsPageItems.Count;
 
             TotalItemsNumber = (uint) (((TotalPages - 1) * itemsPerPage) + LastPageItemsNumber);
-            
+
             _paginatedData.FillPageWithItems(initialPage, GetItemsFromResponseModelInterface(responseModelInterface));
 
             if (TotalPages - 1 < 1) return;
@@ -255,8 +279,6 @@ namespace Repositories
 
         #region Private Methods
 
-        private Task _goingOnTask;
-
         private void GetResponseItemsAndFillPaginatedData(TRequestResponseModelInterface responseModelInterface)
         {
             var pageNumber = (uint) ((IPaginatedResponse) responseModelInterface).Paginated.Page;
@@ -268,7 +290,6 @@ namespace Repositories
         private void RegisterAsyncTaskExecution(Task task, IEnumerable<DisposableCancellationTokenSource> cancellationTokenSources)
         {
             GoingTasksCancellationTokenSources.AddRange(cancellationTokenSources);
-            _goingOnTask = task;
         }
 
         private void RegisterAsyncTaskExecution(Task task, DisposableCancellationTokenSource cancellationTokenSource)

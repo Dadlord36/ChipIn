@@ -10,13 +10,20 @@ namespace RequestsStaticProcessors
 {
     public static class UsersRequestsStaticProcessor
     {
-        public static
-            Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
+        public static Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
             GetUsersList(out DisposableCancellationTokenSource cancellationTokensSource, IRequestHeaders requestHeaders,
                 PaginatedRequestData paginatedRequestData)
         {
-            return new UsersListGetProcessor(out cancellationTokensSource, requestHeaders, paginatedRequestData).SendRequest(
-                "Users list was retrieved successfully");
+            return new UsersListGetProcessor(out cancellationTokensSource, requestHeaders, paginatedRequestData)
+                .SendRequest("Users list was retrieved successfully");
+        }
+
+        public static Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
+            GetUserDataByName(out DisposableCancellationTokenSource cancellationTokensSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData, in string userName)
+        {
+            return new UsersListGetProcessor(out cancellationTokensSource, requestHeaders, paginatedRequestData, userName)
+                .SendRequest("User data was retrieved successfully");
         }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Controllers
 {
-    [RequireComponent(typeof(Image))]
+    /*[RequireComponent(typeof(Image))]*/
     public class IconSizeFitterController : UIBehaviour
     {
         protected override void Awake()

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using Factories;
+using Factories.ReferencesContainers;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Tasking;
@@ -73,7 +73,7 @@ namespace ViewModels.Cards
         {
             try
             {
-                var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
+                var downloadedSpritesRepository = MainObjectsReferencesContainer.GetObjectInstance<IDownloadedSpritesRepository>();
                 _asyncOperationCancellationController.CancelOngoingTask();
                 
                 Icon = downloadedSpritesRepository.IconPlaceholder;

@@ -19,7 +19,7 @@ namespace ViewModels
     [Binding]
     public sealed class EditProfileViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private UserProfileRemoteRepository userProfileRemoteRepository;
+        [SerializeField] private ScriptableUserProfileRemoteRepository userProfileRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
 

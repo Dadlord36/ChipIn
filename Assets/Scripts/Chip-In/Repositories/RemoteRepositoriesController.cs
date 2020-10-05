@@ -1,6 +1,7 @@
 ﻿using DataModels;
 using DataModels.ResponsesModels;
 using GlobalVariables;
+using Repositories.Interfaces;
 using Repositories.Local;
 using Repositories.Remote;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Repositories
     {
         [SerializeField] private SessionStateRepository sessionStateRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private RemoteRepositoryBase[] remoteRepositories;
+        [SerializeField] private ScriptableObject[] remoteRepositories;
 
         public void SetAuthorisationDataAndInvokeRepositoriesLoading(ILoginResponseModel loginModel)
         {
@@ -33,7 +34,7 @@ namespace Repositories
         {
             for (int i = 0; i < remoteRepositories.Length; i++)
             {
-                remoteRepositories[i].LoadDataFromServer();
+                (remoteRepositories[i] as ISyncData)?.LoadDataFromServer();
             }
         }
     }

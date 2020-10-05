@@ -38,7 +38,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected SimpleDataHelper<TDataType> Data;
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
-        private bool _itemsListIsNotEmpty;
+        private bool _itemsListIsNotEmpty = true;
         protected int MiddleElementNumber;
         private BaseItemViewsHolder _middleItem;
 
@@ -49,12 +49,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             get => _itemsListIsNotEmpty;
             set
             {
-                TasksFactories.ExecuteOnMainThread(() =>
-                {
-                    _itemsListIsNotEmpty = value;
-                    OnPropertyChanged();
-                    OnListFillingStateChanged(value);
-                });
+                _itemsListIsNotEmpty = value;
+                OnPropertyChanged();
+                OnListFillingStateChanged(value);
             }
         }
 
@@ -177,11 +174,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         #endregion
 
-        private void OnListFillingStateChanged(bool obj)
-        {
-            listFillingStateChanged.Invoke(obj);
-        }
-
+        
         protected void FindMiddleElement()
         {
             MiddleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
@@ -194,6 +187,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+        }
+        
+        private void OnListFillingStateChanged(bool state)
+        {
+            TasksFactories.ExecuteOnMainThread(() => { listFillingStateChanged.Invoke(state); });
         }
     }
 }

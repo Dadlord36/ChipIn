@@ -12,21 +12,21 @@ using Utilities;
 
 namespace Repositories.Remote
 {
-    [CreateAssetMenu(fileName = nameof(CommunitiesDetailsDataRepository),
-        menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunitiesDetailsDataRepository), order = 0)]
-    public sealed class CommunitiesDetailsDataRepository : BaseNotPaginatedListRepository<MarketInterestDetailsDataModel>
+    [CreateAssetMenu(fileName = nameof(CommunitiesDetailsDataRepository), menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(CommunitiesDetailsDataRepository), order = 0)]
+    public sealed class CommunitiesDetailsDataRepository : ScriptableObject
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
 
 
-        public override async Task LoadDataFromServer()
+        public  async Task LoadDataFromServer()
         {
-            try
+            /*try
             {
                 var result = await CommunitiesStaticRequestsProcessor.GetCommunitiesList(out TasksCancellationTokenSource,
                     authorisationDataRepository);
                 var responseInterface = result.ResponseModelInterface;
-                var items = await LoadCommunitiesDetailsData(responseInterface.Communities).ConfigureAwait(false);
+                var items = await LoadCommunitiesDetailsData(responseInterface.Communities)
+                    .ConfigureAwait(false);
                 ItemsLiveData = new LiveData<MarketInterestDetailsDataModel>(items);
                 ConfirmDataLoading();
             }
@@ -35,12 +35,12 @@ namespace Repositories.Remote
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
 
         private async Task<MarketInterestDetailsDataModel[]> LoadCommunitiesDetailsData(IReadOnlyList<InterestBasicDataModel> communitiesBasicData)
         {
-            var count = communitiesBasicData.Count;
+            /*var count = communitiesBasicData.Count;
 
             var tasks = new Task<BaseRequestProcessor<object, InterestDetailsResponseDataModel, IInterestDetailsResponseModel>.HttpResponse>[count];
 
@@ -66,7 +66,9 @@ namespace Repositories.Remote
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
+
+            return null;
         }
     }
 }

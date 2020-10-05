@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Common.Structures;
+using DataModels.Interfaces;
 using GlobalVariables;
 using Repositories.Remote;
 using RequestsStaticProcessors;
@@ -15,7 +16,7 @@ namespace ViewModels
     [Binding]
     public sealed class AccessViewModel : ViewsSwitchingViewModel, IMerchantProfileSettings, INotifyPropertyChanged
     {
-        [SerializeField] private MerchantProfileSettingsRepository merchantProfileSettingsRepository;
+        [SerializeField] private ScriptableMerchantProfileSettingsRepository merchantProfileSettingsRepository;
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
 
         private IMerchantProfileSettings MerchantProfileSettingsModelImplementation => merchantProfileSettingsRepository;

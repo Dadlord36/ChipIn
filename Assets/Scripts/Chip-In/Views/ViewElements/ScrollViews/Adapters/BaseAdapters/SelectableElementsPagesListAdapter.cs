@@ -15,7 +15,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         TFillingViewAdapter> : RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>
         where TDataType : class
         where TViewConsumableData : class
-        where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
+        where TRepository : class, IPaginatedItemsListRepository<TDataType>, ISyncData
         where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>,IIdentifiedSelection,  new()
         where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
     {

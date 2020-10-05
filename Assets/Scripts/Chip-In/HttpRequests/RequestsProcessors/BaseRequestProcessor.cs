@@ -11,6 +11,7 @@ using Common;
 using Controllers;
 using DataModels.HttpRequestsHeadersModels;
 using Factories;
+using Factories.ReferencesContainers;
 using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Utilities;
@@ -144,7 +145,7 @@ namespace HttpRequests.RequestsProcessors
                     {
                         if (responseMessage.StatusCode == HttpStatusCode.Unauthorized)
                         {
-                            await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
+                            await MainObjectsReferencesContainer.GetObjectInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
                         }
                         try
                         {

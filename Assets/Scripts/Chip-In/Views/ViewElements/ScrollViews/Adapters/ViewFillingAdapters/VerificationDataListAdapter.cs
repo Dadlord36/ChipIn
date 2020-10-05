@@ -9,7 +9,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
 {
     [Binding]
-    public class VerificationDataListAdapter : RepositoryBasedListAdapter<MerchantVerificationRepository, VerificationDataModel,
+    public class VerificationDataListAdapter : RepositoryBasedListAdapter<ScriptableMerchantVerificationRepository, VerificationDataModel,
         DefaultFillingViewPageViewHolder<VerificationItemViewModel.FieldFillingData>, VerificationItemViewModel.FieldFillingData, 
         VerificationDataListAdapter.VerificationDataFillingViewAdapter>
     {

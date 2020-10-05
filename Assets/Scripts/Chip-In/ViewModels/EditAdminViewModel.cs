@@ -4,7 +4,9 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Common;
 using Common.Structures;
+using DataModels;
 using DataModels.Extensions;
+using DataModels.Interfaces;
 using GlobalVariables;
 using JetBrains.Annotations;
 using Repositories.Remote;
@@ -22,7 +24,7 @@ namespace ViewModels
     [Binding]
     public sealed class EditAdminViewModel : ViewsSwitchingViewModel, IMerchantProfileSettings, INotifyPropertyChanged
     {
-        [SerializeField] private MerchantProfileSettingsRepository merchantProfileSettingsRepository;
+        [SerializeField] private ScriptableMerchantProfileSettingsRepository merchantProfileSettingsRepository;
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
 

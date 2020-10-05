@@ -15,7 +15,7 @@ namespace ViewModels
     [Binding]
     public sealed class CartViewModel : ViewsSwitchingViewModel, INotifyPropertyChanged
     {
-        [SerializeField] private UserProductsRepository userProductsRepository;
+        [SerializeField] private ScriptableUserProductsRepository userProductsRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private InfoCardController infoCardController;
 

@@ -10,7 +10,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UserProductsListAdapter : RepositoryBasedListAdapter<UserProductsRepository, ProductDataModel,
+    public class UserProductsListAdapter : RepositoryBasedListAdapter<ScriptableUserProductsRepository, ProductDataModel,
         DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
         UserProductsListAdapter.UserProductFillingViewAdapter>
     {

@@ -20,7 +20,7 @@ namespace ViewModels
     public sealed class ReservedSponsoredAdViewModel : CorrespondingViewsSwitchingViewModel<ReservedSponsoredAdView>, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private SponsoredAdRepository reservedSponsoredAdRepository;
+        [SerializeField] private ScriptableSponsoredAdRepository reservedSponsoredAdRepository;
 
         private string _posterUri;
         private Sprite _backgroundPoster;

@@ -9,7 +9,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UserInterestsListAdapter : SelectableElementsPagesListAdapter<InterestsBasicDataPaginatedListRepository, InterestBasicDataModel,
+    public class UserInterestsListAdapter : SelectableElementsPagesListAdapter<ScriptableInterestsBasicDataPaginatedListRepository, InterestBasicDataModel,
         DefaultFillingViewPageViewHolder<InterestItemViewModel.FieldFillingData>, InterestItemViewModel.FieldFillingData,
         UserInterestsLabelFillingViewAdapter>
     {
