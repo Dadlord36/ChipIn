@@ -22,8 +22,8 @@ namespace ViewModels.Cards
     {
         public event Action<uint> ItemSelected;
         public uint IndexInOrder { get; set; }
-        public uint InterestIndex { get; private set; }
-        
+        private uint InterestIndex { get; set; }
+
 
         public class FieldFillingData
         {
@@ -75,7 +75,7 @@ namespace ViewModels.Cards
             {
                 var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
                 _asyncOperationCancellationController.CancelOngoingTask();
-                
+
                 Icon = downloadedSpritesRepository.IconPlaceholder;
                 InterestIndex = (uint) data.InterestIndex;
                 Text = data.Description;

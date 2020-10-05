@@ -50,8 +50,8 @@ namespace ViewModels.Cards
             try
             {
                 AsyncOperationCancellationController.CancelOngoingTask();
-                var response = await CommunitiesStaticRequestsProcessor.GetCommunitiesListByName(out AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    userAuthorisationDataRepository, value);
+                var response = await CommunitiesStaticRequestsProcessor.GetCommunitiesListByName(
+                    out AsyncOperationCancellationController.TasksCancellationTokenSource, userAuthorisationDataRepository, value);
                 if (!response.Success)
                 {
                     LogUtility.PrintLog(Tag, response.Error);
