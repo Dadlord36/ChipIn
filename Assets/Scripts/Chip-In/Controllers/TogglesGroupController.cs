@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -40,7 +41,21 @@ namespace Controllers
 
         private void Start()
         {
-            _selectableOptions[0].SetInitialState(true);
+            SetInitialState();
+        }
+
+        private void OnEnable()
+        {
+            SetInitialState();
+        }
+
+        private void SetInitialState()
+        {
+            foreach (var toggle in _selectableOptions)
+            {
+                toggle.SetInitialState(false);
+            }
+            _selectableOptions[_selectedItemIndex].SetInitialState(true);
         }
 
         private void SubscribeOnTogglesEvents()
