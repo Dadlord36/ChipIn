@@ -34,22 +34,23 @@ namespace ViewModels.SwitchingControllers
 
         public void SwitchToPreviousView()
         {
-            ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack());
+            ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack(), false);
         }
 
-        public void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle)
+        public void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
         {
-            ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack(), formsTransitionBundle);
+            ProcessViewsSwitching(null, switchingHistoryController.PopHistoryStack(), recreateViewToSwitchTo, formsTransitionBundle);
         }
 
-        public void RequestSwitchToView(string fromViewName, string toViewName, FormsTransitionBundle formsTransitionBundle = default)
+        public void RequestSwitchToView(string fromViewName, string toViewName, bool recreateViewToSwitchTo,
+            FormsTransitionBundle formsTransitionBundle = default)
         {
             if (!string.IsNullOrEmpty(fromViewName))
                 AddToHistoryStack(fromViewName);
-            ProcessViewsSwitching(fromViewName, toViewName, formsTransitionBundle);
+            ProcessViewsSwitching(fromViewName, toViewName, recreateViewToSwitchTo, formsTransitionBundle);
         }
 
         protected abstract void ProcessViewsSwitching(in string fromViewName, in string toViewName,
-            FormsTransitionBundle formsTransitionBundle = default);
+            bool recreateViewToSwitchTo, FormsTransitionBundle formsTransitionBundle = default);
     }
 }

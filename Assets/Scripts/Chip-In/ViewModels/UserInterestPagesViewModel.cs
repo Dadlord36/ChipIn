@@ -71,9 +71,9 @@ namespace ViewModels
         [Binding]
         public void StartAnInterestButton_OnClick()
         {
-            SwitchToView(nameof(StartInterestView), new FormsTransitionBundle(SelectedCommunityId));
-        } 
-        
+            SwitchToView(nameof(StartInterestView), new FormsTransitionBundle(SelectedCommunityId), true);
+        }
+
         private Task RefreshCorrespondingListViewAsync(int selectedFilterIndex)
         {
             UserInterestPagesListAdapter controllingAdapter;
