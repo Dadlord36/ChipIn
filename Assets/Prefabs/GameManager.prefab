@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1202854798662521435}
   - component: {fileID: 1202854798662521434}
+  - component: {fileID: 2885974761176642077}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -56,4 +57,23 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   mainCanvas: {fileID: 0}
   awaitingProcessVisualizerControllerScriptable: {fileID: 11400000, guid: e18e77092c133f94891e3bf76200b0b2,
+    type: 2}
+--- !u!114 &2885974761176642077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202854798662521437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 156fefdd7417474bbcb7f2342973cba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sessionController: {fileID: 11400000, guid: d755fcd763af13048895403ee85b8653, type: 2}
+  downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
+    type: 2}
+  alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
+    type: 2}
+  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
     type: 2}

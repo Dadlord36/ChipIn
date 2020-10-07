@@ -11,9 +11,16 @@ using WebOperationUtilities;
 
 namespace Repositories.Local
 {
+    public interface IDownloadedSpritesRepository
+    {
+        Sprite IconPlaceholder { get; }
+        Task<Sprite> CreateLoadSpriteTask(string url, CancellationToken cancellationToken, bool isLocalFile = false);
+        Task<Texture2D> CreateLoadTexture2DTask(string url, CancellationToken cancellationToken, bool isLocalFile = false);
+    }
+
     [CreateAssetMenu(fileName = nameof(DownloadedSpritesRepository), menuName = nameof(Repositories) + "/" + nameof(Local) + "/"
                                                                                 + nameof(DownloadedSpritesRepository), order = 0)]
-    public sealed class DownloadedSpritesRepository : ScriptableObject
+    public sealed class DownloadedSpritesRepository : ScriptableObject, IDownloadedSpritesRepository
     {
         [SerializeField] private Sprite iconPlaceholder;
 
@@ -99,7 +106,7 @@ namespace Repositories.Local
                 //TODO: If sprites are loading fine - remove comment below 
                 /*try
                 {
-                    return  downloadHandleSprite.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory, IconPlaceholder);
+                    return  downloadHandleSprite.InvokeDownloading(cancellationToken, TasksFactories.MainThreadTaskFactory);
                 }
                 catch (Exception)
                 {

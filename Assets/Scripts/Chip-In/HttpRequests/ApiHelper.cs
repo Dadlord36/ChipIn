@@ -88,13 +88,14 @@ namespace HttpRequests
             }
         }
 
-        public static async Task<IRestResponse> ExecuteRequestWithDefaultRestClient(RestRequest restRequest)
+        public static async Task<IRestResponse> ExecuteRequestWithDefaultRestClient(RestRequest restRequest, CancellationToken cancellationToken)
         {
-            var response = await DefaultRestClient.ExecuteAsync(restRequest).ConfigureAwait(false);
+            var response = await DefaultRestClient.ExecuteAsync(restRequest, cancellationToken).ConfigureAwait(false);
 
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
             {
                 await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
+                return null;
             }
             LogUtility.PrintLog(Tag, response.ToString());
             return response;

@@ -10,9 +10,8 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class UserInterestsLabelsSimpleListAdapter : SelectableListViewAdapter<BaseParamsWithPrefab, InterestBasicDataModel,
-        DefaultFillingViewPageViewHolder<InterestItemViewModel.FieldFillingData>, InterestItemViewModel.FieldFillingData, 
+        DefaultFillingViewPageViewHolder<InterestItemViewModel.FieldFillingData, uint>,uint, InterestItemViewModel.FieldFillingData,
         UserInterestsLabelFillingViewAdapter>
     {
-
     }
 }

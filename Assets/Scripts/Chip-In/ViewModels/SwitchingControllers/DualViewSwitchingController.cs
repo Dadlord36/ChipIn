@@ -8,14 +8,15 @@ namespace ViewModels.SwitchingControllers
         menuName = nameof(SwitchingControllers) + "/" + nameof(DualViewSwitchingController), order = 0)]
     public sealed class DualViewSwitchingController : BaseViewSwitchingController
     {
-        protected override void ProcessViewsSwitching(in string fromViewName, in string toViewName, 
-            FormsTransitionBundle formsTransitionBundle)
+        protected override void ProcessViewsSwitching(in string fromViewName, in string toViewName,
+            bool recreateViewToSwitchTo, FormsTransitionBundle formsTransitionBundle)
         {
             var toSwitchForm = fromViewName;
             var toName = toViewName;
             TasksFactories.ExecuteOnMainThread(() =>
             {
-                viewsSwitchingBindingObject.SwitchViews(new ViewsPairInfo(toSwitchForm, toName),formsTransitionBundle);
+                viewsSwitchingBindingObject.SwitchViews(new ViewsPairInfo(toSwitchForm, toName),formsTransitionBundle,
+                    recreateViewToSwitchTo);
             });
         }
     }

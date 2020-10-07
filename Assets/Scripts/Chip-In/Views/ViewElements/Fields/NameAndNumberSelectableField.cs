@@ -26,7 +26,7 @@ namespace Views.ViewElements.Fields
 
     [Binding]
     public sealed class NameAndNumberSelectableField : UIBehaviour, IFillingView<NameAndNumberSelectableFieldFillingData>,
-        IIdentifiedSelection, IPointerClickHandler, INotifyPropertyChanged
+        IIdentifiedSelection<uint>, IPointerClickHandler, INotifyPropertyChanged
     {
         private uint _id;
         private string _name;

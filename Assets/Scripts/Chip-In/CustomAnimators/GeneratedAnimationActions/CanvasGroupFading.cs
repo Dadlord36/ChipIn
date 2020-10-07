@@ -26,10 +26,17 @@ namespace CustomAnimators.GeneratedAnimationActions
 
         private readonly CanvasGroup _canvasGroup;
 
-        public const float MinAlpha = 0, MaxAlpha = 1f;
+        private const float MinAlpha = 0;
+        private const float MaxAlpha = 1f;
 
         private float _startAlpha;
         private float _endAlpha;
+
+        private float CanvasGroupAlpha
+        {
+            get => _canvasGroup.alpha;
+            set => _canvasGroup.alpha = value;
+        }
 
         public CanvasGroupFading(AnimationCurve speedCurve, in float time, CanvasGroup canvasGroup, FadingType fadingType = FadingType.Appear) :
             base(speedCurve, in time)
@@ -47,14 +54,13 @@ namespace CustomAnimators.GeneratedAnimationActions
 
         private void SwitchFadingProgressParameters(FadingType fadingType)
         {
+            _startAlpha = CanvasGroupAlpha;
             switch (fadingType)
             {
                 case FadingType.Appear:
-                    _startAlpha = MinAlpha;
                     _endAlpha = MaxAlpha;
                     return;
                 case FadingType.Disappear:
-                    _startAlpha = MaxAlpha;
                     _endAlpha = MinAlpha;
                     return;
                 default:
@@ -64,7 +70,7 @@ namespace CustomAnimators.GeneratedAnimationActions
 
         protected override void ProgressUpdate(float progressPercentage)
         {
-            _canvasGroup.alpha = Mathf.Lerp(_startAlpha,_endAlpha, progressPercentage);
+            CanvasGroupAlpha = Mathf.Lerp(_startAlpha, _endAlpha, progressPercentage);
         }
     }
 }

@@ -44,7 +44,8 @@ namespace ViewModels
         {
             try
             {
-                userInterestPagesPaginatedRepository.SelectedCommunityId = await GetDataByIndex((uint) listIndex);
+                userInterestPagesPaginatedRepository.SelectedCommunityId = await GetDataByIndexAsync((uint) listIndex)
+                    .ConfigureAwait(false);
                 OnNewInterestSelected();
             }
             catch (Exception e)
@@ -59,9 +60,9 @@ namespace ViewModels
             SwitchToPagesView();
         }
 
-        private async Task<int> GetDataByIndex(uint index)
+        private async Task<int> GetDataByIndexAsync(uint index)
         {
-            var itemData = await interestsBasicDataPaginatedListRepository.GetItemWithIndexAsync(index);
+            var itemData = await interestsBasicDataPaginatedListRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
             return (int) itemData.Id;
         }
 
@@ -70,7 +71,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await userInterestsListAdapter.ResetAsync();
+                await userInterestsListAdapter.ResetAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {

@@ -10,7 +10,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters
 {
     [Binding]
     public class VerificationDataListAdapter : RepositoryBasedListAdapter<MerchantVerificationRepository, VerificationDataModel,
-        DefaultFillingViewPageViewHolder<VerificationItemViewModel.FieldFillingData>, VerificationItemViewModel.FieldFillingData, 
+        DefaultFillingViewPageViewHolder<VerificationItemViewModel.FieldFillingData, uint>, VerificationItemViewModel.FieldFillingData, 
         VerificationDataListAdapter.VerificationDataFillingViewAdapter>
     {
         public class VerificationDataFillingViewAdapter : FillingViewAdapter<VerificationDataModel, VerificationItemViewModel.FieldFillingData>

@@ -258,7 +258,7 @@ namespace Controllers
 
         private void SwitchToView(string toViewName)
         {
-            viewsSwitchingController.RequestSwitchToView(null, toViewName);
+            viewsSwitchingController.RequestSwitchToView(null, toViewName,false);
         }
 
         private void OnSwitchingToMode(SessionMode obj)

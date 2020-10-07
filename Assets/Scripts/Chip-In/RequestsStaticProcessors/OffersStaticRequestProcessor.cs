@@ -115,7 +115,7 @@ namespace RequestsStaticProcessors
             var result = request.ToString();
 
             LogUtility.PrintLog(Tag, result);
-            return client.ExecuteAsync(request);
+            return client.ExecuteAsync(request, cancellationTokenSource.Token);
         }
 
         /*public static async Task<FlashOfferCreationResponseDataModel> CreateFlashOffer(CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,

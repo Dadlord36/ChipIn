@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Common;
 using DataModels.Common;
@@ -27,7 +28,8 @@ namespace RequestsStaticProcessors
                 .SendRequest("Adverts list was retrieved successfully");
         }
 
-        public static Task<IRestResponse> CreateAnAdvert(IRequestHeaders requestHeaders, CompanyAdFeaturesPreviewData companyAdFeaturesPreviewData)
+        public static Task<IRestResponse> CreateAnAdvert(IRequestHeaders requestHeaders, CancellationToken cancellationToken,
+            CompanyAdFeaturesPreviewData companyAdFeaturesPreviewData)
         {
             var request = RequestsFactory.MultipartRestRequest(requestHeaders, Method.POST, ApiCategories.Adverts);
             AddAdvertFileParam(MainNames.ModelsPropertiesNames.Poster, companyAdFeaturesPreviewData.CompanyLogoImagePath);
@@ -84,7 +86,7 @@ namespace RequestsStaticProcessors
                 return $"{advert}[advert_features_attributes][{index}][{parameterName}]";
             }
 
-            return ApiHelper.ExecuteRequestWithDefaultRestClient(request);
+            return ApiHelper.ExecuteRequestWithDefaultRestClient(request, cancellationToken);
         }
 
         public static Task<BaseRequestProcessor<object, SponsoredAdvertsResponseDataModel, ISponsoredAdvertsResponseModel>.HttpResponse>

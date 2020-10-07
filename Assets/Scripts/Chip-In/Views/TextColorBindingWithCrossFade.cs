@@ -24,7 +24,7 @@ namespace Views
             set
             {
                 _selectedColor = value;
-                CrossFadeInstantly(value);
+                CrossFadeToColor(value);
             }
         }
 

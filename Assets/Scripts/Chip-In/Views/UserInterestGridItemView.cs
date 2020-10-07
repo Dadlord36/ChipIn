@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 namespace Views
 {
-    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler, IIdentifiedSelection
+    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler, IIdentifiedSelection<uint>
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 

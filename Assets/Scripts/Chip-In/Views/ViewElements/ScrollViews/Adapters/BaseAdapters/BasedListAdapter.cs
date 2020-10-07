@@ -9,10 +9,10 @@ using Common.Interfaces;
 using Common.UnityEvents;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using Factories;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Tasking;
-using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
@@ -21,8 +21,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
     public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> :
-        OSA<TParams, BaseItemViewsHolder>,
-        INotifyPropertyChanged
+        OSA<TParams, BaseItemViewsHolder>, INotifyPropertyChanged
         where TItemViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
         where TParams : BaseParamsWithPrefab
         where TViewConsumableData : class
@@ -30,7 +29,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     {
         protected readonly string Tag;
 
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
+        private IDownloadedSpritesRepository downloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
         public BoolUnityEvent listFillingStateChanged;
 
         // Helper that stores data and notifies the adapter when items count changes
@@ -38,9 +37,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected SimpleDataHelper<TDataType> Data;
         private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
-        private bool _itemsListIsNotEmpty;
+        private bool _itemsListIsNotEmpty = true;
         protected int MiddleElementNumber;
-        private BaseItemViewsHolder _middleItem;
+        
 
 
         [Binding]
@@ -49,26 +48,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             get => _itemsListIsNotEmpty;
             set
             {
-                TasksFactories.ExecuteOnMainThread(() =>
-                {
-                    _itemsListIsNotEmpty = value;
-                    OnPropertyChanged();
-                    OnListFillingStateChanged(value);
-                });
-            }
-        }
-
-        /// <summary>
-        /// Middle item in scroll viewport. Will also call Select() on new middle item sets
-        /// </summary>
-        protected BaseItemViewsHolder MiddleItem
-        {
-            get => _middleItem;
-            set
-            {
-                if (ReferenceEquals(_middleItem, value)) return;
-                _middleItem = value;
-                (value as IIdentifiedSelection).Select();
+                _itemsListIsNotEmpty = value;
+                OnPropertyChanged();
+                OnListFillingStateChanged(value);
             }
         }
 
@@ -80,7 +62,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected override void Awake()
         {
             base.Awake();
-            _fillingViewAdapter.SetDownloadingSpriteRepository(downloadedSpritesRepository);
             Data = new SimpleDataHelper<TDataType>(this);
         }
 
@@ -177,16 +158,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         #endregion
 
-        private void OnListFillingStateChanged(bool obj)
-        {
-            listFillingStateChanged.Invoke(obj);
-        }
 
-        protected void FindMiddleElement()
-        {
-            MiddleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
-            MiddleItem = _VisibleItems[MiddleElementNumber];
-        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -194,6 +167,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+        }
+        
+        private void OnListFillingStateChanged(bool state)
+        {
+            TasksFactories.ExecuteOnMainThread(() => { listFillingStateChanged.Invoke(state); });
         }
     }
 }
