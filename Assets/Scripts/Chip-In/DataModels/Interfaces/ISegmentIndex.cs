@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using GlobalVariables;
+using Newtonsoft.Json;
 
 namespace DataModels.Interfaces
 {
     public interface ISegmentIndex
     {
-        [JsonProperty("segment")] int SegmentIndex { get; set; }
+        [JsonProperty(MainNames.ModelsPropertiesNames.Segment)] int SegmentIndex { get; set; }
     }
 }

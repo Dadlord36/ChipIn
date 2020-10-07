@@ -17,7 +17,7 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class InterestItemViewModel : MonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+    public sealed class InterestItemViewModel : MonoBehaviour, IIdentifiedSelection<uint>, INotifyPropertyChanged, IPointerClickHandler,
         IFillingView<InterestItemViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;

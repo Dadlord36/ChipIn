@@ -11,7 +11,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class ReservedSponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<ReservedSponsorsAdPostersRepository, SponsoredPosterDataModel,
-        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
+        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData, uint>, uint, SponsoredAdCardViewModel.FieldFillingData,
         ReservedSponsorsAdPostersListAdapter.FillingViewAdapter>
     {
         public class FillingViewAdapter : FillingViewAdapter<SponsoredPosterDataModel, SponsoredAdCardViewModel.FieldFillingData>

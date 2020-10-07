@@ -13,8 +13,8 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsoredAdFullCardViewModel : MonoBehaviour, IFillingView<SponsoredAdFullCardViewModel.FieldFillingData>, IIdentifiedSelection,
-        INotifyPropertyChanged
+    public sealed class SponsoredAdFullCardViewModel : MonoBehaviour, IFillingView<SponsoredAdFullCardViewModel.FieldFillingData>, 
+        IIdentifiedSelection<uint>, INotifyPropertyChanged
     {
         private const string Tag = nameof(SponsoredAdFullCardViewModel);
 

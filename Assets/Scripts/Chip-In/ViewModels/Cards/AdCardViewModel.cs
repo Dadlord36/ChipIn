@@ -17,7 +17,7 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class AdCardViewModel : AsyncOperationsMonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+    public sealed class AdCardViewModel : AsyncOperationsMonoBehaviour, IIdentifiedSelection<uint>, INotifyPropertyChanged, IPointerClickHandler,
         IFillingView<AdCardViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;

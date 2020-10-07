@@ -11,7 +11,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class UserProductsListAdapter : RepositoryBasedListAdapter<UserProductsRepository, ProductDataModel,
-        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
+        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData, uint>, SponsoredAdCardViewModel.FieldFillingData,
         UserProductsListAdapter.UserProductFillingViewAdapter>
     {
         public class UserProductFillingViewAdapter : FillingViewAdapter<ProductDataModel, SponsoredAdCardViewModel.FieldFillingData>

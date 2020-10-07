@@ -114,7 +114,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             AmountOfItemsAllowedToFetch = TotalCapacity;
         }
 
-        private void ClearRemainListItems()
+        public void ClearRemainListItems()
         {
             pagesPaginatedRepository.Clear();
             if (Data.Count > 0)

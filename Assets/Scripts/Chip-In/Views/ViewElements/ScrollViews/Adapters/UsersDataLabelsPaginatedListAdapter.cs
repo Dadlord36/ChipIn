@@ -11,15 +11,15 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class UsersDataLabelsPaginatedListAdapter : SelectableElementsPagesListAdapter<UsersDataPaginatedListRepository, UserProfileBaseData,
-        DefaultFillingViewPageViewHolder<UserDataItemViewModel.FieldFillingData>, UserDataItemViewModel.FieldFillingData,
-        UsersDataLabelsPaginatedListAdapter.FillingViewAdapter>
+        DefaultFillingViewPageViewHolder<UserDataItemViewModel.FieldFillingData, UserProfileBaseData>, UserProfileBaseData,
+        UserDataItemViewModel.FieldFillingData, UsersDataLabelsPaginatedListAdapter.FillingViewAdapter>
     {
         public class FillingViewAdapter : FillingViewAdapter<UserProfileBaseData, UserDataItemViewModel.FieldFillingData>
         {
             public override UserDataItemViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 UserProfileBaseData data, uint dataIndexInRepository)
             {
-                return new UserDataItemViewModel.FieldFillingData(data.Id, data.AvatarUrl, data.Name);
+                return new UserDataItemViewModel.FieldFillingData(data);
             }
         }
     }

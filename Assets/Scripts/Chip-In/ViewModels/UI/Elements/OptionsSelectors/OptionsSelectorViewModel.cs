@@ -15,6 +15,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
     public sealed class OptionsSelectorViewModel : MonoBehaviour, INotifyPropertyChanged
     {
         public UnityEvent newItemSelected;
+        [SerializeField] private bool triggerItemSelectionEventOnIndexChange;
 
         private int _selectedItemIndex;
 
@@ -27,6 +28,8 @@ namespace ViewModels.UI.Elements.OptionsSelectors
                 if (value == _selectedItemIndex) return;
                 _selectedItemIndex = value;
                 OnPropertyChanged();
+                if (triggerItemSelectionEventOnIndexChange)
+                    OnNewItemSelected();
             }
         }
 

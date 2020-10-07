@@ -16,7 +16,9 @@ namespace ViewModels.Basic
 
         [SerializeField] private BaseView view;
         protected readonly AsyncOperationCancellationController OperationCancellationController = new AsyncOperationCancellationController();
-        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
+
+        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable =>
+            GameManager.MainAwaitingProcessVisualizerControllerScriptable;
 
         private bool _awaitingProcess;
 

@@ -43,6 +43,8 @@ namespace ViewModels
             }
         }
 
+        private int SelectedCommunityId => userInterestPagesPaginatedRepository.SelectedCommunityId;
+
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
@@ -66,6 +68,12 @@ namespace ViewModels
             }
         }
 
+        [Binding]
+        public void StartAnInterestButton_OnClick()
+        {
+            SwitchToView(nameof(StartInterestView), new FormsTransitionBundle(SelectedCommunityId));
+        } 
+        
         private Task RefreshCorrespondingListViewAsync(int selectedFilterIndex)
         {
             UserInterestPagesListAdapter controllingAdapter;

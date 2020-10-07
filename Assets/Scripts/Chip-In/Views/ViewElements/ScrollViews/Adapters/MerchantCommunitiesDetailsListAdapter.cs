@@ -9,7 +9,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class MerchantCommunitiesDetailsListAdapter : SelectableElementsPagesListAdapter<MarketInterestsPaginatedListRepository,
-        MarketInterestDetailsDataModel, DefaultFillingViewPageViewHolder<MarketInterestDetailsDataModel>, MarketInterestDetailsDataModel,
+        MarketInterestDetailsDataModel, DefaultFillingViewPageViewHolder<MarketInterestDetailsDataModel, uint>, uint, MarketInterestDetailsDataModel,
         DefaultFillingViewAdapter<MarketInterestDetailsDataModel>>
     {
     }

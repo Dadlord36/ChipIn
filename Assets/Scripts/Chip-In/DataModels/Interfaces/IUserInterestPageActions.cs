@@ -2,7 +2,7 @@
 
 namespace DataModels.Interfaces
 {
-    public interface IUserInterestPageActions
+    public interface IUserInterestPageActions 
     {
         [JsonProperty("watch", NullValueHandling = NullValueHandling.Ignore)] bool Watch { get; set; }
 

@@ -58,6 +58,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2225181000225458440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7805089391582372943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &4167072525437587373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.Basic.OptionSelectionViewModel.SelectedIndexUint
+  viewModelPropertyName: ViewModels.Basic.UserDataSelectionViewModel.SelectedIndex
   viewEventName: Views.ViewElements.ScrollViews.Adapters.UsersDataLabelsPaginatedListAdapter.itemSelected
   viewPropertyName: Views.ViewElements.ScrollViews.Adapters.UsersDataLabelsPaginatedListAdapter.SelectedIndex
   viewAdapterTypeName: 
@@ -173,24 +190,7 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
---- !u!114 &2225181000225458440
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7805089391582372943}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &7200570602299163307
+--- !u!114 &727201617794849425
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d206f91b66640f283634bd7e407298a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7495487698564092165
+--- !u!114 &7650705605010721258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -211,10 +211,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1963608365831065676}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f245ee36e27d4fbcbdafa012c7d70333, type: 3}
+  m_Script: {fileID: 11500000, guid: b04f6c87072d467daf15585f635c6fa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  view: {fileID: 7200570602299163307}
+  view: {fileID: 727201617794849425}
   viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
     type: 2}
   viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
@@ -337,10 +337,30 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1959976280099130242, guid: be93f299c91cf1c4e9b9515932644f3b,
+        type: 3}
+      propertyPath: mLocalizeTargetName
+      value: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959976280099130242, guid: be93f299c91cf1c4e9b9515932644f3b,
+        type: 3}
+      propertyPath: mTerm
+      value: Search for user
+      objectReference: {fileID: 0}
+    - target: {fileID: 1959976280099130242, guid: be93f299c91cf1c4e9b9515932644f3b,
+        type: 3}
+      propertyPath: mLocalizeTarget
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 3039368656835056579, guid: be93f299c91cf1c4e9b9515932644f3b,
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4010951346704388753, guid: be93f299c91cf1c4e9b9515932644f3b,
+        type: 3}
+      propertyPath: m_text
+      value: Search for user
       objectReference: {fileID: 0}
     - target: {fileID: 6169964985713776453, guid: be93f299c91cf1c4e9b9515932644f3b,
         type: 3}

@@ -12,7 +12,7 @@ namespace ViewModels.Cards
 {
     [Binding]
     public sealed class SponsoredAdCardViewModel : SwitchableForm, IPointerClickHandler, IFillingView<SponsoredAdCardViewModel.FieldFillingData>,
-        IIdentifiedSelection
+        IIdentifiedSelection<uint>
     {
         public uint IndexInOrder { get; private set; }
         public event Action<uint> ItemSelected;

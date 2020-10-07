@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using Factories;
 using JetBrains.Annotations;
 using Repositories.Local;
@@ -17,30 +18,32 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class UserDataItemViewModel : MonoBehaviour, IIdentifiedSelection, INotifyPropertyChanged, IPointerClickHandler,
+    public sealed class UserDataItemViewModel : MonoBehaviour, IIdentifiedSelection<UserProfileBaseData>, INotifyPropertyChanged, IPointerClickHandler,
         IFillingView<UserDataItemViewModel.FieldFillingData>
     {
         public const string Tag = nameof(UserDataItemViewModel);
 
         public class FieldFillingData
         {
-            public readonly string UserName;
-            public readonly string AvatarUrl;
-            public readonly int? Id;
+            public readonly UserProfileBaseData Data;
 
-            public FieldFillingData(int? id, in string avatarUrl, in string userName)
+            public string Name => Data.Name;
+            public int? Id => Data.Id;
+            public string AvatarUrl => Data.AvatarUrl;
+
+            public FieldFillingData(UserProfileBaseData data)
             {
-                Id = id;
-                AvatarUrl = avatarUrl;
-                UserName = userName;
+                Data = data;
             }
         }
 
-        public event Action<uint> ItemSelected;
+        public event Action<UserProfileBaseData> ItemSelected;
 
         private string _userName;
         private Sprite _userAvatar;
-        private uint _userId;
+
+        private UserProfileBaseData Data;
+
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         public uint IndexInOrder { get; }
@@ -83,8 +86,8 @@ namespace ViewModels.Cards
         {
             try
             {
-                _userId = (uint) data.Id;
-                UserName = data.UserName;
+                Data = data.Data;
+                UserName = data.Name;
                 UserAvatar = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>().CreateLoadSpriteTask(data.AvatarUrl,
                     _asyncOperationCancellationController.CancellationToken).ConfigureAwait(false);
             }
@@ -109,7 +112,7 @@ namespace ViewModels.Cards
 
         private void OnItemSelected()
         {
-            ItemSelected?.Invoke(_userId);
+            ItemSelected?.Invoke(Data);
         }
     }
 }

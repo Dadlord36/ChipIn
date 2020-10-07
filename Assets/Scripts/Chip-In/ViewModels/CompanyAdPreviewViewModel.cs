@@ -141,7 +141,8 @@ namespace ViewModels
             {
                 IsSendingRequest = true;
                 IsAwaitingProcess = true;
-                var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository, _companyAdFeaturesPreviewData)
+                var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository,
+                        OperationCancellationController.CancellationToken, _companyAdFeaturesPreviewData)
                     .ConfigureAwait(false);
                 alertCardController.ShowAlertWithText(result.IsSuccessful
                     ? "Advert created successfully"

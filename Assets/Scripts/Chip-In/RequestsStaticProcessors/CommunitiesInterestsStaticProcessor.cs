@@ -1,15 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Common;
 using DataModels;
 using DataModels.Common;
 using DataModels.HttpRequestsHeadersModels;
 using DataModels.Interfaces;
+using DataModels.RequestsModels;
 using DataModels.ResponsesModels;
+using GlobalVariables;
+using HttpRequests;
 using HttpRequests.RequestsProcessors;
 using HttpRequests.RequestsProcessors.DeleteRequests;
 using HttpRequests.RequestsProcessors.GetRequests;
 using HttpRequests.RequestsProcessors.PostRequests;
 using Repositories.Interfaces;
+using RestSharp;
+using Utilities;
 
 namespace RequestsStaticProcessors
 {
@@ -28,15 +34,34 @@ namespace RequestsStaticProcessors
                 string categoryName, PaginatedRequestData paginatedRequestData)
         {
             return new CommunityClientsInterestsPaginatedGetProcessor(out cancellationTokenSource, requestHeaders, communityId, categoryName,
-                    paginatedRequestData).SendRequest("Community clients interests list was retrieved successfully");
+                paginatedRequestData).SendRequest("Community clients interests list was retrieved successfully");
         }
 
-        public static Task<BaseRequestProcessor<ICommunityCreateInterestModel, MerchantInterestPageDataModel, IInterestPageModel>.HttpResponse>
-            CreateAnInterest(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-                ICommunityCreateInterestModel requestBody, int communityId)
+        public static Task<IRestResponse> CreateAnInterestAsync(CancellationToken cancellationToken, IRequestHeaders requestHeaders, int communityId,
+            InterestCreationDataModel requestBody)
         {
-            return new CreateACommunityInterestPostProcessor(out cancellationTokenSource, requestHeaders, requestBody, communityId)
-                .SendRequest("Community interest was created successfully");
+            var requestBuilder = new MultipartRestRequestBuilder(requestHeaders, Method.POST,
+                $"{ApiCategories.Communities}/{communityId.ToString()}/{ApiCategories.Subcategories.Interests}",
+                ApiHelper.ExecuteRequestWithDefaultRestClient, "interest");
+
+            requestBuilder.AddItemParam(MainNames.ModelsPropertiesNames.IsPublic, PropertiesUtility.BoolToString(requestBody.IsPublic));
+            requestBuilder.AddItemParam(MainNames.ModelsPropertiesNames.Name, requestBody.Name);
+            requestBuilder.AddItemParam(MainNames.ModelsPropertiesNames.Segment, requestBody.SegmentName);
+            requestBuilder.AddItemParam(MainNames.ModelsPropertiesNames.MemberMessage, requestBody.MemberMessage);
+            requestBuilder.AddItemParam(MainNames.ModelsPropertiesNames.MerchantMessage, requestBody.MerchantMessage);
+
+            requestBuilder.AddFileParam(MainNames.ModelsPropertiesNames.Poster, requestBody.PosterFilePath.Path);
+
+            {
+                requestBuilder.InitializeArrayParameter("user_interests_attributes");
+                var userAttributes = requestBody.UserAttributes;
+                for (var index = 0; index < userAttributes.Count; index++)
+                {
+                    requestBuilder.AddArrayParameterItemParameter(MainNames.ModelsPropertiesNames.UserId, index, userAttributes[index].UserId.ToString());
+                }
+            }
+
+            return requestBuilder.ExecuteAsync(cancellationToken);
         }
 
         public static Task<BaseRequestProcessor<object, SuccessConfirmationModel, ISuccess>.HttpResponse>

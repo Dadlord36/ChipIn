@@ -9,7 +9,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class UserInterestPagesListAdapter : RepositoryBasedListAdapter<UserInterestPagesPaginatedRepository, UserInterestPageDataModel,
-        DefaultFillingViewPageViewHolder<UserInterestPageDataModel>,UserInterestPageDataModel ,DefaultFillingViewAdapter<UserInterestPageDataModel>>
+        DefaultFillingViewPageViewHolder<UserInterestPageDataModel, uint>, UserInterestPageDataModel, DefaultFillingViewAdapter<UserInterestPageDataModel>>
     {
     }
 }
