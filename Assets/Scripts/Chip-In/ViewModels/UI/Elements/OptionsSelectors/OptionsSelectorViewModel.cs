@@ -18,6 +18,7 @@ namespace ViewModels.UI.Elements.OptionsSelectors
         [SerializeField] private bool triggerItemSelectionEventOnIndexChange;
 
         private int _selectedItemIndex;
+        private int _lastSelectedItemIndex;
 
         [Binding]
         public int SelectedItemIndex
@@ -37,8 +38,14 @@ namespace ViewModels.UI.Elements.OptionsSelectors
         public void SelectButton_OnClick()
         {
             OnNewItemSelected();
+            _lastSelectedItemIndex = _selectedItemIndex;
         }
 
+        [Binding]
+        public void CancelButton_OnClick()
+        {
+            SelectedItemIndex = _lastSelectedItemIndex;
+        }
 
 #if UNITY_EDITOR
         [SerializeField] private Object prefab;

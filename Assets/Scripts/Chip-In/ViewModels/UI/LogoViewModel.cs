@@ -1,58 +1,30 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Controllers;
-using JetBrains.Annotations;
-using UnityEngine;
+﻿using System.ComponentModel;
 using UnityWeld.Binding;
+using Repositories.Remote;
+using UnityEngine;
 
 namespace ViewModels.UI
 {
     [Binding]
     public sealed class LogoViewModel : MonoBehaviour, INotifyPropertyChanged
     {
-        [SerializeField] private ViewsLogoController logoController;
-        private Sprite _logoSprite;
-
+        [SerializeField] private MerchantProfileSettingsRepository merchantProfileSettingsRepository;
+        [SerializeField] private Sprite defaultLogo;
+        private IMerchantProfileSettings MerchantProfileSettingsModelImplementation => merchantProfileSettingsRepository;
         
         [Binding]
         public Sprite LogoSprite
         {
-            get => _logoSprite;
-            private set
-            {
-                _logoSprite = value;
-                OnPropertyChanged();
-            }
+            get => MerchantProfileSettingsModelImplementation.LogoSprite
+                ? MerchantProfileSettingsModelImplementation.LogoSprite
+                : defaultLogo;
+            set => MerchantProfileSettingsModelImplementation.LogoSprite = value;
         }
 
-        private void Awake()
+        public event PropertyChangedEventHandler PropertyChanged
         {
-            LogoSprite = logoController.LogoSpite;
-        }
-
-        private void OnEnable()
-        {
-            logoController.LogoChanged += SetLogo;
-        }
-
-        private void OnDisable()
-        {
-            logoController.LogoChanged -= SetLogo;
-        }
-        
-        private void SetLogo(Sprite logoSprite)
-        {
-            LogoSprite = logoSprite;
-        }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            add => merchantProfileSettingsRepository.PropertyChanged += value;
+            remove => merchantProfileSettingsRepository.PropertyChanged -= value;
         }
     }
 }
