@@ -59,6 +59,11 @@ namespace ViewModels
             SwitchToView(new ViewsPairInfo(null, viewName), default, recreateViewToSwitchTo);
         }
 
+        public void SwitchToView(string viewName)
+        {
+            SwitchToView(viewName, false);
+        }
+
         protected void SwitchToPreviousView()
         {
             viewsSwitchingController.SwitchToPreviousView();
