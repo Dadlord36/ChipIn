@@ -12,12 +12,12 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     public class DesignedListViewAdapter : SelectableListViewAdapter<DesignedListParams, DesignedScrollBarItemDefaultDataModel,
-        DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData>, DesignedScrollBarItemBaseViewModel.FieldFillingData,
-        DesignedListViewAdapter.FillingViewAdapterImplementation>
+        DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData, uint>, uint,
+        DesignedScrollBarItemBaseViewModel.FieldFillingData, DesignedListViewAdapter.FillingViewAdapterImplementation>
     {
         [SerializeField, Range(0f, 1f)] private float itemsBackgroundAlpha;
         private const int MINItemsToLoop = 10;
-        
+
         public class FillingViewAdapterImplementation : FillingViewAdapter<DesignedScrollBarItemDefaultDataModel,
             DesignedScrollBarItemBaseViewModel.FieldFillingData>
         {
@@ -93,6 +93,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             {
                 SetVisibleItemsSiblingIndexAsLast(i);
             }
+
             _VisibleItems[MiddleElementNumber].root.SetAsLastSibling();
         }
 

@@ -2,18 +2,18 @@
 using Common;
 using DataModels;
 using DataModels.HttpRequestsHeadersModels;
-using DataModels.Interfaces;
+using DataModels.RequestsModels;
 using GlobalVariables;
+using Repositories.Interfaces;
 
 namespace HttpRequests.RequestsProcessors.PostRequests
 {
-    public class CreateACommunityInterestPostProcessor : BaseRequestProcessor<ICommunityCreateInterestModel,
-        MerchantInterestPageDataModel, IInterestPageModel>
+    public class CreateCommunityInterestPostProcessor : BaseRequestProcessor<ICommunityCreateInterestRequestBodyModel, SuccessConfirmationModel, ISuccess>
     {
-        public CreateACommunityInterestPostProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-            ICommunityCreateInterestModel requestBodyModel, int communityId) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
-            ApiCategories.Communities, HttpMethod.Post, requestHeaders, requestBodyModel,
-            new[] {communityId.ToString(), ApiCategories.Subcategories.Interests}))
+        public CreateCommunityInterestPostProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+            ICommunityCreateInterestRequestBodyModel requestBodyModel) : base(out cancellationTokenSource,
+            new BaseRequestProcessorParameters(ApiCategories.Communities, HttpMethod.Post, requestHeaders, requestBodyModel,
+                new[] {ApiCategories.Subcategories.Interests}))
         {
         }
     }

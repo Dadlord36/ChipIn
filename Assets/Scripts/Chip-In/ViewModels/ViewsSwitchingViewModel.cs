@@ -24,49 +24,50 @@ namespace ViewModels
         public ViewsSwitchingViewModel(string tag) : base(tag)
         {
         }
-        
-        private void InvokeViewsSwitching(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle)
+
+        private void InvokeViewsSwitching(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
         {
             viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(viewsPairInfo.ViewToSwitchFromName)
-                    ? View.ViewName
-                    : viewsPairInfo.ViewToSwitchFromName, viewsPairInfo.ViewToSwitchToName, formsTransitionBundle);
+                ? View.ViewName
+                : viewsPairInfo.ViewToSwitchFromName, viewsPairInfo.ViewToSwitchToName, recreateViewToSwitchTo, formsTransitionBundle);
         }
 
-        protected void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default)
+        protected void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default,
+            bool recreateViewToSwitchTo = false)
         {
-            TasksFactories.ExecuteOnMainThread(()=>
+            TasksFactories.ExecuteOnMainThread(() =>
             {
-                InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle);
+                InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo);
                 viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultSwitchingParameters);
             });
         }
 
-        protected void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters,
+        protected void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters, bool recreateViewToSwitchTo,
             FormsTransitionBundle formsTransitionBundle = default)
         {
-            InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle);
+            InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo);
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(defaultViewsSwitchingParameters);
         }
 
-        public void SwitchToView(string viewName, FormsTransitionBundle formsTransitionBundle = default)
+        public void SwitchToView(string viewName, FormsTransitionBundle formsTransitionBundle = default, bool recreateViewToSwitchTo = false)
         {
-            SwitchToView(new ViewsPairInfo(null, viewName), formsTransitionBundle);
+            SwitchToView(new ViewsPairInfo(null, viewName), formsTransitionBundle, recreateViewToSwitchTo);
         }
 
-        public void SwitchToView(string viewName)
+        public void SwitchToView(string viewName, bool recreateViewToSwitchTo)
         {
-            SwitchToView(new ViewsPairInfo(null, viewName));
+            SwitchToView(new ViewsPairInfo(null, viewName), default, recreateViewToSwitchTo);
         }
-        
+
         protected void SwitchToPreviousView()
         {
             viewsSwitchingController.SwitchToPreviousView();
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
         }
 
-        protected void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle)
+        protected void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
         {
-            viewsSwitchingController.SwitchToPreviousView(formsTransitionBundle);
+            viewsSwitchingController.SwitchToPreviousView(formsTransitionBundle, recreateViewToSwitchTo);
             viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
         }
     }

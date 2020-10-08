@@ -11,7 +11,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public class ReservedSponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<ReservedSponsorsAdPostersRepository, SponsoredPosterDataModel,
-        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData>, SponsoredAdCardViewModel.FieldFillingData,
+        DefaultFillingViewPageViewHolder<SponsoredAdCardViewModel.FieldFillingData, uint>, uint, SponsoredAdCardViewModel.FieldFillingData,
         ReservedSponsorsAdPostersListAdapter.FillingViewAdapter>
     {
         public class FillingViewAdapter : FillingViewAdapter<SponsoredPosterDataModel, SponsoredAdCardViewModel.FieldFillingData>
@@ -19,8 +19,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             public override SponsoredAdCardViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
                 SponsoredPosterDataModel data, uint dataIndexInRepository)
             {
-                return new SponsoredAdCardViewModel.FieldFillingData(DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
-                    cancellationTokenSource.Token), DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl, cancellationTokenSource.Token));
+                return new SponsoredAdCardViewModel.FieldFillingData(data.BackgroundUrl, data.LogoUrl);
             }
         }
 

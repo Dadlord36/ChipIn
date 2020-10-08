@@ -11,7 +11,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
     public sealed class MerchantInterestPagesListAdapter : SelectableElementsPagesListAdapter<MerchantInterestPagesPaginatedRepository,
-        MerchantInterestPageDataModel, DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData>,
+        MerchantInterestPageDataModel, DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData, uint>, uint,
         NameAndNumberSelectableFieldFillingData,MerchantInterestPagesListAdapter.MerchantInterestPageDataAdapter>
     {
         public class MerchantInterestPageDataAdapter : FillingViewAdapter<MerchantInterestPageDataModel, NameAndNumberSelectableFieldFillingData>

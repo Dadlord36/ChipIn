@@ -298,6 +298,10 @@ namespace Repositories
                         .ConfigureAwait(false);
                     GetResponseItemsAndFillPaginatedData(httpResponse.ResponseModelInterface);
                 }
+                catch (OperationCanceledException)
+                {
+                    LogUtility.PrintDefaultOperationCancellationLog(Tag);
+                }
                 catch (Exception e)
                 {
                     LogUtility.PrintLogException(e);

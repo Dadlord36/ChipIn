@@ -261,7 +261,7 @@ namespace ViewModels
             try
             {
                 CanCreateOffer = false;
-                await SendCreateOfferRequest();
+                await SendCreateOfferRequestAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -274,7 +274,7 @@ namespace ViewModels
             }
         }
 
-        private async Task SendCreateOfferRequest()
+        private async Task SendCreateOfferRequestAsync()
         {
             try
             {

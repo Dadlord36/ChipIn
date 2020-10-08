@@ -31,7 +31,7 @@ RectTransform:
   - {fileID: 4336216783868213177}
   - {fileID: 5656212431103151449}
   m_Father: {fileID: 5261197468501714412}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -197,8 +197,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.SponsoredAdViewModel.SelectedItemIndex
-  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsorsAdPostersListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsorsAdPostersListAdapter.SelectedIndex
+  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdFullListAdapter.itemSelected
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdFullListAdapter.SelectedIndex
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -238,17 +238,17 @@ MonoBehaviour:
   _Params:
     _Content: {fileID: 4092966157386708430}
     _Viewport: {fileID: 3653684039489054715}
-    _Orientation: 0
+    _Orientation: 1
     _Scrollbar: {fileID: 0}
     _ScrollSensivity: 100
     _ScrollSensivityOnXAxis: 100
     _ContentPadding:
       m_Left: 0
-      m_Right: 5
+      m_Right: 0
       m_Top: 0
       m_Bottom: 0
     _Gravity: 1
-    _ContentSpacing: 0
+    _ContentSpacing: 5
     _DefaultItemSize: 60
     _ForwardDragToParents: 0
     _ForwardDragSameDirectionAtBoundary: 0
@@ -297,8 +297,6 @@ MonoBehaviour:
     _AlsoControlItemTransversalSize: 0
     repositoryAdapterParameters:
       preFetchedItemsCount: 5
-  downloadedSpritesRepository: {fileID: 11400000, guid: 3e8d866ff4be1114ebc717dea471ee96,
-    type: 2}
   listFillingStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -350,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8450496890461082489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -362,15 +360,15 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6139862073452739850}
   - {fileID: 8716660288383699447}
-  m_Father: {fileID: 1809592776064885535}
-  m_RootOrder: 3
+  - {fileID: 6139862073452739850}
+  m_Father: {fileID: 5261197468501714412}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 44, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2853124927583363162
 CanvasRenderer:
@@ -436,7 +434,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8450496890461082489}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -850,13 +848,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7981477108610854269}
-  m_Father: {fileID: 1809592776064885535}
-  m_RootOrder: 4
+  m_Father: {fileID: 5261197468501714412}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 44, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7324013461622304923
 GameObject:
@@ -889,7 +887,7 @@ RectTransform:
   - {fileID: 3541128718898974501}
   - {fileID: 8278926958783542545}
   m_Father: {fileID: 8450496890461082489}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -1258,6 +1256,11 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 620660619560118355, guid: 2225de59284c0a9468cf8240f53725dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 894966714220921504, guid: 2225de59284c0a9468cf8240f53725dc,
         type: 3}
       propertyPath: m_RootOrder
@@ -1458,12 +1461,6 @@ PrefabInstance:
 --- !u!1 &5654947804221685121 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2258082276619634269, guid: 2225de59284c0a9468cf8240f53725dc,
-    type: 3}
-  m_PrefabInstance: {fileID: 5849112468991179740}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &1809592776064885535 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5201886019878852803, guid: 2225de59284c0a9468cf8240f53725dc,
     type: 3}
   m_PrefabInstance: {fileID: 5849112468991179740}
   m_PrefabAsset: {fileID: 0}

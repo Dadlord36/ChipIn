@@ -24,15 +24,13 @@ namespace ViewModels
 
         #endregion
 
-        private int _selectedFilterIndex;
-
         [Binding]
         public int SelectedFilterIndex
         {
-            get => _selectedFilterIndex;
+            get => userInterestPagesPaginatedRepository.SelectedFilterIndex;
             set
             {
-                _selectedFilterIndex = value;
+                userInterestPagesPaginatedRepository.SelectedFilterIndex = value;
                 try
                 {
                     RefreshCorrespondingListViewAsync(value);
@@ -45,16 +43,23 @@ namespace ViewModels
             }
         }
 
+        private int SelectedCommunityId => userInterestPagesPaginatedRepository.SelectedCommunityId;
+
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
         }
 
-        protected override void OnBecomingActiveView()
+        protected override async void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
             try
             {
-                RefreshCorrespondingListViewAsync(SelectedFilterIndex);
+                await RefreshCorrespondingListViewAsync(SelectedFilterIndex).ConfigureAwait(false);
+            }
+
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
@@ -63,10 +68,16 @@ namespace ViewModels
             }
         }
 
-        private async void RefreshCorrespondingListViewAsync(int selectedFilterIndex)
+        [Binding]
+        public void StartAnInterestButton_OnClick()
+        {
+            SwitchToView(nameof(StartInterestView), new FormsTransitionBundle(SelectedCommunityId), true);
+        }
+
+        private Task RefreshCorrespondingListViewAsync(int selectedFilterIndex)
         {
             UserInterestPagesListAdapter controllingAdapter;
-            switch (((MainNames.InterestCategory) selectedFilterIndex))
+            switch ((MainNames.InterestCategory) selectedFilterIndex)
             {
                 case MainNames.InterestCategory.all:
                     controllingAdapter = allInterestPagesListAdapter;
@@ -81,19 +92,7 @@ namespace ViewModels
                     throw new ArgumentOutOfRangeException();
             }
 
-            try
-            {
-                await controllingAdapter.ResetAsync();
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            return controllingAdapter.ResetAsync();
         }
     }
 }

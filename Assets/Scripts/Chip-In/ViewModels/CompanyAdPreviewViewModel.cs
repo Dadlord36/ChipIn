@@ -54,7 +54,7 @@ namespace ViewModels
     }*/
 
     [Binding]
-    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<SelectedCompanyAdPreviewView>, INotifyPropertyChanged
+    public sealed class CompanyAdPreviewViewModel : CorrespondingViewsSwitchingViewModel<CompanyAdPreviewView>, INotifyPropertyChanged
     {
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
@@ -141,7 +141,8 @@ namespace ViewModels
             {
                 IsSendingRequest = true;
                 IsAwaitingProcess = true;
-                var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository, _companyAdFeaturesPreviewData)
+                var result = await AdvertStaticRequestsProcessor.CreateAnAdvert(authorisationDataRepository,
+                        OperationCancellationController.CancellationToken, _companyAdFeaturesPreviewData)
                     .ConfigureAwait(false);
                 alertCardController.ShowAlertWithText(result.IsSuccessful
                     ? "Advert created successfully"

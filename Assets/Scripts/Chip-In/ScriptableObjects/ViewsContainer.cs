@@ -66,14 +66,16 @@ namespace ScriptableObjects
         [SerializeField] private BaseView[] containingViews;
         private ViewModelContainerItem[] _viewsContainer;
 
-        public BaseView GetViewByName(in string viewName)
+        public BaseView GetViewByName(in string viewName, bool recreate = false)
         {
             for (var i = 0; i < _viewsContainer.Length; i++)
             {
-                if (_viewsContainer[i].ViewName == viewName)
+                if (_viewsContainer[i].ViewName != viewName) continue;
+                if (recreate)
                 {
-                    return _viewsContainer[i].GetInstance;
+                    _viewsContainer[i].RemoveInstance();
                 }
+                return _viewsContainer[i].GetInstance;
             }
 
             throw new Exception($"There is no view with given ID: {viewName} in {name} views container");

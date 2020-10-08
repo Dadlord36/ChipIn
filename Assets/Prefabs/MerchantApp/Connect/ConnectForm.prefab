@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsNotEmpty
+  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsorsAdPostersListAdapter.ItemsListIsNotEmpty
 --- !u!1 &1108727584695980998
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +268,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2509930834612516921}
-  - {fileID: 322222622102753037}
   - {fileID: 4423211819190571912}
   - {fileID: 3498507253449849367}
   - {fileID: 4991574263916421285}
@@ -1445,7 +1444,7 @@ RectTransform:
   m_Children:
   - {fileID: 4542208291210151900}
   m_Father: {fileID: 4279098501380831844}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1650,7 +1649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: UnityWeld.Binding.Adapters.BoolInversionAdapter
   viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.ItemsListIsNotEmpty
+  viewModelPropertyName: Views.ViewElements.ScrollViews.Adapters.ReservedSponsorsAdPostersListAdapter.ItemsListIsNotEmpty
 --- !u!1 &6291602569817173178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,10 +1717,12 @@ MonoBehaviour:
   companyAdListAdapter: {fileID: 8829972675888673257}
   advertsPaginatedListRepository: {fileID: 11400000, guid: 6ee799f09793e0c499215375e658476a,
     type: 2}
-  sponsoredAdPostersRepository: {fileID: 0}
-  reservedSponsoredAdRepository: {fileID: 0}
-  sponsorsAdPostersListAdapter: {fileID: 0}
-  reservedSponsoredAdListAdapter: {fileID: 0}
+  sponsoredAdPostersRepository: {fileID: 11400000, guid: 1269c658652d5984d8e344565224a6b4,
+    type: 2}
+  reservedSponsoredAdRepository: {fileID: 11400000, guid: 1448195b4c7043141874b406079026bf,
+    type: 2}
+  sponsorsAdPostersListAdapter: {fileID: 1658069171456464120}
+  reservedSponsoredAdListAdapter: {fileID: 7089043104951538863}
 --- !u!1 &6916754360856086178
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,7 +1769,7 @@ GameObject:
   - component: {fileID: 3498507253449849367}
   - component: {fileID: 3582520002248500835}
   - component: {fileID: 6889007962084783131}
-  - component: {fileID: 9118189093073212135}
+  - component: {fileID: 7089043104951538863}
   - component: {fileID: 4689588112244517388}
   m_Layer: 5
   m_Name: ReservedAdSponsorAdsList
@@ -1791,7 +1792,7 @@ RectTransform:
   - {fileID: 6836223280501082032}
   - {fileID: 2210096804978577677}
   m_Father: {fileID: 4279098501380831844}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1835,7 +1836,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &9118189093073212135
+--- !u!114 &7089043104951538863
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1844,7 +1845,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7570486946876965545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 851976b054514065a6ee213a63d1a67c, type: 3}
+  m_Script: {fileID: 11500000, guid: e19d3e4df9204440a892e25af6967645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _Params:
@@ -1855,19 +1856,19 @@ MonoBehaviour:
     _ScrollSensivity: 100
     _ScrollSensivityOnXAxis: 100
     _ContentPadding:
-      m_Left: 10
-      m_Right: 10
-      m_Top: 10
-      m_Bottom: 10
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
     _Gravity: 1
-    _ContentSpacing: 10
+    _ContentSpacing: 15
     _DefaultItemSize: 60
     _ForwardDragToParents: 0
     _ForwardDragSameDirectionAtBoundary: 0
     _DragEnabled: 1
     _ScrollEnabled: 1
     _UseUnscaledTime: 1
-    _ItemTransversalSize: 0
+    _ItemTransversalSize: -1
     effects:
       _ContentVisual: {fileID: 0}
       _ElasticMovement: 1
@@ -1914,9 +1915,10 @@ MonoBehaviour:
   listFillingStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  pagesPaginatedRepository: {fileID: 0}
-  amountOfItemsAllowedToFetch: 10
-  allowedToFetchAllItems: 0
+  pagesPaginatedRepository: {fileID: 11400000, guid: 1448195b4c7043141874b406079026bf,
+    type: 2}
+  amountOfItemsAllowedToFetch: 0
+  allowedToFetchAllItems: 1
   startedFetching:
     m_PersistentCalls:
       m_Calls: []
@@ -1942,8 +1944,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.ConnectViewModel.SelectedReservedAdId
-  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.SelectedIndex
+  viewEventName: Views.ViewElements.ScrollViews.Adapters.ReservedSponsorsAdPostersListAdapter.itemSelected
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.ReservedSponsorsAdPostersListAdapter.SelectedIndex
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -2115,7 +2117,7 @@ GameObject:
   - component: {fileID: 4423211819190571912}
   - component: {fileID: 7071623432811075977}
   - component: {fileID: 2628343689820500541}
-  - component: {fileID: 8257733056766773181}
+  - component: {fileID: 1658069171456464120}
   - component: {fileID: 8187223575758562172}
   m_Layer: 5
   m_Name: AllSponsorAdsList
@@ -2138,7 +2140,7 @@ RectTransform:
   - {fileID: 3535089854549963807}
   - {fileID: 8982175398370070697}
   m_Father: {fileID: 4279098501380831844}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2182,7 +2184,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8257733056766773181
+--- !u!114 &1658069171456464120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2191,7 +2193,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8006716879015166500}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 851976b054514065a6ee213a63d1a67c, type: 3}
+  m_Script: {fileID: 11500000, guid: da9aa44fc346409eb8ac77a8fd111819, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _Params:
@@ -2202,19 +2204,19 @@ MonoBehaviour:
     _ScrollSensivity: 100
     _ScrollSensivityOnXAxis: 100
     _ContentPadding:
-      m_Left: 10
-      m_Right: 10
-      m_Top: 10
-      m_Bottom: 10
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
     _Gravity: 1
-    _ContentSpacing: 10
+    _ContentSpacing: 15
     _DefaultItemSize: 60
     _ForwardDragToParents: 0
     _ForwardDragSameDirectionAtBoundary: 0
     _DragEnabled: 1
     _ScrollEnabled: 1
     _UseUnscaledTime: 1
-    _ItemTransversalSize: 0
+    _ItemTransversalSize: -1
     effects:
       _ContentVisual: {fileID: 0}
       _ElasticMovement: 1
@@ -2261,9 +2263,9 @@ MonoBehaviour:
   listFillingStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  pagesPaginatedRepository: {fileID: 11400000, guid: 723bd13d49426ab40aa755256a1f2bdd,
+  pagesPaginatedRepository: {fileID: 11400000, guid: 1269c658652d5984d8e344565224a6b4,
     type: 2}
-  amountOfItemsAllowedToFetch: 3
+  amountOfItemsAllowedToFetch: 10
   allowedToFetchAllItems: 0
   startedFetching:
     m_PersistentCalls:
@@ -2301,8 +2303,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.ConnectViewModel.SelectedSponsoredAdId
-  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsoredAdListAdapter.SelectedIndex
+  viewEventName: Views.ViewElements.ScrollViews.Adapters.SponsorsAdPostersListAdapter.itemSelected
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.SponsorsAdPostersListAdapter.SelectedIndex
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -2342,7 +2344,7 @@ RectTransform:
   m_Children:
   - {fileID: 7739963553219578179}
   m_Father: {fileID: 4279098501380831844}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -2854,7 +2856,7 @@ PrefabInstance:
     - target: {fileID: 8341830744428323448, guid: 8b0e0008d38b71e4dbefd8549da073d8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8341830744428323448, guid: 8b0e0008d38b71e4dbefd8549da073d8,
         type: 3}
@@ -3608,126 +3610,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 887679526007290235, guid: 2225de59284c0a9468cf8240f53725dc,
     type: 3}
   m_PrefabInstance: {fileID: 4930524501634167892}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &7305046868365877815
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 4279098501380831844}
-    m_Modifications:
-    - target: {fileID: 5617399161747674362, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_Name
-      value: ShowAllCard
-      objectReference: {fileID: 0}
-    - target: {fileID: 5617399161747674362, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -119.05002
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-        type: 3}
-      propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 739bed96a927efd4ab9de47a663febd8, type: 3}
---- !u!224 &322222622102753037 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6996481284520324410, guid: 739bed96a927efd4ab9de47a663febd8,
-    type: 3}
-  m_PrefabInstance: {fileID: 7305046868365877815}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7386819253832937719
 PrefabInstance:

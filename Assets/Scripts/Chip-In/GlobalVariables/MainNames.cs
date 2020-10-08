@@ -6,7 +6,20 @@ namespace GlobalVariables
     {
         public static class ModelsPropertiesNames
         {
+            public const string UserId = "user_id";
+            public const string EndsAt = "ends_at";
+            public const string StartsAt = "starts_at";
+            public const string IsPublic = "is_public";
+            public const string TotalFund = "total_fund";
+            public const string FundedCount = "funded_count";
+            public const string SupportedCount = "supported_count";
+            public const string WatchedCount = "watched_count";
+            public const string JoinedCount = "joined_count";
+            public const string UsersCount = "users_count";
+            public const string MemberMessage = "member_message";
+            public const string MerchantMessage = "merchant_message";
             public const string InterestId = "interest_id";
+            public const string Interest = "interest";
             public const string Icon = "icon";
             public const string Description = "description";
             public const string Poster = "poster";
@@ -40,6 +53,7 @@ namespace GlobalVariables
             public const string CompanyEmail = "company_email";
             public const string SetReminderSAdCAdExpiring = "expiration_reminder";
             public const string Offer = "offer";
+            public const string Segment = "segment";
         }
 
         public enum InterestCategory
@@ -140,6 +154,11 @@ namespace GlobalVariables
             public const string Transport = "transport";
 
             public static readonly string[] OffersSegmentsArray = {Food, Travels, Apparels, Gadgets, Home, Transport};
+
+            public static string GetSegmentName(int itemIndex)
+            {
+                return OffersSegmentsArray[itemIndex];
+            }
         }
 
         public static class OfferCategories

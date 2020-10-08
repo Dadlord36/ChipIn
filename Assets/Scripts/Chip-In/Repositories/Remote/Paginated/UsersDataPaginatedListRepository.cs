@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using DataModels;
@@ -18,14 +17,21 @@ namespace Repositories.Remote.Paginated
         UsersListResponseDataModel, IUserListResponseModel>
     {
         protected override string Tag => nameof(UsersDataPaginatedListRepository);
+        public string UserName { get; set; }
         
 
         protected override Task<BaseRequestProcessor<object, UsersListResponseDataModel, IUserListResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource,
                 PaginatedRequestData paginatedRequestData)
         {
+            if(string.IsNullOrEmpty(UserName))
+            {
+                return UsersRequestsStaticProcessor.GetUsersList(out cancellationTokenSource, authorisationDataRepository,
+                    paginatedRequestData);
+            }
+
             return UsersRequestsStaticProcessor.GetUsersList(out cancellationTokenSource, authorisationDataRepository,
-                paginatedRequestData);
+                paginatedRequestData, UserName);
         }
 
         protected override List<UserProfileBaseData> GetItemsFromResponseModelInterface(

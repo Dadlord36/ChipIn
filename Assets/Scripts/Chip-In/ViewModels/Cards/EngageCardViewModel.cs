@@ -18,8 +18,8 @@ using Views.Cards;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IFillingView<MarketInterestDetailsDataModel>, IIdentifiedSelection,
-        INotifyPropertyChanged
+    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IFillingView<MarketInterestDetailsDataModel>,
+        IIdentifiedSelection<uint>, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         public uint IndexInOrder { get; set; }

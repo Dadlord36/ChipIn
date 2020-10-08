@@ -53,7 +53,7 @@ namespace Views.Bars.BarItems
 
 
     [Binding]
-    public class DesignedScrollBarItemBaseViewModel : MonoBehaviour, IPointerClickHandler, INotifyPropertyChanged, IIdentifiedSelection,
+    public class DesignedScrollBarItemBaseViewModel : MonoBehaviour, IPointerClickHandler, INotifyPropertyChanged, IIdentifiedSelection<uint>,
         IFillingView<DesignedScrollBarItemBaseViewModel.FieldFillingData>
     {
         public class FieldFillingData : IDesignedScrollBarItem

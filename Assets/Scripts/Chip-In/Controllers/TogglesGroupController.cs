@@ -92,7 +92,7 @@ namespace Controllers
             list.RemoveAt(itemByIndex);
             return list;
         }
-        
+
         private static List<T> GetItemsExcept<T>(T item, IEnumerable<T> inList)
         {
             var list = new List<T>(inList);

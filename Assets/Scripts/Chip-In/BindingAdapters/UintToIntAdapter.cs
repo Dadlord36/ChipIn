@@ -7,7 +7,7 @@ namespace BindingAdapters
     {
         public object Convert(object valueIn, AdapterOptions options)
         {
-            return valueIn==null ? 0 :  (int) valueIn;
+            return valueIn == null ? 0 : (int) valueIn;
         }
     }
 }
