@@ -116,8 +116,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         public override void ClearRemainListItems()
         {
-            base.ClearRemainListItems();
             TasksFactories.ExecuteOnMainThread(() => { pagesPaginatedRepository.Clear(); });
+            base.ClearRemainListItems();
         }
 
         public async Task ResetAsync()
