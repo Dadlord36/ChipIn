@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Behaviours;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataModels;
 using Repositories.Remote;
 using RequestsStaticProcessors;
@@ -12,32 +11,27 @@ using Views.ViewElements.ScrollViews.Adapters;
 namespace ViewModels.Cards
 {
     [Binding]
-    public class SearchForCommunityViewModel : AsyncOperationsMonoBehaviour
+    public class SearchForCommunityViewModel : BaseSearchForItemsViewModel
     {
         private const string Tag = nameof(SearchForCommunityViewModel);
 
         [SerializeField] private UserInterestsLabelsSimpleListAdapter userInterestsLabelsSimpleListAdapter;
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
 
-        private string _inputText;
 
-        [Binding]
-        public string InputText
+        protected override async Task RefillListViewAsync(string nameToSearch)
         {
-            get => _inputText;
-            set
+            AsyncOperationCancellationController.CancelOngoingTask();
+            var response = await CommunitiesStaticRequestsProcessor.GetCommunitiesListByName(
+                    out AsyncOperationCancellationController.TasksCancellationTokenSource, userAuthorisationDataRepository, nameToSearch)
+                .ConfigureAwait(false);
+            if (!response.Success)
             {
-                _inputText = value;
-                try
-                {
-                    RefillListView(value);
-                }
-                catch (Exception e)
-                {
-                    LogUtility.PrintLogException(e);
-                    throw;
-                }
+                LogUtility.PrintLog(Tag, response.Error);
+                return;
             }
+
+            RestItems(response.ResponseModelInterface.Communities);
         }
 
         private void RestItems(IList<InterestBasicDataModel> items)
@@ -45,30 +39,10 @@ namespace ViewModels.Cards
             userInterestsLabelsSimpleListAdapter.SetItems(items);
         }
 
-        private async void RefillListView(string value)
+        public override void Clear()
         {
-            try
-            {
-                AsyncOperationCancellationController.CancelOngoingTask();
-                var response = await CommunitiesStaticRequestsProcessor.GetCommunitiesListByName(
-                    out AsyncOperationCancellationController.TasksCancellationTokenSource, userAuthorisationDataRepository, value);
-                if (!response.Success)
-                {
-                    LogUtility.PrintLog(Tag, response.Error);
-                    return;
-                }
-
-                RestItems(response.ResponseModelInterface.Communities);
-            }
-            catch (OperationCanceledException)
-            {
-                LogUtility.PrintDefaultOperationCancellationLog(Tag);
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
+            base.Clear();
+            userInterestsLabelsSimpleListAdapter.ClearRemainListItems();
         }
     }
 }

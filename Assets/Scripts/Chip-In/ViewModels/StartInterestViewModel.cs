@@ -148,6 +148,18 @@ namespace ViewModels
             }
         }
 
+        private bool _communityWasSelected;
+
+        private int SelectedCommunityIndex
+        {
+            get => _selectedCommunityIndex;
+            set
+            {
+                _selectedCommunityIndex = value;
+                _communityWasSelected = true;
+            }
+        }
+
         public StartInterestViewModel() : base(nameof(StartInterestViewModel))
         {
         }
@@ -161,7 +173,8 @@ namespace ViewModels
         protected override void OnBecomingActiveView()
         {
             base.OnBecomingActiveView();
-            _selectedCommunityIndex = (int) View.FormTransitionBundle.TransitionData;
+            if (!_communityWasSelected)
+                SelectedCommunityIndex = (int) View.FormTransitionBundle.TransitionData;
         }
 
         private void Clear()
@@ -224,7 +237,7 @@ namespace ViewModels
         private Task<IRestResponse> CreateInterestAsync()
         {
             return CommunitiesInterestsStaticProcessor.CreateAnInterestAsync(OperationCancellationController.CancellationToken,
-                RequestAuthorizationHeaders, _selectedCommunityIndex, _interestCreationModelImplementation);
+                RequestAuthorizationHeaders, SelectedCommunityIndex, _interestCreationModelImplementation);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

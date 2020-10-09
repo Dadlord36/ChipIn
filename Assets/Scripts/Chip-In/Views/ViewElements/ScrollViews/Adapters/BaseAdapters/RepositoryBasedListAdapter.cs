@@ -114,14 +114,10 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             AmountOfItemsAllowedToFetch = TotalCapacity;
         }
 
-        public void ClearRemainListItems()
+        public override void ClearRemainListItems()
         {
-            pagesPaginatedRepository.Clear();
-            if (Data.Count > 0)
-            {
-                Data.RemoveItemsFromStart(Data.Count);
-            }
-            Refresh();
+            TasksFactories.ExecuteOnMainThread(() => { pagesPaginatedRepository.Clear(); });
+            base.ClearRemainListItems();
         }
 
         public async Task ResetAsync()
@@ -133,7 +129,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             ResetStateVariables();
             ClearRemainListItems();
-            
+
             try
             {
                 OnStartedFetching();

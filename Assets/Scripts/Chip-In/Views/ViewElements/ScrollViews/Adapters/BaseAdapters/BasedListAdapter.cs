@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
-using Common.Interfaces;
 using Common.UnityEvents;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
@@ -29,7 +28,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     {
         protected readonly string Tag;
 
-        private IDownloadedSpritesRepository downloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
+        protected IDownloadedSpritesRepository downloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
         public BoolUnityEvent listFillingStateChanged;
 
         // Helper that stores data and notifies the adapter when items count changes
@@ -39,7 +38,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
         private bool _itemsListIsNotEmpty = true;
         protected int MiddleElementNumber;
-        
 
 
         [Binding]
@@ -159,8 +157,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         #endregion
 
 
-
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -168,10 +164,23 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
-        
+
         private void OnListFillingStateChanged(bool state)
         {
             TasksFactories.ExecuteOnMainThread(() => { listFillingStateChanged.Invoke(state); });
+        }
+
+        public virtual void ClearRemainListItems()
+        {
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                if (Data.Count > 0)
+                {
+                    Data.RemoveItemsFromStart(Data.Count);
+                }
+
+                Refresh();
+            });
         }
     }
 }
