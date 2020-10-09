@@ -19,7 +19,7 @@ namespace ViewModels.UI.Elements
             new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveOut, false,
                ViewAppearanceParameters.SwitchingViewPosition.Above, MoveDirection.Right),
             new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveIn, false, 
-                ViewAppearanceParameters.SwitchingViewPosition.Under, MoveDirection.Left));
+                ViewAppearanceParameters.SwitchingViewPosition.Under, MoveDirection.Left, .5f));
 
 
         protected override void OnEnable()
