@@ -18,6 +18,7 @@ public class ReferencesContainersInitializer : MonoBehaviour
         SimpleAutofac.AddObjectInstance(downloadedSpritesRepository);
         SimpleAutofac.AddObjectInstance(alertCardController);
         SimpleAutofac.AddObjectInstance(userAuthorisationDataRepository);
+        SimpleAutofac.AddObjectInstance<LastViewedInterestsRepository>();
         
         Destroy(this);
     }

@@ -43,7 +43,7 @@ namespace Utilities
             }
         }
 
-        private static async Task WriteBytesToFile(byte[] dataToWrite, string filePath)
+        public static async Task WriteBytesToFile(byte[] dataToWrite, string filePath)
         {
             try
             {
@@ -51,6 +51,22 @@ namespace Utilities
                 {
                     sourceStream.Seek(0, SeekOrigin.End);
                     await sourceStream.WriteAsync(dataToWrite, 0, dataToWrite.Length).ConfigureAwait(false);
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
+        }
+
+        public static async Task WriteTextToFileAsync(string text, string filePath)
+        {
+            try
+            {
+                using (var writer = File.CreateText(filePath))
+                {
+                    await writer.WriteAsync(text).ConfigureAwait(false);
                 }
             }
             catch (Exception e)
