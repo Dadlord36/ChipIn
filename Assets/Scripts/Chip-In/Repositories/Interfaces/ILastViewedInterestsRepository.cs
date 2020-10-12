@@ -11,5 +11,6 @@ namespace Repositories.Interfaces
         IList<InterestBasicDataModel> LastViewedInterestsList { get; }
         Task AddUniqueItemAtStartAsync(InterestBasicDataModel item);
         Task SaveToLocalStorageAsync(LastViewedInterestsDataModel dataToSave);
+        Task RemoveIfExistsAsync(InterestBasicDataModel selectedInterest);
     }
 }
