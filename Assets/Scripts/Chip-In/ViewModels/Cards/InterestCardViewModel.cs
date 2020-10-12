@@ -10,6 +10,7 @@ using Repositories.Local;
 using Repositories.Remote;
 using RequestsStaticProcessors;
 using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityWeld.Binding;
@@ -211,8 +212,9 @@ namespace ViewModels.Cards
         {
             try
             {
-                var response = await CommunitiesInterestsStaticProcessor.SupportInterest(out AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, (int) InterestId);
+                var response = await CommunitiesInterestsStaticProcessor.SupportInterest(
+                        out AsyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, (int) InterestId)
+                    .ConfigureAwait(false);
 
                 alertCardController.ShowAlertWithText(response.Success ? "Successfully supported this interest" : response.Error);
                 if (response.Success)
@@ -233,15 +235,15 @@ namespace ViewModels.Cards
             }
         }
 
-
         [Binding]
         public async void JoinButton_OnClick()
         {
             try
             {
                 Assert.IsTrue(InterestId.HasValue);
-                var response = await CommunitiesInterestsStaticProcessor.JoinToInterest(out AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, (int) InterestId);
+                var response = await CommunitiesInterestsStaticProcessor.JoinToInterest(
+                        out AsyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, (int) InterestId)
+                    .ConfigureAwait(false);
 
                 alertCardController.ShowAlertWithText(response.Success ? "Successfully joining this interest" : response.Error);
             }
@@ -266,8 +268,9 @@ namespace ViewModels.Cards
 
             try
             {
-                var response = await CommunitiesInterestsStaticProcessor.FundInterest(out AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    authorisationDataRepository, (int) InterestId, tokensAmount);
+                var response = await CommunitiesInterestsStaticProcessor.FundInterest(
+                    out AsyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, (int) InterestId, tokensAmount)
+                    .ConfigureAwait(false);
 
                 alertCardController.ShowAlertWithText(response.Success ? "Successfully fund this interest" : response.Error);
                 if (response.Success)
@@ -311,12 +314,13 @@ namespace ViewModels.Cards
             TotalFound = pageDataModel.TotalFound;
             CreatedAt = pageDataModel.CreatedAt;
             Supporting = pageDataModel.Support;
-
-            // Percentage = pageDataModel.
+            
 
             try
             {
-                CardIcon = await downloadedSpritesRepository.CreateLoadSpriteTask(pageDataModel.PosterUri, AsyncOperationCancellationController.CancellationToken);
+                CardIcon = await downloadedSpritesRepository.CreateLoadSpriteTask(pageDataModel.PosterUri,
+                    AsyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -337,7 +341,7 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
         }
     }
 }
