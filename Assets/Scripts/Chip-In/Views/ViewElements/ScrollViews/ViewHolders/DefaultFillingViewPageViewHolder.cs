@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using DataModels;
 using Utilities;
 
 namespace Views.ViewElements.ScrollViews.ViewHolders

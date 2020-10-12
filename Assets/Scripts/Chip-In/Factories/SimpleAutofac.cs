@@ -12,6 +12,11 @@ namespace Factories
             Objects.Add(objectInstance);
         }
 
+        public static void AddObjectInstance<T>() where T : new()
+        {
+            Objects.Add(new T());
+        }
+
         public static T GetInstance<T>() where T:class
         {
             var result = Objects.Find(o => o is T);

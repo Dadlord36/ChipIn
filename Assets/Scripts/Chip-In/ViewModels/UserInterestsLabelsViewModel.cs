@@ -1,6 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using DataModels;
+using DataModels.HttpRequestsHeadersModels;
+using Factories;
+using Repositories.Interfaces;
+using Repositories.Remote;
 using Repositories.Remote.Paginated;
+using RequestsStaticProcessors;
+using ScriptableObjects.CardsControllers;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -16,14 +25,23 @@ namespace ViewModels
         [SerializeField] private InterestsBasicDataPaginatedListRepository interestsBasicDataPaginatedListRepository;
         [SerializeField] private UserInterestPagesPaginatedRepository userInterestPagesPaginatedRepository;
         [SerializeField] private UserInterestsListAdapter userInterestsListAdapter;
+        [SerializeField] private LastViewedInterestsListAdapter lastViewedInterestsListAdapter;
 
-        private int _selectedIndex;
+        private static ILastViewedInterestsRepository ViewedInterestsRepository => SimpleAutofac.GetInstance<ILastViewedInterestsRepository>();
+        private static IRequestHeaders AuthorisationHeaders => SimpleAutofac.GetInstance<IUserAuthorisationDataRepository>();
+        private static IAlertCardController AlertCardController => SimpleAutofac.GetInstance<IAlertCardController>();
+
+        private InterestBasicDataModel _selectedInterestData;
 
         [Binding]
-        public uint SelectedIndex
+        public InterestBasicDataModel SelectedInterest
         {
-            get => (uint) _selectedIndex;
-            set => SelectedInterestIndex = _selectedIndex = (int) value;
+            get => _selectedInterestData;
+            set
+            {
+                _selectedInterestData = value;
+                SelectedInterestIndex = (int) value.Id;
+            }
         }
 
         private int SelectedInterestIndex
@@ -55,14 +73,36 @@ namespace ViewModels
             }
         }
 
-        private void OnNewInterestSelected()
+        private async void OnNewInterestSelected()
         {
-            SwitchToPagesView();
+            try
+            {
+                var response = await CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _, AuthorisationHeaders, (int) SelectedInterest.Id)
+                    .ConfigureAwait(false);
+
+                if (response.Success)
+                {
+                    await ViewedInterestsRepository.AddUniqueItemAtStartAsync(SelectedInterest).ConfigureAwait(false);
+                    SwitchToPagesView();
+                }
+                else
+                {
+                    if (response.StatusCode != HttpStatusCode.NotFound) return;
+                    await ViewedInterestsRepository.RemoveIfExistsAsync(SelectedInterest).ConfigureAwait(false);
+                    AlertCardController.ShowAlertWithText(response.Error);
+                }
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         private async Task<int> GetDataByIndexAsync(uint index)
         {
-            var itemData = await interestsBasicDataPaginatedListRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
+            var itemData = await interestsBasicDataPaginatedListRepository.GetItemWithIndexAsync(index)
+                .ConfigureAwait(false);
             return (int) itemData.Id;
         }
 
@@ -72,12 +112,19 @@ namespace ViewModels
             try
             {
                 await userInterestsListAdapter.ResetAsync().ConfigureAwait(false);
+                await ViewedInterestsRepository.Restore().ConfigureAwait(false);
+                RefillLastViewedItemsList(ViewedInterestsRepository.LastViewedInterestsList);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        private void RefillLastViewedItemsList(IList<InterestBasicDataModel> itemsData)
+        {
+            lastViewedInterestsListAdapter.SetItems(itemsData);
         }
 
         private void SwitchToPagesView()
