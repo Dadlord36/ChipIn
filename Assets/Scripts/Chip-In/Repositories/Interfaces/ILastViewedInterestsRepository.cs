@@ -9,7 +9,7 @@ namespace Repositories.Interfaces
     public interface ILastViewedInterestsRepository : IRestorable
     {
         IList<InterestBasicDataModel> LastViewedInterestsList { get; }
-        void AddUniqueItemAtStart(InterestBasicDataModel item);
+        Task AddUniqueItemAtStartAsync(InterestBasicDataModel item);
         Task SaveToLocalStorageAsync(LastViewedInterestsDataModel dataToSave);
     }
 }

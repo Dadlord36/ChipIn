@@ -68,7 +68,7 @@ namespace ViewModels
 
         private void OnNewInterestSelected()
         {
-            ViewedInterestsRepository.AddUniqueItemAtStart(SelectedInterest);
+            ViewedInterestsRepository.AddUniqueItemAtStartAsync(SelectedInterest);
             SwitchToPagesView();
         }
 
