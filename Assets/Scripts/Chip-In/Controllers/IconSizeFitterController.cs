@@ -10,9 +10,9 @@ namespace Controllers
     [RequireComponent(typeof(Image))]
     public class IconSizeFitterController : UIBehaviour
     {
-        protected override void Awake()
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
             ResetElementSize();
         }
 
