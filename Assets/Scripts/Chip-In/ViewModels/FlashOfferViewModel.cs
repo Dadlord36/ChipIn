@@ -15,6 +15,7 @@ using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using ViewModels.UI.Elements;
+using Views.ViewElements;
 
 namespace ViewModels
 {
@@ -25,6 +26,7 @@ namespace ViewModels
 
         [SerializeField] private UserAuthorisationDataRepository userAuthorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
+        [SerializeField] private SettableIconView iconView;
 
         #endregion
 
@@ -267,6 +269,8 @@ namespace ViewModels
             ExpireLocalDate = DateTime.Now;
             SelectedCurrencyTypeIndex = 0;
             SelectedOfferTypeIndex = 0;
+            PosterFilePath = string.Empty;
+            iconView.Clear();
             transform.GetComponentInChildren<TimePickerAreaViewModel>().Clear();
         }
 
