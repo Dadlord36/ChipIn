@@ -115,6 +115,7 @@ namespace HttpRequests.RequestsProcessors
             public string Error;
             public bool Success { get; set; }
             public string ResponseContentAsString { get; set; }
+            public HttpStatusCode StatusCode { get; set; }
         }
 
         public async Task<HttpResponse> SendRequest(string successfulResponseMassage)
@@ -130,6 +131,7 @@ namespace HttpRequests.RequestsProcessors
                     var httpResponse = new HttpResponse
                     {
                         Headers = responseMessage.Headers,
+                        StatusCode = responseMessage.StatusCode,
                         ResponsePhrase = responseMessage.ReasonPhrase,
                         Success = responseMessage.IsSuccessStatusCode,
                         ResponseContentAsString = contentAsString

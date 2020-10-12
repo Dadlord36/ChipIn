@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common.Interfaces;
 using Controllers;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using Factories;
 using JetBrains.Annotations;
 using Repositories.Local;
@@ -17,25 +18,24 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class InterestItemViewModel : MonoBehaviour, IIdentifiedSelection<uint>, INotifyPropertyChanged, IPointerClickHandler,
+    public sealed class InterestItemViewModel : MonoBehaviour, IIdentifiedSelection<InterestBasicDataModel>, INotifyPropertyChanged, IPointerClickHandler,
         IFillingView<InterestItemViewModel.FieldFillingData>
     {
-        public event Action<uint> ItemSelected;
+        public event Action<InterestBasicDataModel> ItemSelected;
         public uint IndexInOrder { get; set; }
-        private uint InterestIndex { get; set; }
+        private InterestBasicDataModel Interest { get; set; }
 
 
         public class FieldFillingData
         {
-            public readonly string IconUrl;
-            public readonly string Description;
-            public readonly int InterestIndex;
+            public readonly InterestBasicDataModel Interest;
+            public string IconUrl => Interest.PosterUri;
+            public string Description => Interest.Name;
+            public int InterestIndex => (int) Interest.Id;
 
-            public FieldFillingData(in string iconUrl, string description, int interestIndex)
+            public FieldFillingData(InterestBasicDataModel interest)
             {
-                IconUrl = iconUrl;
-                Description = description;
-                InterestIndex = interestIndex;
+                Interest = interest;
             }
         }
 
@@ -69,22 +69,24 @@ namespace ViewModels.Cards
             }
         }
 
+        private static IDownloadedSpritesRepository DownloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
+        
         public async Task FillView(FieldFillingData data, uint dataBaseIndex)
         {
             try
             {
-                var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
                 _asyncOperationCancellationController.CancelOngoingTask();
 
-                Icon = downloadedSpritesRepository.IconPlaceholder;
-                InterestIndex = (uint) data.InterestIndex;
+                Interest = data.Interest;
+                Icon = DownloadedSpritesRepository.IconPlaceholder;
                 Text = data.Description;
-                Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(data.IconUrl, _asyncOperationCancellationController.CancellationToken)
+                Icon = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.IconUrl, _asyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
                 LogUtility.PrintDefaultOperationCancellationLog(Tag);
+                throw;
             }
             catch (Exception e)
             {
@@ -105,7 +107,7 @@ namespace ViewModels.Cards
 
         private void OnItemSelected()
         {
-            ItemSelected?.Invoke(InterestIndex);
+            ItemSelected?.Invoke(Interest);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
