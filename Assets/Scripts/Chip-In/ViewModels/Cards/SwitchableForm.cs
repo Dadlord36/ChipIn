@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Behaviours;
 using JetBrains.Annotations;
 using Tasking;
-using UnityEngine;
 using UnityWeld.Binding;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public class SwitchableForm : AsyncOperationsMonoBehaviour, INotifyPropertyChanged
+    public abstract class SwitchableForm<TDataType> : SelectableListItemBase<TDataType>, INotifyPropertyChanged where TDataType : class
     {
         private bool _alternativeFormUsed;
 
@@ -23,6 +21,10 @@ namespace ViewModels.Cards
                 _alternativeFormUsed = value;
                 OnPropertyChanged();
             }
+        }
+
+        protected SwitchableForm(string childClassName) : base(childClassName)
+        {
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -2,9 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Behaviours;
-using Common.Interfaces;
 using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using Factories;
 using JetBrains.Annotations;
 using Repositories.Local;
@@ -17,8 +16,7 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class AdCardViewModel : AsyncOperationsMonoBehaviour, IIdentifiedSelection<uint>, INotifyPropertyChanged, IPointerClickHandler,
-        IFillingView<AdCardViewModel.FieldFillingData>
+    public sealed class AdCardViewModel : SelectableListItemBase<AdvertItemDataModel>, IFillingView<AdCardViewModel.FieldFillingData>
     {
         public event Action<uint> ItemSelected;
 
@@ -90,16 +88,7 @@ namespace ViewModels.Cards
         {
             Select();
         }
-
-        public void Select()
-        {
-            OnItemSelected();
-        }
-
-        private void OnItemSelected()
-        {
-            ItemSelected?.Invoke(IndexInOrder);
-        }
+        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -107,6 +96,10 @@ namespace ViewModels.Cards
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+        }
+
+        public AdCardViewModel(string childClassName) : base(childClassName)
+        {
         }
     }
 }

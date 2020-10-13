@@ -1,39 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using Factories;
 using Repositories.Local;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
+using Utilities;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsoredAdCardViewModel : SwitchableForm, IPointerClickHandler, IFillingView<SponsoredAdCardViewModel.FieldFillingData>,
-        IIdentifiedSelection<uint>
+    public sealed class SponsoredAdCardViewModel : SwitchableForm<SponsoredAdDataModel>
     {
-        public uint IndexInOrder { get; private set; }
-        public event Action<uint> ItemSelected;
-
-        public class FieldFillingData
-        {
-            public readonly string BackgroundSpriteUrl;
-            public readonly string LogoSpriteUrl;
-
-            public FieldFillingData(in string backgroundSpriteUrl, in string logoSpriteUrl)
-            {
-                BackgroundSpriteUrl = backgroundSpriteUrl;
-                LogoSpriteUrl = logoSpriteUrl;
-            }
-
-            public FieldFillingData(in string backgroundSpriteUrl)
-            {
-                BackgroundSpriteUrl = backgroundSpriteUrl;
-            }
-        }
-
         private Sprite _logoSprite;
 
         [Binding]
@@ -61,33 +40,34 @@ namespace ViewModels.Cards
                 OnPropertyChanged();
             }
         }
-
-        public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
+        
+        public SponsoredAdCardViewModel() : base(nameof(SponsoredAdCardViewModel))
         {
-            IndexInOrder = dataBaseIndex;
-            var downloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
-            if (dataModel.LogoSpriteUrl != null)
-                LogoSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.LogoSpriteUrl,
-                    AsyncOperationCancellationController.CancellationToken).ConfigureAwait(false);
-
-            BackgroundTexture = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.BackgroundSpriteUrl,
-                    AsyncOperationCancellationController.CancellationToken)
-                .ConfigureAwait(false);
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        public override async Task FillView(SponsoredAdDataModel data, uint dataBaseIndex)
         {
-            Select();
-        }
-
-        public void Select()
-        {
-            OnItemSelected(IndexInOrder);
-        }
-
-        private void OnItemSelected(uint index)
-        {
-            ItemSelected?.Invoke(index);
+            await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
+            try
+            {
+                IndexInOrder = dataBaseIndex;
+                BackgroundTexture = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
+                        AsyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
+                
+                if (!string.IsNullOrEmpty(data.LogoUrl))
+                    LogoSprite = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.LogoUrl,
+                        AsyncOperationCancellationController.CancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

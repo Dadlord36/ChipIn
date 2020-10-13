@@ -8,8 +8,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UserInterestPagesListAdapter : RepositoryBasedListAdapter<UserInterestPagesPaginatedRepository, UserInterestPageDataModel,
-        DefaultFillingViewPageViewHolder<UserInterestPageDataModel, uint>, UserInterestPageDataModel, DefaultFillingViewAdapter<UserInterestPageDataModel>>
+    public class UserInterestPagesListAdapter : RepositoryBasedListAdapter<UserInterestPagesPaginatedRepository, UserInterestPageDataModel>
     {
     }
 }

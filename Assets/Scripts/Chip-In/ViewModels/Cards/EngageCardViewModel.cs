@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using DataModels.Interfaces;
 using JetBrains.Annotations;
@@ -12,19 +10,12 @@ using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
-using ViewModels.Basic;
-using Views.Cards;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class EngageCardViewModel : CorrespondingViewModel<EngageCardView>, IFillingView<MarketInterestDetailsDataModel>,
-        IIdentifiedSelection<uint>, INotifyPropertyChanged
+    public sealed class EngageCardViewModel : SelectableListItemBase<MarketInterestDetailsDataModel>
     {
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        public uint IndexInOrder { get; set; }
-        public event Action<uint> ItemSelected;
-
         private const string EmptyFieldText = "-";
         private uint _size;
         private string _minCapMaxCap = EmptyFieldText;
@@ -140,31 +131,15 @@ namespace ViewModels.Cards
         {
         }
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            RelatedView.WasClicked += OnCardWasClicked;
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            RelatedView.WasClicked -= OnCardWasClicked;
-        }
-
         private void OnCardWasClicked()
         {
             Select();
         }
 
-        public void Select()
-        {
-            OnItemSelected((uint) Id);
-        }
 
         private void ClearIcon()
         {
-            Icon = downloadedSpritesRepository.IconPlaceholder;
+            Icon = DownloadedSpritesRepository.IconPlaceholder;
         }
 
         private static string ChooseFieldValue(in string value)
@@ -172,14 +147,14 @@ namespace ViewModels.Cards
             return string.IsNullOrEmpty(value) ? EmptyFieldText : value;
         }
 
-        public async Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
+        public override async Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
-            OperationCancellationController.CancelOngoingTask();
+            AsyncOperationCancellationController.CancelOngoingTask();
             ClearIcon();
             SetViewModelFields(dataModel);
             try
             {
-                Icon = await downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, OperationCancellationController.CancellationToken)
+                Icon = await DownloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, AsyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -202,19 +177,6 @@ namespace ViewModels.Cards
             MinCapMaxCap = $"$ {dataModel.MinCap.ToString()} - {dataModel.MaxCap.ToString()}";
             Id = dataModel.Id;
             Name = dataModel.Name;
-        }
-
-        private void OnItemSelected(uint index)
-        {
-            ItemSelected?.Invoke(index);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

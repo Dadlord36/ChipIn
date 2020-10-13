@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Repositories.Interfaces;
 using Repositories.Remote;
 using Tasking;
@@ -14,7 +13,6 @@ using Utilities;
 using ViewModels.Cards;
 using ViewModels.Elements;
 using Views.ViewElements.ScrollViews.Adapters.Parameters;
-using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
@@ -24,14 +22,10 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     }
 
     [Binding]
-    public abstract class RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData,
-        TFillingViewAdapter> :
-        BasedListAdapter<RepositoryPagesAdapterParameters, TViewPageViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter>, IResettableAsync
+    public abstract class RepositoryBasedListAdapter<TRepository, TDataType> :
+        BasedListAdapter<RepositoryPagesAdapterParameters, TDataType>, IResettableAsync
         where TDataType : class
-        where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
-        where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
-        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
     {
         [SerializeField] private TRepository pagesPaginatedRepository;
         [SerializeField] private uint amountOfItemsAllowedToFetch;
@@ -77,11 +71,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private bool DecideIfAlternativeFormShouldBeUsed(AbstractViewsHolder baseItemViewsHolder)
         {
-            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm>(baseItemViewsHolder.root);
+            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm<TDataType>>(baseItemViewsHolder.root);
             return switchableForm && DecideIfAlternativeFormShouldBeUsed(switchableForm, baseItemViewsHolder);
         }
 
-        private bool DecideIfAlternativeFormShouldBeUsed(SwitchableForm switchableForm, AbstractViewsHolder baseItemViewsHolder)
+        private bool DecideIfAlternativeFormShouldBeUsed(SwitchableForm<TDataType> switchableForm, AbstractViewsHolder baseItemViewsHolder)
         {
             var state = Data[baseItemViewsHolder.ItemIndex] == null;
             switchableForm.AlternativeFormUsed = state;
@@ -92,7 +86,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             DecideScrollingIsAllowedOrNot();
             var instance = base.CreateViewsHolder(itemIndex);
-            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm>(instance.root);
+            var switchableForm = GameObjectsUtility.GetFromRootOrChildren<SwitchableForm<TDataType>>(instance.root);
 
             if (!switchableForm) return instance;
 

@@ -10,9 +10,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UsersAvatarsArrayListAdapter : BasedListAdapter<BaseParamsWithPrefab,
-        DefaultFillingViewPageViewHolder<UserAvatarItemViewModel.FieldFillingData, UserProfileBaseData>, UserProfileBaseData,
-        UserAvatarItemViewModel.FieldFillingData, UsersAvatarsArrayListAdapter.FillingViewAdapter>
+    public class UsersAvatarsArrayListAdapter : BasedListAdapter<BaseParamsWithPrefab,UserProfileBaseData>
     {
         public class FillingViewAdapter : FillingViewAdapter<UserProfileBaseData, UserAvatarItemViewModel.FieldFillingData>
         {

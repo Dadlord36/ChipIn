@@ -10,14 +10,16 @@ namespace Behaviours
     public abstract class AsyncOperationsMonoBehaviour : MonoBehaviour
     {
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
+
         protected ref DisposableCancellationTokenSource TasksCancellationTokenSource =>
             ref AsyncOperationCancellationController.TasksCancellationTokenSource;
-        
-        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable => GameManager.MainAwaitingProcessVisualizerControllerScriptable;
+
+        private static AwaitingProcessVisualizerControllerScriptable MainAwaitingProcessVisualizerControllerScriptable =>
+            GameManager.MainAwaitingProcessVisualizerControllerScriptable;
 
         private bool _awaitingProcess;
 
-        
+
         public bool IsAwaitingProcess
         {
             get => _awaitingProcess;
@@ -31,7 +33,7 @@ namespace Behaviours
                     MainAwaitingProcessVisualizerControllerScriptable.Hide();
             }
         }
-        
+
         private void OnDisable()
         {
             AsyncOperationCancellationController.CancelOngoingTask();

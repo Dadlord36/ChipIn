@@ -12,12 +12,10 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
-    public abstract class NameAndNumberSelectableFieldListAdapter<TDataType, TFillingViewAdapter> : BasedListAdapter<BaseParamsWithPrefab,
-        DefaultFillingViewPageViewHolder<NameAndNumberSelectableFieldFillingData, uint>, TDataType, NameAndNumberSelectableFieldFillingData,
-        TFillingViewAdapter> where TFillingViewAdapter : FillingViewAdapter<TDataType, NameAndNumberSelectableFieldFillingData>, new()
-    {
-        private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
+    public abstract class NameAndNumberSelectableFieldListAdapter<TDataType> : BasedListAdapter<BaseParamsWithPrefab, TDataType>
+        where TDataType : class
 
+    {
         private SimpleDataHelper<TDataType> Data { get; set; }
 
         public void RefillWithData(IList<TDataType> data)
@@ -49,8 +47,7 @@ namespace Views.ViewElements.ScrollViews.Adapters
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                await (viewHolder as IFillingView<NameAndNumberSelectableFieldFillingData>).FillView(_fillingViewAdapter.Convert(
-                        AsyncOperationCancellationController.TasksCancellationTokenSource, Data[(int) index], index), index)
+                await ((IFillingView<TDataType>) viewHolder).FillView(Data[(int) index], index)
                     .ConfigureAwait(true);
             }
             catch (OperationCanceledException)

@@ -9,6 +9,7 @@ using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
+using ViewModels.Cards;
 
 namespace Views.Bars.BarItems
 {
@@ -53,8 +54,7 @@ namespace Views.Bars.BarItems
 
 
     [Binding]
-    public class DesignedScrollBarItemBaseViewModel : MonoBehaviour, IPointerClickHandler, INotifyPropertyChanged, IIdentifiedSelection<uint>,
-        IFillingView<DesignedScrollBarItemBaseViewModel.FieldFillingData>
+    public class DesignedScrollBarItemBaseViewModel : SelectableListItemBase<DesignedScrollBarItemDefaultDataModel>
     {
         public class FieldFillingData : IDesignedScrollBarItem
         {
@@ -112,6 +112,10 @@ namespace Views.Bars.BarItems
             }
         }
 
+        public DesignedScrollBarItemBaseViewModel() : base(nameof(DesignedScrollBarItemBaseViewModel))
+        {
+        }
+
         private void SetBackground(I2DLinearGradientColors barItemBackground)
         {
             BackgroundGradientColor1 = barItemBackground.StartColor;
@@ -123,40 +127,11 @@ namespace Views.Bars.BarItems
             SetBackground(designedScrollBarItemData);
         }
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        public override async Task FillView(DesignedScrollBarItemDefaultDataModel data, uint dataBaseIndex)
         {
-            OnClick();
-        }
-
-        public Task FillView(FieldFillingData data, uint dataBaseIndex)
-        {
+            await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
             Set(data);
             _index = data.Id;
-            return Task.CompletedTask;
         }
-
-        protected virtual void OnClick()
-        {
-        }
-
-        public void Select()
-        {
-            OnItemSelected(_index);
-        }
-
-        protected void OnItemSelected(uint index)
-        {
-            ItemSelected?.Invoke(index);
-        }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
-        }
-
-
     }
 }

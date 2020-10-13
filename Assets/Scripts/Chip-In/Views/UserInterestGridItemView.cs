@@ -1,31 +1,22 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Common.Interfaces;
-using Controllers;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using DataModels.Interfaces;
 using Repositories.Local;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Utilities;
+using ViewModels.Cards;
 
 namespace Views
 {
-    public sealed class UserInterestGridItemView : BaseView, IFillingView<InterestBasicDataModel>, IPointerClickHandler, IIdentifiedSelection<uint>
+    public sealed class UserInterestGridItemView : SelectableListItemBase<InterestBasicDataModel>
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
 
         [SerializeField] private Image itemImage;
         [SerializeField] private TMP_Text textField;
-
-        public uint IndexInOrder { get; set; }
-        public event Action<uint> ItemSelected;
-
-        private uint _interestId;
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         private Sprite ItemImageSprite
         {
@@ -66,32 +57,27 @@ namespace Views
             ItemName = itemName;
         }
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        public override async Task FillView(InterestBasicDataModel dataModel, uint dataBaseIndex)
         {
-            Select();
-        }
+            await base.FillView(dataModel, dataBaseIndex);
+            try
+            {
+                ItemName = dataModel.Name;
+                AsyncOperationCancellationController.CancelOngoingTask();
 
-        public void Select()
-        {
-            OnItemSelected();
-        }
-
-        private void OnItemSelected()
-        {
-            ItemSelected?.Invoke(_interestId);
-        }
-
-        public Task FillView(InterestBasicDataModel dataModel, uint dataBaseIndex)
-        {
-            ItemName = dataModel.Name;
-            _interestId = dataBaseIndex;
-
-            _asyncOperationCancellationController.CancelOngoingTask();
-
-            return downloadedSpritesRepository.CreateLoadSpriteTask(dataModel.PosterUri, _asyncOperationCancellationController.CancellationToken)
-                .ContinueWith(delegate(Task<Sprite> task) { ItemImageSprite = task.GetAwaiter().GetResult(); },
-                    _asyncOperationCancellationController.CancellationToken, TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext());
+                ItemImageSprite = await downloadedSpritesRepository
+                    .CreateLoadSpriteTask(dataModel.PosterUri, AsyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
     }
 }

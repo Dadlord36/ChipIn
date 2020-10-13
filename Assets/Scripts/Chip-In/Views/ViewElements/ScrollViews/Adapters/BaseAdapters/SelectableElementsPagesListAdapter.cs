@@ -1,60 +1,69 @@
-﻿using System.Diagnostics;
-using Com.TheFallenGames.OSA.Core;
-using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+﻿using Com.TheFallenGames.OSA.Core;
 using Repositories.Interfaces;
 using Repositories.Remote;
 using UnityEngine.Events;
 using UnityWeld.Binding;
-using Utilities;
-using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
-    public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType, TViewPageViewHolder, TSelectionDataType, TViewConsumableData,
-        TFillingViewAdapter> : RepositoryBasedListAdapter<TRepository, TDataType, TViewPageViewHolder, TViewConsumableData, TFillingViewAdapter>
+    public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType> :
+        RepositoryBasedListAdapter<TRepository, TDataType>
         where TDataType : class
-        where TViewConsumableData : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
-        where TViewPageViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, IIdentifiedSelection<TSelectionDataType>, new()
-        where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
+    
     {
+        private readonly SelectableListAdapter<TDataType> _selectableListAdapter;
+
         public UnityEvent itemSelected;
 
-        private BaseItemViewsHolder _middleItem;
-        [Binding] public TSelectionDataType SelectedIndex { get; set; }
+        [Binding]
+        public uint SelectedIndex
+        {
+            get => _selectableListAdapter.SelectedIndex;
+            set => _selectableListAdapter.SelectedIndex = value;
+        }
+
+        [Binding]
+        public TDataType SelectedItemData
+        {
+            get => _selectableListAdapter.SelectedItemData;
+            set => _selectableListAdapter.SelectedItemData = value;
+        }
+
+        private int MiddleElementNumber
+        {
+            get => _selectableListAdapter.MiddleElementNumber;
+            set => _selectableListAdapter.MiddleElementNumber = value;
+        }
+
+        protected SelectableElementsPagesListAdapter()
+        {
+            _selectableListAdapter = new SelectableListAdapter<TDataType>(Data);
+            _selectableListAdapter.ItemSelected += OnItemSelected;
+        }
 
         /// <summary>
         /// Middle item in scroll viewport. Will also call Select() on new middle item sets
         /// </summary>
         protected BaseItemViewsHolder MiddleItem
         {
-            get => _middleItem;
-            set
-            {
-                if (ReferenceEquals(_middleItem, value)) return;
-                _middleItem = value;
-                (value as IIdentifiedSelection<TSelectionDataType>)?.Select();
-            }
+            get => _selectableListAdapter.MiddleItem;
+            set => _selectableListAdapter.MiddleItem = value;
         }
 
         protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
         {
-            var defaultFillingViewPageViewHolder = viewHolder as TViewPageViewHolder;
-            Debug.Assert(defaultFillingViewPageViewHolder != null, nameof(defaultFillingViewPageViewHolder) + " != null");
-            defaultFillingViewPageViewHolder.ItemSelected += OnItemSelected;
+            _selectableListAdapter.BindViewHolderSelectionEvent(viewHolder, itemIndex);
         }
 
         protected void FindMiddleElement()
         {
-            MiddleElementNumber = CalculationsUtility.GetMiddle(VisibleItemsCount);
-            MiddleItem = _VisibleItems[MiddleElementNumber];
+            _selectableListAdapter.FindMiddleElement(_VisibleItems, VisibleItemsCount);
         }
 
-        private void OnItemSelected(TSelectionDataType index)
+        private void OnItemSelected()
         {
-            SelectedIndex = index;
             itemSelected.Invoke();
         }
     }

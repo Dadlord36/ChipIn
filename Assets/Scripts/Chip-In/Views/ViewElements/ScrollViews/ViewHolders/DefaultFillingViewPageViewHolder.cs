@@ -7,12 +7,12 @@ using Utilities;
 
 namespace Views.ViewElements.ScrollViews.ViewHolders
 {
-    public class DefaultFillingViewPageViewHolder<TDataType, TSelectionType> : BaseItemViewsHolder, IFillingView<TDataType>,
-        IIdentifiedSelection<TSelectionType> where TDataType : class
+    public class DefaultFillingViewPageViewHolder<TDataType> : BaseItemViewsHolder, IFillingView<TDataType>, IIdentifiedSelection
+        where TDataType : class
     {
-        private const string Tag = nameof(DefaultFillingViewPageViewHolder<TDataType,TSelectionType>);
+        private const string Tag = nameof(DefaultFillingViewPageViewHolder<TDataType>);
         private IFillingView<TDataType> _fillingViewImplementation;
-        private IIdentifiedSelection<TSelectionType> _identifiedSelection;
+        private IIdentifiedSelection _identifiedSelection;
 
         // Retrieving the views from the item's root GameObject
         public override void CollectViews()
@@ -22,7 +22,7 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
             // GetComponentAtPath is a handy extension method from frame8.Logic.Misc.Other.Extensions
             // which infers the variable's component from its type, so you won't need to specify it yourself
             _fillingViewImplementation = GameObjectsUtility.GetFromRootOrChildren<IFillingView<TDataType>>(root);
-            _identifiedSelection = GameObjectsUtility.GetFromRootOrChildren<IIdentifiedSelection<TSelectionType>>(root);
+            _identifiedSelection = GameObjectsUtility.GetFromRootOrChildren<IIdentifiedSelection>(root);
             if (_fillingViewImplementation == null)
                 LogUtility.PrintLogError(Tag, $"{root.name} has no attached component of type {nameof(IFillingView<TDataType>)}");
         }
@@ -32,9 +32,13 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
             return _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
         }
 
-        public uint IndexInOrder => _identifiedSelection.IndexInOrder;
+        public uint IndexInOrder
+        {
+            get => _identifiedSelection.IndexInOrder;
+            set => _identifiedSelection.IndexInOrder = value;
+        }
 
-        public event Action<TSelectionType> ItemSelected
+        public event Action<uint> ItemSelected
         {
             add => _identifiedSelection.ItemSelected += value;
             remove => _identifiedSelection.ItemSelected -= value;

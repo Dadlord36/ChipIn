@@ -11,23 +11,11 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
-    public class DesignedListViewAdapter : SelectableListViewAdapter<DesignedListParams, DesignedScrollBarItemDefaultDataModel,
-        DefaultFillingViewPageViewHolder<DesignedScrollBarItemBaseViewModel.FieldFillingData, uint>, uint,
-        DesignedScrollBarItemBaseViewModel.FieldFillingData, DesignedListViewAdapter.FillingViewAdapterImplementation>
+    public class DesignedListViewAdapter : SelectableListViewAdapter<DesignedListParams, DesignedScrollBarItemDefaultDataModel>
     {
         [SerializeField, Range(0f, 1f)] private float itemsBackgroundAlpha;
         private const int MINItemsToLoop = 10;
-
-        public class FillingViewAdapterImplementation : FillingViewAdapter<DesignedScrollBarItemDefaultDataModel,
-            DesignedScrollBarItemBaseViewModel.FieldFillingData>
-        {
-            public override DesignedScrollBarItemBaseViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
-                DesignedScrollBarItemDefaultDataModel data, uint dataIndexInRepository)
-            {
-                return new DesignedScrollBarItemBaseViewModel.FieldFillingData(data);
-            }
-        }
-
+        
         protected override void OnScrollPositionChanged(double normPos)
         {
             base.OnScrollPositionChanged(normPos);

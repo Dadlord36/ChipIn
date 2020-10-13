@@ -2,10 +2,10 @@
 
 namespace Common.Interfaces
 {
-    public interface IIdentifiedSelection<T>
+    public interface IIdentifiedSelection
     {
-        uint IndexInOrder { get; }
-        event Action<T> ItemSelected;
+        uint IndexInOrder { get; set; }
+        event Action<uint> ItemSelected;
         void Select();
     }
 }

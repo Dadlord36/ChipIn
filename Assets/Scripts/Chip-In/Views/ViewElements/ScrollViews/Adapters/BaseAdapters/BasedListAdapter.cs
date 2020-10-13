@@ -14,17 +14,15 @@ using Repositories.Local;
 using Tasking;
 using UnityWeld.Binding;
 using Utilities;
-using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
+using Views.ViewElements.ScrollViews.ViewHolders;
+
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
-    public abstract class BasedListAdapter<TParams, TItemViewHolder, TDataType, TViewConsumableData, TFillingViewAdapter> :
-        OSA<TParams, BaseItemViewsHolder>, INotifyPropertyChanged
-        where TItemViewHolder : BaseItemViewsHolder, IFillingView<TViewConsumableData>, new()
+    public abstract class BasedListAdapter<TParams, TDataType> : OSA<TParams, BaseItemViewsHolder>, INotifyPropertyChanged
+        where TDataType : class
         where TParams : BaseParamsWithPrefab
-        where TViewConsumableData : class
-        where TFillingViewAdapter : FillingViewAdapter<TDataType, TViewConsumableData>, new()
     {
         protected readonly string Tag;
 
@@ -34,10 +32,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         // Helper that stores data and notifies the adapter when items count changes
         // Can be iterated and can also have its elements accessed by the [] operator
         protected SimpleDataHelper<TDataType> Data;
-        private readonly TFillingViewAdapter _fillingViewAdapter = new TFillingViewAdapter();
         protected readonly AsyncOperationCancellationController AsyncOperationCancellationController = new AsyncOperationCancellationController();
         private bool _itemsListIsNotEmpty = true;
-        protected int MiddleElementNumber;
 
 
         [Binding]
@@ -73,7 +69,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         // *For the method's full description check the base implementation
         protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
         {
-            var instance = new TItemViewHolder();
+            var instance = new  DefaultFillingViewPageViewHolder<TDataType>();
 
             // Using this shortcut spares you from:
             // - instantiating the prefab yourself
@@ -97,16 +93,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             try
             {
                 var index = (uint) viewHolder.ItemIndex;
-                var data = _fillingViewAdapter.Convert
-                (
-                    AsyncOperationCancellationController.TasksCancellationTokenSource,
-                    Data[(int) index],
-                    index
-                );
-                if (viewHolder is IFillingView<TViewConsumableData> fillingView)
-                {
-                    await fillingView.FillView(data, index).ConfigureAwait(false);
-                }
+                await ((IFillingView<TDataType>) viewHolder).FillView(Data[(int) index], index).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

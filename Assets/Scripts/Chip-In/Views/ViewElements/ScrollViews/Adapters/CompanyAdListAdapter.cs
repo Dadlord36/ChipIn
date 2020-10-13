@@ -7,14 +7,11 @@ using Utilities;
 using ViewModels.Cards;
 using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 using Views.ViewElements.ScrollViews.Adapters.ViewFillingAdapters;
-using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel,
-        DefaultFillingViewPageViewHolder<AdCardViewModel.FieldFillingData, uint>, uint, AdCardViewModel.FieldFillingData,
-        CompanyAdListAdapter.FillingViewAdapter>
+    public class CompanyAdListAdapter : SelectableElementsPagesListAdapter<AdvertsPaginatedListRepository, AdvertItemDataModel>
     {
         public class FillingViewAdapter : FillingViewAdapter<AdvertItemDataModel, AdCardViewModel.FieldFillingData>
         {

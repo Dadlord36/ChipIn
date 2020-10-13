@@ -1,52 +1,20 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Common.Interfaces;
-using Controllers;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using Factories;
-using JetBrains.Annotations;
 using Repositories.Local;
-using Tasking;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using Utilities;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class UserDataItemViewModel : MonoBehaviour, IIdentifiedSelection<UserProfileBaseData>, INotifyPropertyChanged, IPointerClickHandler,
-        IFillingView<UserDataItemViewModel.FieldFillingData>
+    public sealed class UserDataItemViewModel : SelectableListItemBase<UserProfileBaseData>
     {
-        public const string Tag = nameof(UserDataItemViewModel);
-
-        public class FieldFillingData
-        {
-            public readonly UserProfileBaseData Data;
-
-            public string Name => Data.Name;
-            public int? Id => Data.Id;
-            public string AvatarUrl => Data.AvatarUrl;
-
-            public FieldFillingData(UserProfileBaseData data)
-            {
-                Data = data;
-            }
-        }
-
-        public event Action<UserProfileBaseData> ItemSelected;
-
         private string _userName;
         private Sprite _userAvatar;
 
-        private UserProfileBaseData Data;
-
-        private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
-
-        public uint IndexInOrder { get; }
 
         [Binding]
         public string UserName
@@ -71,25 +39,19 @@ namespace ViewModels.Cards
             }
         }
 
-        public void Select()
+        public UserDataItemViewModel() : base(nameof(UserDataItemViewModel))
         {
-            OnItemSelected();
         }
 
-
-        public void OnPointerClick(PointerEventData eventData)
+        public override async Task FillView(UserProfileBaseData data, uint dataBaseIndex)
         {
-            Select();
-        }
-
-        public async Task FillView(FieldFillingData data, uint dataBaseIndex)
-        {
+            await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
             try
             {
-                Data = data.Data;
                 UserName = data.Name;
                 UserAvatar = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>().CreateLoadSpriteTask(data.AvatarUrl,
-                    _asyncOperationCancellationController.CancellationToken).ConfigureAwait(false);
+                    AsyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -100,19 +62,6 @@ namespace ViewModels.Cards
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
-        }
-
-        private void OnItemSelected()
-        {
-            ItemSelected?.Invoke(Data);
         }
     }
 }
