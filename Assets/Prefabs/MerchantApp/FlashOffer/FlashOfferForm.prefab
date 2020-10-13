@@ -121,6 +121,48 @@ MonoBehaviour:
     type: 2}
   alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
     type: 2}
+  iconView: {fileID: 843755807624046118}
+--- !u!114 &324206822879211845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483861916035899771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 973393603fa44feda556eefa560a5be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5106131134321275291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483861916035899771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ddda1795c9a4545badff9b7099cc1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3236237268241051487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -934,6 +976,11 @@ PrefabInstance:
       propertyPath: viewModelPropertyName
       value: ViewModels.FlashOfferViewModel.QuantityAsInt
       objectReference: {fileID: 0}
+    - target: {fileID: 160062543955178324, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: ViewModels.UI.Elements.BindableStepper.ProducedNumber
+      objectReference: {fileID: 0}
     - target: {fileID: 211212711301257915, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: m_RootOrder
@@ -1222,17 +1269,17 @@ PrefabInstance:
     - target: {fileID: 2360499328356516462, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2360499328356516462, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2360499328356516462, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2360499328356516462, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
@@ -1424,6 +1471,11 @@ PrefabInstance:
       propertyPath: viewModelPropertyName
       value: ViewModels.FlashOfferViewModel.QuantityAsInt
       objectReference: {fileID: 0}
+    - target: {fileID: 5124541455469111682, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: ViewModels.UI.Elements.Icons.StretchableIconViewModel.sprite
+      objectReference: {fileID: 0}
     - target: {fileID: 5199689007805899475, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: viewModelPropertyName
@@ -1529,6 +1581,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5989742409140837734, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: iconWasChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6186063044437571272, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: viewModelPropertyName
@@ -1617,7 +1674,17 @@ PrefabInstance:
     - target: {fileID: 6477191410448407962, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: viewModelPropertyName
-      value: ViewModels.FlashOfferViewModel.QuantityAsInt
+      value: ViewModels.FlashOfferViewModel.Quantity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477191410448407962, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: viewEventName
+      value: ViewModels.UI.Elements.BindableStepper.valueChanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 6477191410448407962, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: ViewModels.UI.Elements.BindableStepper.ProducedNumber
       objectReference: {fileID: 0}
     - target: {fileID: 6527711934836411736, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
@@ -2129,6 +2196,36 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9190409353751275035, guid: 9886412d7f1870d43b2c82740438146d,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 9190845206009896461, guid: 9886412d7f1870d43b2c82740438146d,
         type: 3}
       propertyPath: m_PreserveAspect
@@ -2137,6 +2234,8 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3022720748681832644, guid: 9886412d7f1870d43b2c82740438146d, type: 3}
     - {fileID: 6200066423486263298, guid: 9886412d7f1870d43b2c82740438146d, type: 3}
+    - {fileID: 90233740350771635, guid: 9886412d7f1870d43b2c82740438146d, type: 3}
+    - {fileID: 5612709335998379435, guid: 9886412d7f1870d43b2c82740438146d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9886412d7f1870d43b2c82740438146d, type: 3}
 --- !u!1 &6053260519313403984 stripped
 GameObject:
@@ -2147,6 +2246,24 @@ GameObject:
 --- !u!224 &6014678759862102077 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 851787142716642173, guid: 9886412d7f1870d43b2c82740438146d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6388999920148560704}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &843755807624046118 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5989742409140837734, guid: 9886412d7f1870d43b2c82740438146d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6388999920148560704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb9318b342a04439b11cf0bb723a95d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1483861916035899771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5493816632737847867, guid: 9886412d7f1870d43b2c82740438146d,
     type: 3}
   m_PrefabInstance: {fileID: 6388999920148560704}
   m_PrefabAsset: {fileID: 0}

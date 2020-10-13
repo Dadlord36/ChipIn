@@ -1,20 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4142114459487438703
+--- !u!114 &2506208234983295839
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683832745706899155}
+  m_GameObject: {fileID: 1335397284961045255}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.NewAvatarImagePath
-  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
-  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
+  viewModelPropertyName: ViewModels.EditAdminViewModel.CompanyName
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -22,22 +22,6 @@ MonoBehaviour:
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   exceptionAdapterOptions: {fileID: 0}
---- !u!114 &8528978230102889753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683832745706899155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.EditAdminViewModel.AvatarSprite
-  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
 --- !u!1 &1394506363328844543
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,6 +95,88 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -568.3}
   m_SizeDelta: {x: -132, y: 36}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &3358399182013261820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564739139828767926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.Slogan
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &4142114459487438703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683832745706899155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.NewAvatarImagePath
+  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
+  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &8528978230102889753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683832745706899155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.EditAdminViewModel.AvatarSprite
+  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
+--- !u!114 &4803536667917471528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1711888151552155727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.LastName
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &2213651835614293235
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,6 +452,47 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -455.30002}
   m_SizeDelta: {x: 0, y: 90.054565}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &4663700357701797030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3520527300150589487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 973393603fa44feda556eefa560a5be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7061168005481220478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3520527300150589487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ddda1795c9a4545badff9b7099cc1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3621986441194999044
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,72 +666,56 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
---- !u!114 &4803536667917471528
+--- !u!114 &6938244963093057128
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1711888151552155727}
+  m_GameObject: {fileID: 4423862384309605605}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ad3a9a8b3e04ea2b0634a5a09cec32f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.LastName
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &3358399182013261820
+--- !u!114 &7230565328885114273
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1564739139828767926}
+  m_GameObject: {fileID: 4423862384309605605}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c98abf018e04dcb8fba6c25b31201d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.Slogan
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &2506208234983295839
+  view: {fileID: 6938244963093057128}
+  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
+    type: 2}
+  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
+    type: 2}
+  merchantProfileSettingsRepository: {fileID: 11400000, guid: 391f325e9da29b74fb2d9917eef806dd,
+    type: 2}
+  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
+    type: 2}
+  alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
+    type: 2}
+  returnButton: {fileID: 6829352054312288426}
+--- !u!114 &8043273818930427441
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1335397284961045255}
+  m_GameObject: {fileID: 4671780882625699106}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.CompanyName
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
+  viewModelMethodName: ViewModels.EditAdminViewModel.ConfirmButton_OnClick
+  viewEventName: UnityEngine.UI.Button.onClick
 --- !u!1 &4940465581342605369
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,6 +926,28 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
+--- !u!114 &6051768293541363774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5249159410921985998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.FirstName
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &5263259489474136933
 GameObject:
   m_ObjectHideFlags: 0
@@ -1016,42 +1129,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5355470299599613446}
   m_CullTransparentMesh: 0
---- !u!114 &8043273818930427441
+--- !u!114 &5501565104593336850
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4671780882625699106}
+  m_GameObject: {fileID: 5792539950116740032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1360956885, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ddda1795c9a4545badff9b7099cc1e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelMethodName: ViewModels.EditAdminViewModel.ConfirmButton_OnClick
-  viewEventName: UnityEngine.UI.Button.onClick
---- !u!114 &1675535076103060613
+--- !u!114 &8619275007105349950
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9156405837548576065}
+  m_GameObject: {fileID: 5792539950116740032}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Script: {fileID: 11500000, guid: 973393603fa44feda556eefa560a5be4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.CompanyEmail
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6565052684805050700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1117,102 +1235,6 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &6938244963093057128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4423862384309605605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ad3a9a8b3e04ea2b0634a5a09cec32f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7230565328885114273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4423862384309605605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c98abf018e04dcb8fba6c25b31201d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  view: {fileID: 6938244963093057128}
-  viewsSwitchingController: {fileID: 11400000, guid: 35a9bdda4b708454a95d46be24aba51f,
-    type: 2}
-  viewsSwitchingAnimationBinding: {fileID: 11400000, guid: bf54d8f827d9e30459cbb77f13c55358,
-    type: 2}
-  merchantProfileSettingsRepository: {fileID: 11400000, guid: 391f325e9da29b74fb2d9917eef806dd,
-    type: 2}
-  userAuthorisationDataRepository: {fileID: 11400000, guid: 58b7a02fbf024cf4a9e14317fd632c79,
-    type: 2}
-  alertCardController: {fileID: 11400000, guid: 7cbd672b824cbc640bbc0020e7d6aef5,
-    type: 2}
-  returnButton: {fileID: 6829352054312288426}
---- !u!114 &6051768293541363774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5249159410921985998}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.FirstName
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
---- !u!114 &7978890647586701349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8639729808508069180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelPropertyName: ViewModels.EditAdminViewModel.LogoSprite
-  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
---- !u!114 &8321072805927735463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8639729808508069180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.EditAdminViewModel.NewLogoImagePath
-  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
-  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &7962936171902717307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1569,6 +1591,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8540593261317510999}
   m_CullTransparentMesh: 0
+--- !u!114 &7978890647586701349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8639729808508069180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1670825535, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelPropertyName: ViewModels.EditAdminViewModel.LogoSprite
+  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImageSprite
+--- !u!114 &8321072805927735463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8639729808508069180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.NewLogoImagePath
+  viewEventName: Views.ViewElements.SettableIconView.iconWasSelectedFromGallery
+  viewPropertyName: Views.ViewElements.SettableIconView.SelectedImagePath
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &8702031995932599500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1744,6 +1804,28 @@ MonoBehaviour:
   mGUI_ShowCallback: 0
   mLocalizeTarget: {fileID: 0}
   mLocalizeTargetName: I2.Loc.LocalizeTarget_TextMeshPro_UGUI
+--- !u!114 &1675535076103060613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9156405837548576065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.EditAdminViewModel.CompanyEmail
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1001 &1051427033768132999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1816,6 +1898,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4744107725198187802, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: iconWasChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5028411913774293714, guid: 5675203f774386147a8b556e2e8ea841,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1845,6 +1932,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 6185594474103482878, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: ViewModels.UI.Elements.Icons.StretchableIconViewModel.sprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8075096738642972017, guid: 5675203f774386147a8b556e2e8ea841,
         type: 3}
@@ -1991,17 +2113,25 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 22
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1407710443177087439, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
+    - {fileID: 6858414111924090327, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
---- !u!1 &1683832745706899155 stripped
+--- !u!1 &5792539950116740032 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1858095095194699604, guid: 5675203f774386147a8b556e2e8ea841,
+  m_CorrespondingSourceObject: {fileID: 6842189623306328647, guid: 5675203f774386147a8b556e2e8ea841,
     type: 3}
   m_PrefabInstance: {fileID: 1051427033768132999}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &8912291313883435201 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8446988090499420486, guid: 5675203f774386147a8b556e2e8ea841,
+    type: 3}
+  m_PrefabInstance: {fileID: 1051427033768132999}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1683832745706899155 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1858095095194699604, guid: 5675203f774386147a8b556e2e8ea841,
     type: 3}
   m_PrefabInstance: {fileID: 1051427033768132999}
   m_PrefabAsset: {fileID: 0}
@@ -2348,15 +2478,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 252e964d1d9dd5e4e820a2d18267fd5b, type: 3}
---- !u!1 &1711888151552155727 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3437692592766821844, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4068151272445625755}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1249918463959387363 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2966852079373289848, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4068151272445625755}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1711888151552155727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3437692592766821844, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
     type: 3}
   m_PrefabInstance: {fileID: 4068151272445625755}
   m_PrefabAsset: {fileID: 0}
@@ -2559,15 +2689,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 252e964d1d9dd5e4e820a2d18267fd5b, type: 3}
---- !u!1 &1564739139828767926 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3437692592766821844, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4179959230633048418}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1382133366548328474 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2966852079373289848, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4179959230633048418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1564739139828767926 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3437692592766821844, guid: 252e964d1d9dd5e4e820a2d18267fd5b,
     type: 3}
   m_PrefabInstance: {fileID: 4179959230633048418}
   m_PrefabAsset: {fileID: 0}
@@ -2941,15 +3071,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7efec85f9a5601d46afabc244efa5b4c, type: 3}
---- !u!1 &4671780882625699106 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1215814027039234071, guid: 7efec85f9a5601d46afabc244efa5b4c,
-    type: 3}
-  m_PrefabInstance: {fileID: 5767439450854507829}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6652221007536144182 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 890411305936419331, guid: 7efec85f9a5601d46afabc244efa5b4c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5767439450854507829}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4671780882625699106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1215814027039234071, guid: 7efec85f9a5601d46afabc244efa5b4c,
     type: 3}
   m_PrefabInstance: {fileID: 5767439450854507829}
   m_PrefabAsset: {fileID: 0}
@@ -3534,18 +3664,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 536657986c77fee48ab69e6895bcce73, type: 3}
---- !u!224 &4187601427360910472 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6614780429716396531, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 7048470480075330939}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &8015235649515763965 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1074923068701846918, guid: 536657986c77fee48ab69e6895bcce73,
-    type: 3}
-  m_PrefabInstance: {fileID: 7048470480075330939}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6829352054312288426 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4546253034256717265, guid: 536657986c77fee48ab69e6895bcce73,
@@ -3558,6 +3676,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e585ee0144a460ab3c99ce9fd795dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &8015235649515763965 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1074923068701846918, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 7048470480075330939}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &4187601427360910472 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6614780429716396531, guid: 536657986c77fee48ab69e6895bcce73,
+    type: 3}
+  m_PrefabInstance: {fileID: 7048470480075330939}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8822193252102784536 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1999466894282249059, guid: 536657986c77fee48ab69e6895bcce73,
@@ -3908,6 +4038,11 @@ PrefabInstance:
       propertyPath: iconWasSelectedFromGallery.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 4744107725198187802, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: iconWasChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4756930212594865238, guid: 5675203f774386147a8b556e2e8ea841,
         type: 3}
       propertyPath: mTerm
@@ -3952,6 +4087,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 6185594474103482878, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: viewPropertyName
+      value: ViewModels.UI.Elements.Icons.StretchableIconViewModel.sprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: NaN
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7873214321318487655, guid: 5675203f774386147a8b556e2e8ea841,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8075096738642972017, guid: 5675203f774386147a8b556e2e8ea841,
         type: 3}
@@ -4098,17 +4268,25 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 22
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1407710443177087439, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
+    - {fileID: 6858414111924090327, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5675203f774386147a8b556e2e8ea841, type: 3}
+--- !u!1 &8639729808508069180 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1858095095194699604, guid: 5675203f774386147a8b556e2e8ea841,
+    type: 3}
+  m_PrefabInstance: {fileID: 7939630470004990568}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1951889543358559022 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8446988090499420486, guid: 5675203f774386147a8b556e2e8ea841,
     type: 3}
   m_PrefabInstance: {fileID: 7939630470004990568}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8639729808508069180 stripped
+--- !u!1 &3520527300150589487 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1858095095194699604, guid: 5675203f774386147a8b556e2e8ea841,
+  m_CorrespondingSourceObject: {fileID: 6842189623306328647, guid: 5675203f774386147a8b556e2e8ea841,
     type: 3}
   m_PrefabInstance: {fileID: 7939630470004990568}
   m_PrefabAsset: {fileID: 0}
