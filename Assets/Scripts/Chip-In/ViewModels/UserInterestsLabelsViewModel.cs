@@ -30,7 +30,6 @@ namespace ViewModels
         private static ILastViewedInterestsRepository ViewedInterestsRepository => SimpleAutofac.GetInstance<ILastViewedInterestsRepository>();
         private static IRequestHeaders AuthorisationHeaders => SimpleAutofac.GetInstance<IUserAuthorisationDataRepository>();
         private static IAlertCardController AlertCardController => SimpleAutofac.GetInstance<IAlertCardController>();
-
         private InterestBasicDataModel _selectedInterestData;
 
         [Binding]
@@ -43,7 +42,7 @@ namespace ViewModels
                 SelectedInterestIndex = (int) value.Id;
             }
         }
-
+        
         private int SelectedInterestIndex
         {
             get => userInterestPagesPaginatedRepository.SelectedCommunityId;
@@ -77,6 +76,12 @@ namespace ViewModels
         {
             try
             {
+                if (SelectedInterest.Id == -1)
+                {
+                    SwitchToFavoritesView();
+                    return;
+                }
+                
                 var response = await CommunitiesStaticRequestsProcessor.GetCommunityDetails(out _, AuthorisationHeaders, (int) SelectedInterest.Id)
                     .ConfigureAwait(false);
 
@@ -97,6 +102,11 @@ namespace ViewModels
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        private void SwitchToFavoritesView()
+        {
+            SwitchToView(nameof(FavoriteInterestsView));
         }
 
         private async Task<int> GetDataByIndexAsync(uint index)

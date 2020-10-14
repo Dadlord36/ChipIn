@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using Factories;
 using JetBrains.Annotations;
@@ -10,6 +9,7 @@ using Repositories.Local;
 using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
+using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
 {

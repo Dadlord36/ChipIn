@@ -1,12 +1,7 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
 using DataModels.Interfaces;
-using JetBrains.Annotations;
-using Repositories.Local;
-using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -131,12 +126,6 @@ namespace ViewModels.Cards
         {
         }
 
-        private void OnCardWasClicked()
-        {
-            Select();
-        }
-
-
         private void ClearIcon()
         {
             Icon = DownloadedSpritesRepository.IconPlaceholder;
@@ -149,6 +138,8 @@ namespace ViewModels.Cards
 
         public override async Task FillView(MarketInterestDetailsDataModel dataModel, uint dataBaseIndex)
         {
+            await base.FillView(dataModel, dataBaseIndex).ConfigureAwait(false);
+
             AsyncOperationCancellationController.CancelOngoingTask();
             ClearIcon();
             SetViewModelFields(dataModel);

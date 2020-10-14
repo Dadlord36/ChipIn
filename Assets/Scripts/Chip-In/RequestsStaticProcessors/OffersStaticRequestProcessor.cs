@@ -118,58 +118,6 @@ namespace RequestsStaticProcessors
             return client.ExecuteAsync(request, cancellationTokenSource.Token);
         }
 
-        /*public static async Task<FlashOfferCreationResponseDataModel> CreateFlashOffer(CancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
-            IFlashOfferCreationRequestModel requestModel)
-        {
-            var elements = DataModelsUtility.ToKeyValue(requestModel.FlashOffer);
-            var form = new MultipartFormDataContent
-            {
-                {
-                    new ByteArrayContent(File.ReadAllBytes(requestModel.PosterFilePath.Path)), "flash_offer[poster]", Path.GetFileName(requestModel
-                    .PosterFilePath.Path)
-                }
-            };
-
-            foreach (var element in elements)
-            {
-                form.Add(new StringContent(element.Value), $"flash_offer[{element.Key}]");
-            }
-
-            try
-            {
-                var formAsString = await form.ReadAsStringAsync().ConfigureAwait(false);
-                LogUtility.PrintLog(Tag, formAsString);
-
-                var requestTask = await ApiHelper.MakeAsyncMultiPartRequest(cancellationTokenSource.Token, HttpMethod.Post,
-                    ApiCategories.FlashOffers, form, requestHeaders.GetRequestHeaders()).ConfigureAwait(false);
-
-                using (var response = await requestTask.ConfigureAwait(false))
-                {
-                    LogUtility.PrintLog(Tag, $"Response phrase: {response.ReasonPhrase}");
-                    LogUtility.PrintLog(Tag, $"Response request message: {response.RequestMessage}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var responseAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        LogUtility.PrintLog(Tag, responseAsString);
-                        
-                        return JsonConverterUtility.ConvertJsonString<FlashOfferCreationResponseDataModel>(responseAsString);
-                    }
-                    else
-                    {
-                        var asString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        LogUtility.PrintLogError(Tag, "Offer was not created");
-                        LogUtility.PrintLog(Tag, $"Response body: {asString}");
-                        return null;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                LogUtility.PrintLogException(e);
-                throw;
-            }
-        }*/
-
         public static Task<BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>.HttpResponse>
             GetOfferDetails(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int? offerId)
         {

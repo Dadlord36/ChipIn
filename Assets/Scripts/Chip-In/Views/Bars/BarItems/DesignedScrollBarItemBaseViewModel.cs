@@ -1,13 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using JetBrains.Annotations;
-using Tasking;
+﻿using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using ViewModels.Cards;
 
@@ -26,15 +18,6 @@ namespace Views.Bars.BarItems
 
     public class DesignedScrollBarItemDefaultDataModel : IDesignedScrollBarItem
     {
-        public DesignedScrollBarItemDefaultDataModel(Task<Sprite> iconSprite, string title, Color startColor, Color endColor, uint id)
-        {
-            IconSprite = iconSprite;
-            Title = title;
-            StartColor = startColor;
-            EndColor = endColor;
-            Id = id;
-        }
-
         public DesignedScrollBarItemDefaultDataModel(Task<Sprite> loadIconTask, uint index)
         {
             IconSprite = loadIconTask;
@@ -56,35 +39,7 @@ namespace Views.Bars.BarItems
     [Binding]
     public class DesignedScrollBarItemBaseViewModel : SelectableListItemBase<DesignedScrollBarItemDefaultDataModel>
     {
-        public class FieldFillingData : IDesignedScrollBarItem
-        {
-            public FieldFillingData(DesignedScrollBarItemDefaultDataModel dataModel)
-            {
-                IconSprite = dataModel.IconSprite;
-                Title = dataModel.Title;
-                StartColor = dataModel.StartColor;
-                EndColor = dataModel.EndColor;
-                Id = dataModel.Id;
-            }
-
-
-            public Task<Sprite> IconSprite { get; set; }
-
-            public string Title { get; set; }
-
-            public Color StartColor { get; set; }
-
-            public Color EndColor { get; set; }
-
-            public uint Id { get; set; }
-        }
-
-        public event Action<uint> ItemSelected;
-
-
-        public uint IndexInOrder { get; set; }
-        private uint _index;
-
+       
         private Color _backgroundGradientColor1;
         private Color _backgroundGradientColor2;
 
@@ -131,7 +86,6 @@ namespace Views.Bars.BarItems
         {
             await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
             Set(data);
-            _index = data.Id;
         }
     }
 }

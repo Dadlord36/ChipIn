@@ -7,15 +7,13 @@ using Com.TheFallenGames.OSA.CustomParams;
 using Com.TheFallenGames.OSA.DataHelpers;
 using Common.UnityEvents;
 using Controllers;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
-using Factories;
 using JetBrains.Annotations;
-using Repositories.Local;
 using Tasking;
+using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
+using Views.ViewElements.Interfaces;
 using Views.ViewElements.ScrollViews.ViewHolders;
-
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
@@ -25,8 +23,6 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TParams : BaseParamsWithPrefab
     {
         protected readonly string Tag;
-
-        protected IDownloadedSpritesRepository downloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
         public BoolUnityEvent listFillingStateChanged;
 
         // Helper that stores data and notifies the adapter when items count changes
@@ -69,7 +65,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         // *For the method's full description check the base implementation
         protected override BaseItemViewsHolder CreateViewsHolder(int itemIndex)
         {
-            var instance = new  DefaultFillingViewPageViewHolder<TDataType>();
+            var instance = new DefaultFillingViewPageViewHolder<TDataType>();
 
             // Using this shortcut spares you from:
             // - instantiating the prefab yourself
@@ -92,8 +88,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             // to retrieve the model from your data set
             try
             {
-                var index = (uint) viewHolder.ItemIndex;
-                await ((IFillingView<TDataType>) viewHolder).FillView(Data[(int) index], index).ConfigureAwait(false);
+                var index = viewHolder.ItemIndex;
+                await ((IFillingView<TDataType>) viewHolder).FillView(Data[index], (uint) index).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

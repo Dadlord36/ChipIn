@@ -1,40 +1,12 @@
 using System.Threading.Tasks;
 using DataModels;
 using UnityWeld.Binding;
-using ViewModels.Cards;
 
 namespace Views.ViewElements.Fields
-{ 
+{
     [Binding]
-    public sealed class NameAndNumberSelectableField : SelectableListItemBase<AnswerData>
+    public sealed class NameAndNumberSelectableField : NameAndNumberSelectableFieldBase<AnswerData>
     {
-        private string _name;
-        private string _number;
-
-        [Binding]
-        public string Name
-        {
-            get => _name;
-            private set
-            {
-                if (value == _name) return;
-                _name = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Binding]
-        public string Number
-        {
-            get => _number;
-            private set
-            {
-                if (value == _number) return;
-                _number = value;
-                OnPropertyChanged();
-            }
-        }
-
         public NameAndNumberSelectableField() : base(nameof(NameAndNumberSelectableField))
         {
         }

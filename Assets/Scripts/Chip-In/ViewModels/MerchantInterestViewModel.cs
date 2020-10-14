@@ -19,8 +19,7 @@ using Views.ViewElements.ScrollViews.Adapters;
 namespace ViewModels
 {
     [Binding]
-    public sealed class MerchantInterestViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestView>,
-        INotifyPropertyChanged
+    public sealed class MerchantInterestViewModel : CorrespondingViewsSwitchingViewModel<MerchantInterestView>, INotifyPropertyChanged
     {
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
@@ -30,14 +29,14 @@ namespace ViewModels
 
 
         private string _interestName;
-        private uint _selectedInterestId;
+        private int _selectedInterestId;
         private Sprite _logoSprite;
         private bool _hasItemsToShow = true;
 
         private MarketInterestDetailsDataModel _selectedCommunityData;
 
         [Binding]
-        public uint SelectedInterestId
+        public int SelectedInterestId
         {
             get => _selectedInterestId;
             set
@@ -106,7 +105,7 @@ namespace ViewModels
                     return;
                 }
 
-                var selectedCommunityId = (int) (uint) RelatedView.FormTransitionBundle.TransitionData;
+                var selectedCommunityId = (int) RelatedView.FormTransitionBundle.TransitionData;
                 LogUtility.PrintLog(Tag, $"<color=blue>{nameof(selectedCommunityId)} is {selectedCommunityId.ToString()}</color>");
 
                 // merchantInterestPagesPaginatedRepository.SelectedCommunityId should be set first before requesting  merchantInterestPagesListAdapter ResetAsync
@@ -117,14 +116,14 @@ namespace ViewModels
                 }
 
                 {
-                    _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId).ConfigureAwait(false);
+                    _selectedCommunityData = await GetSelectedCommunityDetailsAsync(selectedCommunityId)
+                        .ConfigureAwait(false);
 
-                    TasksFactories.ExecuteOnMainThread(delegate { InterestName = _selectedCommunityData.Name; });
+                    InterestName = _selectedCommunityData.Name;
 
-                    var sprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri,
-                        OperationCancellationController.CancellationToken).ConfigureAwait(false);
-
-                    TasksFactories.ExecuteOnMainThread(delegate { LogoSprite = sprite; });
+                    LogoSprite = await downloadedSpritesRepository.CreateLoadSpriteTask(_selectedCommunityData.PosterUri,
+                        OperationCancellationController.CancellationToken)
+                        .ConfigureAwait(false);
                 }
             }
             catch (OperationCanceledException)
@@ -137,7 +136,7 @@ namespace ViewModels
                 throw;
             }
         }
-        
+
         /*public async void FundTheInterest(int tokensAmount)
         {
             if (tokensAmount <= 0) return;
@@ -170,7 +169,8 @@ namespace ViewModels
         private void OnInterestIdSelected()
         {
             SwitchToView(nameof(MerchantInterestDetailsView),
-                new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds((int) _selectedCommunityData.Id, (int) _selectedInterestId)));
+                new FormsTransitionBundle(new MerchantInterestDetailsViewModel.CommunityAndInterestIds((int) _selectedCommunityData.Id,
+                    _selectedInterestId)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -178,7 +178,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

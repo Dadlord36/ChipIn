@@ -22,8 +22,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
     }
 
     [Binding]
-    public abstract class RepositoryBasedListAdapter<TRepository, TDataType> :
-        BasedListAdapter<RepositoryPagesAdapterParameters, TDataType>, IResettableAsync
+    public abstract class RepositoryBasedListAdapter<TRepository, TDataType> : BasedListAdapter<RepositoryPagesAdapterParameters, TDataType>,
+        IResettableAsync
         where TDataType : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
     {
@@ -42,6 +42,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private uint TotalCapacity => pagesPaginatedRepository.TotalItemsNumber;
 
+        //Index of item (like last item), that has different role from others
         public int SpecialItemIndex { get; set; }
 
         private uint AmountOfItemsAllowedToFetch
@@ -114,6 +115,9 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             base.ClearRemainListItems();
         }
 
+        protected virtual void OnItemsCleared()
+        { }
+
         public async Task ResetAsync()
         {
             if (!IsInitialized)
@@ -123,7 +127,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
             ResetStateVariables();
             ClearRemainListItems();
-
+            OnItemsCleared();
             try
             {
                 OnStartedFetching();

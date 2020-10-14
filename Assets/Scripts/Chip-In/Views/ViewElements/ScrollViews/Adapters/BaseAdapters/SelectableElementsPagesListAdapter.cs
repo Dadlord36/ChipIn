@@ -7,15 +7,14 @@ using UnityWeld.Binding;
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
     [Binding]
-    public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType> :
-        RepositoryBasedListAdapter<TRepository, TDataType>
-        where TDataType : class
+    public abstract class SelectableElementsPagesListAdapter<TRepository, TDataType> : RepositoryBasedListAdapter<TRepository, TDataType>,
+        ISelectableListAdapter<TDataType> where TDataType : class
         where TRepository : RemoteRepositoryBase, IPaginatedItemsListRepository<TDataType>
-    
     {
         private readonly SelectableListAdapter<TDataType> _selectableListAdapter;
 
         public UnityEvent itemSelected;
+
 
         [Binding]
         public uint SelectedIndex
@@ -37,16 +36,16 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             set => _selectableListAdapter.MiddleElementNumber = value;
         }
 
-        protected SelectableElementsPagesListAdapter()
+        [Binding]
+        public int SelectedItemId
         {
-            _selectableListAdapter = new SelectableListAdapter<TDataType>(Data);
-            _selectableListAdapter.ItemSelected += OnItemSelected;
+            get => _selectableListAdapter.SelectedItemId;
+            set => _selectableListAdapter.SelectedItemId = value;
         }
 
-        /// <summary>
         /// Middle item in scroll viewport. Will also call Select() on new middle item sets
         /// </summary>
-        protected BaseItemViewsHolder MiddleItem
+        public BaseItemViewsHolder MiddleItem
         {
             get => _selectableListAdapter.MiddleItem;
             set => _selectableListAdapter.MiddleItem = value;
@@ -54,12 +53,30 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
         {
+            BindViewHolderSelectionEvent(viewHolder, itemIndex);
+        }
+
+        public void BindViewHolderSelectionEvent(BaseItemViewsHolder viewHolder, int itemIndex)
+        {
             _selectableListAdapter.BindViewHolderSelectionEvent(viewHolder, itemIndex);
         }
 
-        protected void FindMiddleElement()
+        public void FindMiddleElement()
         {
-            _selectableListAdapter.FindMiddleElement(_VisibleItems, VisibleItemsCount);
+            _selectableListAdapter.FindMiddleElement();
+        }
+
+        protected SelectableElementsPagesListAdapter()
+        {
+            _selectableListAdapter = new SelectableListAdapter<TDataType>();
+            _selectableListAdapter.ItemSelected += OnItemSelected;
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            _selectableListAdapter.Data = Data;
+            _selectableListAdapter.VisibleItems = _VisibleItems;
         }
 
         private void OnItemSelected()

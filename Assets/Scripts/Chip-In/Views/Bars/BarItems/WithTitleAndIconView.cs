@@ -8,8 +8,6 @@ namespace Views.Bars.BarItems
     [Binding]
     public sealed class WithTitleAndIconView : WithTitleView
     {
-        private const string Tag = nameof(WithTitleAndIconView);
-
         private Sprite _iconSprite;
 
         [Binding]

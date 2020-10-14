@@ -214,6 +214,10 @@ MonoBehaviour:
   itemSelected:
     m_PersistentCalls:
       m_Calls: []
+  defaultItems:
+  - name: Favorite
+    logoSprite: {fileID: 21300000, guid: 06fd6ed14801d43c9946c2f62734ccc9, type: 3}
+    id: -1
 --- !u!114 &436213770937964340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,7 +232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.UserInterestsLabelsViewModel.SelectedInterest
   viewEventName: Views.ViewElements.ScrollViews.Adapters.UserInterestsListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.UserInterestsListAdapter.SelectedIndex
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.UserInterestsListAdapter.SelectedItemData
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -556,7 +560,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.UserInterestsLabelsViewModel.SelectedInterest
   viewEventName: Views.ViewElements.ScrollViews.Adapters.LastViewedInterestsListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.LastViewedInterestsListAdapter.SelectedIndex
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.LastViewedInterestsListAdapter.SelectedItemData
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 

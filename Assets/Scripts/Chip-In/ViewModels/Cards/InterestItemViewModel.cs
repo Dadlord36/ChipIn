@@ -10,7 +10,6 @@ namespace ViewModels.Cards
     [Binding]
     public sealed class InterestItemViewModel : SelectableListItemBase<InterestBasicDataModel>
     {
-
         private string _text;
         private Sprite _icon;
 
@@ -48,11 +47,15 @@ namespace ViewModels.Cards
             try
             {
                 AsyncOperationCancellationController.CancelOngoingTask();
-                
+
                 Icon = DownloadedSpritesRepository.IconPlaceholder;
                 Text = data.Name;
-                Icon = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri, AsyncOperationCancellationController.CancellationToken)
-                    .ConfigureAwait(false);
+
+                if (data.LogoSprite)
+                    Icon = data.LogoSprite;
+                else
+                    Icon = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri, AsyncOperationCancellationController.CancellationToken)
+                        .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {

@@ -153,10 +153,7 @@ namespace ViewModels
 
             var selectedCommunityInterest = (CommunityAndInterestIds) RelatedView.FormTransitionBundle.TransitionData;
 
-            TasksFactories.ExecuteOnMainThread(delegate
-            {
-                IsAwaitingProcess = true;
-            });
+            IsAwaitingProcess = true;
 
             try
             {
@@ -169,10 +166,7 @@ namespace ViewModels
             }
             finally
             {
-                TasksFactories.ExecuteOnMainThread(delegate
-                {
-                    IsAwaitingProcess = false;
-                });
+                IsAwaitingProcess = false;
             }
 
             var result = await CommunitiesInterestsStaticProcessor.GetInterestQuestionsAnswers
@@ -209,11 +203,8 @@ namespace ViewModels
 
             var interestData = response.ResponseModelInterface.Interests.First(model => model.Id == communityAndInterestIds.InterestId);
 
-            await TasksFactories.MainThreadTaskFactory.StartNew(delegate
-            {
-                InterestPageName = interestData.Name;
-                InterestPageDescription = interestData.Message;
-            }).ConfigureAwait(false);
+            InterestPageName = interestData.Name;
+            InterestPageDescription = interestData.Message;
         }
 
         private void FillListAdapterWithCorrespondingData(string question)
@@ -271,7 +262,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

@@ -24,6 +24,8 @@ namespace ViewModels
 
         #endregion
 
+        private int SelectedCommunityId => userInterestPagesPaginatedRepository.SelectedCommunityId;
+
         [Binding]
         public int SelectedFilterIndex
         {
@@ -42,8 +44,6 @@ namespace ViewModels
                 }
             }
         }
-
-        private int SelectedCommunityId => userInterestPagesPaginatedRepository.SelectedCommunityId;
 
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {

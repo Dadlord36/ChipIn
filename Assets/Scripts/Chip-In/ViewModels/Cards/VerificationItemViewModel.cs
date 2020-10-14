@@ -2,37 +2,23 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
+using DataModels;
 using DataModels.Interfaces;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityWeld.Binding;
+using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class VerificationItemViewModel : MonoBehaviour, IFillingView<VerificationItemViewModel.FieldFillingData>, INotifyPropertyChanged
+    public sealed class VerificationItemViewModel : MonoBehaviour, IFillingView<VerificationDataModel>, INotifyPropertyChanged
     {
         private string _idAndTitle;
         private string _category;
         private string _dateDay;
         private string _dateTime;
-
-        public class FieldFillingData
-        {
-            public int? Id { get; }
-            public string Category { get; }
-            public string Title { get; }
-            public DateTime Date { get; }
-
-            public FieldFillingData(IVerificationModel data)
-            {
-                Id = data.Id;
-                Category = data.Category;
-                Title = data.Title;
-                Date = data.Date;
-            }
-        }
+        
 
         [Binding]
         public string IdAndTitle
@@ -82,7 +68,7 @@ namespace ViewModels.Cards
             }
         }
 
-        public Task FillView(FieldFillingData data, uint dataBaseIndex)
+        public Task FillView(VerificationDataModel data, uint dataBaseIndex)
         {
             IdAndTitle = $"{data.Id.ToString()} {data.Title}";
             Category = data.Category;

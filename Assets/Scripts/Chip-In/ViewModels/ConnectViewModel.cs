@@ -14,33 +14,33 @@ namespace ViewModels
     {
         [SerializeField] private CompanyAdListAdapter companyAdListAdapter;
         [SerializeField] private AdvertsPaginatedListRepository advertsPaginatedListRepository;
-        
+
         [SerializeField] private SponsorsAdPostersRepository sponsoredAdPostersRepository;
         [SerializeField] private ReservedSponsorsAdPostersRepository reservedSponsoredAdRepository;
 
         [SerializeField] private SponsorsAdPostersListAdapter sponsorsAdPostersListAdapter;
         [SerializeField] private ReservedSponsorsAdPostersListAdapter reservedSponsoredAdListAdapter;
 
-        private uint _selectedSponsoredAdId;
-        private uint _selectedReservedAdId;
-        private uint _selectedCompanyAdId;
+        private int _selectedCompanyAdId;
+        private int _selectedSponsoredAdId;
+        private int _selectedReservedAdId;
 
         [Binding]
-        public uint SelectedCompanyAdId
+        public int SelectedCompanyAdId
         {
             get => _selectedCompanyAdId;
             set => SelectNewCompanyAd(_selectedCompanyAdId = value);
         }
 
         [Binding]
-        public uint SelectedSponsoredAdId
+        public int SelectedSponsoredAdId
         {
             get => _selectedSponsoredAdId;
             set => SelectNewSponsoredAd(_selectedSponsoredAdId = value);
         }
 
         [Binding]
-        public uint SelectedReservedAdId
+        public int SelectedReservedAdId
         {
             get => _selectedReservedAdId;
             set => SelectNewReservedAd(_selectedReservedAdId = value);
@@ -61,7 +61,8 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsorsAdPostersListAdapter.ResetAsync(), reservedSponsoredAdListAdapter.ResetAsync())
+                await Task.WhenAll(companyAdListAdapter.ResetAsync(), sponsorsAdPostersListAdapter.ResetAsync(),
+                        reservedSponsoredAdListAdapter.ResetAsync())
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -75,12 +76,12 @@ namespace ViewModels
             }
         }
 
-        private async void SelectNewSponsoredAd(uint index)
+        private async void SelectNewSponsoredAd(int index)
         {
-            return;
             try
             {
-                var data = await sponsoredAdPostersRepository.GetItemWithIndexAsync(index).ConfigureAwait(false);
+                var data = await sponsoredAdPostersRepository.GetItemWithIndexAsync((uint) index)
+                    .ConfigureAwait(false);
                 SwitchToView(nameof(SponsoredAdView), new FormsTransitionBundle(data));
             }
             catch (OperationCanceledException)
@@ -93,12 +94,12 @@ namespace ViewModels
             }
         }
 
-        private async void SelectNewCompanyAd(uint selectedCompanyAdId)
+        private async void SelectNewCompanyAd(int selectedCompanyAdId)
         {
             return;
             try
             {
-                var advertData = await advertsPaginatedListRepository.GetItemWithIndexAsync(selectedCompanyAdId)
+                var advertData = await advertsPaginatedListRepository.GetItemWithIndexAsync((uint) selectedCompanyAdId)
                     .ConfigureAwait(false);
                 SwitchToView(nameof(SelectedCompanyAdPreviewView), new FormsTransitionBundle(new CompanyAdFeaturesPreviewData(advertData)));
             }
@@ -109,12 +110,12 @@ namespace ViewModels
             }
         }
 
-        private async void SelectNewReservedAd(uint index)
+        private async void SelectNewReservedAd(int index)
         {
             return;
             try
             {
-                var data = await reservedSponsoredAdRepository.GetItemWithIndexAsync(index)
+                var data = await reservedSponsoredAdRepository.GetItemWithIndexAsync((uint) index)
                     .ConfigureAwait(false);
 
                 SwitchToView(nameof(ReservedSponsoredAdView), new FormsTransitionBundle(data));

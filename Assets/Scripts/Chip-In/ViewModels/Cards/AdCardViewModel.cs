@@ -1,39 +1,17 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels;
 using Factories;
-using JetBrains.Annotations;
 using Repositories.Local;
-using Tasking;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityWeld.Binding;
 using Utilities;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class AdCardViewModel : SelectableListItemBase<AdvertItemDataModel>, IFillingView<AdCardViewModel.FieldFillingData>
+    public sealed class AdCardViewModel : SelectableListItemBase<AdvertItemDataModel>
     {
-        public event Action<uint> ItemSelected;
-
-        public uint IndexInOrder { get; set; }
-
-        public class FieldFillingData
-        {
-            public readonly string AdIconUrl;
-            public readonly string Description;
-
-            public FieldFillingData(in string adIconUrl, in string description)
-            {
-                AdIconUrl = adIconUrl;
-                Description = description;
-            }
-        }
-
         private Sprite _adIcon;
         private string _description;
 
@@ -61,45 +39,34 @@ namespace ViewModels.Cards
             }
         }
 
-        public async Task FillView(FieldFillingData dataModel, uint dataBaseIndex)
+        public AdCardViewModel() : base(nameof(AdCardViewModel))
         {
+        }
+
+        public override async Task FillView(AdvertItemDataModel data, uint dataBaseIndex)
+        {
+            await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
+
             AsyncOperationCancellationController.CancelOngoingTask();
+
             //ToDo: replace with description
             IndexInOrder = dataBaseIndex;
             Description = dataBaseIndex.ToString();
             try
             {
                 AdIcon = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>()
-                    .CreateLoadSpriteTask(dataModel.AdIconUrl, AsyncOperationCancellationController.CancellationToken)
+                    .CreateLoadSpriteTask(data.LogoUrl, AsyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
-                LogUtility.PrintDefaultOperationCancellationLog(nameof(AdCardViewModel));
+                LogUtility.PrintDefaultOperationCancellationLog(Tag);
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            Select();
-        }
-        
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
-        }
-
-        public AdCardViewModel(string childClassName) : base(childClassName)
-        {
         }
     }
 }

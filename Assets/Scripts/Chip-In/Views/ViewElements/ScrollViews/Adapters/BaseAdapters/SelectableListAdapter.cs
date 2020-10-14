@@ -3,20 +3,45 @@ using System.Collections.Generic;
 using Com.TheFallenGames.OSA.Core;
 using Com.TheFallenGames.OSA.DataHelpers;
 using Common.Interfaces;
+using DataModels.Interfaces;
 using Utilities;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
-    public class SelectableListAdapter<TDataType>
+    public interface ISelectableListAdapter<TDataType>
+    {
+        uint SelectedIndex { get; set; }
+        TDataType SelectedItemData { get; set; }
+        int SelectedItemId { get; set; }
+
+        /// <summary>
+        /// Middle item in scroll viewport. Will also call Select() on new middle item sets
+        /// </summary>
+        BaseItemViewsHolder MiddleItem { get; set; }
+
+        void BindViewHolderSelectionEvent(BaseItemViewsHolder viewHolder, int itemIndex);
+        void FindMiddleElement();
+    }
+
+    public class SelectableListAdapter<TDataType> : ISelectableListAdapter<TDataType>
     {
         public event Action ItemSelected;
 
+        public SimpleDataHelper<TDataType> Data;
+        public List<BaseItemViewsHolder> VisibleItems;
+        
         private BaseItemViewsHolder _middleItem;
-        private readonly SimpleDataHelper<TDataType> _data;
         public int MiddleElementNumber;
 
         public uint SelectedIndex { get; set; }
         public TDataType SelectedItemData { get; set; }
+
+        private int _selectedItemId;
+        public int SelectedItemId
+        {
+            get => _selectedItemId;
+            set => _selectedItemId = value;
+        }
 
         /// <summary>
         /// Middle item in scroll viewport. Will also call Select() on new middle item sets
@@ -32,27 +57,23 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             }
         }
 
-        public SelectableListAdapter(SimpleDataHelper<TDataType> data)
-        {
-            _data = data;
-        }
-
         public void BindViewHolderSelectionEvent(BaseItemViewsHolder viewHolder, int itemIndex)
         {
             ((IIdentifiedSelection) viewHolder).ItemSelected += OnItemSelected;
         }
 
-        public void FindMiddleElement(List<BaseItemViewsHolder> _VisibleItems, int visibleItemsCount)
+        public void FindMiddleElement()
         {
-            MiddleElementNumber = CalculationsUtility.GetMiddle(visibleItemsCount);
-            MiddleItem = _VisibleItems[MiddleElementNumber];
+            MiddleElementNumber = CalculationsUtility.GetMiddle(VisibleItems.Count);
+            MiddleItem = VisibleItems[MiddleElementNumber];
         }
 
         private void OnItemSelected(uint index)
         {
             SelectedIndex = index;
-            SelectedItemData = _data[(int) index];
-            ItemSelected.Invoke();
+            SelectedItemData = Data[(int) index];
+            SelectedItemId = (int) ((IIdentifier) SelectedItemData).Id;
+            ItemSelected?.Invoke();
         }
     }
 }

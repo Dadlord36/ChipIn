@@ -7,7 +7,7 @@ using UnityWeld.Binding;
 namespace ViewModels.Cards
 {
     [Binding]
-    public abstract class SwitchableForm<TDataType> : SelectableListItemBase<TDataType>, INotifyPropertyChanged where TDataType : class
+    public abstract class SwitchableForm<TDataType> : SelectableListItemBase<TDataType> where TDataType : class
     {
         private bool _alternativeFormUsed;
 
@@ -25,14 +25,6 @@ namespace ViewModels.Cards
 
         protected SwitchableForm(string childClassName) : base(childClassName)
         {
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

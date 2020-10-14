@@ -138,22 +138,12 @@ namespace ViewModels
             get => ChallengingOfferDataModel.Quantity;
             set
             {
+                if (ChallengingOfferDataModel.Quantity == value) return;
                 ChallengingOfferDataModel.Quantity = value;
                 OnPropertyChanged();
             }
         }
 
-        [Binding]
-        public int QuantityAsInt
-        {
-            get => (int) Quantity;
-            set
-            {
-                if (Quantity == value) return;
-                Quantity = (uint) value;
-                OnPropertyChanged();
-            }
-        }
 
         [Binding]
         public string Price
@@ -233,7 +223,7 @@ namespace ViewModels
             base.OnDisable();
             ThisView.NewCategorySelected -= SetCategoryName;
         }
-        
+
         private void SetCategoryName(string categoryName)
         {
             Segment = categoryName;
@@ -243,7 +233,7 @@ namespace ViewModels
         {
             Description = string.Empty;
             Price = "0";
-            QuantityAsInt = 0;
+            Quantity = 0;
             Title = string.Empty;
             ExpireLocalDate = DateTime.Now;
             SelectedCurrencyTypeIndex = 0;

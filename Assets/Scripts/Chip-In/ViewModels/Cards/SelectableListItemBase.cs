@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Behaviours;
 using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using DataModels.Interfaces;
 using Factories;
 using JetBrains.Annotations;
@@ -12,6 +11,7 @@ using Repositories.Local;
 using Tasking;
 using UnityEngine.EventSystems;
 using UnityWeld.Binding;
+using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
 {
@@ -21,10 +21,10 @@ namespace ViewModels.Cards
     {
         protected readonly string Tag;
 
-        protected readonly IDownloadedSpritesRepository DownloadedSpritesRepository;
+        protected IDownloadedSpritesRepository DownloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
 
-        public uint IndexInOrder { get; set; }
         public event Action<uint> ItemSelected;
+        public uint IndexInOrder { get; set; }
         public TDataType ItemData { get; set; }
         public uint ItemDataIndex { get; set; }
 
@@ -32,13 +32,12 @@ namespace ViewModels.Cards
         protected SelectableListItemBase(string childClassName)
         {
             Tag = childClassName;
-            DownloadedSpritesRepository = SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
         }
 
         public virtual Task FillView(TDataType data, uint dataBaseIndex)
         {
             ItemData = data;
-            ItemDataIndex = (uint)((IIdentifier) data).Id;
+            ItemDataIndex = (uint) ((IIdentifier) data).Id;
             return Task.CompletedTask;
         }
 
@@ -62,7 +61,10 @@ namespace ViewModels.Cards
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+            });
         }
     }
 }

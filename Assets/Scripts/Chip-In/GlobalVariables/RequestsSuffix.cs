@@ -21,6 +21,7 @@
         
         public static class Subcategories
         {
+            public const string Favorites = "favorites";
             public const string Market = MainNames.ModelsPropertiesNames.Market;
             public const string Interests = "interests";
             public const string Verification = "verification";

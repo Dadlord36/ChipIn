@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Controllers.SlotsSpinningControllers.RecyclerView.Interfaces
+namespace Views.ViewElements.Interfaces
 {
     public interface IFillingView<in TDataModel> where TDataModel : class
     {

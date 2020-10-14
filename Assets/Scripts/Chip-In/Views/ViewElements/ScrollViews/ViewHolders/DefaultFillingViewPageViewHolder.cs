@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Com.TheFallenGames.OSA.Core;
 using Common.Interfaces;
-using Controllers.SlotsSpinningControllers.RecyclerView.Interfaces;
 using Utilities;
+using Views.ViewElements.Interfaces;
 
 namespace Views.ViewElements.ScrollViews.ViewHolders
 {
@@ -29,6 +29,11 @@ namespace Views.ViewElements.ScrollViews.ViewHolders
 
         public Task FillView(TDataType dataModel, uint dataBaseIndex)
         {
+            if (_identifiedSelection != null)
+            {
+                _identifiedSelection.IndexInOrder = dataBaseIndex;
+            }
+
             return _fillingViewImplementation.FillView(dataModel, dataBaseIndex);
         }
 

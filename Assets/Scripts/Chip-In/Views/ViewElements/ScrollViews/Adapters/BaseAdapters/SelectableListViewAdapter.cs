@@ -36,13 +36,20 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         protected SelectableListViewAdapter()
         {
-            _selectableListAdapter = new SelectableListAdapter<TDataType>(Data);
+            _selectableListAdapter = new SelectableListAdapter<TDataType>();
             _selectableListAdapter.ItemSelected += OnItemSelected;
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            _selectableListAdapter.Data = Data;
+            _selectableListAdapter.VisibleItems = _VisibleItems;
         }
 
         protected void FindMiddleElement()
         {
-            _selectableListAdapter.FindMiddleElement(_VisibleItems, VisibleItemsCount);
+            _selectableListAdapter.FindMiddleElement();
         }
 
         protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)

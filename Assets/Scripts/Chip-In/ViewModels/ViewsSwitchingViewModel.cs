@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using ScriptableObjects.SwitchBindings;
+using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using ViewModels.Basic;
@@ -35,7 +36,10 @@ namespace ViewModels
         protected void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default,
             bool recreateViewToSwitchTo = false)
         {
-            StartCoroutine(SwitchToViewCoroutine(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo));
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                StartCoroutine(SwitchToViewCoroutine(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo));
+            });
         }
 
         private IEnumerator SwitchToViewCoroutine(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle,

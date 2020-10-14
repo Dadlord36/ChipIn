@@ -106,5 +106,13 @@ namespace RequestsStaticProcessors
             return new GetInterestsQuestionsAnswersGetRequestProcessor(out cancellationTokenSource, requestHeaders, interestId)
                 .SendRequest("Interest survey was retrieved successfully");
         }
+
+        public static Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
+            GetAllFavoritesInterests(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders,
+                PaginatedRequestData paginatedRequestData)
+        {
+            return new FavoriteInterestsGetProcessor(out cancellationTokenSource, requestHeaders, paginatedRequestData)
+                .SendRequest("Favorite interests was retrieved successfully");
+        }
     }
 }

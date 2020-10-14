@@ -11,7 +11,7 @@ using Utilities;
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class SponsoredAdCardViewModel : SwitchableForm<SponsoredAdDataModel>
+    public sealed class SponsoredAdCardViewModel : SwitchableForm<SponsoredPosterDataModel>
     {
         private Sprite _logoSprite;
 
@@ -45,13 +45,13 @@ namespace ViewModels.Cards
         {
         }
 
-        public override async Task FillView(SponsoredAdDataModel data, uint dataBaseIndex)
+        public override async Task FillView(SponsoredPosterDataModel data, uint dataBaseIndex)
         {
             await base.FillView(data, dataBaseIndex).ConfigureAwait(false);
             try
             {
                 IndexInOrder = dataBaseIndex;
-                BackgroundTexture = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.PosterUri,
+                BackgroundTexture = await DownloadedSpritesRepository.CreateLoadSpriteTask(data.BackgroundUrl,
                         AsyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
                 

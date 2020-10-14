@@ -45,5 +45,20 @@ namespace HttpRequests.RequestsProcessors
             new BaseRequestProcessorParameters(requestSuffix, requestMethod, requestHeaders, null, null))
         {
         }
+
+        protected RequestWithoutBodyProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, IReadOnlyList<string> queryStringParameters,
+            PaginatedRequestData paginatedRequestData, NameValueCollection parameters) : base(out cancellationTokenSource,
+            new BaseRequestProcessorParameters(requestSuffix, requestMethod, requestHeaders, null, queryStringParameters,
+                new NameValueCollection {paginatedRequestData.ConvertPaginationToNameValueCollection(), parameters}))
+        {
+        }
+
+        protected RequestWithoutBodyProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, IReadOnlyList<string> queryStringParameters,
+            PaginatedRequestData paginatedRequestData) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(requestSuffix, requestMethod,
+            requestHeaders, null, queryStringParameters,paginatedRequestData.ConvertPaginationToNameValueCollection()))
+        {
+        }
     }
 }

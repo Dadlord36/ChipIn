@@ -5,6 +5,7 @@ using Common;
 using Common.AsyncTasksManagement;
 using DataModels.Common;
 using DataModels.Interfaces;
+using Factories;
 using HttpRequests.RequestsProcessors;
 using Repositories.Interfaces;
 using Repositories.Remote;
@@ -22,7 +23,8 @@ namespace Repositories
         [Space(25f)] [SerializeField] protected int itemsPerPage;
         [SerializeField] protected byte maxCachedPagesCount;
         [SerializeField] protected byte pagesPortion;
-        [SerializeField] protected UserAuthorisationDataRepository authorisationDataRepository;
+
+        protected IUserAuthorisationDataRepository authorisationDataRepository => SimpleAutofac.GetInstance<IUserAuthorisationDataRepository>();
 
         [NonSerialized] private PaginatedList<TDataType> _paginatedData = new PaginatedList<TDataType>();
 
@@ -30,8 +32,7 @@ namespace Repositories
 
         protected abstract string Tag { get; }
 
-        private List<DisposableCancellationTokenSource> GoingTasksCancellationTokenSources { get; } =
-            new List<DisposableCancellationTokenSource>();
+        private List<DisposableCancellationTokenSource> GoingTasksCancellationTokenSources { get; } = new List<DisposableCancellationTokenSource>();
 
         #region IPaginatedItemsListInfo Implementation
 
@@ -204,7 +205,7 @@ namespace Repositories
             TotalPages = paginatedResponseInterface.Paginated.Total;
 
             var lastPageResponse = await CreateAndRegisterLoadPaginatedItemsTask(new PaginatedRequestData(TotalPages, itemsPerPage))
-                    .ConfigureAwait(false);
+                .ConfigureAwait(false);
 
             if (!CheckIfRequestIsSuccessful(lastPageResponse))
             {
@@ -223,7 +224,7 @@ namespace Repositories
             LastPageItemsNumber = (uint) latsPageItems.Count;
 
             TotalItemsNumber = (uint) (((TotalPages - 1) * itemsPerPage) + LastPageItemsNumber);
-            
+
             _paginatedData.FillPageWithItems(initialPage, GetItemsFromResponseModelInterface(responseModelInterface));
 
             if (TotalPages - 1 < 1) return;

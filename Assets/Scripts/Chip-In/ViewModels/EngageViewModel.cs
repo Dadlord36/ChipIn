@@ -9,10 +9,10 @@ namespace ViewModels
     [Binding]
     public class EngageViewModel : ViewsSwitchingViewModel
     {
-        private uint _selectedCommunityId;
+        private int _selectedCommunityId;
 
         [Binding]
-        public uint SelectedCommunityId
+        public int SelectedCommunityId
         {
             get => _selectedCommunityId;
             set => MerchantInterestListAdapterOnItemSelected(_selectedCommunityId = value);
@@ -47,7 +47,7 @@ namespace ViewModels
         }
 
 
-        private void MerchantInterestListAdapterOnItemSelected(uint index)
+        private void MerchantInterestListAdapterOnItemSelected(int index)
         {
             SwitchToView(nameof(MerchantInterestView), new FormsTransitionBundle(index));
         }
