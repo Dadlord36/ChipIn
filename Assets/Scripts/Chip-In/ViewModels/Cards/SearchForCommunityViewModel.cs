@@ -22,9 +22,10 @@ namespace ViewModels.Cards
         protected override async Task RefillListViewAsync(string nameToSearch)
         {
             AsyncOperationCancellationController.CancelOngoingTask();
-            var response = await CommunitiesStaticRequestsProcessor.GetCommunitiesListByName(
-                    out AsyncOperationCancellationController.TasksCancellationTokenSource, userAuthorisationDataRepository, nameToSearch)
-                .ConfigureAwait(false);
+            var response = await CommunitiesStaticRequestsProcessor
+                .GetCommunitiesListByName(out AsyncOperationCancellationController.TasksCancellationTokenSource, userAuthorisationDataRepository,
+                    nameToSearch).ConfigureAwait(false);
+
             if (!response.Success)
             {
                 LogUtility.PrintLog(Tag, response.Error);

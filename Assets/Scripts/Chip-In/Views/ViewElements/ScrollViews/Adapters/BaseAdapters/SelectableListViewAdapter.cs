@@ -29,6 +29,21 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             set => _selectableListAdapterMediator.SelectedItemData = value;
         }
 
+        [Binding]
+        public int SelectedItemId
+        {
+            get => _selectableListAdapterMediator.SelectedItemId;
+            set => _selectableListAdapterMediator.SelectedItemId = value;
+        }
+
+        [Binding]
+        public BaseItemViewsHolder MiddleItem
+        {
+            get => _selectableListAdapterMediator.MiddleItem;
+            set => _selectableListAdapterMediator.MiddleItem = value;
+        }
+
+        [Binding]
         protected int MiddleElementNumber
         {
             get => _selectableListAdapterMediator.MiddleElementNumber;
@@ -46,6 +61,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             base.OnInitialized();
             _selectableListAdapterMediator.Data = Data;
             _selectableListAdapterMediator.VisibleItems = _VisibleItems;
+        }
+
+        public void BindViewHolderSelectionEvent(BaseItemViewsHolder viewHolder, int itemIndex)
+        {
+            _selectableListAdapterMediator.BindViewHolderSelectionEvent(viewHolder, itemIndex);
         }
 
         protected void FindMiddleElement()
