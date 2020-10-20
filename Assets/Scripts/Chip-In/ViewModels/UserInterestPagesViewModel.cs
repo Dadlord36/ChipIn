@@ -49,9 +49,8 @@ namespace ViewModels
         {
         }
 
-        protected override void Start()
+        protected void Start()
         {
-            base.Start();
             joinInInterestPagesListAdapter.OffersButtonClicked += SwitchToChatView;
         }
 
