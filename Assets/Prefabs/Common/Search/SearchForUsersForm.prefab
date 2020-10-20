@@ -15,28 +15,6 @@ MonoBehaviour:
   usersDataPaginatedListRepository: {fileID: 11400000, guid: f49656626c1b31d4b916a05a5779773d,
     type: 2}
   usersDataLabelsPaginatedListAdapter: {fileID: 4167072525437587373}
---- !u!114 &3743909035739621921
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2419454857128084363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  viewModelPropertyName: ViewModels.Cards.SearchForUserDataViewModel.InputText
-  viewEventName: TMPro.TMP_InputField.onValueChanged
-  viewPropertyName: TMPro.TMP_InputField.text
-  viewAdapterTypeName: 
-  viewAdapterOptions: {fileID: 0}
-  viewModelAdapterTypeName: 
-  viewModelAdapterOptions: {fileID: 0}
-  exceptionPropertyName: 
-  exceptionAdapterTypeName: 
-  exceptionAdapterOptions: {fileID: 0}
 --- !u!223 &442631674063982550
 Canvas:
   m_ObjectHideFlags: 0
@@ -204,7 +182,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewModelPropertyName: ViewModels.Basic.UserDataSelectionViewModel.SelectedIndex
   viewEventName: Views.ViewElements.ScrollViews.Adapters.UsersDataLabelsPaginatedListAdapter.itemSelected
-  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.UsersDataLabelsPaginatedListAdapter.SelectedIndex
+  viewPropertyName: Views.ViewElements.ScrollViews.Adapters.UsersDataLabelsPaginatedListAdapter.SelectedItemData
+  viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
+  viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
+--- !u!114 &3743909035739621921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2419454857128084363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1957390036, guid: 3b1d36d13e0e68f43a78b982cc2fafcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewModelPropertyName: ViewModels.Cards.SearchForUserDataViewModel.InputText
+  viewEventName: TMPro.TMP_InputField.onValueChanged
+  viewPropertyName: TMPro.TMP_InputField.text
   viewAdapterTypeName: 
   viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
@@ -522,12 +522,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4653266940007863882}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2419454857128084363 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6989614105460626881, guid: be93f299c91cf1c4e9b9515932644f3b,
-    type: 3}
-  m_PrefabInstance: {fileID: 4653266940007863882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1168204616211735441 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5811317285418792411, guid: be93f299c91cf1c4e9b9515932644f3b,
@@ -549,6 +543,12 @@ RectTransform:
 --- !u!224 &941142510034082867 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5592386072691935865, guid: be93f299c91cf1c4e9b9515932644f3b,
+    type: 3}
+  m_PrefabInstance: {fileID: 4653266940007863882}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2419454857128084363 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6989614105460626881, guid: be93f299c91cf1c4e9b9515932644f3b,
     type: 3}
   m_PrefabInstance: {fileID: 4653266940007863882}
   m_PrefabAsset: {fileID: 0}
