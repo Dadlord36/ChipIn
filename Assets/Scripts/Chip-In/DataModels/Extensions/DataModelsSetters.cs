@@ -1,6 +1,5 @@
 ﻿using DataModels.Interfaces;
 using Repositories.Remote;
-using ViewModels.Interfaces;
 
 namespace DataModels.Extensions
 {

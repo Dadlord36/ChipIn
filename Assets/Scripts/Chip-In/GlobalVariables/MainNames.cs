@@ -54,6 +54,9 @@ namespace GlobalVariables
             public const string SetReminderSAdCAdExpiring = "expiration_reminder";
             public const string Offer = "offer";
             public const string Segment = "segment";
+            public const string Answers = "answers";
+            public const string Questions = "questions";
+            public const string Survey = "survey";
         }
 
         public enum InterestCategory

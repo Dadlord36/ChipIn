@@ -23,13 +23,13 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         void FindMiddleElement();
     }
 
-    public class SelectableListAdapter<TDataType> : ISelectableListAdapter<TDataType>
+    public class SelectableListAdapterMediator<TDataType> : ISelectableListAdapter<TDataType>
     {
         public event Action ItemSelected;
 
         public SimpleDataHelper<TDataType> Data;
         public List<BaseItemViewsHolder> VisibleItems;
-        
+
         private BaseItemViewsHolder _middleItem;
         public int MiddleElementNumber;
 
@@ -37,6 +37,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         public TDataType SelectedItemData { get; set; }
 
         private int _selectedItemId;
+
         public int SelectedItemId
         {
             get => _selectedItemId;
@@ -72,7 +73,12 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         {
             SelectedIndex = index;
             SelectedItemData = Data[(int) index];
-            SelectedItemId = (int) ((IIdentifier) SelectedItemData).Id;
+
+            if (SelectedItemData is IIdentifier identifier)
+            {
+                if (identifier.Id != null) SelectedItemId = (int) identifier.Id;
+            }
+
             ItemSelected?.Invoke();
         }
     }

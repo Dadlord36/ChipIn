@@ -9,7 +9,6 @@ using Common.UnityEvents;
 using Controllers;
 using JetBrains.Annotations;
 using Tasking;
-using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
 using Views.ViewElements.Interfaces;
@@ -17,6 +16,12 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
+    public abstract class ResizableItemData
+    {
+        public bool HasPendingVisualSizeChange = true;
+    }
+
+
     [Binding]
     public abstract class BasedListAdapter<TParams, TDataType> : OSA<TParams, BaseItemViewsHolder>, INotifyPropertyChanged
         where TDataType : class
@@ -55,7 +60,7 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             Data = new SimpleDataHelper<TDataType>(this);
         }
 
-        protected virtual void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
+        protected virtual void AdditionItemProcessing(DefaultFillingViewPageViewHolder<TDataType> viewHolder, int itemIndex)
         {
         }
 
@@ -76,6 +81,16 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             AdditionItemProcessing(instance, itemIndex);
             return instance;
         }
+        
+
+        protected override void OnItemHeightChangedPreTwinPass(BaseItemViewsHolder vh)
+        {
+            base.OnItemHeightChangedPreTwinPass(vh);
+            if (Data[vh.ItemIndex] is ResizableItemData data)
+            {
+                data.HasPendingVisualSizeChange = false;
+            }
+        }
 
         // This is called anytime a previously invisible item become visible, or after it's created, 
         // or when anything that requires a refresh happens
@@ -90,6 +105,15 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             {
                 var index = viewHolder.ItemIndex;
                 await ((IFillingView<TDataType>) viewHolder).FillView(Data[index], (uint) index).ConfigureAwait(false);
+
+                if (!(Data[index] is ResizableItemData data)) return;
+                if (!data.HasPendingVisualSizeChange) return;
+
+                TasksFactories.ExecuteOnMainThread(() =>
+                {
+                    viewHolder.MarkForRebuild();
+                    ScheduleComputeVisibilityTwinPass(true);
+                });
             }
             catch (OperationCanceledException)
             {
@@ -100,6 +124,20 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
                 LogUtility.PrintLogException(e);
                 throw;
             }
+        }
+
+        protected override void RebuildLayoutDueToScrollViewSizeChange()
+        {
+            // Invalidate the last sizes so that they'll be re-calculated
+            for (int i = 0; i < Data.Count; i++)
+            {
+                if (Data[i] is ResizableItemData data)
+                {
+                    data.HasPendingVisualSizeChange = false;
+                }
+            }
+
+            base.RebuildLayoutDueToScrollViewSizeChange();
         }
 
         // These are common data manipulation methods
@@ -116,6 +154,16 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
             //InsertItems(index, items.Length);
 
             TasksFactories.ExecuteOnMainThread(() => Data.InsertItems(index, items));
+        }
+
+        public void AddItemAtTheBeginning(TDataType item)
+        {
+            TasksFactories.ExecuteOnMainThread(() => Data.InsertOneAtStart(item));
+        }
+
+        public void AddItemAtTheEnd(TDataType item)
+        {
+            TasksFactories.ExecuteOnMainThread(() => Data.InsertOneAtEnd(item));
         }
 
         public void RemoveItemsFrom(int index, int count)

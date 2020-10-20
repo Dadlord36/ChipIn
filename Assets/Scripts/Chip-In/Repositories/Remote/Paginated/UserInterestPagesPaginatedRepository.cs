@@ -21,8 +21,8 @@ namespace Repositories.Remote.Paginated
         protected override string Tag => nameof(UserInterestPagesPaginatedRepository);
         public int SelectedCommunityId { get; set; }
         public int SelectedFilterIndex { get; set; }
-
         private string SelectedCategory => ((MainNames.InterestCategory) SelectedFilterIndex).ToString();
+        
 
         protected override Task<BaseRequestProcessor<object, UserInterestPagesResponseDataModel, IUserInterestPagesResponseModel>.HttpResponse>
             CreateLoadPaginatedItemsTask(out DisposableCancellationTokenSource cancellationTokenSource, PaginatedRequestData paginatedRequestData)
@@ -33,8 +33,7 @@ namespace Repositories.Remote.Paginated
 
         protected override List<UserInterestPageDataModel> GetItemsFromResponseModelInterface(IUserInterestPagesResponseModel pagesResponseModelInterface)
         {
-            if (pagesResponseModelInterface.Interests == null) return null;
-            return new List<UserInterestPageDataModel>(pagesResponseModelInterface.Interests);
+            return pagesResponseModelInterface.Interests == null ? null : new List<UserInterestPageDataModel>(pagesResponseModelInterface.Interests);
         }
     }
 }

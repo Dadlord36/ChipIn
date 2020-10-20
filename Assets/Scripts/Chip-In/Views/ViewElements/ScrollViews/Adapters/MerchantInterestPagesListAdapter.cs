@@ -6,7 +6,7 @@ using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public sealed class MerchantInterestPagesListAdapter : SelectableElementsPagesListAdapter<MerchantInterestPagesPaginatedRepository,
+    public sealed class MerchantInterestPagesListAdapter : SelectableItemsRepositoryListAdapter<MerchantInterestPagesPaginatedRepository,
         MerchantInterestPageDataModel>
     {
     }

@@ -15,8 +15,7 @@ namespace Repositories.Remote
 {
     [CreateAssetMenu(fileName = nameof(UserProfileRemoteRepository),
         menuName = nameof(Repositories) + "/" + nameof(Remote) + "/" + nameof(UserProfileRemoteRepository), order = 0)]
-    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable,
-        INotifyPropertyChanged
+    public sealed class UserProfileRemoteRepository : RemoteRepositoryBase, IUserProfileModel, IClearable, INotifyPropertyChanged
     {
         private const string Tag = nameof(UserProfileRemoteRepository);
 

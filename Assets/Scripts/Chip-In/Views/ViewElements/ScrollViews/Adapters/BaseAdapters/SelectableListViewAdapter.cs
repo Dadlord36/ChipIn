@@ -2,6 +2,7 @@
 using Com.TheFallenGames.OSA.CustomParams;
 using UnityEngine.Events;
 using UnityWeld.Binding;
+using Views.ViewElements.ScrollViews.ViewHolders;
 
 namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 {
@@ -10,51 +11,51 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         where TOSAPrams : BaseParamsWithPrefab
         where TDataType : class
     {
-        private readonly SelectableListAdapter<TDataType> _selectableListAdapter;
+        private readonly SelectableListAdapterMediator<TDataType> _selectableListAdapterMediator;
 
         public UnityEvent itemSelected;
 
         [Binding]
         public uint SelectedIndex
         {
-            get => _selectableListAdapter.SelectedIndex;
-            set => _selectableListAdapter.SelectedIndex = value;
+            get => _selectableListAdapterMediator.SelectedIndex;
+            set => _selectableListAdapterMediator.SelectedIndex = value;
         }
 
         [Binding]
         public TDataType SelectedItemData
         {
-            get => _selectableListAdapter.SelectedItemData;
-            set => _selectableListAdapter.SelectedItemData = value;
+            get => _selectableListAdapterMediator.SelectedItemData;
+            set => _selectableListAdapterMediator.SelectedItemData = value;
         }
 
         protected int MiddleElementNumber
         {
-            get => _selectableListAdapter.MiddleElementNumber;
-            set => _selectableListAdapter.MiddleElementNumber = value;
+            get => _selectableListAdapterMediator.MiddleElementNumber;
+            set => _selectableListAdapterMediator.MiddleElementNumber = value;
         }
 
         protected SelectableListViewAdapter()
         {
-            _selectableListAdapter = new SelectableListAdapter<TDataType>();
-            _selectableListAdapter.ItemSelected += OnItemSelected;
+            _selectableListAdapterMediator = new SelectableListAdapterMediator<TDataType>();
+            _selectableListAdapterMediator.ItemSelected += OnItemSelected;
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            _selectableListAdapter.Data = Data;
-            _selectableListAdapter.VisibleItems = _VisibleItems;
+            _selectableListAdapterMediator.Data = Data;
+            _selectableListAdapterMediator.VisibleItems = _VisibleItems;
         }
 
         protected void FindMiddleElement()
         {
-            _selectableListAdapter.FindMiddleElement();
+            _selectableListAdapterMediator.FindMiddleElement();
         }
 
-        protected override void AdditionItemProcessing(BaseItemViewsHolder viewHolder, int itemIndex)
+        protected override void AdditionItemProcessing(DefaultFillingViewPageViewHolder<TDataType> viewHolder, int itemIndex)
         {
-            _selectableListAdapter.BindViewHolderSelectionEvent(viewHolder, itemIndex);
+            _selectableListAdapterMediator.BindViewHolderSelectionEvent(viewHolder, itemIndex);
         }
 
         private void OnItemSelected()

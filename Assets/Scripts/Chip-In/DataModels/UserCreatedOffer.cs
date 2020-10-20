@@ -3,11 +3,10 @@ using DataModels.Interfaces;
 
 namespace DataModels
 {
-    public interface ICreatedOfferModel : IOfferBaseModel
+    public interface ICreatedOfferModel : IOfferBaseModel,IMarketSegment
     {
-        
     }
-    
+
     public sealed class UserCreatedOffer : ICreatedOfferModel
     {
         public string Title { get; set; }

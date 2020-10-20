@@ -14,7 +14,6 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityWeld.Binding;
 using Utilities;
-using ViewModels.UI.Elements.Icons;
 using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
@@ -23,12 +22,18 @@ namespace ViewModels.Cards
     public sealed class InterestCardViewModel : AsyncOperationsMonoBehaviour, INotifyPropertyChanged, IFillingView<UserInterestPageDataModel>
     {
         private const string Tag = nameof(InterestCardViewModel);
-
-        [SerializeField] private UserAvatarIcon avatarIcon;
+        
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
+        [SerializeField] private bool isInAlternativeMode;
 
+
+        #region Events
+
+        public event Action<int> OffersButtonClicked;
+
+        #endregion
 
         #region Backing fields
 
@@ -49,6 +54,18 @@ namespace ViewModels.Cards
         #endregion
 
         #region Bindable properties
+
+        [Binding]
+        public bool IsInAlternativeMode
+        {
+            get => isInAlternativeMode;
+            set
+            {
+                if (value == isInAlternativeMode) return;
+                isInAlternativeMode = value;
+                OnPropertyChanged();
+            }
+        }
 
         [Binding]
         public int TotalFound
@@ -207,6 +224,7 @@ namespace ViewModels.Cards
 
         #endregion
 
+
         [Binding]
         public async void LikeButton_OnClick()
         {
@@ -262,6 +280,12 @@ namespace ViewModels.Cards
             }
         }
 
+        [Binding]
+        public void OffersButton_OnClick()
+        {
+            OnOffersButtonClicked();
+        }
+
         public async void FundTheInterest(int tokensAmount)
         {
             if (tokensAmount <= 0) return;
@@ -269,7 +293,7 @@ namespace ViewModels.Cards
             try
             {
                 var response = await CommunitiesInterestsStaticProcessor.FundInterest(
-                    out AsyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, (int) InterestId, tokensAmount)
+                        out AsyncOperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, (int) InterestId, tokensAmount)
                     .ConfigureAwait(false);
 
                 alertCardController.ShowAlertWithText(response.Success ? "Successfully fund this interest" : response.Error);
@@ -293,11 +317,6 @@ namespace ViewModels.Cards
             }
         }
 
-        private string GetCorrespondingEndText(int days)
-        {
-            return days == 1 ? "Day" : "Days";
-        }
-
         public async Task FillView(UserInterestPageDataModel pageDataModel, uint index)
         {
             AsyncOperationCancellationController.CancelOngoingTask();
@@ -314,12 +333,12 @@ namespace ViewModels.Cards
             TotalFound = pageDataModel.TotalFound;
             CreatedAt = pageDataModel.CreatedAt;
             Supporting = pageDataModel.Support;
-            
+
 
             try
             {
                 CardIcon = await downloadedSpritesRepository.CreateLoadSpriteTask(pageDataModel.PosterUri,
-                    AsyncOperationCancellationController.CancellationToken)
+                        AsyncOperationCancellationController.CancellationToken)
                     .ConfigureAwait(false);
             }
             catch (OperationCanceledException)
@@ -342,6 +361,11 @@ namespace ViewModels.Cards
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             TasksFactories.ExecuteOnMainThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+        }
+
+        private void OnOffersButtonClicked()
+        {
+            OffersButtonClicked?.Invoke((int) InterestId);
         }
     }
 }

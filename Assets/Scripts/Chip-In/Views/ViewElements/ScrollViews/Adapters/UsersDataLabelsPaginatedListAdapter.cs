@@ -6,7 +6,7 @@ using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UsersDataLabelsPaginatedListAdapter : SelectableElementsPagesListAdapter<UsersDataPaginatedListRepository, UserProfileBaseData>
+    public class UsersDataLabelsPaginatedListAdapter : SelectableItemsRepositoryListAdapter<UsersDataPaginatedListRepository, UserProfileBaseData>
     {
     }
 }

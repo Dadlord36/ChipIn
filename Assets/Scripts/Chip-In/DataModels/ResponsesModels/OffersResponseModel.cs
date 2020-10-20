@@ -16,6 +16,4 @@ namespace DataModels.ResponsesModels
         public PaginatedResponseData Paginated { get; set; }
         public ChallengingOfferWithIdentifierModel[] Offers { get; set; }
     }
-
-
 }

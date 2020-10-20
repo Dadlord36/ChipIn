@@ -1,87 +1,59 @@
-﻿using System.Collections;
-using ScriptableObjects.SwitchBindings;
-using Tasking;
+﻿using ScriptableObjects.SwitchBindings;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using ViewModels.Basic;
 using ViewModels.SwitchingControllers;
-using ViewModels.UI.Elements;
 
 namespace ViewModels
 {
-    public abstract class ViewsSwitchingViewModel : BaseViewModel
+    public abstract class ViewsSwitchingViewModel : BaseViewModel, IViewsSwitchingMediator
     {
         [SerializeField] private BaseViewSwitchingController viewsSwitchingController;
         [SerializeField] private ViewsSwitchingAnimationBinding viewsSwitchingAnimationBinding;
+        private ViewsSwitchingMediator _viewsSwitchingMediator;
 
-        private readonly ViewsSwitchingParameters _defaultSwitchingParameters = new ViewsSwitchingParameters
-        (
-            new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveOut, false,
-                ViewAppearanceParameters.SwitchingViewPosition.Under, MoveDirection.Left, .5f),
-            new ViewAppearanceParameters(ViewAppearanceParameters.Appearance.MoveIn, false,
-                ViewAppearanceParameters.SwitchingViewPosition.Above, MoveDirection.Right)
-        );
-
-        public ViewsSwitchingViewModel(string tag) : base(tag)
+        protected ViewsSwitchingViewModel(string tag) : base(tag)
         {
         }
 
-        private void InvokeViewsSwitching(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
+        protected virtual void Start()
         {
-            viewsSwitchingController.RequestSwitchToView(string.IsNullOrEmpty(viewsPairInfo.ViewToSwitchFromName)
-                ? View.ViewName
-                : viewsPairInfo.ViewToSwitchFromName, viewsPairInfo.ViewToSwitchToName, recreateViewToSwitchTo, formsTransitionBundle);
+            _viewsSwitchingMediator = new ViewsSwitchingMediator(viewsSwitchingController, viewsSwitchingAnimationBinding, View.ViewName);
         }
 
-        protected void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default,
-            bool recreateViewToSwitchTo = false)
+        public void SwitchToView(string viewName, FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo = false)
         {
-            TasksFactories.ExecuteOnMainThread(() =>
-            {
-                StartCoroutine(SwitchToViewCoroutine(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo));
-            });
-        }
-
-        private IEnumerator SwitchToViewCoroutine(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle,
-            bool recreateViewToSwitchTo)
-        {
-            InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo);
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(_defaultSwitchingParameters);
-            yield return null;
-        }
-
-        protected void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters, bool recreateViewToSwitchTo,
-            FormsTransitionBundle formsTransitionBundle = default)
-        {
-            InvokeViewsSwitching(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo);
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(defaultViewsSwitchingParameters);
-        }
-
-        public void SwitchToView(string viewName, FormsTransitionBundle formsTransitionBundle = default, bool recreateViewToSwitchTo = false)
-        {
-            SwitchToView(new ViewsPairInfo(null, viewName), formsTransitionBundle, recreateViewToSwitchTo);
+            _viewsSwitchingMediator.SwitchToView(viewName, formsTransitionBundle, recreateViewToSwitchTo);
         }
 
         public void SwitchToView(string viewName, bool recreateViewToSwitchTo)
         {
-            SwitchToView(new ViewsPairInfo(null, viewName), default, recreateViewToSwitchTo);
+            _viewsSwitchingMediator.SwitchToView(viewName, recreateViewToSwitchTo);
         }
 
         public void SwitchToView(string viewName)
         {
-            SwitchToView(viewName, false);
+            _viewsSwitchingMediator.SwitchToView(viewName);
         }
 
-        protected void SwitchToPreviousView()
+        public void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
         {
-            viewsSwitchingController.SwitchToPreviousView();
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
+            _viewsSwitchingMediator.SwitchToPreviousView(in formsTransitionBundle, recreateViewToSwitchTo);
         }
 
-        protected void SwitchToPreviousView(in FormsTransitionBundle formsTransitionBundle, bool recreateViewToSwitchTo)
+        public void SwitchToView(ViewsPairInfo viewsPairInfo, FormsTransitionBundle formsTransitionBundle = default, bool recreateViewToSwitchTo = false)
         {
-            viewsSwitchingController.SwitchToPreviousView(formsTransitionBundle, recreateViewToSwitchTo);
-            viewsSwitchingAnimationBinding.RequestViewsSwitchingAnimation(ReturnButton.DefaultParameters);
+            _viewsSwitchingMediator.SwitchToView(viewsPairInfo, formsTransitionBundle, recreateViewToSwitchTo);
+        }
+
+        public void SwitchToPreviousView()
+        {
+            _viewsSwitchingMediator.SwitchToPreviousView();
+        }
+
+        public void SwitchToView(ViewsPairInfo viewsPairInfo, in ViewsSwitchingParameters defaultViewsSwitchingParameters,
+            bool recreateViewToSwitchTo = false, FormsTransitionBundle formsTransitionBundle = default)
+        {
+            _viewsSwitchingMediator.SwitchToView(viewsPairInfo, in defaultViewsSwitchingParameters, recreateViewToSwitchTo, formsTransitionBundle);
         }
     }
 }

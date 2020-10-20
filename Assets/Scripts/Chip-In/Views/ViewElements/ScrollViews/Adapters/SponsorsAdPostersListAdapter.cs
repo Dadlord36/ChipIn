@@ -6,7 +6,7 @@ using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class SponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<SponsorsAdPostersRepository, SponsoredPosterDataModel>
+    public class SponsorsAdPostersListAdapter : SelectableItemsRepositoryListAdapter<SponsorsAdPostersRepository, SponsoredPosterDataModel>
     {
     }
 }

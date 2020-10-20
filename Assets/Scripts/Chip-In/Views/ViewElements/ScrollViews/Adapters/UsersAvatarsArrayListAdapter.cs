@@ -10,15 +10,7 @@ using Views.ViewElements.ScrollViews.ViewHolders;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UsersAvatarsArrayListAdapter : BasedListAdapter<BaseParamsWithPrefab,UserProfileBaseData>
+    public class UsersAvatarsArrayListAdapter : BasedListAdapter<BaseParamsWithPrefab, UserProfileBaseData>
     {
-        public class FillingViewAdapter : FillingViewAdapter<UserProfileBaseData, UserAvatarItemViewModel.FieldFillingData>
-        {
-            public override UserAvatarItemViewModel.FieldFillingData Convert(DisposableCancellationTokenSource cancellationTokenSource,
-                UserProfileBaseData data, uint dataIndexInRepository)
-            {
-                return new UserAvatarItemViewModel.FieldFillingData(data);
-            }
-        }
     }
 }

@@ -1,27 +1,22 @@
-﻿using System.Collections.Generic;
-using UnityEngine.Assertions;
-
-namespace Factories
+﻿namespace Factories
 {
     public static class SimpleAutofac
     {
-        private static readonly List<object> Objects = new List<object>();
+        private static readonly FactoryContainer Container = new FactoryContainer();
 
-        public static void AddObjectInstance(object objectInstance)
+        public static void AddObjectInstanceAs<T>(object objectInstance) where T : class
         {
-            Objects.Add(objectInstance);
+            Container.AddObjectInstanceAs<T>(objectInstance);
         }
 
-        public static void AddObjectInstance<T>() where T : new()
+        public static void AddObjectInstanceAs<T,TInterface>() where T : TInterface, new()
         {
-            Objects.Add(new T());
+            Container.AddObjectInstanceAs<T,TInterface>();
         }
 
-        public static T GetInstance<T>() where T:class
+        public static T GetInstance<T>() where T : class
         {
-            var result = Objects.Find(o => o is T);
-           Assert.IsNotNull(result);
-           return result as T;
+            return Container.GetInstance<T>();
         }
     }
 }

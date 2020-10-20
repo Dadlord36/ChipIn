@@ -34,6 +34,14 @@ namespace Utilities
             return newGameObject;
         }
 
+        public static void SetGameObjectsActivity(GameObject[] gameObjects, bool activity)
+        {
+            for (int i = 0; i < gameObjects.Length; i++)
+            {
+                gameObjects[i].SetActive(activity);
+            }
+        }
+
         public static void DestroyTransformAttachments(Transform slotSpinnerRootTransform, bool destroyImmediate = false)
         {
             var items = new GameObject[slotSpinnerRootTransform.childCount];

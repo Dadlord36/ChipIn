@@ -77,7 +77,7 @@ namespace ViewModels
 
         private void SwitchToViewAndChooseAppearingSide(string viewToSwitchToName)
         {
-            SwitchToView(new ViewsPairInfo(_currentViewName, viewToSwitchToName), _defaultViewsSwitchingParameters, false);
+            SwitchToView(new ViewsPairInfo(_currentViewName, viewToSwitchToName), _defaultViewsSwitchingParameters);
         }
     }
 }

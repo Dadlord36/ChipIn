@@ -11,7 +11,6 @@ using Common;
 using Controllers;
 using DataModels.HttpRequestsHeadersModels;
 using Factories;
-using Newtonsoft.Json;
 using Repositories.Interfaces;
 using Utilities;
 
@@ -77,6 +76,14 @@ namespace HttpRequests.RequestsProcessors
             cancellationTokenSource = _requestCancellationTokenSource;
         }
 
+        protected BaseRequestProcessor(out DisposableCancellationTokenSource cancellationTokenSource, string requestSuffix,
+            HttpMethod requestMethod, IRequestHeaders requestHeaders, TRequestBodyModelInterface requestBodyModel, IReadOnlyList<string> requestParameters)
+        {
+            _requestProcessorParameters = new BaseRequestProcessorParameters(requestSuffix, requestMethod,
+                requestHeaders, requestBodyModel, requestParameters, null);
+            cancellationTokenSource = _requestCancellationTokenSource;
+        }
+
         ~BaseRequestProcessor()
         {
             _requestCancellationTokenSource.Dispose();
@@ -105,7 +112,6 @@ namespace HttpRequests.RequestsProcessors
                 _requestProcessorParameters.QueryStringParameters, requestHeaders?.GetRequestHeaders(), requestBodyModel,
                 SendBodyAsQueryStringFormat);
         }
-
 
         public struct HttpResponse : ISuccess
         {
@@ -148,6 +154,7 @@ namespace HttpRequests.RequestsProcessors
                         {
                             await SimpleAutofac.GetInstance<ISessionController>().ProcessTokenInvalidationCase().ConfigureAwait(false);
                         }
+
                         try
                         {
                             httpResponse.Error = ErrorsHandlingUtility.CollectErrors(contentAsString);
@@ -175,6 +182,5 @@ namespace HttpRequests.RequestsProcessors
                 throw;
             }
         }
-        
     }
 }

@@ -44,9 +44,20 @@ namespace ViewModels
                 }
             }
         }
-
+        
         public UserInterestPagesViewModel() : base(nameof(UserInterestPagesViewModel))
         {
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            joinInInterestPagesListAdapter.OffersButtonClicked += SwitchToChatView;
+        }
+
+        private void SwitchToChatView(int interestId)
+        {
+            SwitchToView(nameof(ChatView), new FormsTransitionBundle(interestId));
         }
 
         protected override async void OnBecomingActiveView()

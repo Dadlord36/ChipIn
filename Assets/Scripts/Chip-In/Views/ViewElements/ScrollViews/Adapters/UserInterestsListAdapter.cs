@@ -7,7 +7,7 @@ using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class UserInterestsListAdapter : SelectableElementsPagesListAdapter<InterestsBasicDataPaginatedListRepository,
+    public class UserInterestsListAdapter : SelectableItemsRepositoryListAdapter<InterestsBasicDataPaginatedListRepository,
         InterestBasicDataModel>
     {
         [SerializeField] private InterestBasicDataModel[] defaultItems;

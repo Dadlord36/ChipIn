@@ -4,6 +4,7 @@ using Common.Interfaces;
 using CustomAnimators;
 using CustomAnimators.GeneratedAnimationActions;
 using ScriptableObjects.SwitchBindings;
+using Tasking;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Utilities;
@@ -33,16 +34,19 @@ namespace ViewModels.UI
 
         private void StartAnimation(ViewsSwitchingParameters viewsSwitchingParameters)
         {
-            StopUpdating();
-            ClearProgressiveOperationsController();
-            ResetViewSlotsAnimationParameters();
-            _progressiveOperationsCompletionTracker.ResetCounter();
+            TasksFactories.ExecuteOnMainThread(() =>
+            {
+                StopUpdating();
+                ClearProgressiveOperationsController();
+                ResetViewSlotsAnimationParameters();
+                _progressiveOperationsCompletionTracker.ResetCounter();
 
-            if (viewsSwitchingParameters.PreviousViewAppearanceParameters != null)
-                SetupPreviousViewSlotAnimation(viewsSwitchingParameters.PreviousViewAppearanceParameters);
+                if (viewsSwitchingParameters.PreviousViewAppearanceParameters != null)
+                    SetupPreviousViewSlotAnimation(viewsSwitchingParameters.PreviousViewAppearanceParameters);
 
-            SetupNextViewAnimation(viewsSwitchingParameters.NextViewAppearanceParameters);
-            StartUpdating();
+                SetupNextViewAnimation(viewsSwitchingParameters.NextViewAppearanceParameters);
+                StartUpdating();
+            });
         }
 
         private void ResetViewSlotsAnimationParameters()

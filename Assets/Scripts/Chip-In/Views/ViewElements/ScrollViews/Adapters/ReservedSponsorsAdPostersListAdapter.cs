@@ -6,7 +6,7 @@ using Views.ViewElements.ScrollViews.Adapters.BaseAdapters;
 namespace Views.ViewElements.ScrollViews.Adapters
 {
     [Binding]
-    public class ReservedSponsorsAdPostersListAdapter : SelectableElementsPagesListAdapter<ReservedSponsorsAdPostersRepository, SponsoredPosterDataModel>
+    public class ReservedSponsorsAdPostersListAdapter : SelectableItemsRepositoryListAdapter<ReservedSponsorsAdPostersRepository, SponsoredPosterDataModel>
     {
         protected override void OnScrollPositionChanged(double normPos)
         {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Controllers;
@@ -9,25 +10,14 @@ using Repositories.Local;
 using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
+using Utilities;
 using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
 {
     [Binding]
-    public sealed class UserAvatarItemViewModel : MonoBehaviour, IFillingView<UserAvatarItemViewModel.FieldFillingData>, INotifyPropertyChanged
+    public sealed class UserAvatarItemViewModel : MonoBehaviour, IFillingView<UserProfileBaseData>, INotifyPropertyChanged
     {
-        public class FieldFillingData
-        {
-            private readonly UserProfileBaseData Data;
-            
-            public string AvatarUrl => Data.AvatarUrl;
-
-            public FieldFillingData(UserProfileBaseData data)
-            {
-                Data = data;
-            }
-        }
-
         private Sprite _avatarSprite;
         private readonly AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
@@ -42,11 +32,23 @@ namespace ViewModels.Cards
             }
         }
 
-        public async Task FillView(FieldFillingData data, uint dataBaseIndex)
+        public async Task FillView(UserProfileBaseData data, uint dataBaseIndex)
         {
-            AvatarSprite = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>().CreateLoadSpriteTask(data.AvatarUrl,
-                    _asyncOperationCancellationController.CancellationToken)
-                .ConfigureAwait(false);
+            try
+            {
+                AvatarSprite = await SimpleAutofac.GetInstance<IDownloadedSpritesRepository>().CreateLoadSpriteTask(data.AvatarUrl,
+                        _asyncOperationCancellationController.CancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                LogUtility.PrintDefaultOperationCancellationLog(nameof(UserAvatarItemViewModel));
+            }
+            catch (Exception e)
+            {
+                LogUtility.PrintLogException(e);
+                throw;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using DataModels.Interfaces;
 using UnityEngine;
+using Utilities;
 
 namespace WebOperationUtilities
 {
@@ -33,7 +33,6 @@ namespace WebOperationUtilities
 
                 var bytesArray = await responseMessage.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-
                 return await mainThreadTaskFactory.StartNew(delegate
                 {
                     var texture = new Texture2D(0, 0);
@@ -44,14 +43,11 @@ namespace WebOperationUtilities
             }
             catch (OperationCanceledException)
             {
-                return null;
+                throw;
             }
-            catch (SocketException)
+            catch (Exception e)
             {
-                return null;
-            }
-            catch (Exception)
-            {
+                LogUtility.PrintLog(Tag, e.Message);
                 return null;
             }
         }
@@ -61,8 +57,8 @@ namespace WebOperationUtilities
             return httpClient.GetAsync(uri, HttpCompletionOption.ResponseContentRead, cancellationToken);
         }
 
-        public static Task<byte[][]> CreateDownloadMultipleDataArrayFromUrlsTask(HttpClient httpClient, IReadOnlyList<IUrl>
-            imagesUrls, in CancellationToken cancellationToken)
+        public static Task<byte[][]> CreateDownloadMultipleDataArrayFromUrlsTask(HttpClient httpClient, IReadOnlyList<IUrl> imagesUrls,
+            in CancellationToken cancellationToken)
         {
             var tasks = new List<Task<HttpResponseMessage>>(imagesUrls.Count);
             foreach (var url in imagesUrls)
