@@ -30,11 +30,11 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         [SerializeField] private TRepository pagesPaginatedRepository;
         [SerializeField] private uint amountOfItemsAllowedToFetch;
         [SerializeField] private bool allowedToFetchAllItems = true;
+        [SerializeField] private bool shouldBlockScrollingAutomatically = true;
 
         public UnityEvent startedFetching;
         public UnityEvent endedFetching;
         public UnityEvent showAllWasClicked;
-
 
         private bool _fetching;
         private bool _allItemsAreFetched;
@@ -116,7 +116,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
         }
 
         protected virtual void OnItemsCleared()
-        { }
+        {
+        }
 
         public async Task ResetAsync()
         {
@@ -224,6 +225,8 @@ namespace Views.ViewElements.ScrollViews.Adapters.BaseAdapters
 
         private void DecideScrollingIsAllowedOrNot()
         {
+            if (!shouldBlockScrollingAutomatically) return;
+
             if (_VisibleItemsCount <= 0) return;
             SetInteractivity(TotalCapacity > _VisibleItems.Count);
         }
