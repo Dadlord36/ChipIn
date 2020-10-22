@@ -8,4 +8,14 @@ namespace DataModels.Interfaces
         [JsonProperty(MainNames.ModelsPropertiesNames.Category)]
         string Category { get; set; }
     }
+
+    public interface IProductCategory
+    {
+        [JsonProperty(MainNames.ModelsPropertiesNames.ProductCategory)]
+        string ProductCategory
+        {
+            get;
+            set;
+        }
+    }
 }

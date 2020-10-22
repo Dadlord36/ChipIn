@@ -24,7 +24,7 @@ namespace ViewModels
         #region SerielizedFields
 
         [SerializeField] private InfoCardController infoCardController;
-        [SerializeField] private OffersRemoteRepository offersRemoteRepository;
+        [SerializeField] private ClientOffersRemoteRepository clientOffersRemoteRepository;
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
         [SerializeField] private AlertCardController alertCardController;
         [SerializeField] private GameIconsRepository gameIconsRepository;
@@ -75,7 +75,7 @@ namespace ViewModels
                 var response = await OffersStaticRequestProcessor.GetOfferDetails(out OperationCancellationController.TasksCancellationTokenSource,
                     authorisationDataRepository, SelectedOfferId);
 
-                var offer = response.ResponseModelInterface.Offer;
+                var offer = response.ResponseModelInterface.OfferData;
                 await infoCardController.ShowCard(offer, offer, offer, offer);
             }
             catch (Exception e)
@@ -103,11 +103,11 @@ namespace ViewModels
         {
             try
             {
-                var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(
+                /*var offerDetails = await OffersStaticRequestProcessor.GetOfferDetails(
                     out OperationCancellationController.TasksCancellationTokenSource, authorisationDataRepository, SelectedOfferId)
                     .ConfigureAwait(false);
 
-                var gameId = offerDetails.ResponseModelInterface.Offer.GameData.Id;
+                var gameId = offerDetails.ResponseModelInterface.OfferData.GameData.Id;
                 var response = await UserGamesStaticProcessor.TryJoinAGame(out OperationCancellationController.TasksCancellationTokenSource,
                     authorisationDataRepository, gameId);
                 if (response.Success)
@@ -117,7 +117,7 @@ namespace ViewModels
                 else
                 {
                     alertCardController.ShowAlertWithText(response.Error);
-                }
+                }*/
             }
             catch (Exception e)
             {
@@ -137,7 +137,7 @@ namespace ViewModels
             base.OnEnable();
             ViewAsProductGalleryView.NewCategorySelected += OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected += OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded += OffersRemoteRepositoryOnCollectionChanged;
+            clientOffersRemoteRepository.DataWasLoaded += ClientOffersRemoteRepositoryOnCollectionChanged;
         }
 
 
@@ -146,10 +146,10 @@ namespace ViewModels
             base.OnDisable();
             ViewAsProductGalleryView.NewCategorySelected -= OnNewOffersCategorySelected;
             ViewAsProductGalleryView.RelatedItemSelected -= OnOfferSelected;
-            offersRemoteRepository.DataWasLoaded -= OffersRemoteRepositoryOnCollectionChanged;
+            clientOffersRemoteRepository.DataWasLoaded -= ClientOffersRemoteRepositoryOnCollectionChanged;
         }
 
-        private void OffersRemoteRepositoryOnCollectionChanged()
+        private void ClientOffersRemoteRepositoryOnCollectionChanged()
         {
             FillDropdownListWithItemsOfCurrentCategory(ViewAsProductGalleryView.CurrentlySelectedOffersCategory);
         }
@@ -166,7 +166,7 @@ namespace ViewModels
 
         private void FillDropdownListWithItemsOfCurrentCategory(string selectedCategory)
         {
-            var items = (from offerWithIdentifierData in offersRemoteRepository.ItemsData
+            /*var items = (from offerWithIdentifierData in offersRemoteRepository.ItemsData
                 where string.Equals(selectedCategory, offerWithIdentifierData.Segment, StringComparison.OrdinalIgnoreCase)
                 select new {offerWithIdentifierData.Id, offerWithIdentifierData.Title}).ToDictionary(arg => arg.Id, arg => arg.Title);
 
@@ -175,7 +175,7 @@ namespace ViewModels
                 LogUtility.PrintLog(Tag, $"There is no items of offers category \"{selectedCategory}\"");
             }
 
-            ViewAsProductGalleryView.FillDropdownList(items);
+            ViewAsProductGalleryView.FillDropdownList(items);*/
         }
 
         protected override async void OnBecomingActiveView()
@@ -183,7 +183,7 @@ namespace ViewModels
             base.OnBecomingActiveView();
             try
             {
-                await offersRemoteRepository.LoadDataFromServer();
+                await clientOffersRemoteRepository.LoadDataFromServer();
             }
             catch (Exception e)
             {

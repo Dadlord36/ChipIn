@@ -78,7 +78,7 @@ namespace Behaviours.Games
         #region Private serialized fields
 
         [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
-        [SerializeField] private SelectedGameRepository selectedGameRepository;
+        /*[SerializeField] private SelectedGameRepository selectedGameRepository;*/
         [SerializeField] private SlotsGameViewModel gameInterfaceViewModel;
         [SerializeField] private AlertCardController alertCardController;
 
@@ -152,7 +152,7 @@ namespace Behaviours.Games
         {
             try
             {
-                var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource, authorisationDataRepository,
+                /*var response = await UserGamesStaticProcessor.TryShowMatch(out TasksCancellationTokenSource, authorisationDataRepository,
                     selectedGameRepository.GameId);
 
                 if (!response.Success || !response.ResponseModelInterface.Success)
@@ -172,7 +172,7 @@ namespace Behaviours.Games
                 LogUtility.PrintLog(Tag, $"Seconds sins round has started: {secondsSinsRoundHaveStarted.ToString()}");
                 matchData.MatchData.RoundEndsAt = secondsSinsRoundHaveStarted;
 
-                _roundData.Update(matchData.MatchData);
+                _roundData.Update(matchData.MatchData);*/
             }
             catch (Exception e)
             {
@@ -215,7 +215,7 @@ namespace Behaviours.Games
 
         private async Task UpdateGameRepositoryUsersData()
         {
-            try
+            /*try
             {
                 await selectedGameRepository.SaveGameSateData(_roundData);
             }
@@ -223,7 +223,7 @@ namespace Behaviours.Games
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
 
         private void CloseConnectionAndDisposeGameChannelSocket()
@@ -272,7 +272,7 @@ namespace Behaviours.Games
 
         private void UpdateUsersData()
         {
-            selectedGameRepository.UpdateUsersData(_roundData.UsersData);
+            /*selectedGameRepository.UpdateUsersData(_roundData.UsersData);*/
         }
         
         private void GameChannelSocketOnMatchRoundEnds(MatchStateData matchStateData)
@@ -282,7 +282,7 @@ namespace Behaviours.Games
 
         private void GameChannelSocketOnMatchEnds(MatchStateData matchStateData)
         {
-            selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;
+            /*selectedGameRepository.WinnerId = matchStateData.MatchState.Body.WinnerId;*/
             _gameShouldBeFinished = true;
         }
 
@@ -320,7 +320,7 @@ namespace Behaviours.Games
         
         private async Task MakeASpin(SpinBoardParameters spinBoardParameters)
         {
-            try
+            /*try
             {
                 var result = await UserGamesStaticProcessor.TryMakeAMove(out TasksCancellationTokenSource, authorisationDataRepository,
                     selectedGameRepository.GameId, spinBoardParameters);
@@ -333,7 +333,7 @@ namespace Behaviours.Games
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
 
         private void AnimateMatchingSlots()

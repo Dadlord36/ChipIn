@@ -18,29 +18,17 @@ namespace ViewModels
     [Binding]
     public sealed class MyChallengeViewModel : BaseItemsListViewModel<MyChallengeView>
     {
-        [SerializeField] private SelectedGameRepository selectedGameRepository;
-        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
         [SerializeField] private InfoCardController infoCardController;
 
 
-        private int SelectedGameId
-        {
-            get => selectedGameRepository.GameId;
-            set
-            {
-                if (value == selectedGameRepository.GameId) return;
-                selectedGameRepository.GameId = value;
-                ItemIsSelected = true;
-                OnPropertyChanged();
-            }
-        }
+
 
 
         public MyChallengeViewModel() : base(nameof(MyChallengeViewModel))
         {
         }
 
-        [Binding]
+        /*[Binding]
         public async Task ShowInfo_OnButtonClick()
         {
             try
@@ -53,7 +41,7 @@ namespace ViewModels
                 LogUtility.PrintLogException(e);
                 throw;
             }
-        }
+        }*/
 
         [Binding]
         public void Challenge_OnButtonClick()
@@ -68,28 +56,28 @@ namespace ViewModels
 
         protected override void OnItemsListUpdated()
         {
-            var itemsList = userGamesRemoteRepository.ItemsData;
+            /*var itemsList = userGamesRemoteRepository.ItemsData;
             //Set first game id as selected in list
             if (itemsList.Count > 0)
             {
                 SelectedGameId = itemsList[0].Id;
                 ItemIsSelected = true;
-            }
+            }*/
         }
 
-        protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
+        /*protected override void OnSelectedItemIndexChanged(int relatedItemIndex)
         {
             base.OnSelectedItemIndexChanged(relatedItemIndex);
             SelectedGameId = relatedItemIndex;
-        }
+        }*/
 
         protected override async Task FillInfoCardWithRelatedData(int selectedId)
         {
             try
             {
-                var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
+                /*var responseModel = await userGamesRemoteRepository.GetOfferDataForGivenGameId(selectedId);
                 var offer = responseModel.ResponseModelInterface.Offer;
-                await infoCardController.ShowCard(offer, offer, offer, offer);
+                await infoCardController.ShowCard(offer, offer, offer, offer);*/
             }
             catch (Exception e)
             {
@@ -100,7 +88,7 @@ namespace ViewModels
 
         private Task LoadGamesList()
         {
-            return userGamesRemoteRepository.LoadDataFromServer();
+            return Task.CompletedTask;
         }
 
         protected override async Task LoadDataAndFillTheList()
@@ -119,7 +107,7 @@ namespace ViewModels
 
         protected override async Task FillDropdownList()
         {
-            try
+            /*try
             {
                 var itemsList = userGamesRemoteRepository.ItemsData;
 
@@ -144,7 +132,7 @@ namespace ViewModels
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
     }
 }

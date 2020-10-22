@@ -13,7 +13,7 @@ namespace Views
 
         [SerializeField] private SlotsView slotsView;
         [SerializeField] private GameIconsRepository gameIconsRepository;
-        [SerializeField] private SelectedGameRepository selectedGameRepository;
+
 
         private bool _shouldInvokeAnimation;
 
@@ -51,14 +51,14 @@ namespace Views
 
         public void RefillSlotsWithUniqueIcons(ISlotIconBaseData[] roundDataSlotsIconsData)
         {
-            var gameId = selectedGameRepository.GameId;
+            /*var gameId = selectedGameRepository.GameId;
             if (!gameIconsRepository.GameIconsSetIsInStorage(gameId))
             {
                 LogUtility.PrintLogError(Tag, $"There is no icons data for Game {gameId.ToString()}");
                 return;
             }
 
-            slotsView.InitializeSlotsIcons(GetUniqueBoardIconsData(gameId, roundDataSlotsIconsData));
+            slotsView.InitializeSlotsIcons(GetUniqueBoardIconsData(gameId, roundDataSlotsIconsData));*/
         }
 
         public void StartSpinning(in SpinBoardParameters spinBoardParameters)

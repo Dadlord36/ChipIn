@@ -7,8 +7,7 @@ using GlobalVariables;
 
 namespace HttpRequests.RequestsProcessors.GetRequests
 {
-    public sealed class
-        DetailedOfferGetProcessor : BaseRequestProcessor<object, OfferDetailsResponseModel, IOfferDetailsResponseModel>
+    public sealed class DetailedOfferGetProcessor : RequestWithoutBodyProcessor<OfferDetailsResponseModel, IOfferDetailsResponseModel>
     {
         public class DetailedOfferGetProcessorParameters
         {
@@ -23,8 +22,8 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         }
 
         public DetailedOfferGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource,
-            DetailedOfferGetProcessorParameters parameters) : base(out cancellationTokenSource, new BaseRequestProcessorParameters(
-            ApiCategories.Offers, HttpMethod.Get, parameters.RequestHeaders, null, new[] {parameters.OfferId.ToString()}))
+            DetailedOfferGetProcessorParameters parameters) : base(out cancellationTokenSource, ApiCategories.Offers, HttpMethod.Get, 
+            parameters.RequestHeaders,new[] {parameters.OfferId.ToString()})
         {
         }
     }

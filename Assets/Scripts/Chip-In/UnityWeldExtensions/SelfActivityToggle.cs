@@ -10,7 +10,7 @@ namespace UnityWeldExtensions
         [SerializeField] private string viewAdapterTypeName;
         [SerializeField] private AdapterOptions viewAdapterOptions;
         [SerializeField] private string viewModelPropertyName;
-        private PropertyWatcher viewModelWatcher;
+        private PropertyWatcher _viewModelWatcher;
 
         public string ViewAdapterTypeName
         {
@@ -41,16 +41,16 @@ namespace UnityWeldExtensions
             PropertySync propertySync = new PropertySync(source, new PropertyEndPoint(this, "IsActive",
                     CreateAdapter(viewAdapterTypeName), viewAdapterOptions, "view", this),
                 null, this);
-            viewModelWatcher = source.Watch( () => propertySync.SyncFromSource());
+            _viewModelWatcher = source.Watch( () => propertySync.SyncFromSource());
             propertySync.SyncFromSource();
         }
 
         public override void Disconnect()
         {
-            if (viewModelWatcher == null)
+            if (_viewModelWatcher == null)
                 return;
-            viewModelWatcher.Dispose();
-            viewModelWatcher = null;
+            _viewModelWatcher.Dispose();
+            _viewModelWatcher = null;
         }
     }
 }

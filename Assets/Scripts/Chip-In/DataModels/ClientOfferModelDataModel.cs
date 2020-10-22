@@ -3,7 +3,7 @@ using DataModels.Interfaces;
 
 namespace DataModels
 {
-    public class OfferWithGameModel : IOfferWithGameModel
+    public class ClientOfferDataModel : IClientOfferModel
     {
         public string PosterUri { get; set; }
         public DateTime ExpireDate { get; set; }
@@ -12,8 +12,10 @@ namespace DataModels
         public string Description { get; set; }
         public uint Quantity { get; set; }
         public string Category { get; set; }
-        public string Segment { get; set; }
         public uint Price { get; set; }
-        public GameDataModel GameData { get; set; }
+        public uint RealPrice { get; set; }
+        public string PriceType { get; set; }
+        public string ProductCategory { get; set; }
+        public InterestBasicDataModel Interest { get; set; }
     }
 }

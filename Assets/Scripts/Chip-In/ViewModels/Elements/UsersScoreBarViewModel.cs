@@ -13,12 +13,12 @@ namespace ViewModels.Elements
 {
     public class UsersScoreBarViewModel : MonoBehaviour
     {
-        [SerializeField] private SelectedGameRepository selectedGameRepository;
+
         [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
         [SerializeField] private PlayerScoreViewModel[] playerScoreViewModels;
         [SerializeField] private UserAvatarIcon[] userAvatarIcons;
 
-        private AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
+        private readonly AsyncOperationCancellationController _cancellationController = new AsyncOperationCancellationController();
 
         private void OnEnable()
         {
@@ -32,12 +32,12 @@ namespace ViewModels.Elements
 
         private void SubscribeOnEvents()
         {
-            selectedGameRepository.UsersDataUpdated += GameRepositoryOnUsersDataUpdated;
+            /*selectedGameRepository.UsersDataUpdated += GameRepositoryOnUsersDataUpdated;*/
         }
 
         private void UnsubscribeFromEvents()
         {
-            selectedGameRepository.UsersDataUpdated -= GameRepositoryOnUsersDataUpdated;
+            /*selectedGameRepository.UsersDataUpdated -= GameRepositoryOnUsersDataUpdated;*/
         }
 
         private async void GameRepositoryOnUsersDataUpdated(IReadOnlyList<MatchUserDownloadingData> matchUserDownloadingData)

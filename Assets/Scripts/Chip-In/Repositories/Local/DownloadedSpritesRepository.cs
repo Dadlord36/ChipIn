@@ -59,6 +59,10 @@ namespace Repositories.Local
 
                     LoadingTask = ImagesDownloadingUtility.CreateDownloadImageTask(ApiHelper.DefaultClient, mainThreadTaskFactory, Url, cancellationToken);
                     LoadedSprite = await LoadingTask.ConfigureAwait(false);
+
+                    if (LoadedSprite == null)
+                        LoadedSprite = await LoadingTask.ConfigureAwait(false);
+
                     LoadingTask = null;
                     return LoadedSprite;
                 }
@@ -96,13 +100,12 @@ namespace Repositories.Local
                 {
                     return downloadHandleSprite.LoadingTask;
                 }
-                
+
                 if (downloadHandleSprite.IsLoaded)
                 {
                     return Task.FromResult(downloadHandleSprite.LoadedSprite);
                 }
-
-
+                
                 //TODO: If sprites are loading fine - remove comment below 
                 /*try
                 {

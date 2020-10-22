@@ -26,8 +26,7 @@ namespace Repositories.Local
     public sealed class GameIconsRepository : ScriptableObject, IRestorable
     {
         #region Serialized fields
-
-        [SerializeField] private UserGamesRemoteRepository userGamesRemoteRepository;
+        
 
         #endregion
 
@@ -89,8 +88,7 @@ namespace Repositories.Local
 
         private CancellationTokenSource _cancellationTokenSource;
 
-        private static string GameIconsDirectoryPath =>
-            Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
+        private static string GameIconsDirectoryPath => Path.Combine(Application.persistentDataPath, GameIconsDirectoryName);
 
         private static string GetGameIdDirectory(int gameId) => Path.Combine(GameIconsDirectoryPath, gameId.ToString());
 
@@ -131,12 +129,10 @@ namespace Repositories.Local
 
         private void OnEnable()
         {
-            userGamesRemoteRepository.DataWasLoaded += UserGamesRemoteRepositoryOnDataWasLoaded;
         }
 
         private void OnDisable()
         {
-            userGamesRemoteRepository.DataWasLoaded -= UserGamesRemoteRepositoryOnDataWasLoaded;
         }
 
         #endregion
@@ -149,7 +145,7 @@ namespace Repositories.Local
 
         private void RemoveUnneededIconsSets()
         {
-            var userGamesInRepository = userGamesRemoteRepository.ItemsData;
+            /*var userGamesInRepository = userGamesRemoteRepository.ItemsData;
             var userSavedGames = _boardIconsSetsContainer.BoardIconsSets;
             for (int i = 0; i < userSavedGames.Count; i++)
             {
@@ -170,7 +166,7 @@ namespace Repositories.Local
                 }
 
                 return false;
-            }
+            }*/
         }
 
         public async Task StoreNewGameIconsSet(int gameId, IReadOnlyList<IndexedUrl> indexedUrls)
@@ -259,8 +255,7 @@ namespace Repositories.Local
                 GameId = gameId;
                 ImagesStoringHeaders = imagesStoringHeaders;
             }
-
-
+            
             public static ImagesStoringHeaderDataModel Create(int gameId, IReadOnlyList<IndexedUrl> indexedUrls,
                 IReadOnlyList<byte[]> imagesBytes)
             {
@@ -272,8 +267,7 @@ namespace Repositories.Local
 
                 for (int i = 0; i < count; i++)
                 {
-                    imagesStoringHeaders[i] =
-                        ImageStoringHeader.Create(indexedUrls[i].Id, indexedUrls[i], imagesBytes[i].Length);
+                    imagesStoringHeaders[i] = ImageStoringHeader.Create(indexedUrls[i].Id, indexedUrls[i], imagesBytes[i].Length);
                 }
 
                 return new ImagesStoringHeaderDataModel(gameId, imagesStoringHeaders);
@@ -309,8 +303,7 @@ namespace Repositories.Local
         private void SaveIconsData(int gameId, IReadOnlyList<byte[]> indexedTexturesBytesData,
             IReadOnlyList<IndexedUrl> indexedUrls)
         {
-            var imagesStoringHeaderData =
-                ImagesStoringHeaderDataModel.Create(gameId, indexedUrls, indexedTexturesBytesData);
+            var imagesStoringHeaderData = ImagesStoringHeaderDataModel.Create(gameId, indexedUrls, indexedTexturesBytesData);
             var json = JsonConverterUtility.ConvertModelToJson(imagesStoringHeaderData);
 
             Directory.CreateDirectory(GetGameIdDirectory(gameId));
@@ -477,11 +470,9 @@ namespace Repositories.Local
             public static List<BoardIconData> CreateBoardIcons(IReadOnlyList<byte[]> textures,
                 IReadOnlyList<IIdentifier> boardElementsIdentifiers, int rowsNumber, int columnsNumber)
             {
-                var indexedTextures =
-                    CreateSpritesSheets(textures, boardElementsIdentifiers, rowsNumber, columnsNumber);
+                var indexedTextures = CreateSpritesSheets(textures, boardElementsIdentifiers, rowsNumber, columnsNumber);
                 return CreateBoardIcons(indexedTextures);
             }
-
 
             public static List<SimpleImageAnimator.SpritesSheet> CreateSpritesSheets(IReadOnlyList<byte[]> textures,
                 IReadOnlyList<IIdentifier> identifiers, int rowsNumber, int columnsNumber)

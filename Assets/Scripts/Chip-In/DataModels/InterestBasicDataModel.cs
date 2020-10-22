@@ -10,6 +10,7 @@ namespace DataModels
         [SerializeField] private string name;
         [SerializeField] private Sprite logoSprite;
         [SerializeField] private int id;
+        [SerializeField] private string productCategory;
 
         public string Name
         {
@@ -29,6 +30,12 @@ namespace DataModels
         {
             get => id;
             set => id = (int) value;
+        }
+
+        public string ProductCategory
+        {
+            get => productCategory;
+            set => productCategory = value;
         }
     }
 }

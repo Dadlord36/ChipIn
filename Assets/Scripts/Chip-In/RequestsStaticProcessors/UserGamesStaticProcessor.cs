@@ -11,11 +11,11 @@ namespace RequestsStaticProcessors
 {
     public static class UserGamesStaticProcessor
     {
-        public static Task<BaseRequestProcessor<object, UserGamesResponseModel, IUserGamesResponseModel>.HttpResponse> GetUserGames(
+        /*public static Task<BaseRequestProcessor<object, UserGamesResponseModel, IUserGamesResponseModel>.HttpResponse> GetUserGames(
             out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
         {
             return new UserGamesGetProcessor(out cancellationTokenSource, requestHeaders).SendRequest("User Games was retrieved");
-        }
+        }*/
 
         public static Task<BaseRequestProcessor<object, JoinGameResponseDataModel, IJoinGameResponseModel>.HttpResponse>
             TryJoinAGame(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders, int gameId)

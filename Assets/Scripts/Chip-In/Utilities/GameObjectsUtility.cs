@@ -69,9 +69,25 @@ namespace Utilities
             }
         }
 
-        public static T GetFromRootOrChildren<T>(RectTransform instanceRoot) where T : class
+        public static T GetFromRootOrChildren<T>(Transform instanceRoot) where T : class
         {
             return instanceRoot.GetComponent<T>() ?? instanceRoot.GetComponentInChildren<T>();
         }
+
+        public static void DestroyComponentInAllChildren<T>(GameObject obj, bool destroyImmediate) where T : Component
+        {
+            foreach (var component in obj.GetComponentsInChildren<T>())
+            {
+                if (destroyImmediate)
+                {
+                    Object.DestroyImmediate(component);
+                }
+                else
+                {
+                    Object.Destroy(component);
+                }
+            }
+        }
+        
     }
 }

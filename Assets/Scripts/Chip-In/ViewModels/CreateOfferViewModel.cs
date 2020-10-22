@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using DataModels;
+using DataModels.Interfaces;
 using DataModels.RequestsModels;
 using GlobalVariables;
 using JetBrains.Annotations;
@@ -41,13 +42,13 @@ namespace ViewModels
 
         private readonly OfferCreationRequestModel _offerDataModel = new OfferCreationRequestModel
         {
-            Offer = new UserCreatedOffer
+            /*Offer = new UserCreatedOffer
             {
                 Title = string.Empty, Description = string.Empty, Category = MainNames.OfferCategories.BulkOffer
-            }
+            }*/
         };
 
-        private ICreatedOfferModel ChallengingOfferDataModel => _offerDataModel.Offer;
+        private IOffer ChallengingOfferDataModel => _offerDataModel.Offer;
 
         private CreateOfferView ThisView => View as CreateOfferView;
 
@@ -109,25 +110,13 @@ namespace ViewModels
                 OnPropertyChanged();
             }
         }
-
-
+        
         public DateTime ExpireDate
         {
             get => ChallengingOfferDataModel.ExpireDate;
             set
             {
                 ChallengingOfferDataModel.ExpireDate = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [Binding]
-        public string Segment
-        {
-            get => ChallengingOfferDataModel.Segment;
-            set
-            {
-                ChallengingOfferDataModel.Segment = value;
                 OnPropertyChanged();
             }
         }
@@ -146,12 +135,12 @@ namespace ViewModels
 
 
         [Binding]
-        public string Price
+        public uint Price
         {
-            get => ChallengingOfferDataModel.Price.ToString();
+            get => ChallengingOfferDataModel.Price;
             set
             {
-                ChallengingOfferDataModel.Price = uint.Parse(value);
+                ChallengingOfferDataModel.Price = value;
                 OnPropertyChanged();
             }
         }
@@ -204,7 +193,7 @@ namespace ViewModels
         {
             base.OnBecomingActiveView();
             ClearAllFields();
-            Segment = offerCreationRepository.OfferSegmentName;
+
         }
 
         private void Initialize()
@@ -226,13 +215,13 @@ namespace ViewModels
 
         private void SetCategoryName(string categoryName)
         {
-            Segment = categoryName;
+          
         }
 
         private void ClearAllFields()
         {
             Description = string.Empty;
-            Price = "0";
+            Price = 0;
             Quantity = 0;
             Title = string.Empty;
             ExpireLocalDate = DateTime.Now;

@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Common.UnityEvents;
 using JetBrains.Annotations;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 
@@ -17,11 +18,23 @@ namespace Views.InteractiveWindows
         public IntUnityEvent amountConfirmed;
 
 
+        public int NumberAsInt
+        {
+            get => _numberAsInt;
+            set
+            {
+                if (_numberAsInt == value) return;
+                _numberAsInt = value;
+                NumberAsString = value.ToString();
+                OnPropertyChanged();
+            }
+        }
+
         [Binding]
         public string NumberAsString
         {
             get => _numberAsInt.ToString();
-            set
+            private set
             {
                 if (string.IsNullOrEmpty(value) || value == NumberAsString) return;
                 _numberAsInt = int.Parse(value);
@@ -44,14 +57,14 @@ namespace Views.InteractiveWindows
         {
             amountConfirmed?.Invoke(value);
         }
-        
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

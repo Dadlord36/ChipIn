@@ -15,12 +15,29 @@ using Views.ViewElements.Interfaces;
 
 namespace ViewModels.Cards
 {
-    [Binding]
-    public abstract class SelectableListItemBase<TDataType> : AsyncOperationsMonoBehaviour, IFillingView<TDataType>, IIdentifiedSelection,
-        IPointerClickHandler, INotifyPropertyChanged where TDataType : class
+    public abstract class ListItemBase<TDataType> : AsyncOperationsMonoBehaviour, IFillingView<TDataType>, INotifyPropertyChanged where TDataType : class
     {
         protected readonly string Tag;
 
+        protected ListItemBase(string childClassName)
+        {
+            Tag = childClassName;
+        }
+
+        public abstract Task FillView(TDataType data, uint dataBaseIndex);
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
+        }
+    }
+
+    [Binding]
+    public abstract class SelectableListItemBase<TDataType> : ListItemBase<TDataType>, IIdentifiedSelection, IPointerClickHandler where TDataType : class
+    {
         protected IDownloadedSpritesRepository DownloadedSpritesRepository => SimpleAutofac.GetInstance<IDownloadedSpritesRepository>();
 
         public event Action<uint> ItemSelected;
@@ -29,12 +46,11 @@ namespace ViewModels.Cards
         public uint ItemDataIndex { get; set; }
 
 
-        protected SelectableListItemBase(string childClassName)
+        protected SelectableListItemBase(string childClassName) : base(childClassName)
         {
-            Tag = childClassName;
         }
 
-        public virtual Task FillView(TDataType data, uint dataBaseIndex)
+        public override Task FillView(TDataType data, uint dataBaseIndex)
         {
             ItemData = data;
             ItemDataIndex = (uint) ((IIdentifier) data).Id;
@@ -53,18 +69,7 @@ namespace ViewModels.Cards
 
         private void OnItemSelected()
         {
-            ItemSelected?.Invoke(IndexInOrder);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            TasksFactories.ExecuteOnMainThread(() =>
-            {
-                TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
-            });
+            TasksFactories.ExecuteOnMainThread(() => { ItemSelected?.Invoke(IndexInOrder); });
         }
     }
 }

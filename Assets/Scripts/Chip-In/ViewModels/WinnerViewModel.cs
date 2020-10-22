@@ -1,20 +1,14 @@
-﻿using System;
-using ActionsTranslators;
+﻿using ActionsTranslators;
 using Controllers;
 using Repositories.Local;
 using UnityEngine;
-using Utilities;
 using Views;
 
 namespace ViewModels
 {
     public class WinnerViewModel : ViewsSwitchingViewModel
     {
-        [SerializeField] private DownloadedSpritesRepository downloadedSpritesRepository;
-        [SerializeField] private SelectedGameRepository slotsGameRepository;
         [SerializeField] private MainInputActionsTranslator inputActionsTranslator;
-
-        private AsyncOperationCancellationController _asyncOperationCancellationController = new AsyncOperationCancellationController();
 
         public WinnerViewModel() : base(nameof(WinnerViewModel))
         {
@@ -40,7 +34,7 @@ namespace ViewModels
         protected override async void OnEnable()
         {
             base.OnEnable();
-            var winnerView = (WinnerView) View;
+            /*var winnerView = (WinnerView) View;
             var iconUrl = slotsGameRepository.GetWinnerUserData().AvatarUrl;
 
             try
@@ -55,7 +49,7 @@ namespace ViewModels
             {
                 LogUtility.PrintLogException(e);
                 throw;
-            }
+            }*/
         }
     }
 }

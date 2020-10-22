@@ -4,8 +4,7 @@
         IFoundedCount, ITotalFound, IInterestMessage, ICreatedAtTime, IStartedAtTime, IEndsAtTime
     {
     }
-    
-    
+
     public interface IMerchantInterestPageModel : IInterestPageModel, IUserInterestPageActions
     {
     }

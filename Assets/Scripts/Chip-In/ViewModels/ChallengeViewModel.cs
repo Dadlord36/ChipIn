@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Repositories.Local;
 using Repositories.Remote;
-using RequestsStaticProcessors;
-using ScriptableObjects.CardsControllers;
+using Tasking;
 using UnityEngine;
 using UnityWeld.Binding;
 using Utilities;
@@ -19,10 +18,10 @@ namespace ViewModels
     public sealed class ChallengeViewModel : BaseContainerItemsViewModel, INotifyPropertyChanged
     {
         [SerializeField] private ChallengesCardsParametersRepository challengesCardsParametersRepository;
+
         [SerializeField] private ChallengesRemoteRepository challengesRemoteRepository;
-        [SerializeField] private SelectedGameRepository selectedGameRepository;
-        [SerializeField] private AlertCardController alertCardController;
-        [SerializeField] private UserAuthorisationDataRepository authorisationDataRepository;
+
+        /*[SerializeField] private SelectedGameRepository selectedGameRepository;*/
         [SerializeField] private Timer timer;
         private bool _canStartTheGame;
 
@@ -50,7 +49,8 @@ namespace ViewModels
             }
             catch (Exception e)
             {
-                LogUtility.PrintLogException(e);;
+                LogUtility.PrintLogException(e);
+                ;
                 throw;
             }
         }
@@ -59,16 +59,17 @@ namespace ViewModels
         {
             try
             {
-                var response = await UserGamesStaticProcessor.TryShowMatch(out OperationCancellationController.TasksCancellationTokenSource,
+                /*var response = await UserGamesStaticProcessor.TryShowMatch(out OperationCancellationController.TasksCancellationTokenSource,
                     authorisationDataRepository, selectedGameRepository.GameId);
                 if (response.Success && response.ResponseModelInterface.Success) return true;
-                alertCardController.ShowAlertWithText(response.Error);
+                alertCardController.ShowAlertWithText(response.Error);*/
             }
             catch (Exception e)
             {
                 LogUtility.PrintLogException(e);
                 throw;
             }
+
             return false;
         }
 
@@ -131,14 +132,14 @@ namespace ViewModels
 
         private void CheckIfGameCanBePlayed()
         {
-            if (selectedGameRepository.GameHasStarted)
+            /*if (selectedGameRepository.GameHasStarted)
             {
                 AllowToPlay();
             }
             else
             {
                 AllowToPlayOnTimer();
-            }
+            }*/
         }
 
         private void AllowToPlay()
@@ -146,10 +147,10 @@ namespace ViewModels
             CanStartTheGame = true;
         }
 
-        private void AllowToPlayOnTimer()
+        /*private void AllowToPlayOnTimer()
         {
             StartTimerCountdown(Mathf.Abs((float) selectedGameRepository.TimeTillGameStarts.TotalSeconds) + 1f);
-        }
+        }*/
 
         private void StartTimerCountdown(float intervalInSeconds)
         {
@@ -169,7 +170,7 @@ namespace ViewModels
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            TasksFactories.ExecuteOnMainThread(() => { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); });
         }
     }
 }

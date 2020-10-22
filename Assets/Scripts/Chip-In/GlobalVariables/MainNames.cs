@@ -57,6 +57,7 @@ namespace GlobalVariables
             public const string Answers = "answers";
             public const string Questions = "questions";
             public const string Survey = "survey";
+            public const string ProductCategory = "product_category";
         }
 
         public enum InterestCategory

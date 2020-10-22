@@ -95,7 +95,6 @@ namespace ViewModels
             }
         }
 
-
         public ChatViewModel() : base(nameof(ChatViewModel))
         {
         }
@@ -110,8 +109,7 @@ namespace ViewModels
             try
             {
                 var interestSurvey = await SurveyStaticRequestsProcessor.ShowInterestSurvey(
-                    out OperationCancellationController.TasksCancellationTokenSource, AuthorizationHeaders,
-                    _interestId);
+                    out OperationCancellationController.TasksCancellationTokenSource, AuthorizationHeaders, _interestId);
 
                 if (interestSurvey.Success)
                 {
@@ -182,10 +180,8 @@ namespace ViewModels
 
         private async void OnQuestionsFinished()
         {
-            if (await SendAnswersToServer().ConfigureAwait(false))
-            {
-                SwitchToView(nameof(OffersView));
-            }
+            await SendAnswersToServer().ConfigureAwait(false);
+            SwitchToView(nameof(OffersView), new FormsTransitionBundle(_interestId));
         }
 
         private void OnAnswerRejected()

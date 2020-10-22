@@ -7,12 +7,12 @@ namespace DataModels.ResponsesModels
     public interface ICreateAnOfferResponseModel : ISuccess
     {
         [JsonProperty(MainNames.ModelsPropertiesNames.Offer)]
-        ChallengingOfferWithIdentifierModel Offer { get; set; }
+        ClientOfferDataModel Offer { get; set; }
     }
 
     public class CreateAnOfferResponseModel : ICreateAnOfferResponseModel
     {
         public bool Success { get; set; }
-        public ChallengingOfferWithIdentifierModel Offer { get; set; }
+        public ClientOfferDataModel Offer { get; set; }
     }
 }

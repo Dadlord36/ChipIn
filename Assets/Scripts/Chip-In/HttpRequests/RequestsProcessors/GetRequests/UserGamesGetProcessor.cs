@@ -25,14 +25,7 @@ namespace HttpRequests.RequestsProcessors.GetRequests
         public static SpinBoardParameters JustBoard = new SpinBoardParameters(false, true);
         public static SpinBoardParameters Both = new SpinBoardParameters(true, true);
     }
-
-    public class UserGamesGetProcessor : RequestWithoutBodyProcessor<UserGamesResponseModel, IUserGamesResponseModel>
-    {
-        public UserGamesGetProcessor(out DisposableCancellationTokenSource cancellationTokenSource, IRequestHeaders requestHeaders)
-            : base(out cancellationTokenSource, ApiCategories.UserGames, HttpMethod.Get, requestHeaders, requestParameters: null)
-        {
-        }
-    }
+    
 
     public interface ISlotGameIconsSet
     {
